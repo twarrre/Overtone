@@ -20,44 +20,49 @@ public class Note
 
     public enum DifficultyMultiplier
     {
-        easy(4),
-        medium(3),
-        hard(2);
+        easy(5),
+        medium(4),
+        hard(3);
 
         public float value;
         DifficultyMultiplier(float value) { this.value = value; }
     }
 
-    public Note(NoteType type, Vector2 position, Vector2 target, DifficultyMultiplier diff)
+    public Note(NoteType type, Vector2 center, Vector2 target, Vector2 scale, DifficultyMultiplier diff)
     {
         _type = type;
-        _position = position;
+        _center = center;
         _target = target;
         _isVisible = false;
         _difficulty = diff;
+        _scale = scale;
 
-        _speed = ((float)Math.sqrt(Math.pow((_target.x - _position.x), 2) + Math.pow((_target.y - _position.y), 2))) / _difficulty.value;
+        _direction = new Vector2(target.x - center.x, target.y - center.y).nor();
+        _speed = ((float)Math.sqrt(Math.pow((_target.x - _center.x), 2) + Math.pow((_target.y - _center.y), 2))) / _difficulty.value;
     }
 
     private NoteType _type;
-    private Vector2 _position;
     private Vector2 _target;
     private boolean _isVisible;
     private float _speed;
     private DifficultyMultiplier _difficulty;
+    private Vector2 _scale;
+    private Vector2 _center;
+    private Vector2 _direction;
 
     public void Update(float deltaTime)
     {
-        if(_isVisible)
+        if(_isVisible && ((float)Math.sqrt(Math.pow((_target.x - _center.x), 2) + Math.pow((_target.y - _center.y), 2))) > 2)
         {
-            _position.add(_target.nor().scl(_speed * deltaTime));
+            _center.add(new Vector2(_direction.x * _speed * deltaTime, _direction.y * _speed * deltaTime));
         }
     }
 
-    public Vector2 GetPosition() {return _position;}
+    public Vector2 GetPosition() {return new Vector2(_center.x - (_scale.x / 2.0f), _center.y - (_scale.y / 2.0f));}
     public Vector2 GetTarget() {return _target;}
     public boolean IsVisible() {return _isVisible;}
     public NoteType GetType() {return _type;}
+    public Vector2 GetScale() {return _scale;}
 
-    public void SetVisiblilty(boolean b) {_isVisible = b;}
+    public void SetVisibility(boolean b) {_isVisible = b;}
 }

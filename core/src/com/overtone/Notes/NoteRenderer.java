@@ -29,9 +29,17 @@ public class NoteRenderer
     {
         _spriteBatch.begin();
 
-        for(Note n :notes)
+        for(int i = 0; i < notes.size(); i++)
         {
-            _spriteBatch.draw(_noteTextures[n.GetType().value], n.GetPosition().x, n.GetTarget().y);
+            if(notes.get(i).IsVisible())
+            {
+                _spriteBatch.draw(_noteTextures[notes.get(i).GetType().value],
+                        notes.get(i).GetPosition().x,
+                        notes.get(i).GetPosition().y,
+                        notes.get(i).GetScale().x,
+                        notes.get(i).GetScale().y
+                );
+            }
         }
 
         _spriteBatch.end();
