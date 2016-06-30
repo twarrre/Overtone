@@ -1,65 +1,76 @@
 package com.overtone.Screens;
 
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
+import com.overtone.Notes.Note;
+import com.overtone.Notes.NoteRenderer;
+
+import java.util.ArrayList;
 
 /**
  * Created by trevor on 2016-05-01.
  */
-public class GameplayScreen implements Screen
+public class GameplayScreen extends OvertoneScreen
 {
-    private Texture _backgroundImage;
-    private SpriteBatch _batch;
-    private int _screenWidth;
-    private int _screenHeight;
+    public enum TargetZone
+    {
+        TopLeft(Gdx.graphics.getWidth() * 0.15f, Gdx.graphics.getHeight() * 0.85f),
+        TopRight(Gdx.graphics.getWidth() * 0.85f, Gdx.graphics.getHeight() * 0.85f),
+        BottomLeft(Gdx.graphics.getWidth() * 0.15f, Gdx.graphics.getHeight() * 0.15f),
+        BottomRight(Gdx.graphics.getWidth() * 0.85f, Gdx.graphics.getHeight() * 0.15f);
+
+        public Vector2 value;
+        TargetZone(float x, float y) { value = new Vector2(x, y);}
+
+        // The size of the enum
+        public static final int size = TargetZone.values().length;
+    }
+
+    private ArrayList<Note> _notes;
+    private NoteRenderer _renderer;
 
     public GameplayScreen(String backgroundImagePath, int screenWidth, int screenHeight)
     {
-        _screenWidth = screenWidth;
-        _screenHeight = screenHeight;
+        super(backgroundImagePath, screenWidth, screenHeight);
 
-        _batch = new SpriteBatch();
-        _backgroundImage = new Texture(backgroundImagePath);
-    }
+        _renderer = new NoteRenderer();
 
-    // Called when the screen is made the main one
-    public void show ()
-    {
+        _notes = new ArrayList<Note>();
+        for(int i = 0; i < TargetZone.size; i++)
+        {
+            _notes.add(new Note(Note.NoteType.singleNote,
+                    new Vector2(screenWidth / 2.0f, screenHeight / 2.0f),
+                    TargetZone.values()[i].value,
+                    new Vector2(Gdx.graphics.getWidth() * 0.025f, Gdx.graphics.getWidth() * 0.025f),
+                    Note.DifficultyMultiplier.easy
+            ));
 
+            _notes.get(i).SetVisibility(true);
+        }
     }
 
     public void render (float deltaTime)
     {
+        super.render(deltaTime);
+
         _batch.begin();
-        _batch.draw(_backgroundImage, 0, 0, _screenWidth, _screenHeight);
+        _renderer.Draw(_notes);
         _batch.end();
     }
 
-    public void resize (int width, int height)
+    public void update(float deltaTime)
     {
-        _screenWidth = width;
-        _screenHeight = height;
-    }
+        super.update(deltaTime);
 
-    public void pause ()
-    {
-
-    }
-
-    public void resume ()
-    {
-
-    }
-
-    public void hide ()
-    {
-
+        for(int i = 0; i < _notes.size(); i++)
+        {
+            if(_notes.get(i).IsVisible())
+                _notes.get(i).Update(deltaTime);
+        }
     }
 
     public void dispose ()
     {
-        _batch.dispose();
-        _backgroundImage.dispose();
+        super.dispose();
     }
 }
