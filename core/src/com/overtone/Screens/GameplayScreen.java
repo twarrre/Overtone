@@ -1,6 +1,7 @@
 package com.overtone.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.overtone.Notes.Note;
 import com.overtone.Notes.NoteRenderer;
@@ -28,12 +29,14 @@ public class GameplayScreen extends OvertoneScreen
 
     private ArrayList<Note> _notes;
     private NoteRenderer _renderer;
+    private Texture _targetZone;
 
     public GameplayScreen(String backgroundImagePath, int screenWidth, int screenHeight)
     {
         super(backgroundImagePath, screenWidth, screenHeight);
 
         _renderer = new NoteRenderer();
+        _targetZone = new Texture(Gdx.files.internal("targetzone.png"));
 
         _notes = new ArrayList<Note>();
         for(int i = 0; i < TargetZone.size; i++)
@@ -41,7 +44,7 @@ public class GameplayScreen extends OvertoneScreen
             _notes.add(new Note(Note.NoteType.singleNote,
                     new Vector2(screenWidth / 2.0f, screenHeight / 2.0f),
                     TargetZone.values()[i].value,
-                    new Vector2(Gdx.graphics.getWidth() * 0.025f, Gdx.graphics.getWidth() * 0.025f),
+                    new Vector2(screenWidth * 0.025f, screenWidth * 0.025f),
                     Note.DifficultyMultiplier.easy
             ));
 
@@ -54,8 +57,21 @@ public class GameplayScreen extends OvertoneScreen
         super.render(deltaTime);
 
         _batch.begin();
-        _renderer.Draw(_notes);
+
+        for(int i = 0; i < TargetZone.size; i++)
+        {
+            Vector2 pos =  new Vector2(TargetZone.values()[i].value.x - ((_screenWidth * 0.045f) / 2.0f) , TargetZone.values()[i].value.y - ((_screenWidth * 0.045f) / 2.0f));
+            _batch.draw(_targetZone,
+                    pos.x,
+                    pos.y,
+                    _screenWidth * 0.045f,
+                    _screenWidth * 0.045f
+            );
+        }
+
         _batch.end();
+
+        _renderer.Draw(_notes);
     }
 
     public void update(float deltaTime)

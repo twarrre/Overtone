@@ -10,10 +10,10 @@ public class OvertoneScreen implements OvertoneScreenInterface
 {
     protected Texture _backgroundImage;
     protected SpriteBatch _batch;
-    protected int _screenWidth;
-    protected int _screenHeight;
+    protected float _screenWidth;
+    protected float _screenHeight;
 
-    public OvertoneScreen(String backgroundImagePath, int screenWidth, int screenHeight)
+    public OvertoneScreen(String backgroundImagePath, float screenWidth, float screenHeight)
     {
         _screenWidth = screenWidth;
         _screenHeight = screenHeight;

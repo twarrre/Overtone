@@ -52,7 +52,7 @@ public class Note
 
     public void Update(float deltaTime)
     {
-        if(_isVisible && ((float)Math.sqrt(Math.pow((_target.x - _center.x), 2) + Math.pow((_target.y - _center.y), 2))) > 2)
+        if(_isVisible && ((float)Math.sqrt(Math.pow((_target.x - _center.x), 2) + Math.pow((_target.y - _center.y), 2))) > 0.5)
         {
             _center.add(new Vector2(_direction.x * _speed * deltaTime, _direction.y * _speed * deltaTime));
         }
