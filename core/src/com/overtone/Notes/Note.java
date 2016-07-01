@@ -30,14 +30,15 @@ public class Note
 
     public Note(NoteType type, Vector2 center, Vector2 target, Vector2 scale, DifficultyMultiplier diff)
     {
+        _direction = new Vector2(target.x - center.x, target.y - center.y).nor();
+
         _type = type;
-        _center = center;
+        _center = new Vector2(center.x + _direction.x, center.y + _direction.y);
         _target = target;
         _isVisible = false;
         _difficulty = diff;
         _scale = scale;
 
-        _direction = new Vector2(target.x - center.x, target.y - center.y).nor();
         _speed = ((float)Math.sqrt(Math.pow((_target.x - _center.x), 2) + Math.pow((_target.y - _center.y), 2))) / _difficulty.value;
     }
 
@@ -59,6 +60,7 @@ public class Note
     }
 
     public Vector2 GetPosition() {return new Vector2(_center.x - (_scale.x / 2.0f), _center.y - (_scale.y / 2.0f));}
+    public Vector2 GetCenter() {return _center;}
     public Vector2 GetTarget() {return _target;}
     public boolean IsVisible() {return _isVisible;}
     public NoteType GetType() {return _type;}
