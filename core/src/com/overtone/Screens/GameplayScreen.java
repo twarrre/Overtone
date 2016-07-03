@@ -4,12 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Queue;
 import com.overtone.InputManager;
 import com.overtone.Notes.Note;
 import com.overtone.Notes.NoteRenderer;
 import com.overtone.Quadtree;
-
-import java.util.ArrayList;
 
 /**
  * Created by trevor on 2016-05-01.
@@ -30,10 +29,14 @@ public class GameplayScreen extends OvertoneScreen
         public static final int size = TargetZone.values().length;
     }
 
+    public static final float ERROR = 0.0045f;
+
     private NoteRenderer _renderer;
     private Texture _targetZone;
     private InputManager _input;
-    private Quadtree _notes;
+    private Quadtree _onScreenNotes;
+    private Queue<Note> _noteQueue;
+    private float elaspedTime;
 
     public GameplayScreen(String backgroundImagePath, int screenWidth, int screenHeight)
     {
@@ -42,19 +45,22 @@ public class GameplayScreen extends OvertoneScreen
         _input = new InputManager();
         _renderer = new NoteRenderer();
         _targetZone = new Texture(Gdx.files.internal("targetzone.png"));
-        _notes = new Quadtree(new Rectangle(0, 0, screenWidth, screenHeight));
+        _onScreenNotes = new Quadtree(new Rectangle(0, 0, screenWidth, screenHeight));
 
-        for(int i = 0; i < TargetZone.size; i++)
+        _noteQueue = new Queue<Note>();
+        for(int i = 0; i < 12; i++)
         {
             Note n = new Note(Note.NoteType.singleNote,
                               new Vector2(screenWidth / 2.0f, screenHeight / 2.0f),
-                              TargetZone.values()[i].value,
+                              TargetZone.values()[i % TargetZone.size].value,
                               new Vector2(screenWidth * 0.025f, screenWidth * 0.025f),
-                              Note.DifficultyMultiplier.easy
+                              Note.DifficultyMultiplier.easy,
+                              i * 3.0f
                      );
-            n.SetVisibility(true);
-            _notes.Insert(n);
+            _noteQueue.addLast(n);
         }
+
+        elaspedTime = 0;
     }
 
     public void render (float deltaTime)
@@ -62,6 +68,18 @@ public class GameplayScreen extends OvertoneScreen
         super.render(deltaTime);
 
         _batch.begin();
+
+        if(_noteQueue.size > 0)
+        {
+            if(Math.abs(elaspedTime - _noteQueue.first().GetTime()) <= _noteQueue.first().GetDifficulty().value + ERROR)
+            {
+                Note n = _noteQueue.removeFirst();
+                n.SetVisibility(true);
+                _onScreenNotes.Insert(n);
+            }
+        }
+
+        elaspedTime += deltaTime;
 
         for(int i = 0; i < TargetZone.size; i++)
         {
@@ -76,7 +94,7 @@ public class GameplayScreen extends OvertoneScreen
 
         _batch.end();
 
-        _renderer.Draw(_notes.GetAll());
+        _renderer.Draw(_onScreenNotes.GetAll());
     }
 
     public void update(float deltaTime)
@@ -86,12 +104,12 @@ public class GameplayScreen extends OvertoneScreen
         _input.Update();
 
         // Update the note positions
-        _notes.Update(deltaTime);
+        _onScreenNotes.Update(deltaTime);
 
         // Check for input
         if(_input.ActionOccurred(InputManager.KeyBinding.BottomLeft, InputManager.ActionType.Pressed))
         {
-
+            return;
         }
 
         if(_input.ActionOccurred(InputManager.KeyBinding.BottomRight, InputManager.ActionType.Pressed))

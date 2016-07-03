@@ -28,7 +28,7 @@ public class Note
         DifficultyMultiplier(float value) { this.value = value; }
     }
 
-    public Note(NoteType type, Vector2 center, Vector2 target, Vector2 scale, DifficultyMultiplier diff)
+    public Note(NoteType type, Vector2 center, Vector2 target, Vector2 scale, DifficultyMultiplier diff, float timer)
     {
         _direction = new Vector2(target.x - center.x, target.y - center.y).nor();
 
@@ -38,6 +38,7 @@ public class Note
         _isVisible = false;
         _difficulty = diff;
         _scale = scale;
+        _timer = timer;
 
         _speed = ((float)Math.sqrt(Math.pow((_target.x - _center.x), 2) + Math.pow((_target.y - _center.y), 2))) / _difficulty.value;
     }
@@ -50,6 +51,7 @@ public class Note
     private Vector2 _scale;
     private Vector2 _center;
     private Vector2 _direction;
+    private float _timer;
 
     public void Update(float deltaTime)
     {
@@ -65,6 +67,8 @@ public class Note
     public boolean IsVisible() {return _isVisible;}
     public NoteType GetType() {return _type;}
     public Vector2 GetScale() {return _scale;}
+    public float GetTime() {return _timer;}
+    public DifficultyMultiplier GetDifficulty() {return _difficulty;}
 
     public void SetVisibility(boolean b) {_isVisible = b;}
 }
