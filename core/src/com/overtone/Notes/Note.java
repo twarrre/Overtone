@@ -28,7 +28,7 @@ public class Note
         DifficultyMultiplier(float value) { this.value = value; }
     }
 
-    public Note(NoteType type, Vector2 center, Vector2 target, Vector2 scale, DifficultyMultiplier diff, float timer)
+    public Note(NoteType type, Vector2 center, Vector2 target, Vector2 scale, DifficultyMultiplier diff, float timer, float targetRadius, int id)
     {
         _direction = new Vector2(target.x - center.x, target.y - center.y).nor();
 
@@ -39,6 +39,8 @@ public class Note
         _difficulty = diff;
         _scale = scale;
         _timer = timer;
+        _targetRadius = targetRadius;
+        _id = id;
 
         _speed = ((float)Math.sqrt(Math.pow((_target.x - _center.x), 2) + Math.pow((_target.y - _center.y), 2))) / _difficulty.value;
     }
@@ -52,12 +54,27 @@ public class Note
     private Vector2 _center;
     private Vector2 _direction;
     private float _timer;
+    private float _targetRadius;
+    private int _id;
 
+    private boolean IsPassedTarget()
+    {
+        Vector2 noteDir = new Vector2(_target.x - _center.x, _target.y - _center.y);
+
+        if(noteDir.dot(_direction) < 0 && _center.dst(_target) > _targetRadius)
+            return true;
+
+       return false;
+    }
     public void Update(float deltaTime)
     {
-        if(_isVisible && ((float)Math.sqrt(Math.pow((_target.x - _center.x), 2) + Math.pow((_target.y - _center.y), 2))) > 0.5)
+        if(!IsPassedTarget()) //_isVisible && ((float)Math.sqrt(Math.pow((_target.x - _center.x), 2) + Math.pow((_target.y - _center.y), 2))) > 0.5
         {
             _center.add(new Vector2(_direction.x * _speed * deltaTime, _direction.y * _speed * deltaTime));
+        }
+        else
+        {
+            _isVisible = false;
         }
     }
 

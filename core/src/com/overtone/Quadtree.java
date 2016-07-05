@@ -54,6 +54,11 @@ public class Quadtree
         return _notes;
     }
 
+    public void Remove(Note n)
+    {
+        Remove(n, _root);
+    }
+
     public void Update(float deltaTime)
     {
         Update(deltaTime, _root);
@@ -146,18 +151,26 @@ public class Quadtree
     // Updates all objects and moves them to new quads if necessary
     private void Update(float deltaTime, Node node)
     {
+        ArrayList<Note> toBeRemoved = new ArrayList();
         if (node == null)
             return;
 
         for (Note n : node.objects)
         {
             n.Update(deltaTime);
+            if(n.IsVisible() == false)
+                toBeRemoved.add(n);
         }
 
         Update(deltaTime, node.topLeft);
         Update(deltaTime, node.topRight);
         Update(deltaTime, node.bottomLeft);
         Update(deltaTime, node.bottomRight);
+
+        for(Note n : toBeRemoved)
+        {
+            Remove(n, node);
+        }
     }
 
     private ArrayList<Note> GetAll(Node n)
@@ -173,5 +186,26 @@ public class Quadtree
         notes.addAll(GetAll(n.topRight));
         notes.addAll(n.objects);
         return notes;
+    }
+
+    private void Remove(Note note, Node node)
+    {
+        if(note == null)
+            return;
+
+        if (!node._bounds.contains(note.GetPosition().x, note.GetPosition().y))
+            return;
+
+        if(node.bottomLeft != null)
+        {
+            Remove(note, node.bottomLeft);
+            Remove(note, node.bottomRight);
+            Remove(note, node.topRight);
+            Remove(note, node.topLeft);
+        }
+        else
+        {
+            node.objects.remove(note);
+        }
     }
 }
