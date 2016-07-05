@@ -61,7 +61,7 @@ public class Note
     {
         Vector2 noteDir = new Vector2(_target.x - _center.x, _target.y - _center.y);
 
-        if(noteDir.dot(_direction) < 0 && _center.dst(_target) > _targetRadius)
+        if(noteDir.dot(_direction) < 0 && _center.dst(_target) > _targetRadius * 2.1)
             return true;
 
        return false;
@@ -86,6 +86,7 @@ public class Note
     public Vector2 GetScale() {return _scale;}
     public float GetTime() {return _timer;}
     public DifficultyMultiplier GetDifficulty() {return _difficulty;}
+    public int GetId() {return _id;}
 
     public void SetVisibility(boolean b) {_isVisible = b;}
 }

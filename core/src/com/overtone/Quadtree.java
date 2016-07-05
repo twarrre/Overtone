@@ -49,7 +49,7 @@ public class Quadtree
 
     public ArrayList<Note> Get(Vector2 point)
     {
-        _notes.clear();
+        _notes = new ArrayList<Note>();
         Get(point, _root);
         return _notes;
     }
