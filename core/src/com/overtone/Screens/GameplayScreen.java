@@ -1,7 +1,6 @@
 package com.overtone.Screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -10,7 +9,8 @@ import com.overtone.InputManager;
 import com.overtone.Notes.Note;
 import com.overtone.Notes.NoteRenderer;
 import com.overtone.Quadtree;
-import com.sun.org.apache.xpath.internal.SourceTree;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 
 import java.util.ArrayList;
 
@@ -52,8 +52,12 @@ public class GameplayScreen extends OvertoneScreen
     private InputManager _input;
     private Quadtree _onScreenNotes;
     private Queue<Note> _noteQueue;
-    private float elapsedTime;
+    private float _elapsedTime;
     private final float _targetRadius;
+    private int _combo;
+    private int _score;
+    private final BitmapFont _font;
+    private final GlyphLayout _glyphLayout;
 
     public GameplayScreen(String backgroundImagePath, int screenWidth, int screenHeight)
     {
@@ -80,7 +84,11 @@ public class GameplayScreen extends OvertoneScreen
             _noteQueue.addLast(n);
         }
 
-        elapsedTime = 0;
+        _elapsedTime = 0;
+        _combo = 0;
+        _score = 0;
+        _font = new BitmapFont();
+        _glyphLayout = new GlyphLayout();
     }
 
     public void render (float deltaTime)
@@ -100,12 +108,13 @@ public class GameplayScreen extends OvertoneScreen
             );
         }
 
+        _glyphLayout.setText(_font,  "Combo: " + _combo + " Score: " + _score);
+        _font.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.10f);
+
         _batch.end();
 
         _renderer.Draw(_onScreenNotes.GetAll());
     }
-
-    private int counter = 0;
 
     public void update(float deltaTime)
     {
@@ -113,7 +122,7 @@ public class GameplayScreen extends OvertoneScreen
 
         if(_noteQueue.size > 0)
         {
-            if(_noteQueue.first().GetTime() - _noteQueue.first().GetDifficulty().value <=  elapsedTime + ERROR)
+            if(_noteQueue.first().GetTime() - _noteQueue.first().GetDifficulty().value <=  _elapsedTime + ERROR)
             {
                 Note n = _noteQueue.removeFirst();
                 n.SetVisibility(true);
@@ -121,7 +130,7 @@ public class GameplayScreen extends OvertoneScreen
             }
         }
 
-        elapsedTime += deltaTime;
+        _elapsedTime += deltaTime;
 
         // Update the note positions
         _onScreenNotes.Update(deltaTime);
@@ -152,7 +161,6 @@ public class GameplayScreen extends OvertoneScreen
         }
 
         _onScreenNotes.Remove(closestNote);
-        counter ++;
 
         if(minDistance <= _targetRadius * 0.10f)
             return Rating.Perfect.value;
@@ -173,15 +181,25 @@ public class GameplayScreen extends OvertoneScreen
             float rating = CheckNotes(TargetZone.BottomLeft.value);
 
             if(rating == Rating.Perfect.value)
-                System.out.println("perfect");
+            {
+                _combo++;
+                _score += Rating.Perfect.value * _combo;
+            }
             else if(rating == Rating.Great.value)
-                System.out.println("great");
+            {
+                _combo++;
+                _score += Rating.Great.value * _combo;
+            }
             else if(rating == Rating.Ok.value)
-                System.out.println("ok");
+            {
+                _combo = 0;
+                _score += Rating.Ok.value;
+            }
             else if(rating == Rating.Bad.value)
-                System.out.println("bad");
-            else
-                System.out.println("nothing");
+            {
+                _combo = 0;
+                _score += Rating.Bad.value;
+            }
         }
 
         if(_input.ActionOccurred(InputManager.KeyBinding.BottomRight, InputManager.ActionType.Pressed))
@@ -189,15 +207,25 @@ public class GameplayScreen extends OvertoneScreen
             float rating = CheckNotes(TargetZone.BottomRight.value);
 
             if(rating == Rating.Perfect.value)
-                System.out.println("perfect");
+            {
+                _combo++;
+                _score += Rating.Perfect.value * _combo;
+            }
             else if(rating == Rating.Great.value)
-                System.out.println("great");
+            {
+                _combo++;
+                _score += Rating.Great.value * _combo;
+            }
             else if(rating == Rating.Ok.value)
-                System.out.println("ok");
+            {
+                _combo = 0;
+                _score += Rating.Ok.value;
+            }
             else if(rating == Rating.Bad.value)
-                System.out.println("bad");
-            else
-                System.out.println("nothing");
+            {
+                _combo = 0;
+                _score += Rating.Bad.value;
+            }
         }
 
         if(_input.ActionOccurred(InputManager.KeyBinding.TopRight, InputManager.ActionType.Pressed))
@@ -205,15 +233,25 @@ public class GameplayScreen extends OvertoneScreen
             float rating = CheckNotes(TargetZone.TopRight.value);
 
             if(rating == Rating.Perfect.value)
-                System.out.println("perfect");
+            {
+                _combo++;
+                _score += Rating.Perfect.value * _combo;
+            }
             else if(rating == Rating.Great.value)
-                System.out.println("great");
+            {
+                _combo++;
+                _score += Rating.Great.value * _combo;
+            }
             else if(rating == Rating.Ok.value)
-                System.out.println("ok");
+            {
+                _combo = 0;
+                _score += Rating.Ok.value;
+            }
             else if(rating == Rating.Bad.value)
-                System.out.println("bad");
-            else
-                System.out.println("nothing");
+            {
+                _combo = 0;
+                _score += Rating.Bad.value;
+            }
         }
 
         if(_input.ActionOccurred(InputManager.KeyBinding.TopLeft, InputManager.ActionType.Pressed))
@@ -221,15 +259,25 @@ public class GameplayScreen extends OvertoneScreen
             float rating = CheckNotes(TargetZone.TopLeft.value);
 
             if(rating == Rating.Perfect.value)
-                System.out.println("perfect");
+            {
+                _combo++;
+                _score += Rating.Perfect.value * _combo;
+            }
             else if(rating == Rating.Great.value)
-                System.out.println("great");
+            {
+                _combo++;
+                _score += Rating.Great.value * _combo;
+            }
             else if(rating == Rating.Ok.value)
-                System.out.println("ok");
+            {
+                _combo = 0;
+                _score += Rating.Ok.value;
+            }
             else if(rating == Rating.Bad.value)
-                System.out.println("bad");
-            else
-                System.out.println("nothing");
+            {
+                _combo = 0;
+                _score += Rating.Bad.value;
+            }
         }
     }
 
