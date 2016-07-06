@@ -1,6 +1,7 @@
 package com.overtone.Screens;
 
 /**
+ * Screen used for the song complete screen
  * Created by trevor on 2016-05-01.
  */
 public class SongCompleteScreen extends OvertoneScreen

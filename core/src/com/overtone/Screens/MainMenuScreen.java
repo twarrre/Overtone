@@ -1,6 +1,7 @@
 package com.overtone.Screens;
 
 /**
+ * Screen used for the main menu
  * Created by trevor on 2016-05-01.
  */
 public class MainMenuScreen extends OvertoneScreen

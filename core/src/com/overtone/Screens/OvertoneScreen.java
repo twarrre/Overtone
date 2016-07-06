@@ -4,25 +4,33 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /**
+ * Base class for all screens in Overtone.
+ * Stores some variables that will be used by all screens
  * Created by trevor on 2016-06-30.
  */
 public class OvertoneScreen implements OvertoneScreenInterface
 {
-    protected Texture _backgroundImage;
-    protected SpriteBatch _batch;
+    // The background image for the screen
+    protected final Texture _backgroundImage;
+    protected final  SpriteBatch _batch;
     protected float _screenWidth;
     protected float _screenHeight;
 
+    /**
+     * Constructor
+     * @param backgroundImagePath The path the the background image
+     * @param screenWidth The screen width
+     * @param screenHeight The screen height
+     */
     public OvertoneScreen(String backgroundImagePath, float screenWidth, float screenHeight)
     {
-        _screenWidth = screenWidth;
+        _screenWidth  = screenWidth;
         _screenHeight = screenHeight;
 
-        _batch = new SpriteBatch();
+        _batch           = new SpriteBatch();
         _backgroundImage = new Texture(backgroundImagePath);
     }
 
-    // Called when the screen is made the main one
     public void show ()
     {
 
@@ -30,6 +38,7 @@ public class OvertoneScreen implements OvertoneScreenInterface
 
     public void render (float deltaTime)
     {
+        // Draws the background image
         _batch.begin();
         _batch.draw(_backgroundImage, 0, 0, _screenWidth, _screenHeight);
         _batch.end();
@@ -65,5 +74,6 @@ public class OvertoneScreen implements OvertoneScreenInterface
     {
         _batch.dispose();
         _backgroundImage.dispose();
+        _batch.dispose();
     }
 }

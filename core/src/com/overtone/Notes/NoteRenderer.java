@@ -9,13 +9,17 @@ import com.overtone.Quadtree;
 import java.util.ArrayList;
 
 /**
+ * Handles rendering the notes so that only one instance of each note texture exists
  * Created by trevor on 2016-06-21.
  */
 public class NoteRenderer
 {
-    private SpriteBatch _spriteBatch;
-    private Texture[] _noteTextures;
+    private final SpriteBatch _spriteBatch;
+    private final Texture[] _noteTextures;
 
+    /**
+     * Constructor
+     */
     public NoteRenderer()
     {
         _spriteBatch = new SpriteBatch();
@@ -26,6 +30,10 @@ public class NoteRenderer
         _noteTextures[2] = new Texture(Gdx.files.internal("Textures\\Notes\\hold_note.png"));
     }
 
+    /**
+     * Draws all of the notes on screen
+     * @param notes All of the notes on screen to be rendered
+     */
     public void Draw(ArrayList<Note> notes)
     {
         _spriteBatch.begin();

@@ -31,10 +31,10 @@ public class InputManager
      */
     public enum KeyBinding
     {
-        TopRight    (Input.Keys.I),
-        BottomRight (Input.Keys.K),
         TopLeft     (Input.Keys.E),
-        BottomLeft  (Input.Keys.D);
+        TopRight    (Input.Keys.I),
+        BottomLeft  (Input.Keys.D),
+        BottomRight (Input.Keys.K);
 
         KeyBinding(int key) { this.keyCode = key; }
 
@@ -42,7 +42,7 @@ public class InputManager
         public int keyCode;
 
         // The size of the enum
-        private static final int size = KeyBinding.values().length;
+        public static final int size = KeyBinding.values().length;
     }
 
     /**

@@ -8,17 +8,16 @@ import com.overtone.Screens.*;
 
 public class Overtone extends ApplicationAdapter
 {
+	// Stores the current screen that is on display
 	public OvertoneScreen _currentScreen;
 
+	// Stores an array of all of the screens in the game
 	private Array<OvertoneScreen> _screens;
-	private InputManager _input;
-
 
 	@Override
 	public void create ()
 	{
-		_input = new InputManager();
-
+		// Create all of the new screens
 		_screens = new Array<OvertoneScreen>();
 		_screens.add(new MainMenuScreen("Textures\\background1.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		_screens.add(new DifficultySelectScreen("Textures\\background2.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
@@ -26,6 +25,7 @@ public class Overtone extends ApplicationAdapter
 		_screens.add(new GameplayScreen("Textures\\background2.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		_currentScreen = _screens.get(3);
 
+		// Show the current one
 		_currentScreen.show();
 	}
 
@@ -43,7 +43,6 @@ public class Overtone extends ApplicationAdapter
 
 	public void Update(float deltaTime)
 	{
-		_input.Update();
 		_currentScreen.update(deltaTime);
 	}
 }

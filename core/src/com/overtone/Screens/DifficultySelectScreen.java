@@ -1,6 +1,7 @@
 package com.overtone.Screens;
 
 /**
+ * Screen used form the difficulty select screen
  * Created by trevor on 2016-05-01.
  */
 public class DifficultySelectScreen extends OvertoneScreen
