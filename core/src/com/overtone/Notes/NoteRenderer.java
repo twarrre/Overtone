@@ -21,9 +21,9 @@ public class NoteRenderer
         _spriteBatch = new SpriteBatch();
 
         _noteTextures = new Texture[3];
-        _noteTextures[0] = new Texture(Gdx.files.internal("Notes\\note.png"));
-        _noteTextures[1] = new Texture(Gdx.files.internal("Notes\\double_note.png"));
-        _noteTextures[2] = new Texture(Gdx.files.internal("Notes\\hold_note.png"));
+        _noteTextures[0] = new Texture(Gdx.files.internal("Textures\\Notes\\note.png"));
+        _noteTextures[1] = new Texture(Gdx.files.internal("Textures\\Notes\\double_note.png"));
+        _noteTextures[2] = new Texture(Gdx.files.internal("Textures\\Notes\\hold_note.png"));
     }
 
     public void Draw(ArrayList<Note> notes)

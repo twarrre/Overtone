@@ -1,6 +1,7 @@
 package com.overtone.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -21,10 +22,10 @@ public class GameplayScreen extends OvertoneScreen
 {
     public enum TargetZone
     {
-        TopLeft(Gdx.graphics.getWidth() * 0.15f, Gdx.graphics.getHeight() * 0.85f),
-        TopRight(Gdx.graphics.getWidth() * 0.85f, Gdx.graphics.getHeight() * 0.85f),
-        BottomLeft(Gdx.graphics.getWidth() * 0.15f, Gdx.graphics.getHeight() * 0.15f),
-        BottomRight(Gdx.graphics.getWidth() * 0.85f, Gdx.graphics.getHeight() * 0.15f);
+        TopLeft(Gdx.graphics.getWidth() * 0.12f, Gdx.graphics.getHeight() * 0.83f),
+        TopRight(Gdx.graphics.getWidth() * 0.88f, Gdx.graphics.getHeight() * 0.83f),
+        BottomLeft(Gdx.graphics.getWidth() * 0.12f, Gdx.graphics.getHeight() * 0.17f),
+        BottomRight(Gdx.graphics.getWidth() * 0.88f, Gdx.graphics.getHeight() * 0.17f);
 
         public Vector2 value;
         TargetZone(float x, float y) { value = new Vector2(x, y);}
@@ -35,20 +36,44 @@ public class GameplayScreen extends OvertoneScreen
 
     public enum Rating
     {
-        Perfect(5),
-        Great(3),
-        Ok(1),
-        Bad(0),
+        Perfect(7),
+        Great(5),
+        Ok(3),
+        Bad(1),
+        Miss(0),
         None(-1);
 
         public int value;
         Rating(int val) {value = val;}
+
+        public String ToString()
+        {
+            switch(value)
+            {
+                case 7:
+                    return "Perfect";
+                case 5:
+                    return "Great";
+                case 3:
+                    return "Okay";
+                case 1:
+                    return "Bad";
+                case 0:
+                    return "Miss";
+                default:
+                    return "";
+            }
+        }
     }
 
     public static final float ERROR = 0.0045f;
 
     private NoteRenderer _renderer;
     private Texture _targetZone;
+    private Texture _d;
+    private Texture _e;
+    private Texture _i;
+    private Texture _k;
     private InputManager _input;
     private Quadtree _onScreenNotes;
     private Queue<Note> _noteQueue;
@@ -58,15 +83,16 @@ public class GameplayScreen extends OvertoneScreen
     private int _score;
     private final BitmapFont _font;
     private final GlyphLayout _glyphLayout;
+    private final Sound _noteHit;
 
     public GameplayScreen(String backgroundImagePath, int screenWidth, int screenHeight)
     {
         super(backgroundImagePath, screenWidth, screenHeight);
 
-        _targetRadius = _screenWidth * 0.045f / 2.0f;
+        _targetRadius = _screenWidth * 0.05f / 2.0f;
         _input = new InputManager();
         _renderer = new NoteRenderer();
-        _targetZone = new Texture(Gdx.files.internal("targetzone.png"));
+        _targetZone = new Texture(Gdx.files.internal("Textures\\targetzone.png"));
         _onScreenNotes = new Quadtree(new Rectangle(0, 0, screenWidth, screenHeight));
 
         _noteQueue = new Queue<Note>();
@@ -89,6 +115,13 @@ public class GameplayScreen extends OvertoneScreen
         _score = 0;
         _font = new BitmapFont();
         _glyphLayout = new GlyphLayout();
+
+        _e = new Texture(Gdx.files.internal("Textures\\e.png"));
+        _d = new Texture(Gdx.files.internal("Textures\\d.png"));
+        _i = new Texture(Gdx.files.internal("Textures\\i.png"));
+        _k = new Texture(Gdx.files.internal("Textures\\k.png"));
+
+        _noteHit = Gdx.audio.newSound(Gdx.files.internal("Sounds\\note.wav"));
     }
 
     public void render (float deltaTime)
@@ -96,6 +129,11 @@ public class GameplayScreen extends OvertoneScreen
         super.render(deltaTime);
 
         _batch.begin();
+
+        _batch.draw(_d, 0, 0, _screenWidth * 0.2f, _screenWidth * 0.2f);
+        _batch.draw(_k, _screenWidth * 0.8f, 0, _screenWidth * 0.2f, _screenWidth * 0.2f);
+        _batch.draw(_i, _screenWidth * 0.8f, _screenHeight - _screenWidth * 0.2f, _screenWidth * 0.2f, _screenWidth * 0.2f);
+        _batch.draw(_e, 0, _screenHeight - _screenWidth * 0.2f, _screenWidth * 0.2f, _screenWidth * 0.2f);
 
         for(int i = 0; i < TargetZone.size; i++)
         {
@@ -162,14 +200,16 @@ public class GameplayScreen extends OvertoneScreen
 
         _onScreenNotes.Remove(closestNote);
 
-        if(minDistance <= _targetRadius * 0.10f)
+        if(minDistance <= _targetRadius * 0.15f)
             return Rating.Perfect.value;
-        else if(minDistance <= _targetRadius * 0.35f && minDistance > _targetRadius * 0.10f)
+        else if(minDistance <= _targetRadius * 0.55f && minDistance > _targetRadius * 0.15f)
             return Rating.Great.value;
-        else if(minDistance <= _targetRadius * 2.0 && minDistance > _targetRadius * 0.35)
+        else if(minDistance <= _targetRadius  && minDistance > _targetRadius * 0.55f)
             return Rating.Ok.value;
-        else
+        else if(minDistance <= _targetRadius * 2.0f  && minDistance > _targetRadius)
             return Rating.Bad.value;
+        else
+            return Rating.Miss.value;
     }
 
 
@@ -178,6 +218,8 @@ public class GameplayScreen extends OvertoneScreen
         // Check for input
         if(_input.ActionOccurred(InputManager.KeyBinding.BottomLeft, InputManager.ActionType.Pressed))
         {
+            _noteHit.play();
+
             float rating = CheckNotes(TargetZone.BottomLeft.value);
 
             if(rating == Rating.Perfect.value)
@@ -200,10 +242,17 @@ public class GameplayScreen extends OvertoneScreen
                 _combo = 0;
                 _score += Rating.Bad.value;
             }
+            else if(rating == Rating.Miss.value)
+            {
+                _combo = 0;
+                _score += Rating.Miss.value;
+            }
         }
 
         if(_input.ActionOccurred(InputManager.KeyBinding.BottomRight, InputManager.ActionType.Pressed))
         {
+            _noteHit.play();
+
             float rating = CheckNotes(TargetZone.BottomRight.value);
 
             if(rating == Rating.Perfect.value)
@@ -226,10 +275,17 @@ public class GameplayScreen extends OvertoneScreen
                 _combo = 0;
                 _score += Rating.Bad.value;
             }
+            else if(rating == Rating.Miss.value)
+            {
+                _combo = 0;
+                _score += Rating.Miss.value;
+            }
         }
 
         if(_input.ActionOccurred(InputManager.KeyBinding.TopRight, InputManager.ActionType.Pressed))
         {
+            _noteHit.play();
+
             float rating = CheckNotes(TargetZone.TopRight.value);
 
             if(rating == Rating.Perfect.value)
@@ -252,10 +308,17 @@ public class GameplayScreen extends OvertoneScreen
                 _combo = 0;
                 _score += Rating.Bad.value;
             }
+            else if(rating == Rating.Miss.value)
+            {
+                _combo = 0;
+                _score += Rating.Miss.value;
+            }
         }
 
         if(_input.ActionOccurred(InputManager.KeyBinding.TopLeft, InputManager.ActionType.Pressed))
         {
+            _noteHit.play();
+
             float rating = CheckNotes(TargetZone.TopLeft.value);
 
             if(rating == Rating.Perfect.value)
@@ -277,6 +340,11 @@ public class GameplayScreen extends OvertoneScreen
             {
                 _combo = 0;
                 _score += Rating.Bad.value;
+            }
+            else if(rating == Rating.Miss.value)
+            {
+                _combo = 0;
+                _score += Rating.Miss.value;
             }
         }
     }

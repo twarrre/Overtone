@@ -20,10 +20,10 @@ public class Overtone extends ApplicationAdapter
 		_input = new InputManager();
 
 		_screens = new Array<OvertoneScreen>();
-		_screens.add(new MainMenuScreen("background1.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-		_screens.add(new DifficultySelectScreen("background2.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-		_screens.add(new SongCompleteScreen("background3.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-		_screens.add(new GameplayScreen("background2.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		_screens.add(new MainMenuScreen("Textures\\background1.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		_screens.add(new DifficultySelectScreen("Textures\\background2.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		_screens.add(new SongCompleteScreen("Textures\\background3.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		_screens.add(new GameplayScreen("Textures\\background2.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		_currentScreen = _screens.get(3);
 
 		_currentScreen.show();
