@@ -68,15 +68,15 @@ public class GameplayScreen extends OvertoneScreen
 
     public static final float ERROR = 0.0045f;
 
-    private NoteRenderer _renderer;
-    private Texture _targetZone;
-    private Texture _d;
-    private Texture _e;
-    private Texture _i;
-    private Texture _k;
-    private InputManager _input;
-    private Quadtree _onScreenNotes;
-    private Queue<Note> _noteQueue;
+    private final NoteRenderer _renderer;
+    private final  Texture _targetZone;
+    private final Texture _d;
+    private final Texture _e;
+    private final Texture _i;
+    private final Texture _k;
+    private final InputManager _input;
+    private final Quadtree _onScreenNotes;
+    private final Queue<Note> _noteQueue;
     private float _elapsedTime;
     private final float _targetRadius;
     private int _combo;
@@ -84,6 +84,10 @@ public class GameplayScreen extends OvertoneScreen
     private final BitmapFont _font;
     private final GlyphLayout _glyphLayout;
     private final Sound _noteHit;
+    private final Texture _progressBar;
+    private final Texture _progress;
+    private final Texture _arrow;
+    private final float _totalTime;
 
     public GameplayScreen(String backgroundImagePath, int screenWidth, int screenHeight)
     {
@@ -110,6 +114,7 @@ public class GameplayScreen extends OvertoneScreen
             _noteQueue.addLast(n);
         }
 
+        _totalTime =   3.0f + (float)56 * 2.0f;
         _elapsedTime = 0;
         _combo = 0;
         _score = 0;
@@ -120,6 +125,9 @@ public class GameplayScreen extends OvertoneScreen
         _d = new Texture(Gdx.files.internal("Textures\\d.png"));
         _i = new Texture(Gdx.files.internal("Textures\\i.png"));
         _k = new Texture(Gdx.files.internal("Textures\\k.png"));
+        _progressBar = new Texture(Gdx.files.internal("Textures\\progressbar.png"));
+        _progress = new Texture(Gdx.files.internal("Textures\\background1.jpg"));
+        _arrow = new Texture(Gdx.files.internal("Textures\\arrow.png"));
 
         _noteHit = Gdx.audio.newSound(Gdx.files.internal("Sounds\\note.wav"));
     }
@@ -129,6 +137,10 @@ public class GameplayScreen extends OvertoneScreen
         super.render(deltaTime);
 
         _batch.begin();
+
+        _batch.draw(_progressBar, (_screenWidth * 0.5f) - (_screenWidth * 0.275f), _screenHeight * 0.95f, _screenWidth * 0.55f, _screenHeight * 0.02f);
+        _batch.draw(_progress, (_screenWidth * 0.5f) - (_screenWidth * 0.27f), _screenHeight * 0.955f, (_screenWidth * 0.55f) * (_elapsedTime / _totalTime) , _screenHeight * 0.01f);
+        _batch.draw(_arrow, (_screenWidth * 0.5f) - (_screenWidth * 0.27f + (_arrow.getWidth() / 8.0f)) + (_screenWidth * 0.55f) * (_elapsedTime / _totalTime), _screenHeight * 0.94f, _arrow.getWidth() / 4.0f, _arrow.getHeight() / 4.0f);
 
         _batch.draw(_d, 0, 0, _screenWidth * 0.2f, _screenWidth * 0.2f);
         _batch.draw(_k, _screenWidth * 0.8f, 0, _screenWidth * 0.2f, _screenWidth * 0.2f);
@@ -168,7 +180,8 @@ public class GameplayScreen extends OvertoneScreen
             }
         }
 
-        _elapsedTime += deltaTime;
+        if(_elapsedTime < _totalTime)
+            _elapsedTime += deltaTime;
 
         // Update the note positions
         _onScreenNotes.Update(deltaTime);
