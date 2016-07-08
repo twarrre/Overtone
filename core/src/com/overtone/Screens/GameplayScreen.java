@@ -12,7 +12,11 @@ import com.overtone.Notes.NoteRenderer;
 import com.overtone.Quadtree;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.overtone.Ratings.Rating;
+import com.overtone.Ratings.RatingRenderer;
+
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 /**
  * Screen used during gameplay
@@ -39,44 +43,10 @@ public class GameplayScreen extends OvertoneScreen
         public static final int size = TargetZone.values().length;
     }
 
-    /**
-     * Represents the ratings of how well the player hit the button
-     */
-    public enum Rating
-    {
-        Perfect (7),
-        Great   (5),
-        Ok      (3),
-        Bad     (1),
-        Miss    (0),
-        None    (0);
-
-        public int score;
-        Rating(int s) {score = s;}
-
-        public String ToString()
-        {
-            switch(score)
-            {
-                case 7:
-                    return "Perfect";
-                case 5:
-                    return "Great";
-                case 3:
-                    return "Okay";
-                case 1:
-                    return "Bad";
-                case 0:
-                    return "Miss";
-                default:
-                    return "";
-            }
-        }
-    }
-
     // Objects
-    private final NoteRenderer _renderer;
-    private final InputManager _input;
+    private final NoteRenderer    _noteRenderer;
+    private final InputManager    _input;
+    private final RatingRenderer _ratingRenderer;
 
     // Textures
     private final Texture _targetZone;
@@ -89,8 +59,9 @@ public class GameplayScreen extends OvertoneScreen
     private final Texture _k;
 
     // Data Structures
-    private final Quadtree    _onScreenNotes;
-    private final Queue<Note> _noteQueue;
+    private final Quadtree          _onScreenNotes;
+    private final Queue<Note>       _noteQueue;
+    private final ArrayList<Rating> _onScreenRatings;
 
     // Font
     private final BitmapFont  _font;
@@ -117,8 +88,9 @@ public class GameplayScreen extends OvertoneScreen
         super(backgroundImagePath, screenWidth, screenHeight);
 
         // Initialize objects
-        _input    = new InputManager();
-        _renderer = new NoteRenderer();
+        _input          = new InputManager();
+        _noteRenderer   = new NoteRenderer();
+        _ratingRenderer = new RatingRenderer();
 
         // Initialize font
         _font        = new BitmapFont();
@@ -138,7 +110,7 @@ public class GameplayScreen extends OvertoneScreen
         _noteHit = Gdx.audio.newSound(Gdx.files.internal("Sounds\\note.wav"));
 
         // Initialize variables
-        _targetRadius = _screenWidth * 0.05f / 2.0f;
+        _targetRadius = _screenWidth * 0.025f;
         _totalTime    = 3.0f + (float)56 * 2.0f;
         _elapsedTime  = 0;
         _combo        = 0;
@@ -159,7 +131,8 @@ public class GameplayScreen extends OvertoneScreen
             );
             _noteQueue.addLast(n);
         }
-        _onScreenNotes = new Quadtree(new Rectangle(0, 0, screenWidth, screenHeight));
+        _onScreenNotes   = new Quadtree(new Rectangle(0, 0, screenWidth, screenHeight));
+        _onScreenRatings = new ArrayList<Rating>();
     }
 
     /**
@@ -203,7 +176,8 @@ public class GameplayScreen extends OvertoneScreen
 
         _batch.end();
 
-        _renderer.Draw(_onScreenNotes.GetAll());
+        _noteRenderer.Draw(_onScreenNotes.GetAll());
+        _ratingRenderer.Draw(_onScreenRatings);
     }
 
     public void update(float deltaTime)
@@ -224,8 +198,25 @@ public class GameplayScreen extends OvertoneScreen
             _elapsedTime += deltaTime;
 
         // Update the note positions
-        if(!_onScreenNotes.Update(deltaTime))
+        ArrayList<Vector2> removedNotes = _onScreenNotes.Update(deltaTime);
+        if(!removedNotes.isEmpty())
+        {
+            for(Vector2 v : removedNotes)
+            {
+                _onScreenRatings.add(new Rating(Rating.RatingValue.Miss, v));
+            }
             _combo = 0;
+        }
+
+        // Update on screen ratings
+        ArrayList<Rating> done = new ArrayList<Rating>();
+        for(Rating r : _onScreenRatings)
+        {
+            r.Update(deltaTime);
+            if(!r.IsVisible())
+                done.add(r);
+        }
+        _onScreenRatings.removeAll(done);
 
         // Update the input
         _input.Update();
@@ -244,15 +235,17 @@ public class GameplayScreen extends OvertoneScreen
                 _noteHit.play();
                 Rating rating = GetNoteRating(TargetZone.values()[i].value);
 
-                // NEED TO FIX THIS
-                if(rating == Rating.Perfect || rating == Rating.Great)
+                if(rating.GetingRating() == Rating.RatingValue.Perfect || rating.GetingRating() == Rating.RatingValue.Great)
                     _combo++;
-                else if(rating == Rating.Bad || rating == Rating.Miss)
+                else if(rating.GetingRating() == Rating.RatingValue.Bad || rating.GetingRating() == Rating.RatingValue.Miss)
                     _combo = 0;
-                else if(rating == Rating.Ok || rating == Rating.None)
+                else if(rating.GetingRating() == Rating.RatingValue.Ok || rating.GetingRating() == Rating.RatingValue.None)
                     _combo += 0;
 
-                _score += rating.score * _combo;
+                _score += rating.GetingRating().score * _combo;
+
+                if(rating.GetingRating() != Rating.RatingValue.None)
+                    _onScreenRatings.add(rating);
             }
         }
     }
@@ -267,7 +260,7 @@ public class GameplayScreen extends OvertoneScreen
         ArrayList<Note> notes = _onScreenNotes.Get(target);
 
         if(notes.isEmpty())
-            return Rating.None;
+            return new Rating(Rating.RatingValue.None, target);
 
         float minDistance = Float.MAX_VALUE;
         Note closestNote = null;
@@ -288,15 +281,15 @@ public class GameplayScreen extends OvertoneScreen
 
         // Return a rating based on how close it was to the target
         if(minDistance <= _targetRadius * 0.15f)
-            return Rating.Perfect;
+            return new Rating(Rating.RatingValue.Perfect, target);
         else if(minDistance <= _targetRadius * 0.55f && minDistance > _targetRadius * 0.15f)
-            return Rating.Great;
+            return new Rating(Rating.RatingValue.Great, target);
         else if(minDistance <= _targetRadius  && minDistance > _targetRadius * 0.55f)
-            return Rating.Ok;
+            return new Rating(Rating.RatingValue.Ok, target);
         else if(minDistance < _targetRadius * 2.0f  && minDistance > _targetRadius)
-            return Rating.Bad;
+            return new Rating(Rating.RatingValue.Bad, target);
         else
-            return Rating.Miss;
+            return new Rating(Rating.RatingValue.Miss, target);
     }
 
 

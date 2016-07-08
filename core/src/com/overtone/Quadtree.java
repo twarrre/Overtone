@@ -101,7 +101,7 @@ public class Quadtree
      * Updates every element in the quadtree
      * @param deltaTime The time since the last frame
      */
-    public boolean Update(float deltaTime)
+    public ArrayList<Vector2> Update(float deltaTime)
     {
         return Update(deltaTime, _root);
     }
@@ -218,38 +218,37 @@ public class Quadtree
      * @param deltaTime The time since the last frame
      * @param node The node we are currently updating
      */
-    private boolean Update(float deltaTime, Node node)
+    private ArrayList<Vector2> Update(float deltaTime, Node node)
     {
-        boolean noMissedNotes = true;
-
-        if (node == null)
-            return true;
-
         // If the node is not visible anymore, then remove it from the tree
         ArrayList<Note> toBeRemoved = new ArrayList();
+        ArrayList<Vector2> removed = new ArrayList();
+
+        if (node == null)
+            return removed;
 
         // Update all of the elements at this node
         for (Note n : node._objects)
         {
             n.Update(deltaTime);
             if(!n.IsVisible())
+            {
                 toBeRemoved.add(n);
+                removed.add(n.GetTarget());
+            }
         }
 
         // Update all nodes in the children nodes
-        if(!Update(deltaTime, node.topLeft)     && noMissedNotes) noMissedNotes = false;
-        if(!Update(deltaTime, node.topRight)    && noMissedNotes) noMissedNotes = false;
-        if(!Update(deltaTime, node.bottomLeft)  && noMissedNotes) noMissedNotes = false;
-        if(!Update(deltaTime, node.bottomRight) && noMissedNotes) noMissedNotes = false;
+        removed.addAll(Update(deltaTime, node.topLeft));
+        removed.addAll(Update(deltaTime, node.topRight));
+        removed.addAll(Update(deltaTime, node.bottomLeft));
+        removed.addAll(Update(deltaTime, node.bottomRight));
 
         // If there are elements to be removed, remove them now
         for(Note n : toBeRemoved)
             Remove(n, node);
 
-        if(!toBeRemoved.isEmpty() && noMissedNotes)
-            noMissedNotes = false;
-
-        return noMissedNotes;
+        return removed;
     }
 
     /**
