@@ -12,7 +12,6 @@ import java.util.ArrayList;
  */
 public class RatingRenderer
 {
-    private final SpriteBatch _spriteBatch;
     private final Texture[] _ratingTextures;
 
     /**
@@ -20,8 +19,6 @@ public class RatingRenderer
      */
     public RatingRenderer()
     {
-        _spriteBatch = new SpriteBatch();
-
         _ratingTextures    = new Texture[5];
         _ratingTextures[0] = new Texture(Gdx.files.internal("Textures\\Ratings\\Perfect.png"));
         _ratingTextures[1] = new Texture(Gdx.files.internal("Textures\\Ratings\\Great.png"));
@@ -33,16 +30,15 @@ public class RatingRenderer
     /**
      * Draws all of the notes on screen
      * @param ratings All of the on screen ratings to be rendered
+     * @param batch The sprite batch to draw to.
      */
-    public void Draw(ArrayList<Rating> ratings)
+    public void Draw(ArrayList<Rating> ratings, SpriteBatch batch)
     {
-        _spriteBatch.begin();
-
         for(Rating r : ratings)
         {
             if(r.IsVisible())
             {
-                _spriteBatch.draw(_ratingTextures[r.GetingRating().ordinal()],
+                batch.draw(_ratingTextures[r.GetingRating().ordinal()],
                         r.GetCenter().x - (_ratingTextures[r.GetingRating().ordinal()].getWidth() / 4.0f),
                         r.GetCenter().y - (_ratingTextures[r.GetingRating().ordinal()].getHeight() / 4.0f),
                         _ratingTextures[r.GetingRating().ordinal()].getWidth() / 2.0f,
@@ -50,7 +46,5 @@ public class RatingRenderer
                 );
             }
         }
-
-        _spriteBatch.end();
     }
 }

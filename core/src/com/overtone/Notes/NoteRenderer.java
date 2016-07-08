@@ -14,7 +14,6 @@ import java.util.ArrayList;
  */
 public class NoteRenderer
 {
-    private final SpriteBatch _spriteBatch;
     private final Texture[] _noteTextures;
 
     /**
@@ -22,8 +21,6 @@ public class NoteRenderer
      */
     public NoteRenderer()
     {
-        _spriteBatch = new SpriteBatch();
-
         _noteTextures = new Texture[3];
         _noteTextures[0] = new Texture(Gdx.files.internal("Textures\\Notes\\note.png"));
         _noteTextures[1] = new Texture(Gdx.files.internal("Textures\\Notes\\double_note.png"));
@@ -33,16 +30,15 @@ public class NoteRenderer
     /**
      * Draws all of the notes on screen
      * @param notes All of the notes on screen to be rendered
+     * @param batch The sprite batch to draw to.
      */
-    public void Draw(ArrayList<Note> notes)
+    public void Draw(ArrayList<Note> notes, SpriteBatch batch)
     {
-        _spriteBatch.begin();
-
         for(int i = 0; i < notes.size(); i++)
         {
             if(notes.get(i).IsVisible())
             {
-                _spriteBatch.draw(_noteTextures[notes.get(i).GetType().value],
+                batch.draw(_noteTextures[notes.get(i).GetType().value],
                         notes.get(i).GetPosition().x,
                         notes.get(i).GetPosition().y,
                         notes.get(i).GetScale().x,
@@ -50,7 +46,5 @@ public class NoteRenderer
                 );
             }
         }
-
-        _spriteBatch.end();
     }
 }

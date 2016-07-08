@@ -16,7 +16,6 @@ import com.overtone.Ratings.Rating;
 import com.overtone.Ratings.RatingRenderer;
 
 import java.util.ArrayList;
-import java.util.ListIterator;
 
 /**
  * Screen used during gameplay
@@ -57,6 +56,7 @@ public class GameplayScreen extends OvertoneScreen
     private final Texture _e;
     private final Texture _i;
     private final Texture _k;
+    private final Texture _pausedBackground;
 
     // Data Structures
     private final Quadtree          _onScreenNotes;
@@ -76,6 +76,9 @@ public class GameplayScreen extends OvertoneScreen
     private int         _combo;
     private int         _score;
     private float       _elapsedTime;
+    private boolean     _paused;
+    private boolean     _resumeDelay;
+    private float       _resume;
 
     /**
      * Constructor
@@ -97,14 +100,15 @@ public class GameplayScreen extends OvertoneScreen
         _glyphLayout = new GlyphLayout();
 
         // Load textures
-        _targetZone  = new Texture(Gdx.files.internal("Textures\\targetzone.png"));
-        _progressBar = new Texture(Gdx.files.internal("Textures\\progressbar.png"));
-        _progress    = new Texture(Gdx.files.internal("Textures\\background1.jpg"));
-        _arrow       = new Texture(Gdx.files.internal("Textures\\arrow.png"));
-        _e           = new Texture(Gdx.files.internal("Textures\\e.png"));
-        _d           = new Texture(Gdx.files.internal("Textures\\d.png"));
-        _i           = new Texture(Gdx.files.internal("Textures\\i.png"));
-        _k           = new Texture(Gdx.files.internal("Textures\\k.png"));
+        _targetZone       = new Texture(Gdx.files.internal("Textures\\targetzone.png"));
+        _progressBar      = new Texture(Gdx.files.internal("Textures\\progressbar.png"));
+        _progress         = new Texture(Gdx.files.internal("Textures\\background1.jpg"));
+        _arrow            = new Texture(Gdx.files.internal("Textures\\arrow.png"));
+        _e                = new Texture(Gdx.files.internal("Textures\\e.png"));
+        _d                = new Texture(Gdx.files.internal("Textures\\d.png"));
+        _i                = new Texture(Gdx.files.internal("Textures\\i.png"));
+        _k                = new Texture(Gdx.files.internal("Textures\\k.png"));
+        _pausedBackground = new Texture(Gdx.files.internal("Textures\\pause.png"));
 
         // Load sounds
         _noteHit = Gdx.audio.newSound(Gdx.files.internal("Sounds\\note.wav"));
@@ -115,6 +119,9 @@ public class GameplayScreen extends OvertoneScreen
         _elapsedTime  = 0;
         _combo        = 0;
         _score        = 0;
+        _paused       = false;
+        _resumeDelay  = false;
+        _resume       = 0;
 
         // Load notes
         _noteQueue = new Queue<Note>();
@@ -171,18 +178,68 @@ public class GameplayScreen extends OvertoneScreen
         }
 
         // Draw the combo and score
-        _glyphLayout.setText(_font,  "Combo: " + _combo + " Score: " + _score);
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.10f);
+        _glyphLayout.reset();
+        _font.getData().setScale(2);
+        _glyphLayout.setText(_font,  "Combo: " + _combo);
+        _font.draw(_batch, _glyphLayout, _screenWidth * 0.7f - (_glyphLayout.width / 2.0f), _screenHeight * 0.05f);
+
+        _glyphLayout.reset();
+        _font.getData().setScale(2);
+        _glyphLayout.setText(_font, "Score: " + _score);
+        _font.draw(_batch, _glyphLayout, _screenWidth * 0.3f - (_glyphLayout.width / 2.0f), _screenHeight * 0.05f);
+
+        _noteRenderer.Draw(_onScreenNotes.GetAll(), _batch);
+        _ratingRenderer.Draw(_onScreenRatings, _batch);
+
+        if(_paused && !_resumeDelay)
+        {
+            _batch.draw(_pausedBackground, 0, 0, _screenWidth, _screenHeight);
+            _glyphLayout.reset();
+            _font.getData().setScale(4);
+            _glyphLayout.setText(_font,  "Paused");
+            _font.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.85f);
+        }
+
+        if(_resumeDelay)
+        {
+            _batch.draw(_pausedBackground, 0, 0, _screenWidth, _screenHeight);
+            _glyphLayout.reset();
+            _font.getData().setScale(4);
+            _glyphLayout.setText(_font,  "Game will resume in");
+            _font.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.85f);
+
+            _glyphLayout.reset();
+            _font.getData().setScale(4);
+            _glyphLayout.setText(_font, (3 - (int)_resume) + "");
+            _font.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.5f);
+        }
 
         _batch.end();
-
-        _noteRenderer.Draw(_onScreenNotes.GetAll());
-        _ratingRenderer.Draw(_onScreenRatings);
     }
 
     public void update(float deltaTime)
     {
         super.update(deltaTime);
+
+        // Update the input
+        _input.Update();
+
+        if(_paused)
+        {
+            CheckInputPaused();
+
+            if(_resumeDelay)
+            {
+                _resume += deltaTime;
+                if(_resume > 3.0f)
+                {
+                    _paused      = false;
+                    _resumeDelay = false;
+                    _resume      = 0;
+                }
+            }
+            return;
+        }
 
         if(_noteQueue.size > 0)
         {
@@ -218,17 +275,15 @@ public class GameplayScreen extends OvertoneScreen
         }
         _onScreenRatings.removeAll(done);
 
-        // Update the input
-        _input.Update();
         CheckInput();
     }
 
     /**
-     * Handles the input
+     * Handles the input when not paused
      */
     private void CheckInput()
     {
-        for(int i = 0; i < InputManager.KeyBinding.size; i++)
+        for(int i = 0; i < TargetZone.size; i++)
         {
             if(_input.ActionOccurred(InputManager.KeyBinding.values()[i], InputManager.ActionType.Pressed))
             {
@@ -247,6 +302,19 @@ public class GameplayScreen extends OvertoneScreen
                 if(rating.GetingRating() != Rating.RatingValue.None)
                     _onScreenRatings.add(rating);
             }
+        }
+
+        if(_input.ActionOccurred(InputManager.KeyBinding.Pause, InputManager.ActionType.Pressed))
+        {
+            _paused = !_paused;
+        }
+    }
+
+    private void CheckInputPaused()
+    {
+        if(_input.ActionOccurred(InputManager.KeyBinding.Pause, InputManager.ActionType.Pressed))
+        {
+            _resumeDelay = true;
         }
     }
 

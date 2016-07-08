@@ -34,7 +34,8 @@ public class InputManager
         TopLeft     (Input.Keys.E),
         TopRight    (Input.Keys.I),
         BottomLeft  (Input.Keys.D),
-        BottomRight (Input.Keys.K);
+        BottomRight (Input.Keys.K),
+        Pause       (Input.Keys.ESCAPE);
 
         KeyBinding(int key) { this.keyCode = key; }
 
