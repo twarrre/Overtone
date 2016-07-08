@@ -25,7 +25,7 @@ public class RatingRenderer
         _ratingTextures    = new Texture[5];
         _ratingTextures[0] = new Texture(Gdx.files.internal("Textures\\Ratings\\Perfect.png"));
         _ratingTextures[1] = new Texture(Gdx.files.internal("Textures\\Ratings\\Great.png"));
-        _ratingTextures[2] = new Texture(Gdx.files.internal("Textures\\Ratings\\ok.png"));
+        _ratingTextures[2] = new Texture(Gdx.files.internal("Textures\\Ratings\\okay.png"));
         _ratingTextures[3] = new Texture(Gdx.files.internal("Textures\\Ratings\\bad.png"));
         _ratingTextures[4] = new Texture(Gdx.files.internal("Textures\\Ratings\\miss.png"));
     }
@@ -43,10 +43,10 @@ public class RatingRenderer
             if(r.IsVisible())
             {
                 _spriteBatch.draw(_ratingTextures[r.GetingRating().ordinal()],
-                        r.GetCenter().x - (_ratingTextures[r.GetingRating().ordinal()].getWidth() / 6.0f),
-                        r.GetCenter().y - (_ratingTextures[r.GetingRating().ordinal()].getHeight() / 6.0f),
-                        _ratingTextures[r.GetingRating().ordinal()].getWidth() / 3.0f,
-                        _ratingTextures[r.GetingRating().ordinal()].getHeight() / 3.0f
+                        r.GetCenter().x - (_ratingTextures[r.GetingRating().ordinal()].getWidth() / 4.0f),
+                        r.GetCenter().y - (_ratingTextures[r.GetingRating().ordinal()].getHeight() / 4.0f),
+                        _ratingTextures[r.GetingRating().ordinal()].getWidth() / 2.0f,
+                        _ratingTextures[r.GetingRating().ordinal()].getHeight() / 2.0f
                 );
             }
         }
