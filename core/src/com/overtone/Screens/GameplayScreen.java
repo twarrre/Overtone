@@ -45,7 +45,7 @@ public class GameplayScreen extends OvertoneScreen
     // Objects
     private final NoteRenderer    _noteRenderer;
     private final InputManager    _input;
-    private final RatingRenderer _ratingRenderer;
+    private final RatingRenderer  _ratingRenderer;
 
     // Textures
     private final Texture _targetZone;
@@ -62,10 +62,6 @@ public class GameplayScreen extends OvertoneScreen
     private final Quadtree          _onScreenNotes;
     private final Queue<Note>       _noteQueue;
     private final ArrayList<Rating> _onScreenRatings;
-
-    // Font
-    private final BitmapFont  _font;
-    private final GlyphLayout _glyphLayout;
 
     // Sound
     private final Sound _noteHit;
@@ -94,10 +90,6 @@ public class GameplayScreen extends OvertoneScreen
         _input          = new InputManager();
         _noteRenderer   = new NoteRenderer();
         _ratingRenderer = new RatingRenderer();
-
-        // Initialize font
-        _font        = new BitmapFont();
-        _glyphLayout = new GlyphLayout();
 
         // Load textures
         _targetZone       = new Texture(Gdx.files.internal("Textures\\targetzone.png"));

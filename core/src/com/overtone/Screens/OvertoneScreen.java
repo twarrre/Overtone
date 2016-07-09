@@ -1,6 +1,8 @@
 package com.overtone.Screens;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /**
@@ -12,9 +14,12 @@ public class OvertoneScreen implements OvertoneScreenInterface
 {
     // The background image for the screen
     protected final Texture _backgroundImage;
-    protected final  SpriteBatch _batch;
+    protected final SpriteBatch _batch;
+    protected final BitmapFont _font;
+    protected final GlyphLayout _glyphLayout;
     protected float _screenWidth;
     protected float _screenHeight;
+
 
     /**
      * Constructor
@@ -29,6 +34,9 @@ public class OvertoneScreen implements OvertoneScreenInterface
 
         _batch           = new SpriteBatch();
         _backgroundImage = new Texture(backgroundImagePath);
+
+        _font        = new BitmapFont();
+        _glyphLayout = new GlyphLayout();
     }
 
     public void show ()
