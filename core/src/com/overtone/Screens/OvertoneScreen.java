@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 public class OvertoneScreen implements OvertoneScreenInterface
 {
     // The background image for the screen
+    protected final String      _backgroundImagePath;
     protected final Texture     _backgroundImage;
     protected final SpriteBatch _batch;
     protected final BitmapFont  _font;
@@ -35,8 +36,9 @@ public class OvertoneScreen implements OvertoneScreenInterface
      */
     public OvertoneScreen(String backgroundImagePath, float screenWidth, float screenHeight)
     {
-        _screenWidth  = screenWidth;
-        _screenHeight = screenHeight;
+        _screenWidth         = screenWidth;
+        _screenHeight        = screenHeight;
+        _backgroundImagePath = backgroundImagePath;
 
         _batch           = new SpriteBatch();
         _backgroundImage = new Texture(backgroundImagePath);
@@ -89,6 +91,7 @@ public class OvertoneScreen implements OvertoneScreenInterface
 
     public void update(float deltaTime)
     {
+
     }
 
     public void resize (int width, int height)

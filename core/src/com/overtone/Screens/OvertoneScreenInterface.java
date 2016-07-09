@@ -15,13 +15,13 @@ public interface OvertoneScreenInterface extends Screen
     void show ();
 
     /**
-     * Renders the graphics obejcts
+     * Renders the graphics objects
      * @param deltaTime the time since the last frame
      */
     void render (float deltaTime);
 
     /**
-     * Used to update game obejcts, logic, etc
+     * Used to update game objects, logic, etc
      * @param deltaTime The time since the last frame
      */
     void update (float deltaTime);

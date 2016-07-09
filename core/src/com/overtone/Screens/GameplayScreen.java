@@ -132,6 +132,7 @@ public class GameplayScreen extends OvertoneScreen
         final TextButton retryButton = CreateTextButton("RETRY", "default", _screenWidth * 0.5f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.25f, _screenHeight * 0.275f), _stage);
         retryButton.addListener(new ChangeListener() {
             public void changed (ChangeEvent event, Actor actor) {
+                Overtone.ResetScreen(Overtone.Screens.Gameplay);
                 Overtone.SetScreen(Overtone.Screens.Gameplay);
             }
         });
@@ -140,6 +141,7 @@ public class GameplayScreen extends OvertoneScreen
         quitButton.addListener(new ChangeListener() {
             public void changed (ChangeEvent event, Actor actor) {
                 Overtone.SetScreen(Overtone.Screens.MainMenu);
+                Overtone.ResetScreen(Overtone.Screens.Gameplay);
             }
         });
 

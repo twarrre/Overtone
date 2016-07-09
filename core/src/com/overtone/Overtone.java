@@ -67,4 +67,36 @@ public class Overtone extends ApplicationAdapter
 		_currentScreen = _screens.get(s.ordinal());
 		_currentScreen.show();
 	}
+
+	public static void ResetScreen(Screens s)
+	{
+		if(s == Screens.MainMenu)
+		{
+			_screens.set(s.ordinal(), new MainMenuScreen("Textures\\background1.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		}
+		else if (s == Screens.DifficultySelect)
+		{
+			_screens.set(s.ordinal(), new DifficultySelectScreen("Textures\\background2.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		}
+		else if (s == Screens.SongComplete)
+		{
+			_screens.set(s.ordinal(), new SongCompleteScreen("Textures\\background3.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		}
+		else if (s == Screens.Gameplay)
+		{
+			_screens.set(s.ordinal(), new GameplayScreen("Textures\\background2.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		}
+		else if (s == Screens.Options)
+		{
+			_screens.set(s.ordinal(), new OptionsScreen("Textures\\background2.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		}
+		else if (s == Screens.Help)
+		{
+			_screens.set(s.ordinal(), new OptionsScreen("Textures\\background2.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		}
+		else if (s == Screens.HighScore)
+		{
+			_screens.set(s.ordinal(), new HighScoreScreen("Textures\\background2.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		}
+	}
 }
