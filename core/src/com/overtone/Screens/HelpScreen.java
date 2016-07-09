@@ -16,9 +16,9 @@ public class HelpScreen extends OvertoneScreen
 {
     private final Stage _stage;
 
-    public HelpScreen(String backgroundImagePath, int screenWidth, int screenHeight)
+    public HelpScreen(int screenWidth, int screenHeight)
     {
-        super(backgroundImagePath, screenWidth, screenHeight);
+        super(screenWidth, screenHeight);
 
         _stage = new Stage();
 

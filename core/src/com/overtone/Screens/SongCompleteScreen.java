@@ -11,9 +11,9 @@ public class SongCompleteScreen extends OvertoneScreen
 {
     private final Stage _stage;
 
-    public SongCompleteScreen(String backgroundImagePath, int screenWidth, int screenHeight)
+    public SongCompleteScreen(int screenWidth, int screenHeight)
     {
-        super(backgroundImagePath, screenWidth, screenHeight);
+        super(screenWidth, screenHeight);
 
         _stage = new Stage();
     }

@@ -16,9 +16,9 @@ public class HighScoreScreen extends OvertoneScreen
 {
     private final Stage _stage;
 
-    public HighScoreScreen(String backgroundImagePath, int screenWidth, int screenHeight)
+    public HighScoreScreen(int screenWidth, int screenHeight)
     {
-        super(backgroundImagePath, screenWidth, screenHeight);
+        super(screenWidth, screenHeight);
 
         _stage = new Stage();
 

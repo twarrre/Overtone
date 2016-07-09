@@ -17,7 +17,8 @@ public class Overtone extends ApplicationAdapter
 		Gameplay,
 		Options,
 		Help,
-		HighScore;
+		HighScore,
+		Splash;
 	}
 
 	// Stores the current screen that is on display
@@ -31,14 +32,15 @@ public class Overtone extends ApplicationAdapter
 	{
 		// Create all of the new screens
 		_screens = new Array<OvertoneScreen>();
-		_screens.add(new MainMenuScreen("Textures\\background1.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-		_screens.add(new DifficultySelectScreen("Textures\\background2.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-		_screens.add(new SongCompleteScreen("Textures\\background3.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-		_screens.add(new GameplayScreen("Textures\\background2.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-		_screens.add(new OptionsScreen("Textures\\background2.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-		_screens.add(new HelpScreen("Textures\\background3.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-		_screens.add(new HighScoreScreen("Textures\\background2.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-		_currentScreen = _screens.get(0);
+		_screens.add(new MainMenuScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		_screens.add(new DifficultySelectScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		_screens.add(new SongCompleteScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		_screens.add(new GameplayScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		_screens.add(new OptionsScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		_screens.add(new HelpScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		_screens.add(new HighScoreScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		_screens.add(new SplashScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		_currentScreen = _screens.get(7);
 
 		// Show the current one
 		_currentScreen.show();
@@ -72,31 +74,35 @@ public class Overtone extends ApplicationAdapter
 	{
 		if(s == Screens.MainMenu)
 		{
-			_screens.set(s.ordinal(), new MainMenuScreen("Textures\\background1.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+			_screens.set(s.ordinal(), new MainMenuScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		}
 		else if (s == Screens.DifficultySelect)
 		{
-			_screens.set(s.ordinal(), new DifficultySelectScreen("Textures\\background2.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+			_screens.set(s.ordinal(), new DifficultySelectScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		}
 		else if (s == Screens.SongComplete)
 		{
-			_screens.set(s.ordinal(), new SongCompleteScreen("Textures\\background3.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+			_screens.set(s.ordinal(), new SongCompleteScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		}
 		else if (s == Screens.Gameplay)
 		{
-			_screens.set(s.ordinal(), new GameplayScreen("Textures\\background2.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+			_screens.set(s.ordinal(), new GameplayScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		}
 		else if (s == Screens.Options)
 		{
-			_screens.set(s.ordinal(), new OptionsScreen("Textures\\background2.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+			_screens.set(s.ordinal(), new OptionsScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		}
 		else if (s == Screens.Help)
 		{
-			_screens.set(s.ordinal(), new OptionsScreen("Textures\\background2.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+			_screens.set(s.ordinal(), new OptionsScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		}
 		else if (s == Screens.HighScore)
 		{
-			_screens.set(s.ordinal(), new HighScoreScreen("Textures\\background2.jpg", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+			_screens.set(s.ordinal(), new HighScoreScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		}
+		else if (s == Screens.Splash)
+		{
+			_screens.set(s.ordinal(), new SplashScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		}
 	}
 }

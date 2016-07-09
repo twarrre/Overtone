@@ -84,13 +84,12 @@ public class GameplayScreen extends OvertoneScreen
 
     /**
      * Constructor
-     * @param backgroundImagePath The path for the background image
      * @param screenWidth The width of the screen
      * @param screenHeight The height of the screen
      */
-    public GameplayScreen(String backgroundImagePath, int screenWidth, int screenHeight)
+    public GameplayScreen(int screenWidth, int screenHeight)
     {
-        super(backgroundImagePath, screenWidth, screenHeight);
+        super(screenWidth, screenHeight);
 
         // Initialize objects
         _input          = new InputManager();
@@ -101,7 +100,7 @@ public class GameplayScreen extends OvertoneScreen
         // Load textures
         _targetZone       = new Texture(Gdx.files.internal("Textures\\targetzone.png"));
         _progressBar      = new Texture(Gdx.files.internal("Textures\\progressbar.png"));
-        _progress         = new Texture(Gdx.files.internal("Textures\\background1.jpg"));
+        _progress         = new Texture(Gdx.files.internal("Textures\\red.png"));
         _arrow            = new Texture(Gdx.files.internal("Textures\\arrow.png"));
         _e                = new Texture(Gdx.files.internal("Textures\\e.png"));
         _d                = new Texture(Gdx.files.internal("Textures\\d.png"));

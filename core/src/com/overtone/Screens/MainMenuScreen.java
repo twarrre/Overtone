@@ -16,9 +16,9 @@ public class MainMenuScreen extends OvertoneScreen
 {
     private final Stage _stage;
 
-    public MainMenuScreen(String backgroundImagePath, int screenWidth, int screenHeight)
+    public MainMenuScreen(int screenWidth, int screenHeight)
     {
-        super(backgroundImagePath, screenWidth, screenHeight);
+        super(screenWidth, screenHeight);
 
         _stage = new Stage();
 

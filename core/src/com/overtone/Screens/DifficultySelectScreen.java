@@ -16,9 +16,9 @@ public class DifficultySelectScreen extends OvertoneScreen
 {
     private final Stage _stage;
 
-    public DifficultySelectScreen(String backgroundImagePath, int screenWidth, int screenHeight)
+    public DifficultySelectScreen(int screenWidth, int screenHeight)
     {
-        super(backgroundImagePath, screenWidth, screenHeight);
+        super(screenWidth, screenHeight);
 
         _stage = new Stage();
 
