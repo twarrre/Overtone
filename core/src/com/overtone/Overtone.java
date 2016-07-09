@@ -8,11 +8,23 @@ import com.overtone.Screens.*;
 
 public class Overtone extends ApplicationAdapter
 {
+
+	public enum Screens
+	{
+		MainMenu,
+		DifficultySelect,
+		SongComplete,
+		Gameplay,
+		Options,
+		Help,
+		HighScore;
+	}
+
 	// Stores the current screen that is on display
-	public OvertoneScreen _currentScreen;
+	public static OvertoneScreen _currentScreen;
 
 	// Stores an array of all of the screens in the game
-	private Array<OvertoneScreen> _screens;
+	private static Array<OvertoneScreen> _screens;
 
 	@Override
 	public void create ()
@@ -47,5 +59,13 @@ public class Overtone extends ApplicationAdapter
 	public void Update(float deltaTime)
 	{
 		_currentScreen.update(deltaTime);
+	}
+
+	public static void SetScreen(Screens s)
+	{
+		_currentScreen.hide();
+		Gdx.input.setInputProcessor(null);
+		_currentScreen = _screens.get(s.ordinal());
+		_currentScreen.show();
 	}
 }

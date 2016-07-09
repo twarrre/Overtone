@@ -352,6 +352,15 @@ public class GameplayScreen extends OvertoneScreen
             return new Rating(Rating.RatingValue.Miss, target);
     }
 
+    public void resize(int width, int height)
+    {
+        super.resize(width, height);
+    }
+
+    public void show()
+    {
+        Gdx.input.setInputProcessor(_stage);
+    }
 
     public void dispose ()
     {

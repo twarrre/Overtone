@@ -1,17 +1,11 @@
 package com.overtone.Screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.overtone.Overtone;
 
 /**
  * Screen used for the main menu
@@ -19,78 +13,35 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
  */
 public class MainMenuScreen extends OvertoneScreen
 {
-    private final Skin skin;
-    private final Stage stage;
-
     public MainMenuScreen(String backgroundImagePath, int screenWidth, int screenHeight)
     {
         super(backgroundImagePath, screenWidth, screenHeight);
 
-        stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
-
-        skin = new Skin();
-        Pixmap pixmap = new Pixmap(100, 100, Format.RGBA8888);
-        pixmap.setColor(Color.WHITE);
-        pixmap.fill();
-
-        _font.getData().scale(1);
-        skin.add("default", _font);
-        skin.add("white", new Texture(pixmap));
-
-        TextButtonStyle textButtonStyle = new TextButtonStyle();
-        textButtonStyle.up      = skin.newDrawable("white", new Color(0.157f, 0.325f, 0.424f, 0.75f));
-        textButtonStyle.down    = skin.newDrawable("white", new Color(0.012f, 0.137f, 0.212f, 0.75f));
-        textButtonStyle.over    = skin.newDrawable("white", new Color(0.067f, 0.224f, 0.318f, 0.75f));
-
-        textButtonStyle.font = skin.getFont("default");
-        skin.add("default", textButtonStyle);
-
-        final TextButton playButton = new TextButton("PLAY", textButtonStyle);
-        playButton.setWidth(_screenWidth * 0.85f);
-        playButton.setHeight(_screenWidth * 0.08f);
-        playButton.setPosition(_screenWidth * 0.5f - (playButton.getWidth() / 2.0f), _screenHeight * 0.25f - (playButton.getHeight() / 2.0f));
-        stage.addActor(playButton);
-
+        final TextButton playButton = CreateTextButton("PLAY", "default", _screenWidth * 0.85f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.21f));
         playButton.addListener(new ChangeListener() {
             public void changed (ChangeEvent event, Actor actor) {
-                System.out.println("Play Clicked");
+                Overtone.SetScreen(Overtone.Screens.DifficultySelect);
             }
         });
 
-        final TextButton highScoreButton = new TextButton("HIGH SCORES", textButtonStyle);
-        highScoreButton.setWidth(_screenWidth * 0.25f);
-        highScoreButton.setHeight(_screenWidth * 0.05f);
-        highScoreButton.setPosition(_screenWidth * 0.075f, _screenHeight * 0.1f - (highScoreButton.getHeight() / 2.0f));
-        stage.addActor(highScoreButton);
-
+        final TextButton highScoreButton = CreateTextButton("HIGH SCORES", "default", _screenWidth * 0.25f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.075f));
         highScoreButton.addListener(new ChangeListener() {
             public void changed (ChangeEvent event, Actor actor) {
-                System.out.println("High Score Clicked");
+                Overtone.SetScreen(Overtone.Screens.HighScore);
             }
         });
 
-        final TextButton optionsButton = new TextButton("OPTIONS", textButtonStyle);
-        optionsButton.setWidth(_screenWidth * 0.25f);
-        optionsButton.setHeight(_screenWidth * 0.05f);
-        optionsButton.setPosition(_screenWidth * 0.5f - (optionsButton.getWidth() / 2.0f), _screenHeight * 0.1f - (optionsButton.getHeight() / 2.0f));
-        stage.addActor(optionsButton);
-
+        final TextButton optionsButton = CreateTextButton("OPTIONS", "default", _screenWidth * 0.25f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.375f, _screenHeight * 0.075f));
         optionsButton.addListener(new ChangeListener() {
             public void changed (ChangeEvent event, Actor actor) {
-                System.out.println("Options Clicked");
+                Overtone.SetScreen(Overtone.Screens.Options);
             }
         });
 
-        final TextButton helpButton = new TextButton("HELP", textButtonStyle);
-        helpButton.setWidth(_screenWidth * 0.25f);
-        helpButton.setHeight(_screenWidth * 0.05f);
-        helpButton.setPosition(_screenWidth * 0.925f - helpButton.getWidth(), _screenHeight * 0.1f - (helpButton.getHeight() / 2.0f));
-        stage.addActor(helpButton);
-
+        final TextButton helpButton = CreateTextButton("HELP", "default", _screenWidth * 0.25f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.675f, _screenHeight * 0.075f));
         helpButton.addListener(new ChangeListener() {
             public void changed (ChangeEvent event, Actor actor) {
-                System.out.println("Help Clicked");
+                Overtone.SetScreen(Overtone.Screens.Help);
             }
         });
     }
@@ -114,25 +65,25 @@ public class MainMenuScreen extends OvertoneScreen
         _batch.end();
 
         _font.getData().scale(1);
-        stage.draw();
     }
 
     public void update(float deltaTime)
     {
         super.update(deltaTime);
-
-        stage.act(deltaTime);
     }
 
     public void resize(int width, int height)
     {
-        stage.getViewport().update(width, height, true);
+        super.resize(width, height);
+    }
+
+    public void show()
+    {
+        Gdx.input.setInputProcessor(_stage);
     }
 
     public void dispose ()
     {
         super.dispose();
-        skin.dispose();
-        stage.dispose();
     }
 }
