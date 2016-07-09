@@ -64,7 +64,6 @@ public class Overtone extends ApplicationAdapter
 	public static void SetScreen(Screens s)
 	{
 		_currentScreen.hide();
-		Gdx.input.setInputProcessor(null);
 		_currentScreen = _screens.get(s.ordinal());
 		_currentScreen.show();
 	}

@@ -13,6 +13,8 @@ public class DesktopLauncher {
 		config.height = 720;
 		config.vSyncEnabled = true;
 		config.foregroundFPS = 60;
+		config.resizable = false;
+		config.forceExit = false;
 
 		new LwjglApplication(new Overtone(), config);
 	}

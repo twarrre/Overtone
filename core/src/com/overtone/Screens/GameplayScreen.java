@@ -5,10 +5,15 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Queue;
 import com.overtone.InputManager;
 import com.overtone.Notes.Note;
 import com.overtone.Notes.NoteRenderer;
+import com.overtone.Overtone;
 import com.overtone.Quadtree;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -46,6 +51,7 @@ public class GameplayScreen extends OvertoneScreen
     private final NoteRenderer    _noteRenderer;
     private final InputManager    _input;
     private final RatingRenderer  _ratingRenderer;
+    private final Stage           _stage;
 
     // Textures
     private final Texture _targetZone;
@@ -90,6 +96,7 @@ public class GameplayScreen extends OvertoneScreen
         _input          = new InputManager();
         _noteRenderer   = new NoteRenderer();
         _ratingRenderer = new RatingRenderer();
+        _stage          = new Stage();
 
         // Load textures
         _targetZone       = new Texture(Gdx.files.internal("Textures\\targetzone.png"));
@@ -114,6 +121,27 @@ public class GameplayScreen extends OvertoneScreen
         _paused       = false;
         _resumeDelay  = false;
         _resume       = 0;
+
+        final TextButton resumeButton = CreateTextButton("RESUME", "default", _screenWidth * 0.5f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.25f, _screenHeight * 0.475f), _stage);
+        resumeButton.addListener(new ChangeListener() {
+            public void changed (ChangeEvent event, Actor actor) {
+                _resumeDelay = true;
+            }
+        });
+
+        final TextButton retryButton = CreateTextButton("RETRY", "default", _screenWidth * 0.5f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.25f, _screenHeight * 0.275f), _stage);
+        retryButton.addListener(new ChangeListener() {
+            public void changed (ChangeEvent event, Actor actor) {
+                Overtone.SetScreen(Overtone.Screens.Gameplay);
+            }
+        });
+
+        final TextButton quitButton = CreateTextButton("MAIN MENU", "default", _screenWidth * 0.5f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.25f, _screenHeight * 0.075f), _stage);
+        quitButton.addListener(new ChangeListener() {
+            public void changed (ChangeEvent event, Actor actor) {
+                Overtone.SetScreen(Overtone.Screens.MainMenu);
+            }
+        });
 
         // Load notes
         _noteQueue = new Queue<Note>();
@@ -207,6 +235,14 @@ public class GameplayScreen extends OvertoneScreen
         }
 
         _batch.end();
+
+        if(_paused && !_resumeDelay)
+        {
+            _font.getData().setScale(1);
+            _font.getData().scale(1);
+            _stage.draw();
+        }
+
     }
 
     public void update(float deltaTime)
@@ -230,6 +266,8 @@ public class GameplayScreen extends OvertoneScreen
                     _resume      = 0;
                 }
             }
+
+            _stage.act(deltaTime);
             return;
         }
 
@@ -355,12 +393,15 @@ public class GameplayScreen extends OvertoneScreen
     public void resize(int width, int height)
     {
         super.resize(width, height);
+        _stage.getViewport().update(width, height, true);
     }
 
     public void show()
     {
         Gdx.input.setInputProcessor(_stage);
     }
+
+    public void hide() {Gdx.input.setInputProcessor(null);}
 
     public void dispose ()
     {
@@ -373,5 +414,6 @@ public class GameplayScreen extends OvertoneScreen
         _e.dispose();
         _i.dispose();
         _k.dispose();
+        _stage.dispose();
     }
 }

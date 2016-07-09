@@ -3,6 +3,7 @@ package com.overtone.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.overtone.Overtone;
@@ -13,35 +14,46 @@ import com.overtone.Overtone;
  */
 public class MainMenuScreen extends OvertoneScreen
 {
+    private final Stage _stage;
+
     public MainMenuScreen(String backgroundImagePath, int screenWidth, int screenHeight)
     {
         super(backgroundImagePath, screenWidth, screenHeight);
 
-        final TextButton playButton = CreateTextButton("PLAY", "default", _screenWidth * 0.85f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.21f));
+        _stage = new Stage();
+
+        final TextButton playButton = CreateTextButton("PLAY", "default", _screenWidth * 0.85f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.21f), _stage);
         playButton.addListener(new ChangeListener() {
             public void changed (ChangeEvent event, Actor actor) {
                 Overtone.SetScreen(Overtone.Screens.DifficultySelect);
             }
         });
 
-        final TextButton highScoreButton = CreateTextButton("HIGH SCORES", "default", _screenWidth * 0.25f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.075f));
+        final TextButton highScoreButton = CreateTextButton("HIGH SCORES", "default", _screenWidth * 0.18f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.075f), _stage);
         highScoreButton.addListener(new ChangeListener() {
             public void changed (ChangeEvent event, Actor actor) {
                 Overtone.SetScreen(Overtone.Screens.HighScore);
             }
         });
 
-        final TextButton optionsButton = CreateTextButton("OPTIONS", "default", _screenWidth * 0.25f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.375f, _screenHeight * 0.075f));
+        final TextButton optionsButton = CreateTextButton("OPTIONS", "default", _screenWidth * 0.18f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.2983f, _screenHeight * 0.075f), _stage);
         optionsButton.addListener(new ChangeListener() {
             public void changed (ChangeEvent event, Actor actor) {
                 Overtone.SetScreen(Overtone.Screens.Options);
             }
         });
 
-        final TextButton helpButton = CreateTextButton("HELP", "default", _screenWidth * 0.25f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.675f, _screenHeight * 0.075f));
+        final TextButton helpButton = CreateTextButton("HELP", "default", _screenWidth * 0.18f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.5217f, _screenHeight * 0.075f), _stage);
         helpButton.addListener(new ChangeListener() {
             public void changed (ChangeEvent event, Actor actor) {
                 Overtone.SetScreen(Overtone.Screens.Help);
+            }
+        });
+
+        final TextButton quitButton = CreateTextButton("QUIT", "default", _screenWidth * 0.18f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.745f, _screenHeight * 0.075f), _stage);
+        quitButton.addListener(new ChangeListener() {
+            public void changed (ChangeEvent event, Actor actor) {
+                Gdx.app.exit();
             }
         });
     }
@@ -65,16 +77,20 @@ public class MainMenuScreen extends OvertoneScreen
         _batch.end();
 
         _font.getData().scale(1);
+
+        _stage.draw();
     }
 
     public void update(float deltaTime)
     {
         super.update(deltaTime);
+        _stage.act(deltaTime);
     }
 
     public void resize(int width, int height)
     {
         super.resize(width, height);
+        _stage.getViewport().update(width, height, true);
     }
 
     public void show()
@@ -82,8 +98,11 @@ public class MainMenuScreen extends OvertoneScreen
         Gdx.input.setInputProcessor(_stage);
     }
 
+    public void hide() {Gdx.input.setInputProcessor(null);}
+
     public void dispose ()
     {
         super.dispose();
+        _stage.dispose();
     }
 }

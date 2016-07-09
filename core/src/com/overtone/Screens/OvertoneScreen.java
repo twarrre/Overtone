@@ -24,10 +24,8 @@ public class OvertoneScreen implements OvertoneScreenInterface
     protected final BitmapFont  _font;
     protected final GlyphLayout _glyphLayout;
     protected final Skin        _skin;
-    protected final Stage       _stage;
     protected float             _screenWidth;
     protected float             _screenHeight;
-
 
     /**
      * Constructor
@@ -46,7 +44,6 @@ public class OvertoneScreen implements OvertoneScreenInterface
         _font        = new BitmapFont();
         _glyphLayout = new GlyphLayout();
 
-        _stage = new Stage();
         _skin  = new Skin();
 
         Pixmap pixmap = new Pixmap(100, 100, Pixmap.Format.RGBA8888);
@@ -66,13 +63,13 @@ public class OvertoneScreen implements OvertoneScreenInterface
         _skin.add("default", textButtonStyle);
     }
 
-    public TextButton CreateTextButton(String label, String style, float width, float height, Vector2 pos)
+    public TextButton CreateTextButton(String label, String style, float width, float height, Vector2 pos, Stage stage)
     {
         final TextButton button = new TextButton(label, _skin.get(style, TextButton.TextButtonStyle.class));
         button.setWidth(width);
         button.setHeight(height);
         button.setPosition(pos.x,pos.y);
-        _stage.addActor(button);
+        stage.addActor(button);
 
         return button;
     }
@@ -88,21 +85,16 @@ public class OvertoneScreen implements OvertoneScreenInterface
         _batch.begin();
         _batch.draw(_backgroundImage, 0, 0, _screenWidth, _screenHeight);
         _batch.end();
-
-        _stage.draw();
     }
 
     public void update(float deltaTime)
     {
-        _stage.act(deltaTime);
     }
 
     public void resize (int width, int height)
     {
         _screenWidth = width;
         _screenHeight = height;
-
-        _stage.getViewport().update(width, height, true);
     }
 
     public void pause ()
@@ -126,7 +118,6 @@ public class OvertoneScreen implements OvertoneScreenInterface
         _backgroundImage.dispose();
         _batch.dispose();
         _skin.dispose();
-        _stage.dispose();
         _font.dispose();
     }
 }
