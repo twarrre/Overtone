@@ -11,10 +11,11 @@ import com.overtone.Overtone;
  */
 public class SplashScreen extends OvertoneScreen
 {
-    private static final float SPLASH_TIME = 3000;
+    private static final float SPLASH_TIME = 3;
     private float _startTime;
     private final Texture _splash;
     private final InputManager _input;
+    private float _elapsedTime;
 
     public SplashScreen(int screenWidth, int screenHeight)
     {
@@ -22,6 +23,7 @@ public class SplashScreen extends OvertoneScreen
         _splash = new Texture("Textures//splash.jpg");
 
         _input = new InputManager();
+        _elapsedTime = 0;
     }
 
     public void render (float deltaTime)
@@ -36,8 +38,9 @@ public class SplashScreen extends OvertoneScreen
     {
         super.update(deltaTime);
         _input.Update();
+        _elapsedTime += deltaTime;
 
-        if (TimeUtils.millis() > (_startTime + SPLASH_TIME))
+        if (_elapsedTime >= SPLASH_TIME)
             Overtone.SetScreen(Overtone.Screens.MainMenu);
 
         if(_input.ActionOccurred(InputManager.KeyBinding.Enter, InputManager.ActionType.Pressed))

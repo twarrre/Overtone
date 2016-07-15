@@ -73,14 +73,15 @@ public class GameplayScreen extends OvertoneScreen
     private final Sound _noteHit;
 
     // Variables
-    private final float _totalTime;
-    private final float _targetRadius;
-    private int         _combo;
-    private int         _score;
-    private float       _elapsedTime;
-    private boolean     _paused;
-    private boolean     _resumeDelay;
-    private float       _resume;
+    private final float               _totalTime;
+    private final float               _targetRadius;
+    private int                       _combo;
+    private int                       _score;
+    private float                     _elapsedTime;
+    private boolean                   _paused;
+    private boolean                   _resumeDelay;
+    private float                     _resume;
+    private Note.DifficultyMultiplier _difficulty;
 
     /**
      * Constructor
@@ -120,6 +121,7 @@ public class GameplayScreen extends OvertoneScreen
         _paused       = false;
         _resumeDelay  = false;
         _resume       = 0;
+        _difficulty   = Note.DifficultyMultiplier.easy;
 
         final TextButton resumeButton = CreateTextButton("RESUME", "default", _screenWidth * 0.5f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.25f, _screenHeight * 0.475f), _stage);
         resumeButton.addListener(new ChangeListener() {
@@ -145,20 +147,7 @@ public class GameplayScreen extends OvertoneScreen
         });
 
         // Load notes
-        _noteQueue = new Queue<Note>();
-        for(int i = 0; i < 56; i++)
-        {
-            Note n = new Note(Note.NoteType.singleNote,
-                    new Vector2(screenWidth / 2.0f, screenHeight / 2.0f),
-                    TargetZone.values()[i % TargetZone.size].value,
-                    new Vector2(screenWidth * 0.025f, screenWidth * 0.025f),
-                    Note.DifficultyMultiplier.hard,
-                    3.0f + (float)i * 2.0f,
-                    _targetRadius,
-                    i
-            );
-            _noteQueue.addLast(n);
-        }
+        _noteQueue       = new Queue<Note>();
         _onScreenNotes   = new Quadtree(new Rectangle(0, 0, screenWidth, screenHeight));
         _onScreenRatings = new ArrayList<Rating>();
     }
@@ -389,6 +378,25 @@ public class GameplayScreen extends OvertoneScreen
             return new Rating(Rating.RatingValue.Bad, target);
         else
             return new Rating(Rating.RatingValue.Miss, target);
+    }
+
+    public void SetDifficulty(Note.DifficultyMultiplier diff) {_difficulty = diff;}
+
+    public void GenerateNotes()
+    {
+        for(int i = 0; i < 56; i++)
+        {
+            Note n = new Note(Note.NoteType.singleNote,
+                    new Vector2(_screenWidth / 2.0f, _screenHeight / 2.0f),
+                    TargetZone.values()[i % TargetZone.size].value,
+                    new Vector2(_screenWidth * 0.025f, _screenWidth * 0.025f),
+                    _difficulty,
+                    3.0f + (float)i * 2.0f,
+                    _targetRadius,
+                    i
+            );
+            _noteQueue.addLast(n);
+        }
     }
 
     public void resize(int width, int height)

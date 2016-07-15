@@ -8,6 +8,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.overtone.Overtone;
 
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Scanner;
+
 /**
  * Screen used form the difficulty select screen
  * Created by trevor on 2016-05-01.
@@ -15,6 +21,7 @@ import com.overtone.Overtone;
 public class DifficultySelectScreen extends OvertoneScreen
 {
     private final Stage _stage;
+    private int[] _scores;
 
     public DifficultySelectScreen(int screenWidth, int screenHeight)
     {
@@ -35,6 +42,75 @@ public class DifficultySelectScreen extends OvertoneScreen
                 Overtone.SetScreen(Overtone.Screens.MainMenu);
             }
         });
+
+        _scores = new int[3];
+        LoadHighScores();
+    }
+
+    private void LoadHighScores()
+    {
+        try
+        {
+            BufferedReader reader = new BufferedReader(new FileReader("Storage\\HighScores.txt"));
+
+            boolean readNextValue = false;
+            String line           = null;
+            int counter           = 0;
+
+            while ((line = reader.readLine()) != null)
+            {
+                if(readNextValue)
+                {
+                    _scores[counter] = Integer.parseInt(line);
+                    readNextValue = false;
+                    counter++;
+                }
+
+                if(line.compareTo("e") == 0  || line.compareTo("n") == 0  || line.compareTo("h") == 0 )
+                    readNextValue = true;
+            }
+
+            reader.close();
+        }
+        catch (IOException e)
+        {
+            try
+            {
+                System.out.println("Saved data cannot be found. Creating Data.");
+                File file = new File("Storage\\HighScores.txt");
+
+                if (!file.exists())
+                    file.createNewFile();
+
+                FileWriter fw = new FileWriter(file.getAbsoluteFile());
+                BufferedWriter writer = new BufferedWriter(fw);
+                String[] diff = {"e", "n", "h"};
+
+                for(int i = 0; i < diff.length; i++)
+                {
+                    writer.write(diff[i]);
+                    writer.newLine();
+                    for(int j = 0; j < 5; j++)
+                    {
+                        writer.write("" + 0);
+                        writer.newLine();
+                    }
+                }
+
+                writer.close();
+
+                _scores[0] = 0;
+                _scores[1] = 0;
+                _scores[2] = 0;
+            }
+            catch(IOException x)
+            {
+                _scores[0] = 0;
+                _scores[1] = 0;
+                _scores[2] = 0;
+                System.out.print("Data Cannot be saved at this time.");
+            }
+        }
     }
 
     public void render (float deltaTime)
