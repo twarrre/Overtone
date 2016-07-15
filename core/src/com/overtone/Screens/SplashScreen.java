@@ -1,5 +1,7 @@
 package com.overtone.Screens;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.overtone.InputManager;
@@ -44,6 +46,9 @@ public class SplashScreen extends OvertoneScreen
             Overtone.SetScreen(Overtone.Screens.MainMenu);
 
         if(_input.ActionOccurred(InputManager.KeyBinding.Enter, InputManager.ActionType.Pressed))
+            Overtone.SetScreen(Overtone.Screens.MainMenu);
+
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) || Gdx.input.isButtonPressed(Input.Buttons.RIGHT))
             Overtone.SetScreen(Overtone.Screens.MainMenu);
     }
 

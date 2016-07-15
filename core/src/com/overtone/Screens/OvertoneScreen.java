@@ -58,6 +58,15 @@ public class OvertoneScreen implements OvertoneScreenInterface
 
         textButtonStyle.font = _skin.getFont("default");
         _skin.add("default", textButtonStyle);
+
+        TextButton.TextButtonStyle buttonGroupStyle = new TextButton.TextButtonStyle();
+        buttonGroupStyle.up         = _skin.newDrawable("white", new Color(0.157f, 0.325f, 0.424f, 0.75f));
+        buttonGroupStyle.down       = _skin.newDrawable("white", new Color(0.012f, 0.137f, 0.212f, 0.75f));
+        buttonGroupStyle.over       = _skin.newDrawable("white", new Color(0.067f, 0.224f, 0.318f, 0.75f));
+        buttonGroupStyle.checked    = _skin.newDrawable("white", new Color(0.467f, 0.224f, 0.318f, 0.75f));
+
+        buttonGroupStyle.font = _skin.getFont("default");
+        _skin.add("group", buttonGroupStyle);
     }
 
     public TextButton CreateTextButton(String label, String style, float width, float height, Vector2 pos, Stage stage)

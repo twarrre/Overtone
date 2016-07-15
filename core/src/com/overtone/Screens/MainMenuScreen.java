@@ -3,9 +3,11 @@ package com.overtone.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.overtone.Overtone;
 
 /**
@@ -23,36 +25,36 @@ public class MainMenuScreen extends OvertoneScreen
         _stage = new Stage();
 
         final TextButton playButton = CreateTextButton("PLAY", "default", _screenWidth * 0.85f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.21f), _stage);
-        playButton.addListener(new ChangeListener() {
-            public void changed (ChangeEvent event, Actor actor) {
+        playButton.addListener(new ClickListener() {
+            public void clicked (InputEvent i, float x, float y) {
                 Overtone.SetScreen(Overtone.Screens.DifficultySelect);
             }
         });
 
         final TextButton highScoreButton = CreateTextButton("HIGH SCORES", "default", _screenWidth * 0.18f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.075f), _stage);
-        highScoreButton.addListener(new ChangeListener() {
-            public void changed (ChangeEvent event, Actor actor) {
+        highScoreButton.addListener(new ClickListener() {
+            public void clicked (InputEvent i, float x, float y) {
                 Overtone.SetScreen(Overtone.Screens.HighScore);
             }
         });
 
         final TextButton optionsButton = CreateTextButton("OPTIONS", "default", _screenWidth * 0.18f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.2983f, _screenHeight * 0.075f), _stage);
-        optionsButton.addListener(new ChangeListener() {
-            public void changed (ChangeEvent event, Actor actor) {
+        optionsButton.addListener(new ClickListener() {
+            public void clicked (InputEvent i, float x, float y) {
                 Overtone.SetScreen(Overtone.Screens.Options);
             }
         });
 
         final TextButton helpButton = CreateTextButton("HELP", "default", _screenWidth * 0.18f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.5217f, _screenHeight * 0.075f), _stage);
-        helpButton.addListener(new ChangeListener() {
-            public void changed (ChangeEvent event, Actor actor) {
+        helpButton.addListener(new ClickListener() {
+            public void clicked (InputEvent i, float x, float y) {
                 Overtone.SetScreen(Overtone.Screens.Help);
             }
         });
 
         final TextButton quitButton = CreateTextButton("QUIT", "default", _screenWidth * 0.18f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.745f, _screenHeight * 0.075f), _stage);
-        quitButton.addListener(new ChangeListener() {
-            public void changed (ChangeEvent event, Actor actor) {
+        quitButton.addListener(new ClickListener() {
+            public void clicked (InputEvent i, float x, float y) {
                 Gdx.app.exit();
             }
         });

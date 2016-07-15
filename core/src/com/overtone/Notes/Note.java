@@ -27,7 +27,7 @@ public class Note
     public enum DifficultyMultiplier
     {
         easy(5),
-        medium(4),
+        normal(4),
         hard(3);
 
         public float value;

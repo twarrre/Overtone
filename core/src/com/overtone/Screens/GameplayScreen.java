@@ -6,9 +6,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Queue;
 import com.overtone.InputManager;
 import com.overtone.Notes.Note;
@@ -124,23 +126,23 @@ public class GameplayScreen extends OvertoneScreen
         _difficulty   = Note.DifficultyMultiplier.easy;
 
         final TextButton resumeButton = CreateTextButton("RESUME", "default", _screenWidth * 0.5f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.25f, _screenHeight * 0.475f), _stage);
-        resumeButton.addListener(new ChangeListener() {
-            public void changed (ChangeEvent event, Actor actor) {
+        resumeButton.addListener(new ClickListener() {
+            public void clicked (InputEvent i, float x, float y) {
                 _resumeDelay = true;
             }
         });
 
         final TextButton retryButton = CreateTextButton("RETRY", "default", _screenWidth * 0.5f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.25f, _screenHeight * 0.275f), _stage);
-        retryButton.addListener(new ChangeListener() {
-            public void changed (ChangeEvent event, Actor actor) {
+        retryButton.addListener(new ClickListener() {
+            public void clicked (InputEvent i, float x, float y) {
                 Overtone.ResetScreen(Overtone.Screens.Gameplay);
                 Overtone.SetScreen(Overtone.Screens.Gameplay);
             }
         });
 
         final TextButton quitButton = CreateTextButton("MAIN MENU", "default", _screenWidth * 0.5f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.25f, _screenHeight * 0.075f), _stage);
-        quitButton.addListener(new ChangeListener() {
-            public void changed (ChangeEvent event, Actor actor) {
+        quitButton.addListener(new ClickListener() {
+            public void clicked (InputEvent i, float x, float y) {
                 Overtone.SetScreen(Overtone.Screens.MainMenu);
                 Overtone.ResetScreen(Overtone.Screens.Gameplay);
             }
