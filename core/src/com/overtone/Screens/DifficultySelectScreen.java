@@ -40,7 +40,7 @@ public class DifficultySelectScreen extends OvertoneScreen
         final TextButton startButton = CreateTextButton("START", "default", _screenWidth * 0.85f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.075f),_stage);
         startButton.addListener(new ChangeListener() {
             public void changed (ChangeEvent event, Actor actor) {
-                Overtone.SetScreen(Overtone.Screens.Gameplay);
+                Overtone.SetScreen(Overtone.Screens.Gameplay, _multiplier, _scores[_difficultyIndex]);
             }
         });
 

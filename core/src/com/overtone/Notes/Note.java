@@ -32,6 +32,20 @@ public class Note
 
         public float value;
         DifficultyMultiplier(float value) { this.value = value; }
+        public String toString()
+        {
+            switch(this.ordinal())
+            {
+                case 0:
+                    return "Easy";
+                case 1:
+                    return "Normal";
+                case 2:
+                    return "Hard";
+                default:
+                    return "";
+            }
+        }
     }
 
     // Stores the type of note that this is
