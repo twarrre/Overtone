@@ -91,6 +91,12 @@ public class GameplayScreen extends OvertoneScreen
     private boolean                   _songDone;
     private float                     _doneCounter;
 
+    private int                       _perfectCounter;
+    private int                       _greatCounter;
+    private int                       _goodCounter;
+    private int                       _badCounter;
+    private int                       _missCounter;
+
     /**
      * Constructor
      * @param screenWidth The width of the screen
@@ -121,18 +127,23 @@ public class GameplayScreen extends OvertoneScreen
         _noteHit = Gdx.audio.newSound(Gdx.files.internal("Sounds\\note.wav"));
 
         // Initialize variables
-        _targetRadius  = _screenWidth * 0.025f;
-        _totalTime     = 3.0f + (float)4 * 2.0f;
-        _elapsedTime   = 0;
-        _combo         = 0;
-        _score         = 0;
-        _paused        = false;
-        _resumeDelay   = false;
-        _resume        = 0;
-        _difficulty    = diff;
-        _prevHighScore = score;
-        _songDone      = false;
-        _doneCounter   = 0.0f;
+        _targetRadius   = _screenWidth * 0.025f;
+        _totalTime      = 3.0f + (float)4 * 2.0f;
+        _elapsedTime    = 0;
+        _combo          = 0;
+        _score          = 0;
+        _paused         = false;
+        _resumeDelay    = false;
+        _resume         = 0;
+        _difficulty     = diff;
+        _prevHighScore  = score;
+        _songDone       = false;
+        _doneCounter    = 0.0f;
+        _perfectCounter = 0;
+        _greatCounter   = 0;
+        _goodCounter    = 0;
+        _badCounter     = 0;
+        _missCounter    = 0;
 
         final TextButton resumeButton = CreateTextButton("RESUME", "default", _screenWidth * 0.5f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.25f, _screenHeight * 0.475f), _stage);
         resumeButton.addListener(new ClickListener() {
@@ -322,7 +333,8 @@ public class GameplayScreen extends OvertoneScreen
         {
             _doneCounter += deltaTime;
             if(_doneCounter > DONE_DELAY)
-                Overtone.SetScreen(Overtone.Screens.SongComplete, true, _difficulty, _score, _prevHighScore);
+                Overtone.SetScreen(Overtone.Screens.SongComplete, true, _difficulty, _score, _prevHighScore,
+                        _perfectCounter, _greatCounter, _goodCounter, _badCounter, _missCounter);
         }
 
         // Update the note positions
@@ -331,6 +343,7 @@ public class GameplayScreen extends OvertoneScreen
         {
             for(Vector2 v : removedNotes)
             {
+                _missCounter++;
                 _onScreenRatings.add(new Rating(Rating.RatingValue.Miss, v));
             }
             _combo = 0;
@@ -420,15 +433,31 @@ public class GameplayScreen extends OvertoneScreen
 
         // Return a rating based on how close it was to the target
         if(minDistance <= _targetRadius * 0.15f)
+        {
+            _perfectCounter++;
             return new Rating(Rating.RatingValue.Perfect, target);
+        }
         else if(minDistance <= _targetRadius * 0.55f && minDistance > _targetRadius * 0.15f)
+        {
+            _greatCounter++;
             return new Rating(Rating.RatingValue.Great, target);
+        }
         else if(minDistance <= _targetRadius  && minDistance > _targetRadius * 0.55f)
+        {
+            _goodCounter++;
             return new Rating(Rating.RatingValue.Ok, target);
+        }
         else if(minDistance < _targetRadius * 2.0f  && minDistance > _targetRadius)
+        {
+            _badCounter++;
             return new Rating(Rating.RatingValue.Bad, target);
+        }
         else
+        {
+            _missCounter++;
             return new Rating(Rating.RatingValue.Miss, target);
+        }
+
     }
 
     public void SetDifficulty(Note.DifficultyMultiplier diff) {_difficulty = diff;}

@@ -28,7 +28,7 @@ public class Overtone extends ApplicationAdapter
 	@Override
 	public void create ()
 	{
-		_currentScreen = new SplashScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		_currentScreen = new SplashScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());//SongCompleteScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true, Note.DifficultyMultiplier.easy, 39, 0, 0, 0, 0, 0, 0);
 		_currentScreen.show();
 	}
 
@@ -59,12 +59,12 @@ public class Overtone extends ApplicationAdapter
 		_currentScreen.show();
 	}
 
-	public static void SetScreen(Screens s, boolean completed, Note.DifficultyMultiplier diff, int score, int highscore)
+	public static void SetScreen(Screens s, boolean completed, Note.DifficultyMultiplier diff, int score, int highscore, int ... counters)
 	{
 		_currentScreen.hide();
 
 		if (s == Screens.SongComplete)
-			_currentScreen = new SongCompleteScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), completed, diff, score, highscore);
+			_currentScreen = new SongCompleteScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), completed, diff, score, highscore, counters);
 
 		_currentScreen.show();
 	}
