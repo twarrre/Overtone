@@ -52,6 +52,8 @@ public class SongCompleteScreen extends OvertoneScreen
                 Overtone.SetScreen(Overtone.Screens.DifficultySelect);
             }
         });
+
+        Overtone.UpdateScore(_score, Overtone._difficulty);
     }
 
     public void render (float deltaTime)

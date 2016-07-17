@@ -95,6 +95,10 @@ public class GameplayScreen extends OvertoneScreen
     private int                       _badCounter;
     private int                       _missCounter;
 
+    private final TextButton          _resumeButton;
+    private final TextButton          _retryButton;
+    private final TextButton          _quitButton;
+
     /**
      * Constructor
      * @param screenWidth The width of the screen
@@ -141,26 +145,38 @@ public class GameplayScreen extends OvertoneScreen
         _badCounter     = 0;
         _missCounter    = 0;
 
-        final TextButton resumeButton = CreateTextButton("RESUME", "default", _screenWidth * 0.5f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.25f, _screenHeight * 0.475f), _stage);
-        resumeButton.addListener(new ClickListener() {
+        _resumeButton = CreateTextButton("RESUME", "default", _screenWidth * 0.5f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.25f, _screenHeight * 0.475f), _stage);
+        _resumeButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 _resumeDelay = true;
+                _resumeButton.setDisabled(true);
+                _retryButton.setDisabled(true);
+                _quitButton.setDisabled(true);
+                _resumeButton.setVisible(false);
+                _retryButton.setVisible(false);
+                _quitButton.setVisible(false);
             }
         });
+        _resumeButton.setDisabled(true);
+        _resumeButton.setVisible(false);
 
-        final TextButton retryButton = CreateTextButton("RETRY", "default", _screenWidth * 0.5f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.25f, _screenHeight * 0.275f), _stage);
-        retryButton.addListener(new ClickListener() {
+        _retryButton = CreateTextButton("RETRY", "default", _screenWidth * 0.5f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.25f, _screenHeight * 0.275f), _stage);
+        _retryButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 Overtone.SetScreen(Overtone.Screens.Gameplay);
             }
         });
+        _retryButton.setDisabled(true);
+        _retryButton.setVisible(false);
 
-        final TextButton quitButton = CreateTextButton("MAIN MENU", "default", _screenWidth * 0.5f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.25f, _screenHeight * 0.075f), _stage);
-        quitButton.addListener(new ClickListener() {
+        _quitButton = CreateTextButton("MAIN MENU", "default", _screenWidth * 0.5f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.25f, _screenHeight * 0.075f), _stage);
+        _quitButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 Overtone.SetScreen(Overtone.Screens.MainMenu);
             }
         });
+        _quitButton.setDisabled(true);
+        _quitButton.setVisible(false);
 
         // Load notes
         _noteQueue       = new Queue<Note>();
@@ -286,6 +302,7 @@ public class GameplayScreen extends OvertoneScreen
     public void update(float deltaTime)
     {
         super.update(deltaTime);
+        _stage.act(deltaTime);
 
         // Update the input
         _input.Update();
@@ -304,8 +321,6 @@ public class GameplayScreen extends OvertoneScreen
                     _resume      = 0;
                 }
             }
-
-            _stage.act(deltaTime);
             return;
         }
 
@@ -387,6 +402,16 @@ public class GameplayScreen extends OvertoneScreen
         if(_input.ActionOccurred(InputManager.KeyBinding.Pause, InputManager.ActionType.Pressed) && !_songDone)
         {
             _paused = !_paused;
+
+            if(_paused)
+            {
+                _resumeButton.setDisabled(false);
+                _retryButton.setDisabled(false);
+                _quitButton.setDisabled(false);
+                _resumeButton.setVisible(true);
+                _retryButton.setVisible(true);
+                _quitButton.setVisible(true);
+            }
         }
     }
 

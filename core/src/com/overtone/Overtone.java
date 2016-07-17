@@ -191,15 +191,20 @@ public class Overtone extends ApplicationAdapter
 
 	public static void UpdateScore(int score, Note.DifficultyMultiplier difficulty)
 	{
+		boolean replacedScore = false;
 		int replace = score;
 		for(int i = 0; i < _scores[difficulty.ordinal()].length; i++)
 		{
 			if(replace > _scores[difficulty.ordinal()][i])
 			{
+				replacedScore = true;
 				int temp = _scores[difficulty.ordinal()][i];
 				_scores[difficulty.ordinal()][i] = replace;
 				replace = temp;
 			}
 		}
+
+		if(replacedScore)
+			WriteScores();
 	}
 }
