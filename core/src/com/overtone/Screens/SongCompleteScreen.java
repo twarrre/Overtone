@@ -10,6 +10,8 @@ import com.overtone.Notes.Note;
 import com.overtone.Overtone;
 import com.overtone.Ratings.Rating;
 
+import java.io.*;
+
 /**
  * Screen used for the song complete screen
  * Created by trevor on 2016-05-01.
@@ -18,18 +20,16 @@ public class SongCompleteScreen extends OvertoneScreen
 {
     private final Stage _stage;
     private final int _score;
-    private final int _prevHighScore;
     private final Note.DifficultyMultiplier _difficulty;
     private final String _songCompleted;
     private final int[] _counters;
 
-    public SongCompleteScreen(int screenWidth, int screenHeight, boolean completed, Note.DifficultyMultiplier diff, int score, int highScore, int ... counters)
+    public SongCompleteScreen(int screenWidth, int screenHeight, boolean completed, Note.DifficultyMultiplier diff, int score, int ... counters)
     {
         super(screenWidth, screenHeight);
 
         _stage = new Stage();
         _score = score;
-        _prevHighScore = highScore;
         _difficulty = diff;
         _songCompleted =  completed ? "Song Completed!" : "Song Failed...";
         _counters = counters;
@@ -37,7 +37,7 @@ public class SongCompleteScreen extends OvertoneScreen
         final TextButton retryButton = CreateTextButton("RETRY", "default", _screenWidth * 0.25f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.075f), _stage);
         retryButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
-                Overtone.SetScreen(Overtone.Screens.Gameplay, _difficulty, _prevHighScore);
+                Overtone.SetScreen(Overtone.Screens.Gameplay, _difficulty);
             }
         });
 
@@ -100,10 +100,10 @@ public class SongCompleteScreen extends OvertoneScreen
 
         _glyphLayout.reset();
         _font.getData().setScale(2);
-        _glyphLayout.setText(_font, (_prevHighScore > _score) ? _prevHighScore + "" : _score + "");
+        _glyphLayout.setText(_font, (Overtone._scores[_difficulty.ordinal()][0] > _score) ? Overtone._scores[_difficulty.ordinal()][0] + "" : _score + "");
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.925f - _glyphLayout.width, _screenHeight * 0.45f);
 
-        if(_score > _prevHighScore)
+        if(_score > Overtone._scores[_difficulty.ordinal()][0])
         {
             _glyphLayout.reset();
             _font.getData().setScale(2);

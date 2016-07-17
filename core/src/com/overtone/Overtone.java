@@ -7,6 +7,8 @@ import com.badlogic.gdx.utils.Array;
 import com.overtone.Notes.Note;
 import com.overtone.Screens.*;
 
+import java.io.*;
+
 public class Overtone extends ApplicationAdapter
 {
 
@@ -25,10 +27,15 @@ public class Overtone extends ApplicationAdapter
 	// Stores the current screen that is on display
 	public static OvertoneScreen _currentScreen;
 
+	public static int[][] _scores;
+
 	@Override
 	public void create ()
 	{
-		_currentScreen = new SplashScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());//SongCompleteScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true, Note.DifficultyMultiplier.easy, 39, 0, 0, 0, 0, 0, 0);
+		_scores = new int[3][5];
+		LoadHighScores();
+
+		_currentScreen = new SplashScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());//SongCompleteScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true, Note.DifficultyMultiplier.easy, 39, 0, 0, 0, 0, 0);
 		_currentScreen.show();
 	}
 
@@ -49,22 +56,22 @@ public class Overtone extends ApplicationAdapter
 		_currentScreen.update(deltaTime);
 	}
 
-	public static void SetScreen(Screens s, Note.DifficultyMultiplier diff, int score)
+	public static void SetScreen(Screens s, Note.DifficultyMultiplier diff)
 	{
 		_currentScreen.hide();
 
 		if (s == Screens.Gameplay)
-			_currentScreen = new GameplayScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), diff, score);
+			_currentScreen = new GameplayScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), diff);
 
 		_currentScreen.show();
 	}
 
-	public static void SetScreen(Screens s, boolean completed, Note.DifficultyMultiplier diff, int score, int highscore, int ... counters)
+	public static void SetScreen(Screens s, boolean completed, Note.DifficultyMultiplier diff, int score, int ... counters)
 	{
 		_currentScreen.hide();
 
 		if (s == Screens.SongComplete)
-			_currentScreen = new SongCompleteScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), completed, diff, score, highscore, counters);
+			_currentScreen = new SongCompleteScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), completed, diff, score, counters);
 
 		_currentScreen.show();
 	}
@@ -87,5 +94,116 @@ public class Overtone extends ApplicationAdapter
 			_currentScreen = new SplashScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		_currentScreen.show();
+	}
+
+	public static void LoadHighScores()
+	{
+		try
+		{
+			BufferedReader reader = new BufferedReader(new FileReader("Storage\\HighScores.txt"));
+
+			String line      = null;
+			int diffCounter  = -1;
+			int scoreCounter = 0;
+
+			while ((line = reader.readLine())!= null)
+			{
+				if(line.compareTo("e") == 0  || line.compareTo("n") == 0  || line.compareTo("h") == 0 )
+				{
+					diffCounter++;
+					scoreCounter = 0;
+					continue;
+				}
+
+				_scores[diffCounter][scoreCounter] = Integer.parseInt(line);
+				scoreCounter++;
+			}
+
+			reader.close();
+		}
+		catch (IOException e)
+		{
+			System.out.print("Data Cannot be loaded at this time.");
+		}
+	}
+
+	public static void ResetScores()
+	{
+		_scores = new int[3][5];
+
+		try
+		{
+			File file = new File("Storage\\HighScores.txt");
+
+			if (!file.exists())
+				file.createNewFile();
+
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter writer = new BufferedWriter(fw);
+			String[] diff = {"e", "n", "h"};
+
+			for(int i = 0; i < diff.length; i++)
+			{
+				writer.write(diff[i]);
+				writer.newLine();
+				for(int j = 0; j < 5; j++)
+				{
+					writer.write("" + 0);
+					writer.newLine();
+				}
+			}
+
+			writer.close();
+		}
+		catch(IOException x)
+		{
+			System.out.print("Data Cannot be reset at this time.");
+		}
+	}
+
+	public static void WriteScores()
+	{
+		try
+		{
+			File file = new File("Storage\\HighScores.txt");
+
+			if (!file.exists())
+				file.createNewFile();
+
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter writer = new BufferedWriter(fw);
+			String[] diff = {"e", "n", "h"};
+
+			for(int i = 0; i < diff.length; i++)
+			{
+				writer.write(diff[i]);
+				writer.newLine();
+				for(int j = 0; j < 5; j++)
+				{
+					writer.write("" + _scores[i][j]);
+					writer.newLine();
+				}
+			}
+
+			writer.close();
+		}
+		catch(IOException x)
+		{
+			System.out.print("Data Cannot be saved at this time.");
+		}
+	}
+
+	public static void UpdateScore(int score, Note.DifficultyMultiplier difficulty)
+	{
+		int replace = score;
+		for(int i = 0; i < _scores[difficulty.ordinal()].length; i++)
+		{
+			if(replace > _scores[difficulty.ordinal()][i])
+			{
+				int temp = _scores[difficulty.ordinal()][i];
+				_scores[difficulty.ordinal()][i] = replace;
+				replace = temp;
+			}
+		}
 	}
 }

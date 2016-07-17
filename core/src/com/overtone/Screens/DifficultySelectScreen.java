@@ -20,7 +20,6 @@ import java.io.*;
 public class DifficultySelectScreen extends OvertoneScreen
 {
     private final Stage _stage;
-    private int[] _scores;
     private Note.DifficultyMultiplier _multiplier;
     private int _difficultyIndex;
     private final TextButton _easyButton;
@@ -39,7 +38,7 @@ public class DifficultySelectScreen extends OvertoneScreen
         final TextButton startButton = CreateTextButton("START", "default", _screenWidth * 0.85f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.075f),_stage);
         startButton.addListener(new ChangeListener() {
             public void changed (ChangeEvent event, Actor actor) {
-                Overtone.SetScreen(Overtone.Screens.Gameplay, _multiplier, _scores[_difficultyIndex]);
+                Overtone.SetScreen(Overtone.Screens.Gameplay, _multiplier);
             }
         });
 
@@ -85,75 +84,6 @@ public class DifficultySelectScreen extends OvertoneScreen
 
         _currentButton = _easyButton;
         _currentButton.setChecked(true);
-
-        _scores = new int[3];
-        LoadHighScores();
-    }
-
-    private void LoadHighScores()
-    {
-        try
-        {
-            BufferedReader reader = new BufferedReader(new FileReader("Storage\\HighScores.txt"));
-
-            boolean readNextValue = false;
-            String line           = null;
-            int counter           = 0;
-
-            while ((line = reader.readLine()) != null)
-            {
-                if(readNextValue)
-                {
-                    _scores[counter] = Integer.parseInt(line);
-                    readNextValue = false;
-                    counter++;
-                }
-
-                if(line.compareTo("e") == 0  || line.compareTo("n") == 0  || line.compareTo("h") == 0 )
-                    readNextValue = true;
-            }
-
-            reader.close();
-        }
-        catch (IOException e)
-        {
-            try
-            {
-                System.out.println("Saved data cannot be found. Creating Data.");
-                File file = new File("Storage\\HighScores.txt");
-
-                if (!file.exists())
-                    file.createNewFile();
-
-                FileWriter fw = new FileWriter(file.getAbsoluteFile());
-                BufferedWriter writer = new BufferedWriter(fw);
-                String[] diff = {"e", "n", "h"};
-
-                for(int i = 0; i < diff.length; i++)
-                {
-                    writer.write(diff[i]);
-                    writer.newLine();
-                    for(int j = 0; j < 5; j++)
-                    {
-                        writer.write("" + 0);
-                        writer.newLine();
-                    }
-                }
-
-                writer.close();
-
-                _scores[0] = 0;
-                _scores[1] = 0;
-                _scores[2] = 0;
-            }
-            catch(IOException x)
-            {
-                _scores[0] = 0;
-                _scores[1] = 0;
-                _scores[2] = 0;
-                System.out.print("Data Cannot be saved at this time.");
-            }
-        }
     }
 
     public void render (float deltaTime)
@@ -165,7 +95,7 @@ public class DifficultySelectScreen extends OvertoneScreen
 
         _glyphLayout.reset();
         _font.getData().setScale(2);
-        _glyphLayout.setText(_font,  "High Score: " + _scores[_difficultyIndex]);
+        _glyphLayout.setText(_font,  "High Score: " + Overtone._scores[_difficultyIndex][0]);
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.355f);
 
         _glyphLayout.reset();
