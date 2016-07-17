@@ -14,10 +14,10 @@ public class Rating
      */
     public enum RatingValue
     {
-        Perfect (7),
-        Great   (5),
-        Ok      (3),
-        Bad     (1),
+        Perfect (700),
+        Great   (500),
+        Ok      (300),
+        Bad     (100),
         Miss    (0),
         None    (0);
 
@@ -28,13 +28,13 @@ public class Rating
         {
             switch(score)
             {
-                case 7:
+                case 700:
                     return "Perfect";
-                case 5:
+                case 500:
                     return "Great";
-                case 3:
+                case 300:
                     return "Okay";
-                case 1:
+                case 100:
                     return "Bad";
                 case 0:
                     return "Miss";
@@ -47,28 +47,29 @@ public class Rating
     private final RatingValue _rating;
     private float             _screenTime;
     private Vector2           _center;
-    private boolean           _isVisisble;
+    private boolean           _isVisible;
 
     public Rating(RatingValue rating, Vector2 center)
     {
         _rating     = rating;
         _center     = center;
         _screenTime = 0;
-        _isVisisble = true;
+        _isVisible = true;
     }
 
     public void Update(float deltaTime)
     {
-        if(_isVisisble)
+        if(_isVisible)
             _screenTime += deltaTime;
 
         if(_screenTime >= ONSCREEN_TIME)
-            _isVisisble = false;
+            _isVisible = false;
     }
 
-    public boolean IsVisible() {return _isVisisble;}
+    public boolean IsVisible() {return _isVisible;}
     public Vector2 GetCenter() {return _center;}
     public RatingValue GetingRating() {return _rating;}
-    public void SetVisibility(boolean v) {_isVisisble = v;}
+    public void SetVisibility(boolean v) {
+        _isVisible = v;}
 
 }
