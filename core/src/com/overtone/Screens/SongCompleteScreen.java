@@ -20,24 +20,22 @@ public class SongCompleteScreen extends OvertoneScreen
 {
     private final Stage _stage;
     private final int _score;
-    private final Note.DifficultyMultiplier _difficulty;
     private final String _songCompleted;
     private final int[] _counters;
 
-    public SongCompleteScreen(int screenWidth, int screenHeight, boolean completed, Note.DifficultyMultiplier diff, int score, int ... counters)
+    public SongCompleteScreen(int screenWidth, int screenHeight, boolean completed, int score, int ... counters)
     {
         super(screenWidth, screenHeight);
 
         _stage = new Stage();
         _score = score;
-        _difficulty = diff;
         _songCompleted =  completed ? "Song Completed!" : "Song Failed...";
         _counters = counters;
 
         final TextButton retryButton = CreateTextButton("RETRY", "default", _screenWidth * 0.25f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.075f), _stage);
         retryButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
-                Overtone.SetScreen(Overtone.Screens.Gameplay, _difficulty);
+                Overtone.SetScreen(Overtone.Screens.Gameplay);
             }
         });
 
@@ -75,35 +73,45 @@ public class SongCompleteScreen extends OvertoneScreen
 
         _glyphLayout.reset();
         _font.getData().setScale(2);
-        _glyphLayout.setText(_font, "Rating:");
+        _glyphLayout.setText(_font, "Difficulty:");
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.65f);
 
         _glyphLayout.reset();
         _font.getData().setScale(2);
+        _glyphLayout.setText(_font, "Rating:");
+        _font.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.57f);
+
+        _glyphLayout.reset();
+        _font.getData().setScale(2);
         _glyphLayout.setText(_font, "Score: ");
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.55f);
+        _font.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.49f);
 
         _glyphLayout.reset();
         _font.getData().setScale(2);
         _glyphLayout.setText(_font, "High Score: ");
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.45f);
+        _font.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.41f);
 
         _glyphLayout.reset();
         _font.getData().setScale(2);
-        _glyphLayout.setText(_font, "" + "Brilliant");
+        _glyphLayout.setText(_font, "" + Overtone._difficulty.toString());
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.925f - _glyphLayout.width, _screenHeight * 0.65f);
 
         _glyphLayout.reset();
         _font.getData().setScale(2);
-        _glyphLayout.setText(_font, "" + _score);
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.925f - _glyphLayout.width, _screenHeight * 0.55f);
+        _glyphLayout.setText(_font, "" + "Brilliant");
+        _font.draw(_batch, _glyphLayout, _screenWidth * 0.925f - _glyphLayout.width, _screenHeight * 0.57f);
 
         _glyphLayout.reset();
         _font.getData().setScale(2);
-        _glyphLayout.setText(_font, (Overtone._scores[_difficulty.ordinal()][0] > _score) ? Overtone._scores[_difficulty.ordinal()][0] + "" : _score + "");
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.925f - _glyphLayout.width, _screenHeight * 0.45f);
+        _glyphLayout.setText(_font, "" + _score);
+        _font.draw(_batch, _glyphLayout, _screenWidth * 0.925f - _glyphLayout.width, _screenHeight * 0.49f);
 
-        if(_score > Overtone._scores[_difficulty.ordinal()][0])
+        _glyphLayout.reset();
+        _font.getData().setScale(2);
+        _glyphLayout.setText(_font, (Overtone._scores[Overtone._difficulty.ordinal()][0] > _score) ? Overtone._scores[Overtone._difficulty.ordinal()][0] + "" : _score + "");
+        _font.draw(_batch, _glyphLayout, _screenWidth * 0.925f - _glyphLayout.width, _screenHeight * 0.41f);
+
+        if(_score > Overtone._scores[Overtone._difficulty.ordinal()][0])
         {
             _glyphLayout.reset();
             _font.getData().setScale(2);

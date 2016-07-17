@@ -29,9 +29,13 @@ public class Overtone extends ApplicationAdapter
 
 	public static int[][] _scores;
 
+	public static Note.DifficultyMultiplier _difficulty;
+
 	@Override
 	public void create ()
 	{
+		_difficulty = Note.DifficultyMultiplier.easy;
+
 		_scores = new int[3][5];
 		LoadHighScores();
 
@@ -56,22 +60,12 @@ public class Overtone extends ApplicationAdapter
 		_currentScreen.update(deltaTime);
 	}
 
-	public static void SetScreen(Screens s, Note.DifficultyMultiplier diff)
-	{
-		_currentScreen.hide();
-
-		if (s == Screens.Gameplay)
-			_currentScreen = new GameplayScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), diff);
-
-		_currentScreen.show();
-	}
-
-	public static void SetScreen(Screens s, boolean completed, Note.DifficultyMultiplier diff, int score, int ... counters)
+	public static void SetScreen(Screens s, boolean completed, int score, int ... counters)
 	{
 		_currentScreen.hide();
 
 		if (s == Screens.SongComplete)
-			_currentScreen = new SongCompleteScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), completed, diff, score, counters);
+			_currentScreen = new SongCompleteScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), completed, score, counters);
 
 		_currentScreen.show();
 	}
@@ -84,6 +78,8 @@ public class Overtone extends ApplicationAdapter
 			_currentScreen = new MainMenuScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		else if (s == Screens.DifficultySelect)
 			_currentScreen = new DifficultySelectScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		if (s == Screens.Gameplay)
+			_currentScreen = new GameplayScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		else if (s == Screens.Options)
 			_currentScreen = new OptionsScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		else if (s == Screens.Help)

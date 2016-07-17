@@ -86,7 +86,6 @@ public class GameplayScreen extends OvertoneScreen
     private boolean                   _paused;
     private boolean                   _resumeDelay;
     private float                     _resume;
-    private Note.DifficultyMultiplier _difficulty;
     private boolean                   _songDone;
     private float                     _doneCounter;
 
@@ -101,7 +100,7 @@ public class GameplayScreen extends OvertoneScreen
      * @param screenWidth The width of the screen
      * @param screenHeight The height of the screen
      */
-    public GameplayScreen(int screenWidth, int screenHeight, Note.DifficultyMultiplier diff)
+    public GameplayScreen(int screenWidth, int screenHeight)
     {
         super(screenWidth, screenHeight);
 
@@ -134,7 +133,6 @@ public class GameplayScreen extends OvertoneScreen
         _paused         = false;
         _resumeDelay    = false;
         _resume         = 0;
-        _difficulty     = diff;
         _songDone       = false;
         _doneCounter    = 0.0f;
         _perfectCounter = 0;
@@ -153,7 +151,7 @@ public class GameplayScreen extends OvertoneScreen
         final TextButton retryButton = CreateTextButton("RETRY", "default", _screenWidth * 0.5f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.25f, _screenHeight * 0.275f), _stage);
         retryButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
-                Overtone.SetScreen(Overtone.Screens.Gameplay, _difficulty);
+                Overtone.SetScreen(Overtone.Screens.Gameplay);
             }
         });
 
@@ -172,7 +170,7 @@ public class GameplayScreen extends OvertoneScreen
                     new Vector2(_screenWidth / 2.0f, _screenHeight / 2.0f),
                     TargetZone.values()[i % TargetZone.size].value,
                     new Vector2(_screenWidth * 0.025f, _screenWidth * 0.025f),
-                    _difficulty,
+                    Overtone._difficulty,
                     3.0f + (float)i * 2.0f,
                     _targetRadius,
                     i
@@ -232,12 +230,12 @@ public class GameplayScreen extends OvertoneScreen
 
         _glyphLayout.reset();
         _font.getData().setScale(2);
-        _glyphLayout.setText(_font, "High Score: " + Overtone._scores[_difficulty.ordinal()][0]);
+        _glyphLayout.setText(_font, "High Score: " + Overtone._scores[Overtone._difficulty.ordinal()][0]);
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.775f - _glyphLayout.width, _screenHeight * 0.92f);
 
         _glyphLayout.reset();
         _font.getData().setScale(2);
-        _glyphLayout.setText(_font, "Difficulty: " + _difficulty.toString());
+        _glyphLayout.setText(_font, "Difficulty: " + Overtone._difficulty.toString());
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.225f, _screenHeight * 0.92f);
 
         _noteRenderer.Draw(_onScreenNotes.GetAll(), _batch);
@@ -331,7 +329,7 @@ public class GameplayScreen extends OvertoneScreen
         {
             _doneCounter += deltaTime;
             if(_doneCounter > DONE_DELAY)
-                Overtone.SetScreen(Overtone.Screens.SongComplete, true, _difficulty, _score,
+                Overtone.SetScreen(Overtone.Screens.SongComplete, true, _score,
                         _perfectCounter, _greatCounter, _goodCounter, _badCounter, _missCounter);
         }
 
