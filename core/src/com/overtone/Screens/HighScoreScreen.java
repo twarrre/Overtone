@@ -27,7 +27,6 @@ public class HighScoreScreen extends OvertoneScreen
     private final TextButton _normalButton;
     private final TextButton _hardButton;
     private TextButton _currentButton;
-    private int[][] _scores;
     private int _difficultyIndex;
     private final Image _background;
     private final ImageButton _yesButton;
@@ -169,12 +168,17 @@ public class HighScoreScreen extends OvertoneScreen
             _glyphLayout.reset();
             _font.getData().setScale(2);
             _glyphLayout.setText(_font, (i + 1) + "");
-            _font.draw(_batch, _glyphLayout, _screenWidth * 0.3047f, _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
+            _font.draw(_batch, _glyphLayout, _screenWidth * 0.3075f - (_glyphLayout.width / 2.0f), _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
 
             _glyphLayout.reset();
             _font.getData().setScale(2);
             _glyphLayout.setText(_font, Overtone._scores[_difficultyIndex][i] + "");
-            _font.draw(_batch, _glyphLayout, _screenWidth * 0.7075f - _glyphLayout.width, _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
+            _font.draw(_batch, _glyphLayout, _screenWidth * 0.5075f - (_glyphLayout.width / 2.0f), _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
+
+            _glyphLayout.reset();
+            _font.getData().setScale(2);
+            _glyphLayout.setText(_font, Overtone._scoresRatings[_difficultyIndex][i] + "");
+            _font.draw(_batch, _glyphLayout, _screenWidth * 0.7075f - (_glyphLayout.width / 2.0f), _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
         }
 
         _batch.end();

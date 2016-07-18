@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.Array;
 import com.overtone.Notes.Note;
+import com.overtone.Ratings.Rating;
 import com.overtone.Screens.*;
 
 import java.io.*;
@@ -25,18 +26,18 @@ public class Overtone extends ApplicationAdapter
 	}
 
 	// Stores the current screen that is on display
-	public static OvertoneScreen _currentScreen;
-
-	public static int[][] _scores;
-
+	public static OvertoneScreen            _currentScreen;
+	public static int[][]                   _scores;
+    public static Rating.ScoreRating[][]    _scoresRatings;
 	public static Note.DifficultyMultiplier _difficulty;
 
 	@Override
 	public void create ()
 	{
-		_difficulty = Note.DifficultyMultiplier.easy;
+		_difficulty    = Note.DifficultyMultiplier.easy;
 
-		_scores = new int[3][5];
+		_scores        = new int[3][5];
+        _scoresRatings = new Rating.ScoreRating[3][5];
 		LoadHighScores();
 
 		_currentScreen = new SplashScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());//SongCompleteScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true, Note.DifficultyMultiplier.easy, 39, 0, 0, 0, 0, 0);
@@ -104,14 +105,17 @@ public class Overtone extends ApplicationAdapter
 
 			while ((line = reader.readLine())!= null)
 			{
-				if(line.compareTo("e") == 0  || line.compareTo("n") == 0  || line.compareTo("h") == 0 )
+                String[] tokens = line.split(" ");
+
+				if(tokens[0].compareTo("e") == 0  || tokens[0].compareTo("n") == 0  || tokens[0].compareTo("h") == 0 )
 				{
 					diffCounter++;
 					scoreCounter = 0;
 					continue;
 				}
 
-				_scores[diffCounter][scoreCounter] = Integer.parseInt(line);
+				_scores[diffCounter][scoreCounter]        = Integer.parseInt(tokens[0]);
+                _scoresRatings[diffCounter][scoreCounter] = Rating.ScoreRating.GetRating(tokens[1]);
 				scoreCounter++;
 			}
 
@@ -144,7 +148,7 @@ public class Overtone extends ApplicationAdapter
 				writer.newLine();
 				for(int j = 0; j < 5; j++)
 				{
-					writer.write("" + 0);
+					writer.write(0 + " ---");
 					writer.newLine();
 				}
 			}
@@ -176,7 +180,7 @@ public class Overtone extends ApplicationAdapter
 				writer.newLine();
 				for(int j = 0; j < 5; j++)
 				{
-					writer.write("" + _scores[i][j]);
+					writer.write(_scores[i][j] + " " + _scoresRatings[i][j]);
 					writer.newLine();
 				}
 			}
@@ -189,10 +193,11 @@ public class Overtone extends ApplicationAdapter
 		}
 	}
 
-	public static void UpdateScore(int score, Note.DifficultyMultiplier difficulty)
+	public static void UpdateScore(int score, Rating.ScoreRating rating, Note.DifficultyMultiplier difficulty)
 	{
 		boolean replacedScore = false;
 		int replace = score;
+        Rating.ScoreRating replacedRating = rating;
 		for(int i = 0; i < _scores[difficulty.ordinal()].length; i++)
 		{
 			if(replace > _scores[difficulty.ordinal()][i])
@@ -201,6 +206,10 @@ public class Overtone extends ApplicationAdapter
 				int temp = _scores[difficulty.ordinal()][i];
 				_scores[difficulty.ordinal()][i] = replace;
 				replace = temp;
+
+                Rating.ScoreRating temp2 = _scoresRatings[_difficulty.ordinal()][i];
+                _scoresRatings[_difficulty.ordinal()][i] = replacedRating;
+                replacedRating = temp2;
 			}
 		}
 

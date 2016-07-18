@@ -53,7 +53,7 @@ public class SongCompleteScreen extends OvertoneScreen
             }
         });
 
-        Overtone.UpdateScore(_score, Overtone._difficulty);
+        Overtone.UpdateScore(_score, Rating.ScoreRating.GetRating(_counters), Overtone._difficulty);
     }
 
     public void render (float deltaTime)
@@ -100,7 +100,7 @@ public class SongCompleteScreen extends OvertoneScreen
 
         _glyphLayout.reset();
         _font.getData().setScale(2);
-        _glyphLayout.setText(_font, "" + "Brilliant");
+        _glyphLayout.setText(_font, "" + Rating.ScoreRating.GetRating(_counters).toString());
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.925f - _glyphLayout.width, _screenHeight * 0.57f);
 
         _glyphLayout.reset();

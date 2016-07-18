@@ -34,7 +34,6 @@ public class GameplayScreen extends OvertoneScreen
     public static final float PAUSE_DELAY = 3.0f;
     public static final float DONE_DELAY = 3.0f;
 
-
     /**
      * Represents the four targets of the screen
      */

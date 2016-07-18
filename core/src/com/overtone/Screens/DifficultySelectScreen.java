@@ -98,7 +98,7 @@ public class DifficultySelectScreen extends OvertoneScreen
 
         _glyphLayout.reset();
         _font.getData().setScale(2);
-        _glyphLayout.setText(_font,  "Rating: Brilliant");
+        _glyphLayout.setText(_font,  "Rating: " +  Overtone._scoresRatings[_difficultyIndex][0].toString());
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.43f);
 
         _glyphLayout.reset();
