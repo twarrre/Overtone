@@ -115,7 +115,7 @@ public class Overtone extends ApplicationAdapter
 				}
 
 				_scores[diffCounter][scoreCounter]        = Integer.parseInt(tokens[0]);
-                _scoresRatings[diffCounter][scoreCounter] = Rating.ScoreRating.GetRating(tokens[1]);
+                _scoresRatings[diffCounter][scoreCounter] = Rating.ScoreRating.GetRating("" + tokens[1]);
 				scoreCounter++;
 			}
 
@@ -130,6 +130,7 @@ public class Overtone extends ApplicationAdapter
 	public static void ResetScores()
 	{
 		_scores = new int[3][5];
+        _scoresRatings = new Rating.ScoreRating[3][5];
 
 		try
 		{
@@ -148,6 +149,8 @@ public class Overtone extends ApplicationAdapter
 				writer.newLine();
 				for(int j = 0; j < 5; j++)
 				{
+                    _scoresRatings[i][j] = Rating.ScoreRating.None;
+                    _scores[i][j] = 0;
 					writer.write(0 + " ---");
 					writer.newLine();
 				}
