@@ -67,6 +67,12 @@ public class GameplayScreen extends OvertoneScreen
     private final Texture _i;
     private final Texture _k;
     private final Texture _pausedBackground;
+    private final Texture _perfection;
+    private final Texture _brilliant;
+    private final Texture _great;
+    private final Texture _cleared;
+    private final Texture _failure;
+    private Texture _currentCrowdRating;
 
     // Data Structures
     private final Quadtree          _onScreenNotes;
@@ -123,6 +129,12 @@ public class GameplayScreen extends OvertoneScreen
         _i                = new Texture(Gdx.files.internal("Textures\\i.png"));
         _k                = new Texture(Gdx.files.internal("Textures\\k.png"));
         _pausedBackground = new Texture(Gdx.files.internal("Textures\\pause.png"));
+        _perfection       = new Texture(Gdx.files.internal("Textures\\perfection.png"));
+        _brilliant        = new Texture(Gdx.files.internal("Textures\\brilliant.png"));
+        _great            = new Texture(Gdx.files.internal("Textures\\great.png"));
+        _cleared          = new Texture(Gdx.files.internal("Textures\\cleared.png"));
+        _failure          = new Texture(Gdx.files.internal("Textures\\failure.png"));
+        _currentCrowdRating = _cleared;
 
         // Load sounds
         _noteHit = Gdx.audio.newSound(Gdx.files.internal("Sounds\\note.wav"));
@@ -256,6 +268,11 @@ public class GameplayScreen extends OvertoneScreen
         _noteRenderer.Draw(_onScreenNotes.GetAll(), _batch);
         _ratingRenderer.Draw(_onScreenRatings, _batch);
 
+        for(int i = 0; i <  5; i++)
+        {
+            _batch.draw(_currentCrowdRating, _screenWidth * 0.40f + (_screenWidth * 0.04f * (float)i), _screenHeight * 0.05f, _screenWidth * 0.04f, _screenWidth * 0.04f);
+        }
+
         if(_paused && !_resumeDelay)
         {
             _batch.draw(_pausedBackground, 0, 0, _screenWidth, _screenHeight);
@@ -370,6 +387,7 @@ public class GameplayScreen extends OvertoneScreen
         _onScreenRatings.removeAll(done);
 
         CheckInput();
+        UpdateCrowdRating();
     }
 
     /**
@@ -417,9 +435,7 @@ public class GameplayScreen extends OvertoneScreen
     private void CheckInputPaused()
     {
         if(_input.ActionOccurred(InputManager.KeyBinding.Pause, InputManager.ActionType.Pressed))
-        {
             _resumeDelay = true;
-        }
     }
 
     /**
@@ -480,6 +496,33 @@ public class GameplayScreen extends OvertoneScreen
 
     }
 
+    private void UpdateCrowdRating()
+    {
+        Rating.ScoreRating rating = Rating.ScoreRating.GetRating(_perfectCounter, _greatCounter, _goodCounter, _badCounter, _missCounter);
+
+        switch(rating.ordinal())
+        {
+            case 0:
+                _currentCrowdRating = _perfection;
+                break;
+            case 1:
+                _currentCrowdRating = _brilliant;
+                break;
+            case 2:
+                _currentCrowdRating = _great;
+                break;
+            case 3:
+                _currentCrowdRating = _cleared;
+                break;
+            case 4:
+                _currentCrowdRating = _failure;
+                 break;
+            default:
+                _currentCrowdRating = _cleared;
+                break;
+        }
+    }
+
     public void resize(int width, int height)
     {
         super.resize(width, height);
@@ -505,5 +548,11 @@ public class GameplayScreen extends OvertoneScreen
         _i.dispose();
         _k.dispose();
         _stage.dispose();
+        _pausedBackground.dispose();
+        _perfection.dispose();
+        _brilliant.dispose();
+        _great.dispose();
+        _cleared.dispose();
+        _failure.dispose();
     }
 }

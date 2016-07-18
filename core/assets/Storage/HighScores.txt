@@ -5,11 +5,11 @@ e
 0 ---
 0 ---
 n
+6200 Great
+6200 Great
 5800 Great
-0 ---
-0 ---
-0 ---
-0 ---
+2200 Cleared
+1900 Failure
 h
 1800 Failure
 500 Failure
