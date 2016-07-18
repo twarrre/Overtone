@@ -1,9 +1,12 @@
 package com.overtone.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.overtone.Notes.Note;
@@ -22,6 +25,14 @@ public class SongCompleteScreen extends OvertoneScreen
     private final int _score;
     private final String _songCompleted;
     private final int[] _counters;
+    private final ImageButton _yesButton;
+    private final ImageButton _noButton;
+    private final TextButton _retryButton;
+    private final TextButton _menuButton;
+    private final TextButton _difficultyButton;
+    private final Image _background;
+    private Overtone.Screens _nextScreen;
+    private boolean _showConfirmationScreen;
 
     public SongCompleteScreen(int screenWidth, int screenHeight, boolean completed, int score, int ... counters)
     {
@@ -31,27 +42,72 @@ public class SongCompleteScreen extends OvertoneScreen
         _score = score;
         _songCompleted =  completed ? "Song Completed!" : "Song Failed...";
         _counters = counters;
+        _nextScreen = Overtone.Screens.MainMenu;
+        _showConfirmationScreen = false;
 
-        final TextButton retryButton = CreateTextButton("RETRY", "default", _screenWidth * 0.25f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.075f), _stage);
-        retryButton.addListener(new ClickListener() {
+        _retryButton = CreateTextButton("RETRY", "default", _screenWidth * 0.25f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.075f), _stage);
+        _retryButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
-                Overtone.SetScreen(Overtone.Screens.Gameplay);
+                _nextScreen = Overtone.Screens.Gameplay;
+                _background.setVisible(true);
+                _yesButton.setDisabled(false);
+                _yesButton.setVisible(true);
+                _noButton.setDisabled(false);
+                _noButton.setVisible(true);
+                _showConfirmationScreen = true;
             }
         });
 
-        final TextButton menuButton = CreateTextButton("MAIN MENU", "default", _screenWidth * 0.25f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.375f, _screenHeight * 0.075f), _stage);
-        menuButton.addListener(new ClickListener() {
+        _menuButton = CreateTextButton("MAIN MENU", "default", _screenWidth * 0.25f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.375f, _screenHeight * 0.075f), _stage);
+        _menuButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
-                Overtone.SetScreen(Overtone.Screens.MainMenu);
+                _nextScreen = Overtone.Screens.MainMenu;
+                _background.setVisible(true);
+                _yesButton.setDisabled(false);
+                _yesButton.setVisible(true);
+                _noButton.setDisabled(false);
+                _noButton.setVisible(true);
+                _showConfirmationScreen = true;
             }
         });
 
-        final TextButton difficultyButton = CreateTextButton("CHANGE DIFFICULTY", "default", _screenWidth * 0.25f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.675f, _screenHeight * 0.075f), _stage);
-        difficultyButton.addListener(new ClickListener() {
+        _difficultyButton = CreateTextButton("CHANGE DIFFICULTY", "default", _screenWidth * 0.25f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.675f, _screenHeight * 0.075f), _stage);
+        _difficultyButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
-                Overtone.SetScreen(Overtone.Screens.DifficultySelect);
+                _nextScreen = Overtone.Screens.DifficultySelect;
+                _background.setVisible(true);
+                _yesButton.setDisabled(false);
+                _yesButton.setVisible(true);
+                _noButton.setDisabled(false);
+                _noButton.setVisible(true);
+                _showConfirmationScreen = true;
             }
         });
+
+        _background = new Image(new Texture(Gdx.files.internal("Textures\\background.png")));
+        _background.setWidth(_screenWidth * 0.85f);
+        _background.setHeight(_screenHeight * 0.75f);
+        _background.setPosition(screenWidth * 0.075f, _screenHeight * 0.125f);
+        _stage.addActor(_background);
+        _background.setVisible(false);
+
+        _yesButton = CreateImageButton("yesButtons",_screenWidth * 0.1f, _screenWidth * 0.1f, new Vector2(_screenWidth * 0.375f, _screenHeight * 0.2f), _stage);
+        _yesButton.addListener(new ClickListener() {
+            public void clicked (InputEvent i, float x, float y) {Overtone.SetScreen(_nextScreen);
+            }
+        });
+        _yesButton.setDisabled(true);
+        _yesButton.setVisible(false);
+
+
+        _noButton = CreateImageButton("noButtons",_screenWidth * 0.1f, _screenWidth * 0.1f, new Vector2(_screenWidth * 0.525f, _screenHeight * 0.2f), _stage);
+        _noButton.addListener(new ClickListener() {
+            public void clicked (InputEvent i, float x, float y) {
+                Overtone.SetScreen(_nextScreen);
+            }
+        });
+        _noButton.setDisabled(true);
+        _noButton.setVisible(false);
 
         Overtone.UpdateScore(_score, Rating.ScoreRating.GetRating(_counters), Overtone._difficulty);
     }
@@ -59,7 +115,6 @@ public class SongCompleteScreen extends OvertoneScreen
     public void render (float deltaTime)
     {
         super.render(deltaTime);
-        _stage.draw();
 
         _batch.begin();
 
@@ -135,6 +190,17 @@ public class SongCompleteScreen extends OvertoneScreen
         }
 
         _batch.end();
+
+        _stage.draw();
+        if(_showConfirmationScreen)
+        {
+            _batch.begin();
+            _glyphLayout.reset();
+            _font.getData().setScale(4);
+            _glyphLayout.setText(_font,  "Did you like this song?");
+            _font.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.7f);
+            _batch.end();
+        }
     }
 
     public void update(float deltaTime)
