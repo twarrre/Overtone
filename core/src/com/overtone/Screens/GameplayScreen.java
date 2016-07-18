@@ -271,7 +271,7 @@ public class GameplayScreen extends OvertoneScreen
 
         for(int i = 0; i <  5; i++)
         {
-            _batch.draw(_currentCrowdRating, _screenWidth * 0.40f + (_screenWidth * 0.04f * (float)i), _screenHeight * 0.05f, _screenWidth * 0.04f, _screenWidth * 0.04f);
+            _batch.draw(_currentCrowdRating, _screenWidth * 0.40f + (_screenWidth * 0.04f * (float)i), _screenHeight * 0.02f, _screenWidth * 0.04f, _screenWidth * 0.04f);
         }
 
         _batch.setColor(1.0f, 1.0f, 1.0f, (_failureTimer /FAILURE_TIMER[Overtone._difficulty.ordinal()]));
