@@ -12,9 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.overtone.Notes.Note;
-
-import java.io.*;
 
 /**
  * Base class for all screens in Overtone.
@@ -23,7 +20,6 @@ import java.io.*;
  */
 public class OvertoneScreen implements OvertoneScreenInterface
 {
-    // The background image for the screen
     protected final SpriteBatch _batch;
     protected final BitmapFont  _font;
     protected final GlyphLayout _glyphLayout;
@@ -34,6 +30,7 @@ public class OvertoneScreen implements OvertoneScreenInterface
     protected final Texture     _no;
     protected final Texture     _noHover;
     protected final Texture     _noDown;
+
     protected float             _screenWidth;
     protected float             _screenHeight;
 
@@ -44,22 +41,19 @@ public class OvertoneScreen implements OvertoneScreenInterface
      */
     public OvertoneScreen(float screenWidth, float screenHeight)
     {
-        _screenWidth         = screenWidth;
-        _screenHeight        = screenHeight;
+        _screenWidth  = screenWidth;
+        _screenHeight = screenHeight;
+        _batch        = new SpriteBatch();
+        _font         = new BitmapFont();
+        _glyphLayout  = new GlyphLayout();
+        _skin         = new Skin();
 
-        _batch           = new SpriteBatch();
-
-        _font        = new BitmapFont();
-        _glyphLayout = new GlyphLayout();
-
-        _skin  = new Skin();
-
-        _yes      = new Texture(Gdx.files.internal("Textures\\yes.png"));
-        _yesHover = new Texture(Gdx.files.internal("Textures\\yesHover.png"));
-        _yesDown  = new Texture(Gdx.files.internal("Textures\\yesDown.png"));
-        _no       = new Texture(Gdx.files.internal("Textures\\no.png"));
-        _noHover  = new Texture(Gdx.files.internal("Textures\\noHover.png"));
-        _noDown   = new Texture(Gdx.files.internal("Textures\\noDown.png"));
+        _yes          = new Texture(Gdx.files.internal("Textures\\yes.png"));
+        _yesHover     = new Texture(Gdx.files.internal("Textures\\yesHover.png"));
+        _yesDown      = new Texture(Gdx.files.internal("Textures\\yesDown.png"));
+        _no           = new Texture(Gdx.files.internal("Textures\\no.png"));
+        _noHover      = new Texture(Gdx.files.internal("Textures\\noHover.png"));
+        _noDown       = new Texture(Gdx.files.internal("Textures\\noDown.png"));
 
         Pixmap pixmap = new Pixmap(100, 100, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
@@ -96,14 +90,12 @@ public class OvertoneScreen implements OvertoneScreenInterface
         imageButtonStyleYes.up   = _skin.newDrawable("yes", new Color(1f, 1f, 1f, 1f));
         imageButtonStyleYes.over = _skin.newDrawable("yesHover", new Color(1f, 1f, 1f, 1f));
         imageButtonStyleYes.down = _skin.newDrawable("yesDown", new Color(1f, 1f, 1f, 1f));
-
         _skin.add("yesButtons", imageButtonStyleYes);
 
         ImageButton.ImageButtonStyle imageButtonStyleNo = new ImageButton.ImageButtonStyle();
         imageButtonStyleNo.up   = _skin.newDrawable("no", new Color(1f, 1f, 1f, 1f));
         imageButtonStyleNo.over = _skin.newDrawable("noHover", new Color(1f, 1f, 1f, 1f));
         imageButtonStyleNo.down = _skin.newDrawable("noDown", new Color(1f, 1f, 1f, 1f));
-
         _skin.add("noButtons", imageButtonStyleNo);
     }
 
@@ -129,39 +121,10 @@ public class OvertoneScreen implements OvertoneScreenInterface
         return button;
     }
 
-    public void show ()
-    {
-
-    }
-
-    public void render (float deltaTime)
-    {
-    }
-
-    public void update(float deltaTime)
-    {
-
-    }
-
     public void resize (int width, int height)
     {
-        _screenWidth = width;
+        _screenWidth  = width;
         _screenHeight = height;
-    }
-
-    public void pause ()
-    {
-
-    }
-
-    public void resume ()
-    {
-
-    }
-
-    public void hide ()
-    {
-
     }
 
     public void dispose ()
@@ -177,4 +140,11 @@ public class OvertoneScreen implements OvertoneScreenInterface
         _noHover.dispose();
         _noDown.dispose();
     }
+
+    public void pause () {}
+    public void resume () {}
+    public void hide () {}
+    public void show () {}
+    public void render (float deltaTime) {}
+    public void update(float deltaTime) {}
 }

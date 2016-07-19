@@ -2,11 +2,9 @@ package com.overtone.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.overtone.Overtone;
 
@@ -26,10 +24,7 @@ public class HelpScreen extends OvertoneScreen
 
         final TextButton backButton = CreateTextButton("BACK", "default", _screenWidth * 0.11f, _screenHeight * 0.08f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.845f), _stage);
         backButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {
-                Overtone.SetScreen(Overtone.Screens.MainMenu);
-            }
-        });
+            public void clicked (InputEvent i, float x, float y) {Overtone.SetScreen(Overtone.Screens.MainMenu);}});
     }
 
     public void render (float deltaTime)

@@ -21,9 +21,6 @@ public class InputManager
         Held,
         Released,
         Up;
-
-        // The size of the enum
-        private static final int size = KeyBinding.values().length;
     }
 
     /**

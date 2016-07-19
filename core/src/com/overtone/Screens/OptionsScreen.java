@@ -2,11 +2,9 @@ package com.overtone.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.overtone.Overtone;
 
@@ -26,15 +24,12 @@ public class OptionsScreen extends OvertoneScreen
 
         final TextButton backButton = CreateTextButton("CONFIRM", "default", _screenWidth * 0.25f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.2175f, _screenHeight * 0.075f), _stage);
         backButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {
-                Overtone.SetScreen(Overtone.Screens.MainMenu);
-            }
+            public void clicked (InputEvent i, float x, float y) {Overtone.SetScreen(Overtone.Screens.MainMenu);}
         });
 
         final TextButton startButton = CreateTextButton("RESET", "default", _screenWidth * 0.25f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.5475f, _screenHeight * 0.075f), _stage);
         startButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {
-                System.out.println("Options Reset");
+            public void clicked (InputEvent i, float x, float y) {System.out.println("Options Reset");
             }
         });
     }

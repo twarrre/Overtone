@@ -26,9 +26,9 @@ import java.util.ArrayList;
  */
 public class GameplayScreen extends OvertoneScreen
 {
-    public static final float ERROR = 0.0045f;
-    public static final float PAUSE_DELAY = 3.0f;
-    public static final float DONE_DELAY = 3.0f;
+    public static final float ERROR           = 0.0045f;
+    public static final float PAUSE_DELAY     = 3.0f;
+    public static final float DONE_DELAY      = 3.0f;
     public static final float[] FAILURE_TIMER = {10.0f, 8.0f, 5.0f};
 
     /**
@@ -43,9 +43,6 @@ public class GameplayScreen extends OvertoneScreen
 
         public Vector2 value;
         TargetZone(float x, float y) { value = new Vector2(x, y);}
-
-        // The size of the enum
-        public static final int size = TargetZone.values().length;
     }
 
     // Objects
@@ -58,7 +55,7 @@ public class GameplayScreen extends OvertoneScreen
     private final Texture _targetZone;
     private final Texture _progressBar;
     private final Texture _progress;
-    private final Texture _arrow;
+    private final Texture _progressArrow;
     private final Texture _d;
     private final Texture _e;
     private final Texture _i;
@@ -69,8 +66,8 @@ public class GameplayScreen extends OvertoneScreen
     private final Texture _great;
     private final Texture _cleared;
     private final Texture _failure;
-    private Texture _currentCrowdRating;
     private final Texture _losing;
+    private Texture       _currentCrowdRating;
 
     // Data Structures
     private final Quadtree          _onScreenNotes;
@@ -81,16 +78,17 @@ public class GameplayScreen extends OvertoneScreen
     private final Sound _noteHit;
 
     // Variables
-    private final float               _totalTime;
+
     private final float               _targetRadius;
     private int                       _combo;
     private int                       _score;
-    private float                     _elapsedTime;
     private boolean                   _paused;
     private boolean                   _resumeDelay;
-    private float                     _resume;
     private boolean                   _songDone;
-    private float                     _doneCounter;
+    private final float               _totalTime;
+    private float                     _elapsedTime;
+    private float                     _resumeTimer;
+    private float                     _doneTimer;
     private float                     _failureTimer;
 
     private int                       _perfectCounter;
@@ -119,21 +117,21 @@ public class GameplayScreen extends OvertoneScreen
         _stage          = new Stage();
 
         // Load textures
-        _targetZone       = new Texture(Gdx.files.internal("Textures\\targetzone.png"));
-        _progressBar      = new Texture(Gdx.files.internal("Textures\\progressbar.png"));
-        _progress         = new Texture(Gdx.files.internal("Textures\\red.png"));
-        _arrow            = new Texture(Gdx.files.internal("Textures\\arrow.png"));
-        _e                = new Texture(Gdx.files.internal("Textures\\e.png"));
-        _d                = new Texture(Gdx.files.internal("Textures\\d.png"));
-        _i                = new Texture(Gdx.files.internal("Textures\\i.png"));
-        _k                = new Texture(Gdx.files.internal("Textures\\k.png"));
-        _background       = new Texture(Gdx.files.internal("Textures\\background.png"));
-        _perfection       = new Texture(Gdx.files.internal("Textures\\perfection.png"));
-        _brilliant        = new Texture(Gdx.files.internal("Textures\\brilliant.png"));
-        _great            = new Texture(Gdx.files.internal("Textures\\great.png"));
-        _cleared          = new Texture(Gdx.files.internal("Textures\\cleared.png"));
-        _failure          = new Texture(Gdx.files.internal("Textures\\failure.png"));
-        _losing           = new Texture(Gdx.files.internal("Textures\\losing.png"));
+        _targetZone         = new Texture(Gdx.files.internal("Textures\\targetzone.png"));
+        _progressBar        = new Texture(Gdx.files.internal("Textures\\progressbar.png"));
+        _progress           = new Texture(Gdx.files.internal("Textures\\red.png"));
+        _progressArrow      = new Texture(Gdx.files.internal("Textures\\arrow.png"));
+        _e                  = new Texture(Gdx.files.internal("Textures\\e.png"));
+        _d                  = new Texture(Gdx.files.internal("Textures\\d.png"));
+        _i                  = new Texture(Gdx.files.internal("Textures\\i.png"));
+        _k                  = new Texture(Gdx.files.internal("Textures\\k.png"));
+        _background         = new Texture(Gdx.files.internal("Textures\\background.png"));
+        _perfection         = new Texture(Gdx.files.internal("Textures\\perfection.png"));
+        _brilliant          = new Texture(Gdx.files.internal("Textures\\brilliant.png"));
+        _great              = new Texture(Gdx.files.internal("Textures\\great.png"));
+        _cleared            = new Texture(Gdx.files.internal("Textures\\cleared.png"));
+        _failure            = new Texture(Gdx.files.internal("Textures\\failure.png"));
+        _losing             = new Texture(Gdx.files.internal("Textures\\losing.png"));
         _currentCrowdRating = _cleared;
 
         // Load sounds
@@ -147,9 +145,9 @@ public class GameplayScreen extends OvertoneScreen
         _score          = 0;
         _paused         = false;
         _resumeDelay    = false;
-        _resume         = 0;
+        _resumeTimer    = 0;
         _songDone       = false;
-        _doneCounter    = 0.0f;
+        _doneTimer      = 0.0f;
         _failureTimer   = 0.0f;
         _perfectCounter = 0;
         _greatCounter   = 0;
@@ -174,31 +172,27 @@ public class GameplayScreen extends OvertoneScreen
 
         _retryButton = CreateTextButton("RETRY", "default", _screenWidth * 0.5f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.25f, _screenHeight * 0.275f), _stage);
         _retryButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {
-                Overtone.SetScreen(Overtone.Screens.Gameplay);
-            }
+            public void clicked (InputEvent i, float x, float y) {Overtone.SetScreen(Overtone.Screens.Gameplay);}
         });
         _retryButton.setDisabled(true);
         _retryButton.setVisible(false);
 
         _quitButton = CreateTextButton("MAIN MENU", "default", _screenWidth * 0.5f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.25f, _screenHeight * 0.075f), _stage);
         _quitButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {
-                Overtone.SetScreen(Overtone.Screens.MainMenu);
-            }
+            public void clicked (InputEvent i, float x, float y) {Overtone.SetScreen(Overtone.Screens.MainMenu);}
         });
         _quitButton.setDisabled(true);
         _quitButton.setVisible(false);
 
         // Load notes
-        _noteQueue       = new Queue<Note>();
+        _noteQueue = new Queue<Note>();
         for(int i = 0; i < 25; i++)
         {
-            Note n = new Note(Note.NoteType.singleNote,
+            Note n = new Note(Note.NoteType.Single,
                     new Vector2(_screenWidth / 2.0f, _screenHeight / 2.0f),
-                    TargetZone.values()[i % TargetZone.size].value,
+                    TargetZone.values()[i % TargetZone.values().length].value,
                     new Vector2(_screenWidth * 0.025f, _screenWidth * 0.025f),
-                    Overtone._difficulty,
+                    Overtone.Difficulty,
                     3.0f + (float)i * 2.0f,
                     _targetRadius,
                     i
@@ -217,14 +211,13 @@ public class GameplayScreen extends OvertoneScreen
     public void render (float deltaTime)
     {
         super.render(deltaTime);
-
         _batch.begin();
 
         // Draw progress bar
         float songProgress = _elapsedTime / _totalTime;
         _batch.draw(_progressBar, _screenWidth * 0.225f, _screenHeight * 0.95f,  _screenWidth * 0.55f,                 _screenHeight * 0.02f);
         _batch.draw(_progress,    _screenWidth * 0.23f,  _screenHeight * 0.955f, _screenWidth * 0.55f * songProgress , _screenHeight * 0.01f);
-        _batch.draw(_arrow,       _screenWidth * 0.23f - (_arrow.getWidth() / 2.0f) + (_screenWidth * 0.55f * songProgress), _screenHeight * 0.94f, _arrow.getWidth(), _arrow.getHeight());
+        _batch.draw(_progressArrow,       _screenWidth * 0.23f - (_progressArrow.getWidth() / 2.0f) + (_screenWidth * 0.55f * songProgress), _screenHeight * 0.94f, _progressArrow.getWidth(), _progressArrow.getHeight());
 
         // Draw the letter borders
         float letterWidth = _screenWidth * 0.2f;
@@ -234,36 +227,26 @@ public class GameplayScreen extends OvertoneScreen
         _batch.draw(_e, 0,                   _screenHeight - letterWidth, letterWidth, letterWidth);
 
         // Draw the target zones
-        for(int i = 0; i < TargetZone.size; i++)
+        for(int i = 0; i < TargetZone.values().length; i++)
         {
             Vector2 pos =  new Vector2(TargetZone.values()[i].value.x - (_screenWidth * 0.0225f) , TargetZone.values()[i].value.y - (_screenWidth * 0.0225f));
-            _batch.draw(_targetZone,
-                    pos.x,
-                    pos.y,
-                    _targetRadius * 2.0f,
-                    _targetRadius * 2.0f
-            );
+            _batch.draw(_targetZone, pos.x, pos.y, _targetRadius * 2.0f, _targetRadius * 2.0f);
         }
 
         // Draw the combo and score
         _glyphLayout.reset();
         _font.getData().setScale(2);
+
         _glyphLayout.setText(_font,  "Combo: " + _combo);
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.7f - (_glyphLayout.width / 2.0f), _screenHeight * 0.05f);
 
-        _glyphLayout.reset();
-        _font.getData().setScale(2);
         _glyphLayout.setText(_font, "Score: " + _score);
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.3f - (_glyphLayout.width / 2.0f), _screenHeight * 0.05f);
 
-        _glyphLayout.reset();
-        _font.getData().setScale(2);
-        _glyphLayout.setText(_font, "High Score: " + Overtone._scores[Overtone._difficulty.ordinal()][0]);
+        _glyphLayout.setText(_font, "High Score: " + Overtone.HighScores[Overtone.Difficulty.ordinal()][0]);
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.775f - _glyphLayout.width, _screenHeight * 0.92f);
 
-        _glyphLayout.reset();
-        _font.getData().setScale(2);
-        _glyphLayout.setText(_font, "Difficulty: " + Overtone._difficulty.toString());
+        _glyphLayout.setText(_font, "Difficulty: " + Overtone.Difficulty.toString());
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.225f, _screenHeight * 0.92f);
 
         _noteRenderer.Draw(_onScreenNotes.GetAll(), _batch);
@@ -274,7 +257,7 @@ public class GameplayScreen extends OvertoneScreen
             _batch.draw(_currentCrowdRating, _screenWidth * 0.40f + (_screenWidth * 0.04f * (float)i), _screenHeight * 0.02f, _screenWidth * 0.04f, _screenWidth * 0.04f);
         }
 
-        _batch.setColor(1.0f, 1.0f, 1.0f, (_failureTimer /FAILURE_TIMER[Overtone._difficulty.ordinal()]));
+        _batch.setColor(1.0f, 1.0f, 1.0f, (_failureTimer / FAILURE_TIMER[Overtone.Difficulty.ordinal()]));
         _batch.draw(_losing, 0, 0, _screenWidth, _screenHeight);
         _batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -295,9 +278,7 @@ public class GameplayScreen extends OvertoneScreen
             _glyphLayout.setText(_font,  "Game will resume in");
             _font.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.85f);
 
-            _glyphLayout.reset();
-            _font.getData().setScale(4);
-            _glyphLayout.setText(_font, (3 - (int)_resume) + "");
+            _glyphLayout.setText(_font, (3 - (int)_resumeTimer) + "");
             _font.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.5f);
         }
 
@@ -324,22 +305,19 @@ public class GameplayScreen extends OvertoneScreen
     {
         super.update(deltaTime);
         _stage.act(deltaTime);
-
-        // Update the input
         _input.Update();
 
         if(_paused)
         {
             CheckInputPaused();
-
             if(_resumeDelay)
             {
-                _resume += deltaTime;
-                if(_resume > PAUSE_DELAY)
+                _resumeTimer += deltaTime;
+                if(_resumeTimer > PAUSE_DELAY)
                 {
                     _paused      = false;
                     _resumeDelay = false;
-                    _resume      = 0;
+                    _resumeTimer = 0;
                 }
             }
             return;
@@ -347,7 +325,7 @@ public class GameplayScreen extends OvertoneScreen
 
         if(_noteQueue.size > 0)
         {
-            if(_noteQueue.first().GetTime() - _noteQueue.first().GetDifficulty().value <=  _elapsedTime + ERROR)
+            if(_noteQueue.first().GetTime() - _noteQueue.first().GetDifficulty().Multiplier <=  _elapsedTime + ERROR)
             {
                 Note n = _noteQueue.removeFirst();
                 n.SetVisibility(true);
@@ -363,10 +341,9 @@ public class GameplayScreen extends OvertoneScreen
 
         if(_songDone)
         {
-            _doneCounter += deltaTime;
-            if(_doneCounter > DONE_DELAY)
-                Overtone.SetScreen(Overtone.Screens.SongComplete, true, _score,
-                        _perfectCounter, _greatCounter, _goodCounter, _badCounter, _missCounter);
+            _doneTimer += deltaTime;
+            if(_doneTimer > DONE_DELAY)
+                Overtone.SetScreen(Overtone.Screens.SongComplete, _elapsedTime < _totalTime ? false : true, _score, _perfectCounter, _greatCounter, _goodCounter, _badCounter, _missCounter);
         }
         else
         {
@@ -377,7 +354,7 @@ public class GameplayScreen extends OvertoneScreen
                 for(Vector2 v : removedNotes)
                 {
                     _missCounter++;
-                    _onScreenRatings.add(new Rating(Rating.RatingValue.Miss, v));
+                    _onScreenRatings.add(new Rating(Rating.RatingType.Miss, v));
                 }
                 _combo = 0;
             }
@@ -402,23 +379,23 @@ public class GameplayScreen extends OvertoneScreen
      */
     private void CheckInput()
     {
-        for(int i = 0; i < TargetZone.size; i++)
+        for(int i = 0; i < TargetZone.values().length; i++)
         {
             if(_input.ActionOccurred(InputManager.KeyBinding.values()[i], InputManager.ActionType.Pressed))
             {
                 _noteHit.play();
                 Rating rating = GetNoteRating(TargetZone.values()[i].value);
 
-                if(rating.GetingRating() == Rating.RatingValue.Perfect || rating.GetingRating() == Rating.RatingValue.Great)
+                if(rating.GetRating() == Rating.RatingType.Perfect || rating.GetRating() == Rating.RatingType.Great)
                     _combo++;
-                else if(rating.GetingRating() == Rating.RatingValue.Bad || rating.GetingRating() == Rating.RatingValue.Miss)
+                else if(rating.GetRating() == Rating.RatingType.Bad || rating.GetRating() == Rating.RatingType.Miss)
                     _combo = 0;
-                else if(rating.GetingRating() == Rating.RatingValue.Ok || rating.GetingRating() == Rating.RatingValue.None)
+                else if(rating.GetRating() == Rating.RatingType.Ok || rating.GetRating() == Rating.RatingType.None)
                     _combo += 0;
 
-                _score += rating.GetingRating().score * _combo;
+                _score += rating.GetRating().Score * _combo;
 
-                if(rating.GetingRating() != Rating.RatingValue.None)
+                if(rating.GetRating() != Rating.RatingType.None)
                     _onScreenRatings.add(rating);
             }
         }
@@ -455,10 +432,10 @@ public class GameplayScreen extends OvertoneScreen
         ArrayList<Note> notes = _onScreenNotes.Get(target);
 
         if(notes.isEmpty())
-            return new Rating(Rating.RatingValue.None, target);
+            return new Rating(Rating.RatingType.None, target);
 
         float minDistance = Float.MAX_VALUE;
-        Note closestNote = null;
+        Note closestNote  = null;
 
         // Find the closest note and store it
         for(Note n : notes)
@@ -478,41 +455,45 @@ public class GameplayScreen extends OvertoneScreen
         if(minDistance <= _targetRadius * 0.15f)
         {
             _perfectCounter++;
-            return new Rating(Rating.RatingValue.Perfect, target);
+            return new Rating(Rating.RatingType.Perfect, target);
         }
         else if(minDistance <= _targetRadius * 0.55f && minDistance > _targetRadius * 0.15f)
         {
             _greatCounter++;
-            return new Rating(Rating.RatingValue.Great, target);
+            return new Rating(Rating.RatingType.Great, target);
         }
         else if(minDistance <= _targetRadius  && minDistance > _targetRadius * 0.55f)
         {
             _goodCounter++;
-            return new Rating(Rating.RatingValue.Ok, target);
+            return new Rating(Rating.RatingType.Ok, target);
         }
         else if(minDistance < _targetRadius * 2.0f  && minDistance > _targetRadius)
         {
             _badCounter++;
-            return new Rating(Rating.RatingValue.Bad, target);
+            return new Rating(Rating.RatingType.Bad, target);
         }
         else
         {
             _missCounter++;
-            return new Rating(Rating.RatingValue.Miss, target);
+            return new Rating(Rating.RatingType.Miss, target);
         }
 
     }
 
+    /**
+     * Updates the crowd on screen to different ratings based on the score so far
+     * @param deltaTime The time since the last frame
+     */
     private void UpdateCrowdRating(float deltaTime)
     {
-        Rating.ScoreRating rating = Rating.ScoreRating.GetRating(_perfectCounter, _greatCounter, _goodCounter, _badCounter, _missCounter);
+        Overtone.CrowdRating rating = Overtone.CrowdRating.GetRating(_perfectCounter, _greatCounter, _goodCounter, _badCounter, _missCounter);
 
-        if(rating == Rating.ScoreRating.Failure)
+        if(rating == Overtone.CrowdRating.Failure)
             _failureTimer += deltaTime;
         else
             _failureTimer = 0.0f;
 
-        if(_failureTimer > FAILURE_TIMER[Overtone._difficulty.ordinal()])
+        if(_failureTimer > FAILURE_TIMER[Overtone.Difficulty.ordinal()])
             _songDone = true;
 
         switch(rating.ordinal())
@@ -557,7 +538,7 @@ public class GameplayScreen extends OvertoneScreen
         _targetZone.dispose();
         _progressBar.dispose();
         _progress.dispose();
-        _arrow.dispose();
+        _progressArrow.dispose();
         _d.dispose();
         _e.dispose();
         _i.dispose();
@@ -569,5 +550,6 @@ public class GameplayScreen extends OvertoneScreen
         _great.dispose();
         _cleared.dispose();
         _failure.dispose();
+        _losing.dispose();
     }
 }

@@ -9,11 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.overtone.Notes.Note;
 import com.overtone.Overtone;
 import com.overtone.Ratings.Rating;
-
-import java.io.*;
 
 /**
  * Screen used for the song complete screen
@@ -21,30 +18,40 @@ import java.io.*;
  */
 public class SongCompleteScreen extends OvertoneScreen
 {
-    private final Stage _stage;
-    private final int _score;
-    private final String _songCompleted;
-    private final int[] _counters;
+    private final Stage       _stage;
+    private final int         _score;
+    private final String      _songCompleted;
+    private final int[]       _counters;
     private final ImageButton _yesButton;
     private final ImageButton _noButton;
-    private final TextButton _retryButton;
-    private final TextButton _menuButton;
-    private final TextButton _difficultyButton;
-    private final Image _background;
-    private Overtone.Screens _nextScreen;
-    private boolean _showConfirmationScreen;
+    private final TextButton  _retryButton;
+    private final TextButton  _menuButton;
+    private final TextButton  _difficultyButton;
+    private final Image       _background;
 
+    private Overtone.Screens _nextScreen;
+    private boolean          _showConfirmationScreen;
+
+    /**
+     * Constructor
+     * @param screenWidth The width of the screen
+     * @param screenHeight The height of the screen
+     * @param completed True if the song was completed successfully, false otherwise
+     * @param score The score that the player got during the song
+     * @param counters Counters for each type of rating for each note in the song
+     */
     public SongCompleteScreen(int screenWidth, int screenHeight, boolean completed, int score, int ... counters)
     {
         super(screenWidth, screenHeight);
 
-        _stage = new Stage();
-        _score = score;
-        _songCompleted =  completed ? "Song Completed!" : "Song Failed...";
-        _counters = counters;
-        _nextScreen = Overtone.Screens.MainMenu;
+        _stage                   = new Stage();
+        _score                  = score;
+        _songCompleted          = completed ? "Song Completed!" : "Song Failed...";
+        _counters               = counters;
+        _nextScreen             = Overtone.Screens.MainMenu;
         _showConfirmationScreen = false;
 
+        // Set up retry button
         _retryButton = CreateTextButton("RETRY", "default", _screenWidth * 0.25f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.075f), _stage);
         _retryButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
@@ -58,6 +65,7 @@ public class SongCompleteScreen extends OvertoneScreen
             }
         });
 
+        // Set up main menu button
         _menuButton = CreateTextButton("MAIN MENU", "default", _screenWidth * 0.25f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.375f, _screenHeight * 0.075f), _stage);
         _menuButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
@@ -71,6 +79,7 @@ public class SongCompleteScreen extends OvertoneScreen
             }
         });
 
+        // Set up change difficulty button
         _difficultyButton = CreateTextButton("CHANGE DIFFICULTY", "default", _screenWidth * 0.25f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.675f, _screenHeight * 0.075f), _stage);
         _difficultyButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
@@ -84,6 +93,7 @@ public class SongCompleteScreen extends OvertoneScreen
             }
         });
 
+        // Set up background for confirmation screen
         _background = new Image(new Texture(Gdx.files.internal("Textures\\background.png")));
         _background.setWidth(_screenWidth * 0.85f);
         _background.setHeight(_screenHeight * 0.75f);
@@ -91,25 +101,20 @@ public class SongCompleteScreen extends OvertoneScreen
         _stage.addActor(_background);
         _background.setVisible(false);
 
+        // Set up yes button for confirmation screen
         _yesButton = CreateImageButton("yesButtons",_screenWidth * 0.1f, _screenWidth * 0.1f, new Vector2(_screenWidth * 0.375f, _screenHeight * 0.2f), _stage);
-        _yesButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {Overtone.SetScreen(_nextScreen);
-            }
-        });
+        _yesButton.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {Overtone.SetScreen(_nextScreen);}});
         _yesButton.setDisabled(true);
         _yesButton.setVisible(false);
 
-
+        // Set up yes button for confirmation screen
         _noButton = CreateImageButton("noButtons",_screenWidth * 0.1f, _screenWidth * 0.1f, new Vector2(_screenWidth * 0.525f, _screenHeight * 0.2f), _stage);
-        _noButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {
-                Overtone.SetScreen(_nextScreen);
-            }
-        });
+        _noButton.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {Overtone.SetScreen(_nextScreen);}});
         _noButton.setDisabled(true);
         _noButton.setVisible(false);
 
-        Overtone.UpdateScore(_score, Rating.ScoreRating.GetRating(_counters), Overtone._difficulty);
+        // Update the score if necessary
+        Overtone.UpdateScore(_score, Overtone.CrowdRating.GetRating(_counters), Overtone.Difficulty);
     }
 
     public void render (float deltaTime)
@@ -120,71 +125,50 @@ public class SongCompleteScreen extends OvertoneScreen
 
         _glyphLayout.reset();
         _font.getData().setScale(3);
+
         _glyphLayout.setText(_font, _songCompleted);
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.5f - _glyphLayout.width / 2.0f, _screenHeight * 0.92f);
 
-        _glyphLayout.reset();
-        _font.getData().setScale(3);
         _glyphLayout.setText(_font, "Notes");
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.25f - _glyphLayout.width / 2.0f, _screenHeight * 0.75f);
 
         _glyphLayout.reset();
         _font.getData().setScale(2);
+
         _glyphLayout.setText(_font, "Difficulty:");
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.65f);
 
-        _glyphLayout.reset();
-        _font.getData().setScale(2);
         _glyphLayout.setText(_font, "Rating:");
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.57f);
 
-        _glyphLayout.reset();
-        _font.getData().setScale(2);
         _glyphLayout.setText(_font, "Score: ");
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.49f);
 
-        _glyphLayout.reset();
-        _font.getData().setScale(2);
         _glyphLayout.setText(_font, "High Score: ");
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.41f);
 
-        _glyphLayout.reset();
-        _font.getData().setScale(2);
-        _glyphLayout.setText(_font, "" + Overtone._difficulty.toString());
+        _glyphLayout.setText(_font, "" + Overtone.Difficulty.toString());
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.925f - _glyphLayout.width, _screenHeight * 0.65f);
 
-        _glyphLayout.reset();
-        _font.getData().setScale(2);
-        _glyphLayout.setText(_font, "" + Rating.ScoreRating.GetRating(_counters).toString());
+        _glyphLayout.setText(_font, "" + Overtone.CrowdRating.GetRating(_counters).toString());
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.925f - _glyphLayout.width, _screenHeight * 0.57f);
 
-        _glyphLayout.reset();
-        _font.getData().setScale(2);
         _glyphLayout.setText(_font, "" + _score);
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.925f - _glyphLayout.width, _screenHeight * 0.49f);
 
-        _glyphLayout.reset();
-        _font.getData().setScale(2);
-        _glyphLayout.setText(_font, (Overtone._scores[Overtone._difficulty.ordinal()][0] > _score) ? Overtone._scores[Overtone._difficulty.ordinal()][0] + "" : _score + "");
+        _glyphLayout.setText(_font, (Overtone.HighScores[Overtone.Difficulty.ordinal()][0] > _score) ? Overtone.HighScores[Overtone.Difficulty.ordinal()][0] + "" : _score + "");
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.925f - _glyphLayout.width, _screenHeight * 0.41f);
 
-        if(_score > Overtone._scores[Overtone._difficulty.ordinal()][0])
+        if(_score > Overtone.HighScores[Overtone.Difficulty.ordinal()][0])
         {
-            _glyphLayout.reset();
-            _font.getData().setScale(2);
             _glyphLayout.setText(_font, "New High Score!!");
             _font.draw(_batch, _glyphLayout, _screenWidth * 0.5f - _glyphLayout.width / 2.0f, _screenHeight * 0.85f);
         }
 
         for(int i = 0; i < _counters.length; i++)
         {
-            _glyphLayout.reset();
-            _font.getData().setScale(2);
-            _glyphLayout.setText(_font, Rating.RatingValue.values()[i].toString() + ": ");
+            _glyphLayout.setText(_font, Overtone.CrowdRating.values()[i].toString() + ": ");
             _font.draw(_batch, _glyphLayout, _screenWidth * 0.075f, _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
-
-            _glyphLayout.reset();
-            _font.getData().setScale(2);
             _glyphLayout.setText(_font, "" + _counters[i]);
             _font.draw(_batch, _glyphLayout, _screenWidth * 0.425f - _glyphLayout.width, _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
         }

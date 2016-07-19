@@ -26,29 +26,21 @@ public class MainMenuScreen extends OvertoneScreen
 
         final TextButton playButton = CreateTextButton("PLAY", "default", _screenWidth * 0.85f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.21f), _stage);
         playButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {
-                Overtone.SetScreen(Overtone.Screens.DifficultySelect);
-            }
+            public void clicked (InputEvent i, float x, float y) {Overtone.SetScreen(Overtone.Screens.DifficultySelect);}
         });
 
         final TextButton highScoreButton = CreateTextButton("HIGH SCORES", "default", _screenWidth * 0.18f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.075f), _stage);
         highScoreButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {
-                Overtone.SetScreen(Overtone.Screens.HighScore);
-            }
-        });
+            public void clicked (InputEvent i, float x, float y) {Overtone.SetScreen(Overtone.Screens.HighScore);}});
 
         final TextButton optionsButton = CreateTextButton("OPTIONS", "default", _screenWidth * 0.18f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.2983f, _screenHeight * 0.075f), _stage);
         optionsButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {
-                Overtone.SetScreen(Overtone.Screens.Options);
-            }
+            public void clicked (InputEvent i, float x, float y) {Overtone.SetScreen(Overtone.Screens.Options);}
         });
 
         final TextButton helpButton = CreateTextButton("HELP", "default", _screenWidth * 0.18f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.5217f, _screenHeight * 0.075f), _stage);
         helpButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {
-                Overtone.SetScreen(Overtone.Screens.Help);
+            public void clicked (InputEvent i, float x, float y) {Overtone.SetScreen(Overtone.Screens.Help);
             }
         });
 
@@ -65,21 +57,17 @@ public class MainMenuScreen extends OvertoneScreen
         super.render(deltaTime);
 
         _batch.begin();
-
         _glyphLayout.reset();
         _font.getData().setScale(1);
+
         _glyphLayout.setText(_font,"Trevor Ware");
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.965f - (_glyphLayout.width / 2.0f), _screenHeight * 0.035f - (_glyphLayout.height / 2.0f));
 
-        _glyphLayout.reset();
-        _font.getData().setScale(1);
         _glyphLayout.setText(_font,"Version 1.0");
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.035f - (_glyphLayout.width / 2.0f), _screenHeight * 0.035f - (_glyphLayout.height / 2.0f));
-
         _batch.end();
 
         _font.getData().scale(1);
-
         _stage.draw();
     }
 

@@ -13,6 +13,6 @@ n
 h
 1800 Failure
 500 Failure
-0 ---
+500 Failure
 0 ---
 0 ---

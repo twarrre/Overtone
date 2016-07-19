@@ -1,6 +1,7 @@
 package com.overtone.Notes;
 
 import com.badlogic.gdx.math.Vector2;
+import com.overtone.Overtone;
 
 /**
  * Represents a note object in the game
@@ -13,39 +14,9 @@ public class Note
      */
     public enum  NoteType
     {
-        singleNote(0),
-        doubleNote(1),
-        holdNote(2);
-
-        public int value;
-        NoteType(int value) { this.value = value; }
-    }
-
-    /**
-     * The difficulty multiplier for each difficulty.
-     */
-    public enum DifficultyMultiplier
-    {
-        easy(5),
-        normal(4),
-        hard(3);
-
-        public float value;
-        DifficultyMultiplier(float value) { this.value = value; }
-        public String toString()
-        {
-            switch(this.ordinal())
-            {
-                case 0:
-                    return "Easy";
-                case 1:
-                    return "Normal";
-                case 2:
-                    return "Hard";
-                default:
-                    return "";
-            }
-        }
+        Single,
+        Double,
+        Hold;
     }
 
     // Stores the type of note that this is
@@ -58,7 +29,7 @@ public class Note
     private final float _speed;
 
     // The difficulty of the note
-    private final DifficultyMultiplier _difficulty;
+    private final Overtone.Difficulty _difficulty;
 
     // The direction that the note is heading
     private final Vector2 _direction;
@@ -92,16 +63,16 @@ public class Note
      * @param targetRadius The radius of the target zone
      * @param id The unique identifer of the note
      */
-    public Note(NoteType type, Vector2 center, Vector2 target, Vector2 scale, DifficultyMultiplier diff, float timer, float targetRadius, int id)
+    public Note(NoteType type, Vector2 center, Vector2 target, Vector2 scale, Overtone.Difficulty diff, float timer, float targetRadius, int id)
     {
         // Calculate the direction the note is heading
         _direction = new Vector2(target.x - center.x, target.y - center.y).nor();
 
         // Shift the center into the proper quad based on the direction it is going
-        _center       = new Vector2(center.x + _direction.x, center.y + _direction.y);
+        _center    = new Vector2(center.x + _direction.x, center.y + _direction.y);
 
         // Calculate the speed of the note based on difficulty and distance to the target
-        _speed     = ((float)Math.sqrt(Math.pow((target.x - _center.x), 2) + Math.pow((target.y - _center.y), 2))) / diff.value;
+        _speed     = ((float)Math.sqrt(Math.pow((target.x - _center.x), 2) + Math.pow((target.y - _center.y), 2))) / diff.Multiplier;
 
         _type         = type;
         _target       = target;
@@ -175,7 +146,7 @@ public class Note
     /**
      * @return The difficulty of the note
      */
-    public DifficultyMultiplier GetDifficulty() {return _difficulty;}
+    public Overtone.Difficulty GetDifficulty() {return _difficulty;}
 
     /**
      * @return The identifier of the note

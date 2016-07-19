@@ -155,7 +155,7 @@ public class Quadtree
 
             level++;
 
-            // Parition all of the children nodes
+            // Partition all of the children nodes
             Partition(level, node.topLeft);
             Partition(level, node.topRight);
             Partition(level, node.bottomLeft);

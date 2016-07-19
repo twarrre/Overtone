@@ -3,9 +3,6 @@ package com.overtone;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.utils.Array;
-import com.overtone.Notes.Note;
-import com.overtone.Ratings.Rating;
 import com.overtone.Screens.*;
 
 import java.io.*;
@@ -13,6 +10,9 @@ import java.io.*;
 public class Overtone extends ApplicationAdapter
 {
 
+	/**
+	 * Enum for the different types of screens
+	 */
 	public enum Screens
 	{
 		MainMenu,
@@ -22,26 +22,115 @@ public class Overtone extends ApplicationAdapter
 		Options,
 		Help,
 		HighScore,
-		Splash;
+		Splash
 	}
 
-	// Stores the current screen that is on display
-	public static OvertoneScreen            _currentScreen;
-	public static int[][]                   _scores;
-    public static Rating.ScoreRating[][]    _scoresRatings;
-	public static Note.DifficultyMultiplier _difficulty;
+	/**
+	 * The available difficulties for the game.
+	 */
+	public enum Difficulty
+	{
+		Easy(5),
+		Normal(4),
+		Hard(3);
+
+		public float Multiplier;
+		Difficulty(float multiplier) { this.Multiplier = multiplier; }
+	}
+
+	/**
+	 * Enum for the different ratings for the score
+	 */
+	public enum CrowdRating
+	{
+		Perfection,
+		Brilliant,
+		Great,
+		Cleared,
+		Failure,
+		None;
+
+		public static CrowdRating GetRating(int ... counters)
+		{
+			float score = 0;
+
+			int totalNotes = 0;
+			for(int i = 0; i < counters.length; i++)
+				totalNotes += counters[i];
+
+			score += 1.0f * ((float)counters[0] / totalNotes);
+			score += 0.5f * ((float)counters[1] / totalNotes);
+			score += 0.3f * ((float)counters[2] / totalNotes);
+			score += 0.1f * ((float)counters[3] / totalNotes);
+			score += 0.0f * ((float)counters[4] / totalNotes);
+
+			if(score >= 1.0f)
+				return Perfection;
+			else if(score >= 0.86f && score < 1.0f)
+				return Brilliant;
+			else if(score >= 0.66f && score <= 0.85f)
+				return Great;
+			else if(score >= 0.5f && score < 0.65f)
+				return Cleared;
+			else if(score < 0.5f)
+				return Failure;
+			else
+				return None;
+		}
+
+		public static CrowdRating GetRating(String rating)
+		{
+			if(rating.compareTo("Perfection") == 0)
+				return Perfection;
+			else if(rating.compareTo("Brilliant") == 0)
+				return Brilliant;
+			else if(rating.compareTo("Great") == 0)
+				return Great;
+			else if(rating.compareTo("Cleared") == 0)
+				return Cleared;
+			else if(rating.compareTo("Failure") == 0)
+				return Failure;
+			else
+				return None;
+		}
+
+		public String toString()
+		{
+			switch(this.ordinal())
+			{
+				case 0:
+					return "Perfection";
+				case 1:
+					return "Brilliant";
+				case 2:
+					return "Great";
+				case 3:
+					return "Cleared";
+				case 4:
+					return "Failure";
+				case 5:
+					return "---";
+				default:
+					return "---";
+			}
+		}
+	}
+
+	// Variables
+	private static OvertoneScreen _currentScreen;
+	public static int[][]         HighScores;
+    public static CrowdRating[][] CrowdRatings;
+	public static Difficulty      Difficulty;
 
 	@Override
 	public void create ()
 	{
-		_difficulty    = Note.DifficultyMultiplier.easy;
-
-		_scores        = new int[3][5];
-        _scoresRatings = new Rating.ScoreRating[3][5];
-		LoadHighScores();
-
-		_currentScreen = new SplashScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());//SongCompleteScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true, Note.DifficultyMultiplier.easy, 39, 0, 0, 0, 0, 0);
+		Difficulty     = Difficulty.Easy;
+		HighScores     = new int[3][5];
+        CrowdRatings   = new CrowdRating[3][5];
+		_currentScreen = new SplashScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		_currentScreen.show();
+		LoadHighScores();
 	}
 
 	@Override
@@ -56,11 +145,22 @@ public class Overtone extends ApplicationAdapter
 		_currentScreen.render(deltaTime);
 	}
 
+	/**
+	 * Called every frame. Updates the current screen.
+	 * @param deltaTime Time since last frame.
+     */
 	public void Update(float deltaTime)
 	{
 		_currentScreen.update(deltaTime);
 	}
 
+	/**
+	 * Sets the screen to a new screen. Called from Gameplay screen to Song Completion screen.
+	 * @param s The type of the next screen
+	 * @param completed True if the song was successfully completed, false otherwise
+	 * @param score The score that the player achieved
+	 * @param counters Counters for each type of rating
+     */
 	public static void SetScreen(Screens s, boolean completed, int score, int ... counters)
 	{
 		_currentScreen.hide();
@@ -71,6 +171,10 @@ public class Overtone extends ApplicationAdapter
 		_currentScreen.show();
 	}
 
+	/**
+	 * Sets the screen to a new screen.
+	 * @param s The type of the next screen.
+     */
 	public static void SetScreen(Screens s)
 	{
 		_currentScreen.hide();
@@ -93,10 +197,14 @@ public class Overtone extends ApplicationAdapter
 		_currentScreen.show();
 	}
 
+	/**
+	 * Loads high scores from a file.
+	 */
 	public static void LoadHighScores()
 	{
 		try
 		{
+			// Open the file
 			BufferedReader reader = new BufferedReader(new FileReader("Storage\\HighScores.txt"));
 
 			String line      = null;
@@ -114,8 +222,8 @@ public class Overtone extends ApplicationAdapter
 					continue;
 				}
 
-				_scores[diffCounter][scoreCounter]        = Integer.parseInt(tokens[0]);
-                _scoresRatings[diffCounter][scoreCounter] = Rating.ScoreRating.GetRating("" + tokens[1]);
+				HighScores[diffCounter][scoreCounter]   = Integer.parseInt(tokens[0]);
+                CrowdRatings[diffCounter][scoreCounter] = CrowdRating.GetRating("" + tokens[1]);
 				scoreCounter++;
 			}
 
@@ -127,10 +235,18 @@ public class Overtone extends ApplicationAdapter
 		}
 	}
 
-	public static void ResetScores()
+	/**
+	 * Writes the scores to a file
+	 * @param reset true if you want to reset the high scores, false otherwise
+     */
+	public static void WriteScores(boolean reset)
 	{
-		_scores = new int[3][5];
-        _scoresRatings = new Rating.ScoreRating[3][5];
+
+		if(reset)
+		{
+			HighScores   = new int[3][5];
+			CrowdRatings = new CrowdRating[3][5];
+		}
 
 		try
 		{
@@ -139,9 +255,9 @@ public class Overtone extends ApplicationAdapter
 			if (!file.exists())
 				file.createNewFile();
 
-			FileWriter fw = new FileWriter(file.getAbsoluteFile());
-			BufferedWriter writer = new BufferedWriter(fw);
-			String[] diff = {"e", "n", "h"};
+			FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter writer = new BufferedWriter(fileWriter);
+			String[] diff         = {"e", "n", "h"};
 
 			for(int i = 0; i < diff.length; i++)
 			{
@@ -149,41 +265,15 @@ public class Overtone extends ApplicationAdapter
 				writer.newLine();
 				for(int j = 0; j < 5; j++)
 				{
-                    _scoresRatings[i][j] = Rating.ScoreRating.None;
-                    _scores[i][j] = 0;
-					writer.write(0 + " ---");
-					writer.newLine();
-				}
-			}
+					if(reset)
+					{
+						CrowdRatings[i][j] = CrowdRating.None;
+						HighScores[i][j]   = 0;
+						writer.write(0 + " ---");
+					}
+					else
+						writer.write(HighScores[i][j] + " " + CrowdRatings[i][j]);
 
-			writer.close();
-		}
-		catch(IOException x)
-		{
-			System.out.print("Data Cannot be reset at this time.");
-		}
-	}
-
-	public static void WriteScores()
-	{
-		try
-		{
-			File file = new File("Storage\\HighScores.txt");
-
-			if (!file.exists())
-				file.createNewFile();
-
-			FileWriter fw = new FileWriter(file.getAbsoluteFile());
-			BufferedWriter writer = new BufferedWriter(fw);
-			String[] diff = {"e", "n", "h"};
-
-			for(int i = 0; i < diff.length; i++)
-			{
-				writer.write(diff[i]);
-				writer.newLine();
-				for(int j = 0; j < 5; j++)
-				{
-					writer.write(_scores[i][j] + " " + _scoresRatings[i][j]);
 					writer.newLine();
 				}
 			}
@@ -196,27 +286,38 @@ public class Overtone extends ApplicationAdapter
 		}
 	}
 
-	public static void UpdateScore(int score, Rating.ScoreRating rating, Note.DifficultyMultiplier difficulty)
+	/**
+	 * Checks if the passed in score is better than any of the stored scores and updates the scores.
+	 * @param score The scores to be checked
+	 * @param rating The rating of the score
+	 * @param difficulty The difficultly of the song
+     */
+	public static void UpdateScore(int score, CrowdRating rating, Difficulty difficulty)
 	{
-		boolean replacedScore = false;
-		int replace = score;
-        Rating.ScoreRating replacedRating = rating;
-		for(int i = 0; i < _scores[difficulty.ordinal()].length; i++)
-		{
-			if(replace > _scores[difficulty.ordinal()][i])
-			{
-				replacedScore = true;
-				int temp = _scores[difficulty.ordinal()][i];
-				_scores[difficulty.ordinal()][i] = replace;
-				replace = temp;
+		boolean replaced            = false;
+		int scoreToReplace          = score;
+		CrowdRating ratingToReplace = rating;
 
-                Rating.ScoreRating temp2 = _scoresRatings[_difficulty.ordinal()][i];
-                _scoresRatings[_difficulty.ordinal()][i] = replacedRating;
-                replacedRating = temp2;
+		for(int i = 0; i < HighScores[difficulty.ordinal()].length; i++)
+		{
+			if(scoreToReplace > HighScores[difficulty.ordinal()][i])
+			{
+				replaced = true;
+
+				// Replace the score
+				int tempScore                           = HighScores[difficulty.ordinal()][i];
+				HighScores[difficulty.ordinal()][i]     = scoreToReplace;
+				scoreToReplace                          = tempScore;
+
+				// Replace the rating
+				CrowdRating tempRating                  = CrowdRatings[Difficulty.ordinal()][i];
+                CrowdRatings[Difficulty.ordinal()][i]   = ratingToReplace;
+				ratingToReplace                         = tempRating;
 			}
 		}
 
-		if(replacedScore)
-			WriteScores();
+		// If any scores were changed, write the scores to the file
+		if(replaced)
+			WriteScores(false);
 	}
 }

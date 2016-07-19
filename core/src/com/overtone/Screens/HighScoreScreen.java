@@ -3,18 +3,13 @@ package com.overtone.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.overtone.Notes.Note;
 import com.overtone.Overtone;
-
-import java.io.*;
 
 /**
  * Screen used for high scores
@@ -22,24 +17,25 @@ import java.io.*;
  */
 public class HighScoreScreen extends OvertoneScreen
 {
-    private final Stage _stage;
-    private final TextButton _easyButton;
-    private final TextButton _normalButton;
-    private final TextButton _hardButton;
-    private TextButton _currentButton;
-    private int _difficultyIndex;
-    private final Image _background;
+    private final Stage       _stage;
+    private final TextButton  _easyButton;
+    private final TextButton  _normalButton;
+    private final TextButton  _hardButton;
+    private final Image       _background;
     private final ImageButton _yesButton;
     private final ImageButton _noButton;
-    private final TextButton _backButton;
-    private final TextButton _resetButton;
-    private boolean _showConfirmationScreen;
+    private final TextButton  _backButton;
+    private final TextButton  _resetButton;
+
+    private boolean           _showConfirmationScreen;
+    private TextButton        _currentButton;
+    private int               _difficultyIndex;
 
     public HighScoreScreen(int screenWidth, int screenHeight)
     {
         super(screenWidth, screenHeight);
 
-        _stage = new Stage();
+        _stage           = new Stage();
         _difficultyIndex = 0;
 
         _backButton = CreateTextButton("BACK", "default", _screenWidth * 0.25f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.2175f, _screenHeight * 0.075f), _stage);
@@ -47,7 +43,6 @@ public class HighScoreScreen extends OvertoneScreen
             public void clicked (InputEvent i, float x, float y) {
                 if(_backButton.isDisabled())
                     return;
-
                 Overtone.SetScreen(Overtone.Screens.MainMenu);
             }
         });
@@ -57,7 +52,6 @@ public class HighScoreScreen extends OvertoneScreen
             public void clicked (InputEvent i, float x, float y) {
                 if(_resetButton.isDisabled())
                     return;
-
                 _backButton.setDisabled(true);
                 _resetButton.setDisabled(true);
                 _background.setVisible(true);
@@ -111,7 +105,6 @@ public class HighScoreScreen extends OvertoneScreen
             public void clicked (InputEvent i, float x, float y) {
                 if(_yesButton.isDisabled())
                     return;
-
                 _background.setVisible(false);
                 _yesButton.setVisible(false);
                 _noButton.setVisible(false);
@@ -120,7 +113,7 @@ public class HighScoreScreen extends OvertoneScreen
                 _yesButton.setDisabled(true);
                 _noButton.setDisabled(true);
                 _showConfirmationScreen = false;
-                Overtone.ResetScores();
+                Overtone.WriteScores(true);
             }
         });
         _yesButton.setDisabled(true);
@@ -132,7 +125,6 @@ public class HighScoreScreen extends OvertoneScreen
             public void clicked (InputEvent i, float x, float y) {
                 if(_noButton.isDisabled())
                     return;
-
                 _background.setVisible(false);
                 _yesButton.setVisible(false);
                 _noButton.setVisible(false);
@@ -147,8 +139,7 @@ public class HighScoreScreen extends OvertoneScreen
         _noButton.setVisible(false);
 
         _showConfirmationScreen = false;
-
-        _currentButton = _easyButton;
+        _currentButton          = _easyButton;
         _currentButton.setChecked(true);
     }
 
@@ -163,26 +154,21 @@ public class HighScoreScreen extends OvertoneScreen
         _glyphLayout.setText(_font,  "High Scores");
         _font.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.95f);
 
+        _glyphLayout.reset();
+        _font.getData().setScale(2);
         for(int i = 0; i < 5; i++)
         {
-            _glyphLayout.reset();
-            _font.getData().setScale(2);
             _glyphLayout.setText(_font, (i + 1) + "");
             _font.draw(_batch, _glyphLayout, _screenWidth * 0.3075f - (_glyphLayout.width / 2.0f), _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
 
-            _glyphLayout.reset();
-            _font.getData().setScale(2);
-            _glyphLayout.setText(_font, Overtone._scores[_difficultyIndex][i] + "");
+            _glyphLayout.setText(_font, Overtone.HighScores[_difficultyIndex][i] + "");
             _font.draw(_batch, _glyphLayout, _screenWidth * 0.5075f - (_glyphLayout.width / 2.0f), _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
 
-            _glyphLayout.reset();
-            _font.getData().setScale(2);
-            _glyphLayout.setText(_font, Overtone._scoresRatings[_difficultyIndex][i] + "");
+            _glyphLayout.setText(_font, Overtone.CrowdRatings[_difficultyIndex][i] + "");
             _font.draw(_batch, _glyphLayout, _screenWidth * 0.7075f - (_glyphLayout.width / 2.0f), _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
         }
 
         _batch.end();
-
         _stage.draw();
 
         if( _showConfirmationScreen)

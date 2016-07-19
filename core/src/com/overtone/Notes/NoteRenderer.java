@@ -4,7 +4,6 @@ package com.overtone.Notes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.overtone.Quadtree;
 
 import java.util.ArrayList;
 
@@ -14,6 +13,7 @@ import java.util.ArrayList;
  */
 public class NoteRenderer
 {
+    // Stores all of the textures for note objects
     private final Texture[] _noteTextures;
 
     /**
@@ -21,7 +21,7 @@ public class NoteRenderer
      */
     public NoteRenderer()
     {
-        _noteTextures = new Texture[3];
+        _noteTextures    = new Texture[3];
         _noteTextures[0] = new Texture(Gdx.files.internal("Textures\\Notes\\note.png"));
         _noteTextures[1] = new Texture(Gdx.files.internal("Textures\\Notes\\double_note.png"));
         _noteTextures[2] = new Texture(Gdx.files.internal("Textures\\Notes\\hold_note.png"));
@@ -38,7 +38,7 @@ public class NoteRenderer
         {
             if(notes.get(i).IsVisible())
             {
-                batch.draw(_noteTextures[notes.get(i).GetType().value],
+                batch.draw(_noteTextures[notes.get(i).GetType().ordinal()],
                         notes.get(i).GetPosition().x,
                         notes.get(i).GetPosition().y,
                         notes.get(i).GetScale().x,
