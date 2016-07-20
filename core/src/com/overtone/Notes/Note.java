@@ -45,6 +45,8 @@ public class Note
 
     private Note _partnerNote;
 
+    private boolean _rendered;
+
     /**
      * Constructor
      * @param type The type of note
@@ -70,6 +72,7 @@ public class Note
         _isVisible   = false;
         _scale       = scale;
         _partnerNote = null;
+        _rendered    = false;
     }
 
     /**
@@ -82,7 +85,7 @@ public class Note
         Vector2 noteDir = new Vector2(target.Position.x - pos.x, target.Position.y - pos.y);
 
         // If the dot product is negative we know that the note has passed the target
-        if(noteDir.dot(dir) < 0 && pos.dst(target.Position) > Target.Radius * 2.1)
+        if(noteDir.dot(dir) < 0 && pos.dst(target.Position) > Target.Radius * 0.75f)
             return true;
 
        return false;
@@ -99,6 +102,8 @@ public class Note
             _center.add(new Vector2(_direction.x * _speed * deltaTime, _direction.y * _speed * deltaTime));
         else
             _isVisible = false;
+
+        _rendered = false;
     }
 
     /**
@@ -155,4 +160,8 @@ public class Note
     public void SetOtherNote(Note n){_partnerNote = n;}
 
     public Note GetOtherNote() {return _partnerNote;}
+
+    public void SetRendered(boolean b){_rendered = b;}
+
+    public boolean IsRendered() {return _rendered;}
 }

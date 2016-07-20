@@ -5,14 +5,14 @@ e
 0 ---
 0 ---
 n
+242800 Great
 217700 Brilliant
 211300 Brilliant
 200700 Great
 6200 Great
-6200 Great
 h
 221300 Brilliant
+41500 Cleared
 1800 Failure
 500 Failure
 500 Failure
-0 ---

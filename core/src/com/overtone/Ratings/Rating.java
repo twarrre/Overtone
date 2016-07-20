@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Rating
 {
     /** How long to keep the rating on screen*/
-    public static final float ONSCREEN_TIME = 1.5f;
+    public static final float ONSCREEN_TIME = 0.75f;
 
     /**
      * Represents the ratings of how well the player hit the button

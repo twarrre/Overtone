@@ -26,7 +26,7 @@ import java.util.ArrayList;
  */
 public class GameplayScreen extends OvertoneScreen
 {
-    public static final float ERROR           = 0.0045f;
+    public static final float ERROR           = 0.000045f;
     public static final float PAUSE_DELAY     = 3.0f;
     public static final float DONE_DELAY      = 3.0f;
     public static final float[] FAILURE_TIMER = {10.0f, 8.0f, 5.0f};
@@ -129,7 +129,7 @@ public class GameplayScreen extends OvertoneScreen
         _targetZones[1] = new Target(Overtone.TargetZone.TopRight);
         _targetZones[2] = new Target(Overtone.TargetZone.BottomLeft);
         _targetZones[3] = new Target(Overtone.TargetZone.BottomRight);
-        _totalTime      = 3.0f + (float)25 * 2.0f;
+        _totalTime      = 3.0f + (float)26 * 2.0f;
         _elapsedTime    = 0;
         _combo          = 0;
         _score          = 0;
@@ -174,9 +174,28 @@ public class GameplayScreen extends OvertoneScreen
         _quitButton.setDisabled(true);
         _quitButton.setVisible(false);
 
-        // Load notes
         _noteQueue = new ArrayList<Note>();
-        for(int i = 0; i < 25; i++)
+
+        Note d1 = new Note(Note.NoteType.Double,
+                 new Vector2(_screenWidth * 0.025f, _screenWidth * 0.025f),
+                 new Vector2(_screenWidth / 2.0f, _screenHeight / 2.0f),
+                 _targetZones[0],
+                 3.0f + (float)0 * 2.0f);
+
+        Note d2 = new Note(Note.NoteType.Double,
+                new Vector2(_screenWidth * 0.025f, _screenWidth * 0.025f),
+                new Vector2(_screenWidth / 2.0f, _screenHeight / 2.0f),
+                _targetZones[1],
+                3.0f + (float)0 * 2.0f);
+
+        d1.SetOtherNote(d2);
+        d2.SetOtherNote(d1);
+
+        _noteQueue.add(d1);
+        _noteQueue.add(d2);
+
+        // Load notes
+        for(int i = 1; i < 26; i++)
         {
            // Note(NoteType type, Vector2 scale, Vector2[] center, Target[] target, float[] timer)
             Note n = new Note(Note.NoteType.Single,
@@ -204,8 +223,8 @@ public class GameplayScreen extends OvertoneScreen
         // Draw progress bar
         float songProgress = _elapsedTime / _totalTime;
         _batch.draw(_progressBar, _screenWidth * 0.225f, _screenHeight * 0.95f,  _screenWidth * 0.55f,                 _screenHeight * 0.02f);
-        _batch.draw(_progress,    _screenWidth * 0.23f,  _screenHeight * 0.955f, _screenWidth * 0.55f * songProgress , _screenHeight * 0.01f);
-        _batch.draw(_progressArrow,       _screenWidth * 0.23f - (_progressArrow.getWidth() / 2.0f) + (_screenWidth * 0.55f * songProgress), _screenHeight * 0.94f, _progressArrow.getWidth(), _progressArrow.getHeight());
+        _batch.draw(_progress,    _screenWidth * 0.23f,  _screenHeight * 0.955f, _screenWidth * 0.54f * songProgress , _screenHeight * 0.01f);
+        _batch.draw(_progressArrow,       _screenWidth * 0.23f - (_progressArrow.getWidth() / 2.0f) + (_screenWidth * 0.54f * songProgress), _screenHeight * 0.94f, _progressArrow.getWidth(), _progressArrow.getHeight());
 
         // Draw the letter borders
         float letterWidth = _screenWidth * 0.2f;
