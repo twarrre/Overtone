@@ -167,7 +167,7 @@ public class SongCompleteScreen extends OvertoneScreen
 
         for(int i = 0; i < _counters.length; i++)
         {
-            _glyphLayout.setText(_font, Overtone.CrowdRating.values()[i].toString() + ": ");
+            _glyphLayout.setText(_font, Rating.RatingType.values()[i].toString() + ": ");
             _font.draw(_batch, _glyphLayout, _screenWidth * 0.075f, _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
             _glyphLayout.setText(_font, "" + _counters[i]);
             _font.draw(_batch, _glyphLayout, _screenWidth * 0.425f - _glyphLayout.width, _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));

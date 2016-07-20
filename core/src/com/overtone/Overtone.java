@@ -116,6 +116,17 @@ public class Overtone extends ApplicationAdapter
 		}
 	}
 
+	/**
+	 * Represents the four targets of the screen
+	 */
+	public enum TargetZone
+	{
+		TopLeft,
+		TopRight,
+		BottomLeft,
+		BottomRight;
+	}
+
 	// Variables
 	private static OvertoneScreen _currentScreen;
 	public static int[][]         HighScores;

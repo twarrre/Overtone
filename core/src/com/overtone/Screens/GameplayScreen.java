@@ -9,10 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Queue;
 import com.overtone.InputManager;
 import com.overtone.Notes.Note;
 import com.overtone.Notes.NoteRenderer;
+import com.overtone.Notes.Target;
 import com.overtone.Overtone;
 import com.overtone.Quadtree;
 import com.overtone.Ratings.Rating;
@@ -30,20 +30,6 @@ public class GameplayScreen extends OvertoneScreen
     public static final float PAUSE_DELAY     = 3.0f;
     public static final float DONE_DELAY      = 3.0f;
     public static final float[] FAILURE_TIMER = {10.0f, 8.0f, 5.0f};
-
-    /**
-     * Represents the four targets of the screen
-     */
-    public enum TargetZone
-    {
-        TopLeft     (Gdx.graphics.getWidth() * 0.12f, Gdx.graphics.getHeight() * 0.83f),
-        TopRight    (Gdx.graphics.getWidth() * 0.88f, Gdx.graphics.getHeight() * 0.83f),
-        BottomLeft  (Gdx.graphics.getWidth() * 0.12f, Gdx.graphics.getHeight() * 0.17f),
-        BottomRight (Gdx.graphics.getWidth() * 0.88f, Gdx.graphics.getHeight() * 0.17f);
-
-        public Vector2 value;
-        TargetZone(float x, float y) { value = new Vector2(x, y);}
-    }
 
     // Objects
     private final NoteRenderer    _noteRenderer;
@@ -71,15 +57,13 @@ public class GameplayScreen extends OvertoneScreen
 
     // Data Structures
     private final Quadtree          _onScreenNotes;
-    private final Queue<Note>       _noteQueue;
+    private final ArrayList<Note>       _noteQueue;
     private final ArrayList<Rating> _onScreenRatings;
 
     // Sound
     private final Sound _noteHit;
 
     // Variables
-
-    private final float               _targetRadius;
     private int                       _combo;
     private int                       _score;
     private boolean                   _paused;
@@ -96,6 +80,8 @@ public class GameplayScreen extends OvertoneScreen
     private int                       _goodCounter;
     private int                       _badCounter;
     private int                       _missCounter;
+
+    private final Target[]             _targetZones;
 
     private final TextButton          _resumeButton;
     private final TextButton          _retryButton;
@@ -138,7 +124,11 @@ public class GameplayScreen extends OvertoneScreen
         _noteHit = Gdx.audio.newSound(Gdx.files.internal("Sounds\\note.wav"));
 
         // Initialize variables
-        _targetRadius   = _screenWidth * 0.025f;
+        _targetZones = new Target[4];
+        _targetZones[0] = new Target(Overtone.TargetZone.TopLeft);
+        _targetZones[1] = new Target(Overtone.TargetZone.TopRight);
+        _targetZones[2] = new Target(Overtone.TargetZone.BottomLeft);
+        _targetZones[3] = new Target(Overtone.TargetZone.BottomRight);
         _totalTime      = 3.0f + (float)25 * 2.0f;
         _elapsedTime    = 0;
         _combo          = 0;
@@ -185,19 +175,17 @@ public class GameplayScreen extends OvertoneScreen
         _quitButton.setVisible(false);
 
         // Load notes
-        _noteQueue = new Queue<Note>();
+        _noteQueue = new ArrayList<Note>();
         for(int i = 0; i < 25; i++)
         {
+           // Note(NoteType type, Vector2 scale, Vector2[] center, Target[] target, float[] timer)
             Note n = new Note(Note.NoteType.Single,
-                    new Vector2(_screenWidth / 2.0f, _screenHeight / 2.0f),
-                    TargetZone.values()[i % TargetZone.values().length].value,
-                    new Vector2(_screenWidth * 0.025f, _screenWidth * 0.025f),
-                    Overtone.Difficulty,
-                    3.0f + (float)i * 2.0f,
-                    _targetRadius,
-                    i
+                     new Vector2(_screenWidth * 0.025f, _screenWidth * 0.025f),
+                     new Vector2(_screenWidth / 2.0f, _screenHeight / 2.0f),
+                    _targetZones[i %_targetZones.length],
+                     3.0f + (float)i * 2.0f
             );
-            _noteQueue.addLast(n);
+            _noteQueue.add(n);
         }
 
         _onScreenNotes   = new Quadtree(new Rectangle(0, 0, screenWidth, screenHeight));
@@ -227,10 +215,9 @@ public class GameplayScreen extends OvertoneScreen
         _batch.draw(_e, 0,                   _screenHeight - letterWidth, letterWidth, letterWidth);
 
         // Draw the target zones
-        for(int i = 0; i < TargetZone.values().length; i++)
+        for(int i = 0; i < _targetZones.length; i++)
         {
-            Vector2 pos =  new Vector2(TargetZone.values()[i].value.x - (_screenWidth * 0.0225f) , TargetZone.values()[i].value.y - (_screenWidth * 0.0225f));
-            _batch.draw(_targetZone, pos.x, pos.y, _targetRadius * 2.0f, _targetRadius * 2.0f);
+            _batch.draw(_targetZone, _targetZones[i].GetDrawingPosition().x, _targetZones[i].GetDrawingPosition().y, Target.Radius, Target.Radius);
         }
 
         // Draw the combo and score
@@ -323,14 +310,23 @@ public class GameplayScreen extends OvertoneScreen
             return;
         }
 
-        if(_noteQueue.size > 0)
+        if(!_noteQueue.isEmpty())
         {
-            if(_noteQueue.first().GetTime() - _noteQueue.first().GetDifficulty().Multiplier <=  _elapsedTime + ERROR)
+            ArrayList<Note> forRemoval = new ArrayList<Note>();
+            for(int i = 0; i < _targetZones.length; i++)
             {
-                Note n = _noteQueue.removeFirst();
-                n.SetVisibility(true);
-                _onScreenNotes.Insert(n);
+                if(i < _noteQueue.size())
+                {
+                    if(_noteQueue.get(i).GetTime() - Overtone.Difficulty.Multiplier <=  _elapsedTime + ERROR)
+                    {
+                        Note n = _noteQueue.get(i);
+                        n.SetVisibility(true);
+                        _onScreenNotes.Insert(n);
+                        forRemoval.add(_noteQueue.get(i));
+                    }
+                }
             }
+            _noteQueue.removeAll(forRemoval);
         }
 
         if(_elapsedTime < _totalTime && !_songDone)
@@ -379,12 +375,12 @@ public class GameplayScreen extends OvertoneScreen
      */
     private void CheckInput()
     {
-        for(int i = 0; i < TargetZone.values().length; i++)
+        for(int i = 0; i <_targetZones.length; i++)
         {
             if(_input.ActionOccurred(InputManager.KeyBinding.values()[i], InputManager.ActionType.Pressed))
             {
                 _noteHit.play();
-                Rating rating = GetNoteRating(TargetZone.values()[i].value);
+                Rating rating = GetNoteRating(_targetZones[i].Position);
 
                 if(rating.GetRating() == Rating.RatingType.Perfect || rating.GetRating() == Rating.RatingType.Great)
                     _combo++;
@@ -452,22 +448,22 @@ public class GameplayScreen extends OvertoneScreen
         _onScreenNotes.Remove(closestNote);
 
         // Return a rating based on how close it was to the target
-        if(minDistance <= _targetRadius * 0.15f)
+        if(minDistance <= Target.Radius * 0.15f)
         {
             _perfectCounter++;
             return new Rating(Rating.RatingType.Perfect, target);
         }
-        else if(minDistance <= _targetRadius * 0.55f && minDistance > _targetRadius * 0.15f)
+        else if(minDistance <= Target.Radius * 0.55f && minDistance > Target.Radius * 0.15f)
         {
             _greatCounter++;
             return new Rating(Rating.RatingType.Great, target);
         }
-        else if(minDistance <= _targetRadius  && minDistance > _targetRadius * 0.55f)
+        else if(minDistance <= Target.Radius  && minDistance > Target.Radius * 0.55f)
         {
             _goodCounter++;
             return new Rating(Rating.RatingType.Ok, target);
         }
-        else if(minDistance < _targetRadius * 2.0f  && minDistance > _targetRadius)
+        else if(minDistance < Target.Radius * 2.0f  && minDistance > Target.Radius)
         {
             _badCounter++;
             return new Rating(Rating.RatingType.Bad, target);

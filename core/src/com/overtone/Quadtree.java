@@ -127,7 +127,7 @@ public class Quadtree
         if (node == null)
             return;
 
-        // if we reached the number of desired levels then stop partiioning, else partition
+        // if we reached the number of desired levels then stop partitioning, else partition
         if (level < NUM_LEVELS)
         {
             float childWidthLeft    = node._bounds.getWidth() / 2.0f;
@@ -234,7 +234,7 @@ public class Quadtree
             if(!n.IsVisible())
             {
                 toBeRemoved.add(n);
-                removed.add(n.GetTarget());
+                removed.add(n.GetTarget().Position);
             }
         }
 

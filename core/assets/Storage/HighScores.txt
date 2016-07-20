@@ -6,13 +6,13 @@ e
 0 ---
 n
 217700 Brilliant
+211300 Brilliant
+200700 Great
 6200 Great
 6200 Great
-5800 Great
-2400 Failure
 h
+221300 Brilliant
 1800 Failure
 500 Failure
 500 Failure
-0 ---
 0 ---
