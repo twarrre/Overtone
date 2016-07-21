@@ -497,12 +497,12 @@ public class GameplayScreen extends OvertoneScreen
         if(minDistance <= Target.Radius * 0.15f)
         {
             _perfectCounter++;
-            return new Rating(Rating.RatingType.Perfect, target);
+            return new Rating(Rating.RatingType.Perfect, closestNote.GetCenter());
         }
         else if(minDistance <= Target.Radius * 0.55f && minDistance > Target.Radius * 0.15f)
         {
             _greatCounter++;
-            return new Rating(Rating.RatingType.Great, target);
+            return new Rating(Rating.RatingType.Great, closestNote.GetCenter());
         }
         else if(minDistance <= Target.Radius  && minDistance > Target.Radius * 0.55f)
         {
@@ -512,12 +512,12 @@ public class GameplayScreen extends OvertoneScreen
         else if(minDistance < Target.Radius * 2.0f  && minDistance > Target.Radius)
         {
             _badCounter++;
-            return new Rating(Rating.RatingType.Bad, target);
+            return new Rating(Rating.RatingType.Bad, closestNote.GetCenter());
         }
         else
         {
             _missCounter++;
-            return new Rating(Rating.RatingType.Miss, target);
+            return new Rating(Rating.RatingType.Miss, closestNote.GetCenter());
         }
 
     }

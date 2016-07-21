@@ -12,7 +12,7 @@ n
 200100 Great
 h
 221300 Brilliant
+154500 Great
 41500 Cleared
 1800 Failure
-500 Failure
 500 Failure
