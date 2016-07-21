@@ -3,6 +3,7 @@ package com.overtone.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -53,11 +54,12 @@ public class GameplayScreen extends OvertoneScreen
     private final Texture _cleared;
     private final Texture _failure;
     private final Texture _losing;
+    private final Sprite  _ship;
     private Texture       _currentCrowdRating;
 
     // Data Structures
     private final Quadtree          _onScreenNotes;
-    private final ArrayList<Note>       _noteQueue;
+    private final ArrayList<Note>   _noteQueue;
     private final ArrayList<Rating> _onScreenRatings;
 
     // Sound
@@ -80,6 +82,10 @@ public class GameplayScreen extends OvertoneScreen
     private int                       _goodCounter;
     private int                       _badCounter;
     private int                       _missCounter;
+
+    private Vector2                   _shipDirection;
+    private float                     _currentShipRotation;
+    private float                     _newShipRotation;
 
     private final Target[]             _targetZones;
 
@@ -119,6 +125,14 @@ public class GameplayScreen extends OvertoneScreen
         _failure            = new Texture(Gdx.files.internal("Textures\\failure.png"));
         _losing             = new Texture(Gdx.files.internal("Textures\\losing.png"));
         _currentCrowdRating = _cleared;
+
+        _ship               = new Sprite(new Texture(Gdx.files.internal("Textures\\ship.png")));
+        _ship.setCenter(_screenWidth * 0.5f, _screenHeight * 0.5f);
+        _ship.setScale(0.75f);
+        _shipDirection = new Vector2(0, 0);
+        _currentShipRotation = 0.0f;
+        _newShipRotation = 0.0f;
+        _ship.setRotation(0);
 
         // Load sounds
         _noteHit = Gdx.audio.newSound(Gdx.files.internal("Sounds\\note.wav"));
@@ -258,6 +272,10 @@ public class GameplayScreen extends OvertoneScreen
         _noteRenderer.Draw(_onScreenNotes.GetAll(), _batch);
         _ratingRenderer.Draw(_onScreenRatings, _batch);
 
+        _ship.setRotation(0);
+        _ship.rotate((float)Math.toDegrees(Math.atan2(_shipDirection.y, _shipDirection.x )));
+        _ship.draw(_batch);
+
         for(int i = 0; i <  5; i++)
         {
             _batch.draw(_currentCrowdRating, _screenWidth * 0.40f + (_screenWidth * 0.04f * (float)i), _screenHeight * 0.02f, _screenWidth * 0.04f, _screenWidth * 0.04f);
@@ -345,6 +363,15 @@ public class GameplayScreen extends OvertoneScreen
                     }
                 }
             }
+
+            if(forRemoval.size() > 1)
+            {
+                float amount = Math.abs(forRemoval.get(0).GetCenter().x - forRemoval.get(1).GetCenter().x) / 2.0f;
+                float x = forRemoval.get(0).GetCenter().x > forRemoval.get(1).GetCenter().x ? forRemoval.get(0).GetCenter().x : forRemoval.get(1).GetCenter().x;
+                _shipDirection = new Vector2(((x - amount) - _screenWidth * 0.5f), (forRemoval.get(0).GetCenter().y - _screenHeight * 0.5f));
+            }
+            else if (!forRemoval.isEmpty())
+                _shipDirection = new Vector2(forRemoval.get(0).GetCenter().x - (_screenWidth * 0.5f), forRemoval.get(0).GetCenter().y - (_screenHeight * 0.5f));
             _noteQueue.removeAll(forRemoval);
         }
 

@@ -140,6 +140,11 @@ public class Note
     public float GetTime() {return _timer;}
 
     /**
+     * @return The direction the note is heading
+     */
+    public Vector2 GetDirection() {return _direction;}
+
+    /**
      * @return Trye if the note is visiblle on screen, false otherwise
      */
     public boolean IsVisible() {return _isVisible;}
