@@ -2,7 +2,11 @@ package com.overtone;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector2;
 import com.overtone.Screens.*;
 
 import java.io.*;
@@ -133,6 +137,13 @@ public class Overtone extends ApplicationAdapter
     public static CrowdRating[][] CrowdRatings;
 	public static Difficulty      Difficulty;
 
+	//private ShaderProgram _shaderProgram;
+	//private SpriteBatch _batch;
+	//private Texture test;
+	//private Sprite test2;
+	//private Mesh mesh;
+	//private float _elapsedTime;
+
 	@Override
 	public void create ()
 	{
@@ -142,6 +153,70 @@ public class Overtone extends ApplicationAdapter
 		_currentScreen = new SplashScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		_currentScreen.show();
 		LoadHighScores();
+
+		//_batch          = new SpriteBatch();
+		//_shaderProgram  = new ShaderProgram(Gdx.files.internal("Shaders\\vertex.glsl").readString(), Gdx.files.internal("Shaders\\fragment.glsl").readString());
+		//test = new Texture("Textures\\splash.jpg");
+		//test2 = new Sprite(test);
+		//test2.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		//_elapsedTime = 0;
+
+		/*float[] verts = new float[30];
+		int i = 0;
+		float x,y; // Mesh location in the world
+		float width,height; // Mesh width and height
+
+		x = y = 50f;
+		width = height = 300f;
+
+		//Top Left Vertex Triangle 1
+		verts[i++] = x;   //X
+		verts[i++] = y + height; //Y
+		verts[i++] = 0;    //Z
+		verts[i++] = 0f;   //U
+		verts[i++] = 0f;   //V
+
+		//Top Right Vertex Triangle 1
+		verts[i++] = x + width;
+		verts[i++] = y + height;
+		verts[i++] = 0;
+		verts[i++] = 1f;
+		verts[i++] = 0f;
+
+		//Bottom Left Vertex Triangle 1
+		verts[i++] = x;
+		verts[i++] = y;
+		verts[i++] = 0;
+		verts[i++] = 0f;
+		verts[i++] = 1f;
+
+		//Top Right Vertex Triangle 2
+		verts[i++] = x + width;
+		verts[i++] = y + height;
+		verts[i++] = 0;
+		verts[i++] = 1f;
+		verts[i++] = 0f;
+
+		//Bottom Right Vertex Triangle 2
+		verts[i++] = x + width;
+		verts[i++] = y;
+		verts[i++] = 0;
+		verts[i++] = 1f;
+		verts[i++] = 1f;
+
+		//Bottom Left Vertex Triangle 2
+		verts[i++] = x;
+		verts[i++] = y;
+		verts[i++] = 0;
+		verts[i++] = 0f;
+		verts[i] = 1f;
+
+		// Create a mesh out of two triangles rendered clockwise without indices
+		mesh = new Mesh( true, 6, 0,
+				new VertexAttribute( VertexAttributes.Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE ),
+				new VertexAttribute( VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE+"0" ) );
+
+		mesh.setVertices(verts);*/
 	}
 
 	@Override
@@ -149,9 +224,23 @@ public class Overtone extends ApplicationAdapter
 	{
 		float deltaTime = Gdx.graphics.getDeltaTime();
 		Update(deltaTime);
+		//_elapsedTime += deltaTime;
 
-		Gdx.gl.glClearColor(0, 0, 1, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		Gdx.gl20.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		Gdx.gl20.glClearColor(0.2f, 0.2f, 0.2f, 1);
+		Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		Gdx.gl20.glEnable(GL20.GL_TEXTURE_2D);
+		Gdx.gl20.glEnable(GL20.GL_BLEND);
+		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+		//test.bind();
+		//_shaderProgram.begin();
+		//_shaderProgram.setUniformf("u_Resolution", new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		//_shaderProgram.setUniformf("u_GlobalTime", _elapsedTime / 1000.0f);
+		//_shaderProgram.setUniformMatrix("u_projTrans", _batch.getProjectionMatrix());
+		//_shaderProgram.setUniformi("u_texture", 0);
+		//mesh.render(_shaderProgram, GL20.GL_TRIANGLES);
+		//_shaderProgram.end();
 
 		_currentScreen.render(deltaTime);
 	}

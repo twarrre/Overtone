@@ -143,7 +143,7 @@ public class GameplayScreen extends OvertoneScreen
         _targetZones[1] = new Target(Overtone.TargetZone.TopRight);
         _targetZones[2] = new Target(Overtone.TargetZone.BottomLeft);
         _targetZones[3] = new Target(Overtone.TargetZone.BottomRight);
-        _totalTime      = 3.0f + (float)26 * 2.0f;
+        _totalTime      = 3.0f + (float)27 * 2.0f;
         _elapsedTime    = 0;
         _combo          = 0;
         _score          = 0;
@@ -208,8 +208,27 @@ public class GameplayScreen extends OvertoneScreen
         _noteQueue.add(d1);
         _noteQueue.add(d2);
 
+        Note d3 = new Note(Note.NoteType.Double,
+                new Vector2(_screenWidth * 0.025f, _screenWidth * 0.025f),
+                new Vector2(_screenWidth / 2.0f, _screenHeight / 2.0f),
+                _targetZones[0],
+                3.0f + (float)1 * 2.0f);
+
+        Note d4 = new Note(Note.NoteType.Double,
+                new Vector2(_screenWidth * 0.025f, _screenWidth * 0.025f),
+                new Vector2(_screenWidth / 2.0f, _screenHeight / 2.0f),
+                _targetZones[2],
+                3.0f + (float)1 * 2.0f);
+
+        d3.SetOtherNote(d4);
+        d4.SetOtherNote(d3);
+
+        _noteQueue.add(d3);
+        _noteQueue.add(d4);
+
+
         // Load notes
-        for(int i = 1; i < 26; i++)
+        for(int i = 2; i < 27; i++)
         {
            // Note(NoteType type, Vector2 scale, Vector2[] center, Target[] target, float[] timer)
             Note n = new Note(Note.NoteType.Single,
@@ -366,9 +385,18 @@ public class GameplayScreen extends OvertoneScreen
 
             if(forRemoval.size() > 1)
             {
-                float amount = Math.abs(forRemoval.get(0).GetCenter().x - forRemoval.get(1).GetCenter().x) / 2.0f;
-                float x = forRemoval.get(0).GetCenter().x > forRemoval.get(1).GetCenter().x ? forRemoval.get(0).GetCenter().x : forRemoval.get(1).GetCenter().x;
-                _shipDirection = new Vector2(((x - amount) - _screenWidth * 0.5f), (forRemoval.get(0).GetCenter().y - _screenHeight * 0.5f));
+                if(forRemoval.get(0).GetCenter().y == forRemoval.get(1).GetCenter().y)
+                {
+                    float amount = Math.abs(forRemoval.get(0).GetCenter().x - forRemoval.get(1).GetCenter().x) / 2.0f;
+                    float x = forRemoval.get(0).GetCenter().x > forRemoval.get(1).GetCenter().x ? forRemoval.get(0).GetCenter().x : forRemoval.get(1).GetCenter().x;
+                    _shipDirection = new Vector2(((x - amount) - _screenWidth * 0.5f), (forRemoval.get(0).GetCenter().y - _screenHeight * 0.5f));
+                }
+                else
+                {
+                    float amount = Math.abs(forRemoval.get(0).GetCenter().y - forRemoval.get(1).GetCenter().y) / 2.0f;
+                    float y = forRemoval.get(0).GetCenter().y > forRemoval.get(1).GetCenter().y ? forRemoval.get(0).GetCenter().y : forRemoval.get(1).GetCenter().y;
+                    _shipDirection = new Vector2((forRemoval.get(0).GetCenter().x - _screenWidth * 0.5f), (y - amount) - _screenHeight * 0.5f);
+                }
             }
             else if (!forRemoval.isEmpty())
                 _shipDirection = new Vector2(forRemoval.get(0).GetCenter().x - (_screenWidth * 0.5f), forRemoval.get(0).GetCenter().y - (_screenHeight * 0.5f));
