@@ -31,6 +31,7 @@ public class SongCompleteScreen extends OvertoneScreen
 
     private Overtone.Screens _nextScreen;
     private boolean          _showConfirmationScreen;
+    private boolean          _newHighScore;
 
     /**
      * Constructor
@@ -113,6 +114,7 @@ public class SongCompleteScreen extends OvertoneScreen
         _noButton.setDisabled(true);
         _noButton.setVisible(false);
 
+        _newHighScore = _score > Overtone.HighScores[Overtone.Difficulty.ordinal()][0];
         // Update the score if necessary
         Overtone.UpdateScore(_score, Overtone.CrowdRating.GetRating(_counters), Overtone.Difficulty);
     }
@@ -153,7 +155,7 @@ public class SongCompleteScreen extends OvertoneScreen
         _glyphLayout.setText(_font24, (Overtone.HighScores[Overtone.Difficulty.ordinal()][0] > _score) ? Overtone.HighScores[Overtone.Difficulty.ordinal()][0] + "" : _score + "");
         _font24.draw(_batch, _glyphLayout, _screenWidth * 0.925f - _glyphLayout.width, _screenHeight * 0.41f);
 
-        if(_score > Overtone.HighScores[Overtone.Difficulty.ordinal()][0])
+        if(_newHighScore)
         {
             _glyphLayout.setText(_font24, "New High Score!!");
             _font24.draw(_batch, _glyphLayout, _screenWidth * 0.5f - _glyphLayout.width / 2.0f, _screenHeight * 0.85f);
