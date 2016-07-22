@@ -64,6 +64,7 @@ public class GameplayScreen extends OvertoneScreen
 
     // Sound
     private final Sound _noteHit;
+    private final Sound _noteShot;
 
     // Variables
     private int                       _combo;
@@ -84,8 +85,6 @@ public class GameplayScreen extends OvertoneScreen
     private int                       _missCounter;
 
     private Vector2                   _shipDirection;
-    private float                     _currentShipRotation;
-    private float                     _newShipRotation;
 
     private final Target[]             _targetZones;
 
@@ -130,12 +129,11 @@ public class GameplayScreen extends OvertoneScreen
         _ship.setCenter(_screenWidth * 0.5f, _screenHeight * 0.5f);
         _ship.setScale(0.75f);
         _shipDirection = new Vector2(0, 0);
-        _currentShipRotation = 0.0f;
-        _newShipRotation = 0.0f;
         _ship.setRotation(0);
 
         // Load sounds
-        _noteHit = Gdx.audio.newSound(Gdx.files.internal("Sounds\\note.wav"));
+        _noteHit  = Gdx.audio.newSound(Gdx.files.internal("Sounds\\note.wav"));
+        _noteShot = Gdx.audio.newSound(Gdx.files.internal("Sounds\\laser.wav"));
 
         // Initialize variables
         _targetZones = new Target[4];
@@ -379,6 +377,7 @@ public class GameplayScreen extends OvertoneScreen
                         n.SetVisibility(true);
                         _onScreenNotes.Insert(n);
                         forRemoval.add(_noteQueue.get(i));
+                        _noteShot.play();
                     }
                 }
             }
