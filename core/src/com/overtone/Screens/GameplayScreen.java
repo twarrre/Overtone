@@ -20,6 +20,7 @@ import com.overtone.Ratings.Rating;
 import com.overtone.Ratings.RatingRenderer;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Screen used during gameplay
@@ -40,6 +41,7 @@ public class GameplayScreen extends OvertoneScreen
 
     // Textures
     private final Texture _targetZone;
+    private final Texture _targetZonePressed;
     private final Texture _progressBar;
     private final Texture _progress;
     private final Texture _progressArrow;
@@ -86,7 +88,8 @@ public class GameplayScreen extends OvertoneScreen
 
     private Vector2                   _shipDirection;
 
-    private final Target[]             _targetZones;
+    private final Target[] _targetZones;
+    private final boolean[] _targetZonesPressed;
 
     private final TextButton          _resumeButton;
     private final TextButton          _retryButton;
@@ -109,6 +112,7 @@ public class GameplayScreen extends OvertoneScreen
 
         // Load textures
         _targetZone         = new Texture(Gdx.files.internal("Textures\\targetzone.png"));
+        _targetZonePressed  = new Texture(Gdx.files.internal("Textures\\targetzonepressed.png"));
         _progressBar        = new Texture(Gdx.files.internal("Textures\\progressbar.png"));
         _progress           = new Texture(Gdx.files.internal("Textures\\red.png"));
         _progressArrow      = new Texture(Gdx.files.internal("Textures\\arrow.png"));
@@ -141,6 +145,11 @@ public class GameplayScreen extends OvertoneScreen
         _targetZones[1] = new Target(Overtone.TargetZone.TopRight);
         _targetZones[2] = new Target(Overtone.TargetZone.BottomLeft);
         _targetZones[3] = new Target(Overtone.TargetZone.BottomRight);
+        _targetZonesPressed = new boolean[4];
+        _targetZonesPressed[0] = false;
+        _targetZonesPressed[1] = false;
+        _targetZonesPressed[2] = false;
+        _targetZonesPressed[3] = false;
         _totalTime      = 3.0f + (float)27 * 2.0f;
         _elapsedTime    = 0;
         _combo          = 0;
@@ -267,7 +276,7 @@ public class GameplayScreen extends OvertoneScreen
         // Draw the target zones
         for(int i = 0; i < _targetZones.length; i++)
         {
-            _batch.draw(_targetZone, _targetZones[i].GetDrawingPosition().x, _targetZones[i].GetDrawingPosition().y, Target.Radius, Target.Radius);
+            _batch.draw(_targetZonesPressed[i] ? _targetZonePressed : _targetZone, _targetZones[i].GetDrawingPosition().x, _targetZones[i].GetDrawingPosition().y, Target.Radius, Target.Radius);
         }
 
         // Draw the combo and score
@@ -450,10 +459,12 @@ public class GameplayScreen extends OvertoneScreen
     {
         for(int i = 0; i <_targetZones.length; i++)
         {
+            _targetZonesPressed[i] = false;
             if(_input.ActionOccurred(InputManager.KeyBinding.values()[i], InputManager.ActionType.Pressed))
             {
                 _noteHit.play();
                 Rating rating = GetNoteRating(_targetZones[i].Position);
+                _targetZonesPressed[i] = true;
 
                 if(rating.GetRating() == Rating.RatingType.Perfect || rating.GetRating() == Rating.RatingType.Great)
                     _combo++;
