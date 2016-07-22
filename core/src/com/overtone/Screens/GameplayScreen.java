@@ -20,7 +20,6 @@ import com.overtone.Ratings.Rating;
 import com.overtone.Ratings.RatingRenderer;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * Screen used during gameplay
@@ -280,20 +279,17 @@ public class GameplayScreen extends OvertoneScreen
         }
 
         // Draw the combo and score
-        _glyphLayout.reset();
-        _font.getData().setScale(2);
+        _glyphLayout.setText(_font18,  "Combo: " + _combo);
+        _font18.draw(_batch, _glyphLayout, _screenWidth * 0.7f - (_glyphLayout.width / 2.0f), _screenHeight * 0.05f);
 
-        _glyphLayout.setText(_font,  "Combo: " + _combo);
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.7f - (_glyphLayout.width / 2.0f), _screenHeight * 0.05f);
+        _glyphLayout.setText(_font18, "Score: " + _score);
+        _font18.draw(_batch, _glyphLayout, _screenWidth * 0.3f - (_glyphLayout.width / 2.0f), _screenHeight * 0.05f);
 
-        _glyphLayout.setText(_font, "Score: " + _score);
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.3f - (_glyphLayout.width / 2.0f), _screenHeight * 0.05f);
+        _glyphLayout.setText(_font18, "High Score: " + Overtone.HighScores[Overtone.Difficulty.ordinal()][0]);
+        _font18.draw(_batch, _glyphLayout, _screenWidth * 0.775f - _glyphLayout.width, _screenHeight * 0.92f);
 
-        _glyphLayout.setText(_font, "High Score: " + Overtone.HighScores[Overtone.Difficulty.ordinal()][0]);
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.775f - _glyphLayout.width, _screenHeight * 0.92f);
-
-        _glyphLayout.setText(_font, "Difficulty: " + Overtone.Difficulty.toString());
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.225f, _screenHeight * 0.92f);
+        _glyphLayout.setText(_font18, "Difficulty: " + Overtone.Difficulty.toString());
+        _font18.draw(_batch, _glyphLayout, _screenWidth * 0.225f, _screenHeight * 0.92f);
 
         _noteRenderer.Draw(_onScreenNotes.GetAll(), _batch);
         _ratingRenderer.Draw(_onScreenRatings, _batch);
@@ -314,39 +310,31 @@ public class GameplayScreen extends OvertoneScreen
         if(_paused && !_resumeDelay)
         {
             _batch.draw(_background, 0, 0, _screenWidth, _screenHeight);
-            _glyphLayout.reset();
-            _font.getData().setScale(4);
-            _glyphLayout.setText(_font,  "Paused");
-            _font.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.85f);
+            _glyphLayout.setText(_font36,  "Paused");
+            _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.85f);
         }
 
         if(_resumeDelay)
         {
             _batch.draw(_background, 0, 0, _screenWidth, _screenHeight);
-            _glyphLayout.reset();
-            _font.getData().setScale(4);
-            _glyphLayout.setText(_font,  "Game will resume in");
-            _font.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.85f);
+            _glyphLayout.setText(_font36,  "Game will resume in");
+            _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.85f);
 
-            _glyphLayout.setText(_font, (3 - (int)_resumeTimer) + "");
-            _font.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.5f);
+            _glyphLayout.setText(_font36, (3 - (int)_resumeTimer) + "");
+            _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.5f);
         }
 
         if(_songDone)
         {
             _batch.draw(_background, 0, 0, _screenWidth, _screenHeight);
-            _glyphLayout.reset();
-            _font.getData().setScale(4);
-            _glyphLayout.setText(_font, _elapsedTime < _totalTime ? "Game Over..." : "Finished!!");
-            _font.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.5f);
+            _glyphLayout.setText(_font36, _elapsedTime < _totalTime ? "Game Over..." : "Finished!!");
+            _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.5f);
         }
 
         _batch.end();
 
         if(_paused && !_resumeDelay)
         {
-            _font.getData().setScale(1);
-            _font.getData().scale(1);
             _stage.draw();
         }
     }

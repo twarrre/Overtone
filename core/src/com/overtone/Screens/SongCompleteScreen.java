@@ -80,7 +80,7 @@ public class SongCompleteScreen extends OvertoneScreen
         });
 
         // Set up change difficulty button
-        _difficultyButton = CreateTextButton("CHANGE DIFFICULTY", "default", _screenWidth * 0.25f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.675f, _screenHeight * 0.075f), _stage);
+        _difficultyButton = CreateTextButton("MODIFY DIFFICULTY", "default", _screenWidth * 0.25f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.675f, _screenHeight * 0.075f), _stage);
         _difficultyButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 _nextScreen = Overtone.Screens.DifficultySelect;
@@ -123,54 +123,48 @@ public class SongCompleteScreen extends OvertoneScreen
 
         _batch.begin();
 
-        _glyphLayout.reset();
-        _font.getData().setScale(3);
+        _glyphLayout.setText(_font36, _songCompleted);
+        _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - _glyphLayout.width / 2.0f, _screenHeight * 0.92f);
 
-        _glyphLayout.setText(_font, _songCompleted);
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.5f - _glyphLayout.width / 2.0f, _screenHeight * 0.92f);
+        _glyphLayout.setText(_font30, "Stats");
+        _font30.draw(_batch, _glyphLayout, _screenWidth * 0.5f - _glyphLayout.width / 2.0f, _screenHeight * 0.75f);
 
-        _glyphLayout.setText(_font, "Notes");
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.25f - _glyphLayout.width / 2.0f, _screenHeight * 0.75f);
+        _glyphLayout.setText(_font24, "Difficulty:");
+        _font24.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.65f);
 
-        _glyphLayout.reset();
-        _font.getData().setScale(2);
+        _glyphLayout.setText(_font24, "Rating:");
+        _font24.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.57f);
 
-        _glyphLayout.setText(_font, "Difficulty:");
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.65f);
+        _glyphLayout.setText(_font24, "Score: ");
+        _font24.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.49f);
 
-        _glyphLayout.setText(_font, "Rating:");
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.57f);
+        _glyphLayout.setText(_font24, "High Score: ");
+        _font24.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.41f);
 
-        _glyphLayout.setText(_font, "Score: ");
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.49f);
+        _glyphLayout.setText(_font24, "" + Overtone.Difficulty.toString());
+        _font24.draw(_batch, _glyphLayout, _screenWidth * 0.925f - _glyphLayout.width, _screenHeight * 0.65f);
 
-        _glyphLayout.setText(_font, "High Score: ");
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.41f);
+        _glyphLayout.setText(_font24, "" + Overtone.CrowdRating.GetRating(_counters).toString());
+        _font24.draw(_batch, _glyphLayout, _screenWidth * 0.925f - _glyphLayout.width, _screenHeight * 0.57f);
 
-        _glyphLayout.setText(_font, "" + Overtone.Difficulty.toString());
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.925f - _glyphLayout.width, _screenHeight * 0.65f);
+        _glyphLayout.setText(_font24, "" + _score);
+        _font24.draw(_batch, _glyphLayout, _screenWidth * 0.925f - _glyphLayout.width, _screenHeight * 0.49f);
 
-        _glyphLayout.setText(_font, "" + Overtone.CrowdRating.GetRating(_counters).toString());
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.925f - _glyphLayout.width, _screenHeight * 0.57f);
-
-        _glyphLayout.setText(_font, "" + _score);
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.925f - _glyphLayout.width, _screenHeight * 0.49f);
-
-        _glyphLayout.setText(_font, (Overtone.HighScores[Overtone.Difficulty.ordinal()][0] > _score) ? Overtone.HighScores[Overtone.Difficulty.ordinal()][0] + "" : _score + "");
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.925f - _glyphLayout.width, _screenHeight * 0.41f);
+        _glyphLayout.setText(_font24, (Overtone.HighScores[Overtone.Difficulty.ordinal()][0] > _score) ? Overtone.HighScores[Overtone.Difficulty.ordinal()][0] + "" : _score + "");
+        _font24.draw(_batch, _glyphLayout, _screenWidth * 0.925f - _glyphLayout.width, _screenHeight * 0.41f);
 
         if(_score > Overtone.HighScores[Overtone.Difficulty.ordinal()][0])
         {
-            _glyphLayout.setText(_font, "New High Score!!");
-            _font.draw(_batch, _glyphLayout, _screenWidth * 0.5f - _glyphLayout.width / 2.0f, _screenHeight * 0.85f);
+            _glyphLayout.setText(_font24, "New High Score!!");
+            _font24.draw(_batch, _glyphLayout, _screenWidth * 0.5f - _glyphLayout.width / 2.0f, _screenHeight * 0.85f);
         }
 
         for(int i = 0; i < _counters.length; i++)
         {
-            _glyphLayout.setText(_font, Rating.RatingType.values()[i].toString() + ": ");
-            _font.draw(_batch, _glyphLayout, _screenWidth * 0.075f, _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
-            _glyphLayout.setText(_font, "" + _counters[i]);
-            _font.draw(_batch, _glyphLayout, _screenWidth * 0.425f - _glyphLayout.width, _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
+            _glyphLayout.setText(_font24, Rating.RatingType.values()[i].toString() + ": ");
+            _font24.draw(_batch, _glyphLayout, _screenWidth * 0.075f, _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
+            _glyphLayout.setText(_font24, "" + _counters[i]);
+            _font24.draw(_batch, _glyphLayout, _screenWidth * 0.425f - _glyphLayout.width, _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
         }
 
         _batch.end();
@@ -179,10 +173,8 @@ public class SongCompleteScreen extends OvertoneScreen
         if(_showConfirmationScreen)
         {
             _batch.begin();
-            _glyphLayout.reset();
-            _font.getData().setScale(4);
-            _glyphLayout.setText(_font,  "Did you like this song?");
-            _font.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.7f);
+            _glyphLayout.setText(_font36,  "Did you like this song?");
+            _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.7f);
             _batch.end();
         }
     }

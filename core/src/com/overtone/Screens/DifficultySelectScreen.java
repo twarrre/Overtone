@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.overtone.Notes.Note;
 import com.overtone.Overtone;
 
 
@@ -85,20 +84,15 @@ public class DifficultySelectScreen extends OvertoneScreen
         _stage.draw();
 
         _batch.begin();
-        _glyphLayout.reset();
-        _font.getData().setScale(2);
 
-        _glyphLayout.setText(_font,  "High Score: " + Overtone.HighScores[_difficultyIndex][0]);
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.355f);
+        _glyphLayout.setText(_font24,  "High Score: " + Overtone.HighScores[_difficultyIndex][0]);
+        _font24.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.355f);
 
-        _glyphLayout.setText(_font,  "Rating: " +  Overtone.CrowdRatings[_difficultyIndex][0].toString());
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.43f);
+        _glyphLayout.setText(_font24,  "Rating: " +  Overtone.CrowdRatings[_difficultyIndex][0].toString());
+        _font24.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.43f);
 
-        _glyphLayout.reset();
-        _font.getData().setScale(3);
-
-        _glyphLayout.setText(_font,  "Choose your Difficulty");
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.9f);
+        _glyphLayout.setText(_font36,  "Choose your Difficulty");
+        _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.9f);
         _batch.end();
     }
 

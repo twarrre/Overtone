@@ -2,11 +2,9 @@ package com.overtone.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.overtone.Overtone;
 
@@ -57,17 +55,13 @@ public class MainMenuScreen extends OvertoneScreen
         super.render(deltaTime);
 
         _batch.begin();
-        _glyphLayout.reset();
-        _font.getData().setScale(1);
+        _glyphLayout.setText(_font12, "Trevor Ware ");
+        _font12.draw(_batch, _glyphLayout, _screenWidth * 0.955f - (_glyphLayout.width / 2.0f), _screenHeight * 0.035f - (_glyphLayout.height / 2.0f));
 
-        _glyphLayout.setText(_font,"Trevor Ware");
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.965f - (_glyphLayout.width / 2.0f), _screenHeight * 0.035f - (_glyphLayout.height / 2.0f));
-
-        _glyphLayout.setText(_font,"Version 1.0");
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.035f - (_glyphLayout.width / 2.0f), _screenHeight * 0.035f - (_glyphLayout.height / 2.0f));
+        _glyphLayout.setText(_font12, "Version 1.0");
+        _font12.draw(_batch, _glyphLayout, _screenWidth * 0.045f - (_glyphLayout.width / 2.0f), _screenHeight * 0.035f - (_glyphLayout.height / 2.0f));
         _batch.end();
 
-        _font.getData().scale(1);
         _stage.draw();
     }
 

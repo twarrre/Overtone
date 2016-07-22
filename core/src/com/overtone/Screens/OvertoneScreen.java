@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -20,8 +21,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
  */
 public class OvertoneScreen implements OvertoneScreenInterface
 {
+    public final String FONT_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789][_!$%#@|\\/?-+=()*&.;,{}\"´`'<>";
+
     protected final SpriteBatch _batch;
-    protected final BitmapFont  _font;
+    protected final BitmapFont  _font12;
+    protected final BitmapFont  _font18;
+    protected final BitmapFont  _font24;
+    protected final BitmapFont  _font30;
+    protected final BitmapFont  _font36;
     protected final GlyphLayout _glyphLayout;
     protected final Skin        _skin;
     protected final Texture     _yes;
@@ -44,9 +51,22 @@ public class OvertoneScreen implements OvertoneScreenInterface
         _screenWidth  = screenWidth;
         _screenHeight = screenHeight;
         _batch        = new SpriteBatch();
-        _font         = new BitmapFont();
         _glyphLayout  = new GlyphLayout();
         _skin         = new Skin();
+
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Fonts\\Furore.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 12;
+        _font12 = generator.generateFont(parameter);
+        parameter.size = 18;
+        _font18 = generator.generateFont(parameter);
+        parameter.size = 24;
+        _font24 = generator.generateFont(parameter);
+        parameter.size = 30;
+        _font30 = generator.generateFont(parameter);
+        parameter.size = 36;
+        _font36 = generator.generateFont(parameter);
+        generator.dispose();
 
         _yes          = new Texture(Gdx.files.internal("Textures\\yes.png"));
         _yesHover     = new Texture(Gdx.files.internal("Textures\\yesHover.png"));
@@ -59,8 +79,7 @@ public class OvertoneScreen implements OvertoneScreenInterface
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
 
-        _font.getData().scale(1);
-        _skin.add("default", _font);
+        _skin.add("default", _font30);
         _skin.add("white", new Texture(pixmap));
         _skin.add("yes", _yes);
         _skin.add("yesHover", _yesHover);
@@ -132,7 +151,8 @@ public class OvertoneScreen implements OvertoneScreenInterface
         _batch.dispose();
         _batch.dispose();
         _skin.dispose();
-        _font.dispose();
+        _font18.dispose();
+        _font36.dispose();
         _yes.dispose();
         _yesHover.dispose();
         _yesDown.dispose();

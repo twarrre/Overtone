@@ -16,7 +16,6 @@ public class SplashScreen extends OvertoneScreen
     // Amount of time the splash screen stays on screen
     private static final float SPLASH_TIME = 3.0f;
 
-    private final Texture      _splash;
     private final InputManager _input;
     private float              _elapsedTime;
 
@@ -29,7 +28,6 @@ public class SplashScreen extends OvertoneScreen
     {
         super(screenWidth, screenHeight);
 
-        _splash      = new Texture("Textures//splash.jpg");
         _input       = new InputManager();
         _elapsedTime = 0;
     }
@@ -39,7 +37,13 @@ public class SplashScreen extends OvertoneScreen
         super.render(deltaTime);
 
         _batch.begin();
-        _batch.draw(_splash, 0, 0, _screenWidth, _screenHeight);
+
+        _glyphLayout.setText(_font36, "Trevor Ware");
+        _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.6f - (_glyphLayout.height / 2.0f));
+
+        _glyphLayout.setText(_font24, "A00844405");
+        _font24.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.1f - (_glyphLayout.height / 2.0f));
+
         _batch.end();
     }
 
@@ -69,6 +73,5 @@ public class SplashScreen extends OvertoneScreen
     public void dispose ()
     {
         super.dispose();
-        _splash.dispose();
     }
 }

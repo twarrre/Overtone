@@ -149,23 +149,19 @@ public class HighScoreScreen extends OvertoneScreen
 
         _batch.begin();
 
-        _glyphLayout.reset();
-        _font.getData().setScale(3);
-        _glyphLayout.setText(_font,  "High Scores");
-        _font.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.95f);
+        _glyphLayout.setText(_font36,  "High Scores");
+        _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.95f);
 
-        _glyphLayout.reset();
-        _font.getData().setScale(2);
         for(int i = 0; i < 5; i++)
         {
-            _glyphLayout.setText(_font, (i + 1) + "");
-            _font.draw(_batch, _glyphLayout, _screenWidth * 0.3075f - (_glyphLayout.width / 2.0f), _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
+            _glyphLayout.setText(_font24, (i + 1) + "");
+            _font24.draw(_batch, _glyphLayout, _screenWidth * 0.3075f - (_glyphLayout.width / 2.0f), _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
 
-            _glyphLayout.setText(_font, Overtone.HighScores[_difficultyIndex][i] + "");
-            _font.draw(_batch, _glyphLayout, _screenWidth * 0.5075f - (_glyphLayout.width / 2.0f), _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
+            _glyphLayout.setText(_font24, Overtone.HighScores[_difficultyIndex][i] + "");
+            _font24.draw(_batch, _glyphLayout, _screenWidth * 0.5075f - (_glyphLayout.width / 2.0f), _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
 
-            _glyphLayout.setText(_font, Overtone.CrowdRatings[_difficultyIndex][i] + "");
-            _font.draw(_batch, _glyphLayout, _screenWidth * 0.7075f - (_glyphLayout.width / 2.0f), _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
+            _glyphLayout.setText(_font24, Overtone.CrowdRatings[_difficultyIndex][i] + "");
+            _font24.draw(_batch, _glyphLayout, _screenWidth * 0.7075f - (_glyphLayout.width / 2.0f), _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
         }
 
         _batch.end();
@@ -174,10 +170,8 @@ public class HighScoreScreen extends OvertoneScreen
         if( _showConfirmationScreen)
         {
             _batch.begin();
-            _glyphLayout.reset();
-            _font.getData().setScale(4);
-            _glyphLayout.setText(_font,  "Are you sure?");
-            _font.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.7f);
+            _glyphLayout.setText(_font36,  "Are you sure?");
+            _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.7f);
             _batch.end();
         }
     }
