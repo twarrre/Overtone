@@ -43,7 +43,7 @@ public class NoteRenderer
         {
             if(n.IsVisible())
             {
-                if(n.GetType() == Note.NoteType.Double && !n.IsRendered())
+                if(n.GetType() == Note.NoteType.Double && !n.IsRendered() && !n.GetOtherNote().IsRendered() && n.GetOtherNote().IsVisible())
                     DrawDoubleNote(n, batch);
                 else if(n.GetType() == Note.NoteType.Hold)
                     DrawHoldNote(n, batch);
