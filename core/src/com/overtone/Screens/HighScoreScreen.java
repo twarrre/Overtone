@@ -22,13 +22,7 @@ public class HighScoreScreen extends OvertoneScreen
     private final TextButton  _easyButton;
     private final TextButton  _normalButton;
     private final TextButton  _hardButton;
-    private final Image       _background;
-    private final ImageButton _yesButton;
-    private final ImageButton _noButton;
     private final TextButton  _backButton;
-    private final TextButton  _resetButton;
-
-    private boolean           _showConfirmationScreen;
     private TextButton        _currentButton;
     private int               _difficultyIndex;
 
@@ -39,31 +33,13 @@ public class HighScoreScreen extends OvertoneScreen
         _stage           = new Stage();
         _difficultyIndex = 0;
 
-        _backButton = CreateTextButton("BACK", "default", _screenWidth * 0.25f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.2175f, _screenHeight * 0.075f), _stage);
+        _backButton = CreateTextButton("back", "default", _screenWidth * 0.11f, _screenHeight * 0.08f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.845f), _stage);
         _backButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 if(_backButton.isDisabled())
                     return;
                 _buttonPress.play(Overtone.SFXVolume);
                 Overtone.SetScreen(Overtone.Screens.MainMenu);
-            }
-        });
-
-        _resetButton = CreateTextButton("RESET", "default", _screenWidth * 0.25f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.5475f, _screenHeight * 0.075f), _stage);
-        _resetButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {
-                if(_resetButton.isDisabled())
-                    return;
-                _buttonPress.play(Overtone.SFXVolume);
-                _backButton.setDisabled(true);
-                _resetButton.setDisabled(true);
-                _background.setVisible(true);
-                _yesButton.setVisible(true);
-                _noButton.setVisible(true);
-                _yesButton.setDisabled(false);
-                _noButton.setDisabled(false);
-                _showConfirmationScreen = true;
-                _warning.play(Overtone.SFXVolume);
             }
         });
 
@@ -101,55 +77,7 @@ public class HighScoreScreen extends OvertoneScreen
             }
         });
 
-        _background = new Image(new Texture(Gdx.files.internal("Textures\\background.png")));
-        _background.setWidth(_screenWidth * 0.85f);
-        _background.setHeight(_screenHeight * 0.75f);
-        _background.setPosition(screenWidth * 0.075f, _screenHeight * 0.125f);
-        _stage.addActor(_background);
-        _background.setVisible(false);
-
-        _yesButton = CreateImageButton("yesButtons",_screenWidth * 0.1f, _screenWidth * 0.1f, new Vector2(_screenWidth * 0.375f, _screenHeight * 0.2f), _stage);
-        _yesButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {
-                if(_yesButton.isDisabled())
-                    return;
-                _accept.play(Overtone.SFXVolume);
-                _background.setVisible(false);
-                _yesButton.setVisible(false);
-                _noButton.setVisible(false);
-                _backButton.setDisabled(false);
-                _resetButton.setDisabled(false);
-                _yesButton.setDisabled(true);
-                _noButton.setDisabled(true);
-                _showConfirmationScreen = false;
-                Overtone.WriteScores(true);
-            }
-        });
-        _yesButton.setDisabled(true);
-        _yesButton.setVisible(false);
-
-
-        _noButton = CreateImageButton("noButtons",_screenWidth * 0.1f, _screenWidth * 0.1f, new Vector2(_screenWidth * 0.525f, _screenHeight * 0.2f), _stage);
-        _noButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {
-                if(_noButton.isDisabled())
-                    return;
-                _decline.play(Overtone.SFXVolume);
-                _background.setVisible(false);
-                _yesButton.setVisible(false);
-                _noButton.setVisible(false);
-                _backButton.setDisabled(false);
-                _resetButton.setDisabled(false);
-                _yesButton.setDisabled(true);
-                _noButton.setDisabled(true);
-                _showConfirmationScreen = false;
-            }
-        });
-        _noButton.setDisabled(true);
-        _noButton.setVisible(false);
-
-        _showConfirmationScreen = false;
-        _currentButton          = _easyButton;
+        _currentButton = _easyButton;
         _currentButton.setChecked(true);
     }
 
@@ -162,28 +90,20 @@ public class HighScoreScreen extends OvertoneScreen
         _glyphLayout.setText(_font36,  "High Scores");
         _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.92f);
 
-        for(int i = 0; i < 5; i++)
+        for(int i = 0; i < Overtone.NUM_SCORES; i++)
         {
             _glyphLayout.setText(_font24, (i + 1) + "");
-            _font24.draw(_batch, _glyphLayout, _screenWidth * 0.3075f - (_glyphLayout.width / 2.0f), _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
+            _font24.draw(_batch, _glyphLayout, _screenWidth * 0.3075f - (_glyphLayout.width / 2.0f), _screenHeight * 0.7f - (_screenHeight * 0.07f * (float)i));
 
             _glyphLayout.setText(_font24, Overtone.HighScores[_difficultyIndex][i] + "");
-            _font24.draw(_batch, _glyphLayout, _screenWidth * 0.5075f - (_glyphLayout.width / 2.0f), _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
+            _font24.draw(_batch, _glyphLayout, _screenWidth * 0.5075f - (_glyphLayout.width / 2.0f), _screenHeight * 0.7f - (_screenHeight * 0.07f * (float)i));
 
             _glyphLayout.setText(_font24, Overtone.CrowdRatings[_difficultyIndex][i] + "");
-            _font24.draw(_batch, _glyphLayout, _screenWidth * 0.7075f - (_glyphLayout.width / 2.0f), _screenHeight * 0.65f - (_screenHeight * 0.07f * (float)i));
+            _font24.draw(_batch, _glyphLayout, _screenWidth * 0.7075f - (_glyphLayout.width / 2.0f), _screenHeight * 0.7f - (_screenHeight * 0.07f * (float)i));
         }
 
         _batch.end();
         _stage.draw();
-
-        if( _showConfirmationScreen)
-        {
-            _batch.begin();
-            _glyphLayout.setText(_font36,  "Are you sure?");
-            _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.7f);
-            _batch.end();
-        }
     }
 
     public void update(float deltaTime)

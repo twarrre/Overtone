@@ -15,6 +15,7 @@ import java.io.*;
 public class Overtone extends ApplicationAdapter
 {
 
+	public static final int NUM_SCORES = 10;
 	/**
 	 * Enum for the different types of screens
 	 */
@@ -151,8 +152,8 @@ public class Overtone extends ApplicationAdapter
 	public void create ()
 	{
 		Difficulty     = Difficulty.Easy;
-		HighScores     = new int[3][5];
-        CrowdRatings   = new CrowdRating[3][5];
+		HighScores     = new int[Difficulty.values().length][NUM_SCORES];
+        CrowdRatings   = new CrowdRating[Difficulty.values().length][NUM_SCORES];
 		MusicVolume    = 1.0f;
 		SFXVolume      = 1.0f;
 		_currentScreen = new SplashScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -350,8 +351,8 @@ public class Overtone extends ApplicationAdapter
 
 		if(reset)
 		{
-			HighScores   = new int[3][5];
-			CrowdRatings = new CrowdRating[3][5];
+			HighScores   = new int[Difficulty.values().length][NUM_SCORES];
+			CrowdRatings = new CrowdRating[Difficulty.values().length][NUM_SCORES];
 		}
 
 		try
@@ -369,7 +370,7 @@ public class Overtone extends ApplicationAdapter
 			{
 				writer.write(diff[i]);
 				writer.newLine();
-				for(int j = 0; j < 5; j++)
+				for(int j = 0; j < NUM_SCORES; j++)
 				{
 					if(reset)
 					{
