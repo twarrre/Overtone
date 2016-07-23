@@ -37,6 +37,13 @@ public class OvertoneScreen implements OvertoneScreenInterface
     protected final Texture     _noHover;
     protected final Texture     _noDown;
 
+    protected final Texture     _next;
+    protected final Texture     _nextHover;
+    protected final Texture     _nextDown;
+    protected final Texture     _back;
+    protected final Texture     _backHover;
+    protected final Texture     _backDown;
+
     protected float             _screenWidth;
     protected float             _screenHeight;
 
@@ -85,6 +92,12 @@ public class OvertoneScreen implements OvertoneScreenInterface
         _no           = new Texture(Gdx.files.internal("Textures\\no.png"));
         _noHover      = new Texture(Gdx.files.internal("Textures\\noHover.png"));
         _noDown       = new Texture(Gdx.files.internal("Textures\\noDown.png"));
+        _next         = new Texture(Gdx.files.internal("Textures\\next.png"));
+        _nextHover    = new Texture(Gdx.files.internal("Textures\\nextHover.png"));
+        _nextDown     = new Texture(Gdx.files.internal("Textures\\nextDown.png"));
+        _back         = new Texture(Gdx.files.internal("Textures\\back.png"));
+        _backHover    = new Texture(Gdx.files.internal("Textures\\backHover.png"));
+        _backDown     = new Texture(Gdx.files.internal("Textures\\backDown.png"));
 
         Pixmap pixmap = new Pixmap(100, 100, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
@@ -98,6 +111,12 @@ public class OvertoneScreen implements OvertoneScreenInterface
         _skin.add("no", _no);
         _skin.add("noHover", _noHover);
         _skin.add("noDown", _noDown);
+        _skin.add("next", _next);
+        _skin.add("nextHover", _nextHover);
+        _skin.add("nextDown", _nextDown);
+        _skin.add("back", _back);
+        _skin.add("backHover", _backHover);
+        _skin.add("backDown", _backDown);
 
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.up      = _skin.newDrawable("white", new Color(0.157f, 0.325f, 0.424f, 0.75f));
@@ -127,6 +146,18 @@ public class OvertoneScreen implements OvertoneScreenInterface
         imageButtonStyleNo.over = _skin.newDrawable("noHover", new Color(1f, 1f, 1f, 1f));
         imageButtonStyleNo.down = _skin.newDrawable("noDown", new Color(1f, 1f, 1f, 1f));
         _skin.add("noButtons", imageButtonStyleNo);
+
+        ImageButton.ImageButtonStyle imageButtonStyleNext = new ImageButton.ImageButtonStyle();
+        imageButtonStyleNext.up   = _skin.newDrawable("next", new Color(1f, 1f, 1f, 1f));
+        imageButtonStyleNext.over = _skin.newDrawable("nextHover", new Color(1f, 1f, 1f, 1f));
+        imageButtonStyleNext.down = _skin.newDrawable("nextDown", new Color(1f, 1f, 1f, 1f));
+        _skin.add("nextButton", imageButtonStyleNext);
+
+        ImageButton.ImageButtonStyle imageButtonStyleBack = new ImageButton.ImageButtonStyle();
+        imageButtonStyleBack.up   = _skin.newDrawable("back", new Color(1f, 1f, 1f, 1f));
+        imageButtonStyleBack.over = _skin.newDrawable("backHover", new Color(1f, 1f, 1f, 1f));
+        imageButtonStyleBack.down = _skin.newDrawable("backDown", new Color(1f, 1f, 1f, 1f));
+        _skin.add("backButton", imageButtonStyleBack);
     }
 
     public TextButton CreateTextButton(String label, String style, float width, float height, Vector2 pos, Stage stage)
@@ -175,6 +206,12 @@ public class OvertoneScreen implements OvertoneScreenInterface
         _buttonPress.dispose();
         _warning.dispose();
         _countdown.dispose();
+        _next.dispose();
+        _nextHover.dispose();
+        _nextDown.dispose();
+        _back.dispose();
+        _backHover.dispose();
+        _backDown.dispose();
     }
 
     public void pause () {}
