@@ -1,6 +1,7 @@
 package com.overtone.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -21,8 +22,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
  */
 public class OvertoneScreen implements OvertoneScreenInterface
 {
-    public final String FONT_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789][_!$%#@|\\/?-+=()*&.;,{}\"´`'<>";
-
     protected final SpriteBatch _batch;
     protected final BitmapFont  _font12;
     protected final BitmapFont  _font18;
@@ -41,6 +40,12 @@ public class OvertoneScreen implements OvertoneScreenInterface
     protected float             _screenWidth;
     protected float             _screenHeight;
 
+    protected final Sound _accept;
+    protected final Sound _decline;
+    protected final Sound _buttonPress;
+    protected final Sound _warning;
+    protected final Sound _countdown;
+
     /**
      * Constructor
      * @param screenWidth The screen width
@@ -53,6 +58,12 @@ public class OvertoneScreen implements OvertoneScreenInterface
         _batch        = new SpriteBatch();
         _glyphLayout  = new GlyphLayout();
         _skin         = new Skin();
+
+        _accept      = Gdx.audio.newSound(Gdx.files.internal("Sounds\\accept.wav"));
+        _decline     = Gdx.audio.newSound(Gdx.files.internal("Sounds\\decline.wav"));
+        _buttonPress = Gdx.audio.newSound(Gdx.files.internal("Sounds\\press.wav"));
+        _warning     = Gdx.audio.newSound(Gdx.files.internal("Sounds\\warning.wav"));
+        _countdown   = Gdx.audio.newSound(Gdx.files.internal("Sounds\\countdown.wav"));
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Fonts\\Furore.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -159,6 +170,11 @@ public class OvertoneScreen implements OvertoneScreenInterface
         _no.dispose();
         _noHover.dispose();
         _noDown.dispose();
+        _accept.dispose();
+        _decline.dispose();
+        _buttonPress.dispose();
+        _warning.dispose();
+        _countdown.dispose();
     }
 
     public void pause () {}

@@ -24,12 +24,17 @@ public class OptionsScreen extends OvertoneScreen
 
         final TextButton backButton = CreateTextButton("CONFIRM", "default", _screenWidth * 0.25f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.2175f, _screenHeight * 0.075f), _stage);
         backButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {Overtone.SetScreen(Overtone.Screens.MainMenu);}
+            public void clicked (InputEvent i, float x, float y) {
+                _buttonPress.play();
+                Overtone.SetScreen(Overtone.Screens.MainMenu);
+            }
         });
 
         final TextButton startButton = CreateTextButton("RESET", "default", _screenWidth * 0.25f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.5475f, _screenHeight * 0.075f), _stage);
         startButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {System.out.println("Options Reset");
+            public void clicked (InputEvent i, float x, float y) {
+                System.out.println("Options Reset");
+                _buttonPress.play();
             }
         });
     }

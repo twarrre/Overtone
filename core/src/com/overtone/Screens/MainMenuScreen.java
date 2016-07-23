@@ -27,27 +27,38 @@ public class MainMenuScreen extends OvertoneScreen
 
         final TextButton playButton = CreateTextButton("PLAY", "default", _screenWidth * 0.85f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.21f), _stage);
         playButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {Overtone.SetScreen(Overtone.Screens.DifficultySelect);}
+            public void clicked (InputEvent i, float x, float y) {
+                _buttonPress.play();
+                Overtone.SetScreen(Overtone.Screens.DifficultySelect); }
         });
 
         final TextButton highScoreButton = CreateTextButton("HIGH SCORES", "default", _screenWidth * 0.18f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.075f), _stage);
         highScoreButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {Overtone.SetScreen(Overtone.Screens.HighScore);}});
+            public void clicked (InputEvent i, float x, float y) {
+                _buttonPress.play();
+                Overtone.SetScreen(Overtone.Screens.HighScore);
+            }});
 
         final TextButton optionsButton = CreateTextButton("OPTIONS", "default", _screenWidth * 0.18f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.2983f, _screenHeight * 0.075f), _stage);
         optionsButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {Overtone.SetScreen(Overtone.Screens.Options);}
+            public void clicked (InputEvent i, float x, float y) {
+                _buttonPress.play();
+                Overtone.SetScreen(Overtone.Screens.Options);
+            }
         });
 
         final TextButton helpButton = CreateTextButton("HELP", "default", _screenWidth * 0.18f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.5217f, _screenHeight * 0.075f), _stage);
         helpButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {Overtone.SetScreen(Overtone.Screens.Help);
+            public void clicked (InputEvent i, float x, float y) {
+                _buttonPress.play();
+                Overtone.SetScreen(Overtone.Screens.Help);
             }
         });
 
         final TextButton quitButton = CreateTextButton("QUIT", "default", _screenWidth * 0.18f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.745f, _screenHeight * 0.075f), _stage);
         quitButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
+                _buttonPress.play();
                 Gdx.app.exit();
             }
         });

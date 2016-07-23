@@ -34,12 +34,12 @@ public class DifficultySelectScreen extends OvertoneScreen
 
         final TextButton startButton = CreateTextButton("START", "default", _screenWidth * 0.85f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.075f),_stage);
         startButton.addListener(new ChangeListener() {
-            public void changed (ChangeEvent event, Actor actor) {Overtone.SetScreen(Overtone.Screens.Gameplay);}
+            public void changed (ChangeEvent event, Actor actor) {_buttonPress.play(); Overtone.SetScreen(Overtone.Screens.Gameplay);}
         });
 
         final TextButton backButton = CreateTextButton("BACK", "default", _screenWidth * 0.11f, _screenHeight * 0.08f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.845f), _stage);
         backButton.addListener(new ChangeListener() {
-            public void changed (ChangeEvent event, Actor actor) {Overtone.SetScreen(Overtone.Screens.MainMenu);}});
+            public void changed (ChangeEvent event, Actor actor) {_buttonPress.play(); Overtone.SetScreen(Overtone.Screens.MainMenu);}});
 
         _easyButton   = CreateTextButton("EASY", "group", _screenWidth * 0.1325f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.3f),_stage);
         _easyButton.addListener(new ClickListener() {
@@ -49,6 +49,7 @@ public class DifficultySelectScreen extends OvertoneScreen
                 _currentButton.setChecked(false);
                 _easyButton.setChecked(true);
                 _currentButton = _easyButton;
+                _buttonPress.play();
             }
         });
 
@@ -60,6 +61,7 @@ public class DifficultySelectScreen extends OvertoneScreen
                 _currentButton.setChecked(false);
                 _normalButton.setChecked(true);
                 _currentButton = _normalButton;
+                _buttonPress.play();
             }
         });
 
@@ -71,6 +73,7 @@ public class DifficultySelectScreen extends OvertoneScreen
                 _currentButton.setChecked(false);
                 _hardButton.setChecked(true);
                 _currentButton = _hardButton;
+                _buttonPress.play();
             }
         });
 

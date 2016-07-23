@@ -63,6 +63,8 @@ public class SongCompleteScreen extends OvertoneScreen
                 _noButton.setDisabled(false);
                 _noButton.setVisible(true);
                 _showConfirmationScreen = true;
+                _buttonPress.play();
+                _warning.play();
             }
         });
 
@@ -77,6 +79,8 @@ public class SongCompleteScreen extends OvertoneScreen
                 _noButton.setDisabled(false);
                 _noButton.setVisible(true);
                 _showConfirmationScreen = true;
+                _buttonPress.play();
+                _warning.play();
             }
         });
 
@@ -91,6 +95,8 @@ public class SongCompleteScreen extends OvertoneScreen
                 _noButton.setDisabled(false);
                 _noButton.setVisible(true);
                 _showConfirmationScreen = true;
+                _buttonPress.play();
+                _warning.play();
             }
         });
 
@@ -104,13 +110,13 @@ public class SongCompleteScreen extends OvertoneScreen
 
         // Set up yes button for confirmation screen
         _yesButton = CreateImageButton("yesButtons",_screenWidth * 0.1f, _screenWidth * 0.1f, new Vector2(_screenWidth * 0.375f, _screenHeight * 0.2f), _stage);
-        _yesButton.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {Overtone.SetScreen(_nextScreen);}});
+        _yesButton.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) { _accept.play(); Overtone.SetScreen(_nextScreen); }});
         _yesButton.setDisabled(true);
         _yesButton.setVisible(false);
 
         // Set up yes button for confirmation screen
         _noButton = CreateImageButton("noButtons",_screenWidth * 0.1f, _screenWidth * 0.1f, new Vector2(_screenWidth * 0.525f, _screenHeight * 0.2f), _stage);
-        _noButton.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {Overtone.SetScreen(_nextScreen);}});
+        _noButton.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {_decline.play(); Overtone.SetScreen(_nextScreen); }});
         _noButton.setDisabled(true);
         _noButton.setVisible(false);
 

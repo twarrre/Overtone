@@ -76,6 +76,7 @@ public class GameplayScreen extends OvertoneScreen
     private final float               _totalTime;
     private float                     _elapsedTime;
     private float                     _resumeTimer;
+    private float                     _prevResumeTimer;
     private float                     _doneTimer;
     private float                     _failureTimer;
 
@@ -156,6 +157,7 @@ public class GameplayScreen extends OvertoneScreen
         _paused         = false;
         _resumeDelay    = false;
         _resumeTimer    = 0;
+        _prevResumeTimer    = 0;
         _songDone       = false;
         _doneTimer      = 0.0f;
         _failureTimer   = 0.0f;
@@ -182,14 +184,14 @@ public class GameplayScreen extends OvertoneScreen
 
         _retryButton = CreateTextButton("RETRY", "default", _screenWidth * 0.5f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.25f, _screenHeight * 0.275f), _stage);
         _retryButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {Overtone.SetScreen(Overtone.Screens.Gameplay);}
+            public void clicked (InputEvent i, float x, float y) {_buttonPress.play(); Overtone.SetScreen(Overtone.Screens.Gameplay);}
         });
         _retryButton.setDisabled(true);
         _retryButton.setVisible(false);
 
         _quitButton = CreateTextButton("MAIN MENU", "default", _screenWidth * 0.5f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.25f, _screenHeight * 0.075f), _stage);
         _quitButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {Overtone.SetScreen(Overtone.Screens.MainMenu);}
+            public void clicked (InputEvent i, float x, float y) {_buttonPress.play(); Overtone.SetScreen(Overtone.Screens.MainMenu);}
         });
         _quitButton.setDisabled(true);
         _quitButton.setVisible(false);
@@ -350,12 +352,18 @@ public class GameplayScreen extends OvertoneScreen
             CheckInputPaused();
             if(_resumeDelay)
             {
+                _prevResumeTimer = _resumeTimer;
                 _resumeTimer += deltaTime;
+
+                if(_prevResumeTimer == 0 && _resumeTimer >= 0 || _prevResumeTimer < 1 && _resumeTimer >= 1 || _prevResumeTimer < 2 && _resumeTimer >= 2 || _prevResumeTimer < 3 && _resumeTimer >= 3)
+                    _countdown.play();
+
                 if(_resumeTimer > PAUSE_DELAY)
                 {
-                    _paused      = false;
-                    _resumeDelay = false;
-                    _resumeTimer = 0;
+                    _paused          = false;
+                    _resumeDelay     = false;
+                    _resumeTimer     = 0;
+                    _prevResumeTimer = 0;
                 }
             }
             return;
@@ -474,6 +482,7 @@ public class GameplayScreen extends OvertoneScreen
 
             if(_paused)
             {
+                _buttonPress.play();
                 _resumeButton.setDisabled(false);
                 _retryButton.setDisabled(false);
                 _quitButton.setDisabled(false);
