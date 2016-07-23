@@ -265,8 +265,8 @@ public class GameplayScreen extends OvertoneScreen
 
         // Draw progress bar
         float songProgress = _elapsedTime / _totalTime;
-        _batch.draw(_progressBar, _screenWidth * 0.225f, _screenHeight * 0.95f,  _screenWidth * 0.55f,                 _screenHeight * 0.02f);
-        _batch.draw(_progress,    _screenWidth * 0.23f,  _screenHeight * 0.955f, _screenWidth * 0.54f * songProgress , _screenHeight * 0.01f);
+        _batch.draw(_progressBar, _screenWidth * 0.225f, _screenHeight * 0.95f,  _screenWidth * 0.55f,                 _screenHeight * 0.03f);
+        _batch.draw(_progress,    _screenWidth * 0.23f,  _screenHeight * 0.955f, _screenWidth * 0.54f * songProgress , _screenHeight * 0.02f);
         _batch.draw(_progressArrow,       _screenWidth * 0.23f - (_progressArrow.getWidth() / 2.0f) + (_screenWidth * 0.54f * songProgress), _screenHeight * 0.94f, _progressArrow.getWidth(), _progressArrow.getHeight());
 
         // Draw the letter borders
