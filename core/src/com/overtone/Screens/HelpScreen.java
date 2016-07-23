@@ -39,7 +39,7 @@ public class HelpScreen extends OvertoneScreen
 
         final TextButton backButton = CreateTextButton("BACK", "default", _screenWidth * 0.11f, _screenHeight * 0.08f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.845f), _stage);
         backButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {_buttonPress.play(); Overtone.SetScreen(Overtone.Screens.MainMenu);}});
+            public void clicked (InputEvent i, float x, float y) {_buttonPress.play(Overtone.SFXVolume); Overtone.SetScreen(Overtone.Screens.MainMenu);}});
 
         final ImageButton next = CreateImageButton("nextButton",_screenWidth * 0.025f, _screenWidth * 0.025f, new Vector2(_screenWidth * 0.6875f, _screenHeight * 0.82f), _stage);
         next.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
@@ -47,7 +47,7 @@ public class HelpScreen extends OvertoneScreen
 
             if(_helpIndex >= _help.length)
                 _helpIndex = 0;
-            _buttonPress.play();
+            _buttonPress.play(Overtone.SFXVolume);
         }});
 
         final ImageButton back = CreateImageButton("backButton",_screenWidth * 0.025f, _screenWidth * 0.025f, new Vector2(_screenWidth * 0.2875f, _screenHeight * 0.82f), _stage);
@@ -56,7 +56,7 @@ public class HelpScreen extends OvertoneScreen
 
             if(_helpIndex < 0)
                 _helpIndex = _help.length - 1;
-            _buttonPress.play();
+            _buttonPress.play(Overtone.SFXVolume);
         }});
     }
 

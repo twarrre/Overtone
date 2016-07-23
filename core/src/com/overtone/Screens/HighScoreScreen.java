@@ -44,7 +44,7 @@ public class HighScoreScreen extends OvertoneScreen
             public void clicked (InputEvent i, float x, float y) {
                 if(_backButton.isDisabled())
                     return;
-                _buttonPress.play();
+                _buttonPress.play(Overtone.SFXVolume);
                 Overtone.SetScreen(Overtone.Screens.MainMenu);
             }
         });
@@ -54,7 +54,7 @@ public class HighScoreScreen extends OvertoneScreen
             public void clicked (InputEvent i, float x, float y) {
                 if(_resetButton.isDisabled())
                     return;
-                _buttonPress.play();
+                _buttonPress.play(Overtone.SFXVolume);
                 _backButton.setDisabled(true);
                 _resetButton.setDisabled(true);
                 _background.setVisible(true);
@@ -63,7 +63,7 @@ public class HighScoreScreen extends OvertoneScreen
                 _yesButton.setDisabled(false);
                 _noButton.setDisabled(false);
                 _showConfirmationScreen = true;
-                _warning.play();
+                _warning.play(Overtone.SFXVolume);
             }
         });
 
@@ -74,7 +74,7 @@ public class HighScoreScreen extends OvertoneScreen
                 _easyButton.setChecked(true);
                 _currentButton = _easyButton;
                 _difficultyIndex = 0;
-                _buttonPress.play();
+                _buttonPress.play(Overtone.SFXVolume);
             }
         });
 
@@ -85,7 +85,7 @@ public class HighScoreScreen extends OvertoneScreen
                 _normalButton.setChecked(true);
                 _currentButton = _normalButton;
                 _difficultyIndex = 1;
-                _buttonPress.play();
+                _buttonPress.play(Overtone.SFXVolume);
             }
         });
 
@@ -96,7 +96,7 @@ public class HighScoreScreen extends OvertoneScreen
                 _hardButton.setChecked(true);
                 _currentButton = _hardButton;
                 _difficultyIndex = 2;
-                _buttonPress.play();
+                _buttonPress.play(Overtone.SFXVolume);
 
             }
         });
@@ -113,7 +113,7 @@ public class HighScoreScreen extends OvertoneScreen
             public void clicked (InputEvent i, float x, float y) {
                 if(_yesButton.isDisabled())
                     return;
-                _accept.play();
+                _accept.play(Overtone.SFXVolume);
                 _background.setVisible(false);
                 _yesButton.setVisible(false);
                 _noButton.setVisible(false);
@@ -134,7 +134,7 @@ public class HighScoreScreen extends OvertoneScreen
             public void clicked (InputEvent i, float x, float y) {
                 if(_noButton.isDisabled())
                     return;
-                _decline.play();
+                _decline.play(Overtone.SFXVolume);
                 _background.setVisible(false);
                 _yesButton.setVisible(false);
                 _noButton.setVisible(false);

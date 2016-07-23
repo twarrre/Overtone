@@ -2,6 +2,7 @@ package com.overtone;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -136,6 +137,8 @@ public class Overtone extends ApplicationAdapter
 	public static int[][]         HighScores;
     public static CrowdRating[][] CrowdRatings;
 	public static Difficulty      Difficulty;
+	public static float           MusicVolume;
+	public static float           SFXVolume;
 
 	//private ShaderProgram _shaderProgram;
 	//private SpriteBatch _batch;
@@ -150,9 +153,12 @@ public class Overtone extends ApplicationAdapter
 		Difficulty     = Difficulty.Easy;
 		HighScores     = new int[3][5];
         CrowdRatings   = new CrowdRating[3][5];
+		MusicVolume    = 1.0f;
+		SFXVolume      = 1.0f;
 		_currentScreen = new SplashScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		_currentScreen.show();
 		LoadHighScores();
+		LoadVolume();
 
 		//_batch          = new SpriteBatch();
 		//_shaderProgram  = new ShaderProgram(Gdx.files.internal("Shaders\\vertex.glsl").readString(), Gdx.files.internal("Shaders\\fragment.glsl").readString());
@@ -419,5 +425,58 @@ public class Overtone extends ApplicationAdapter
 		// If any scores were changed, write the scores to the file
 		if(replaced)
 			WriteScores(false);
+	}
+
+	public static void LoadVolume()
+	{
+		try
+		{
+			// Open the file
+			BufferedReader reader = new BufferedReader(new FileReader("Storage\\Volume.txt"));
+
+			String line      = null;
+			int counter = 0;
+
+			while ((line = reader.readLine())!= null)
+			{
+				if(counter == 0)
+					MusicVolume = Float.parseFloat(line);
+				else if(counter == 1)
+					SFXVolume = Float.parseFloat(line);
+				else
+					break;
+				counter++;
+			}
+
+			reader.close();
+		}
+		catch (IOException e)
+		{
+			System.out.print("Data Cannot be loaded at this time.");
+		}
+	}
+
+	public static void WriteVolume()
+	{
+		try
+		{
+			File file = new File("Storage\\Volume.txt");
+
+			if (!file.exists())
+				file.createNewFile();
+
+			FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter writer = new BufferedWriter(fileWriter);
+
+			writer.write(MusicVolume + "");
+			writer.newLine();
+			writer.write(SFXVolume + "");
+
+			writer.close();
+		}
+		catch(IOException x)
+		{
+			System.out.print("Data Cannot be saved at this time.");
+		}
 	}
 }
