@@ -1,6 +1,7 @@
 package com.overtone.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -15,12 +16,14 @@ import com.overtone.Overtone;
 public class MainMenuScreen extends OvertoneScreen
 {
     private final Stage _stage;
+    private final Texture _logo;
 
     public MainMenuScreen(int screenWidth, int screenHeight)
     {
         super(screenWidth, screenHeight);
 
         _stage = new Stage();
+        _logo  = new Texture(Gdx.files.internal("Textures\\logo.png"));
 
         final TextButton playButton = CreateTextButton("PLAY", "default", _screenWidth * 0.85f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.21f), _stage);
         playButton.addListener(new ClickListener() {
@@ -60,8 +63,9 @@ public class MainMenuScreen extends OvertoneScreen
 
         _glyphLayout.setText(_font12, "Version 1.0");
         _font12.draw(_batch, _glyphLayout, _screenWidth * 0.045f - (_glyphLayout.width / 2.0f), _screenHeight * 0.035f - (_glyphLayout.height / 2.0f));
-        _batch.end();
 
+        _batch.draw(_logo, _screenWidth * 0.5f - (_logo.getWidth() / 2.0f), _screenHeight * 0.7f - (_logo.getHeight() / 2.0f), _logo.getWidth(), _logo.getHeight());
+        _batch.end();
         _stage.draw();
     }
 
@@ -88,5 +92,6 @@ public class MainMenuScreen extends OvertoneScreen
     {
         super.dispose();
         _stage.dispose();
+        _logo.dispose();
     }
 }
