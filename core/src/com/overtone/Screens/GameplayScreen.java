@@ -64,7 +64,8 @@ public class GameplayScreen extends OvertoneScreen
     private final ArrayList<Rating> _onScreenRatings;
 
     // Sound
-    private final Sound _noteHit;
+    private final Sound _noteHitGood;
+    private final Sound _noteHitBad;
     private final Sound _noteShot;
 
     // Variables
@@ -136,7 +137,8 @@ public class GameplayScreen extends OvertoneScreen
         _ship.setRotation(0);
 
         // Load sounds
-        _noteHit  = Gdx.audio.newSound(Gdx.files.internal("Sounds\\note.wav"));
+        _noteHitGood  = Gdx.audio.newSound(Gdx.files.internal("Sounds\\note_good.wav"));
+        _noteHitBad  = Gdx.audio.newSound(Gdx.files.internal("Sounds\\note_bad.wav"));
         _noteShot = Gdx.audio.newSound(Gdx.files.internal("Sounds\\laser.wav"));
 
         // Initialize variables
@@ -458,16 +460,24 @@ public class GameplayScreen extends OvertoneScreen
             _targetZonesPressed[i] = false;
             if(_input.ActionOccurred(InputManager.KeyBinding.values()[i], InputManager.ActionType.Pressed))
             {
-                _noteHit.play(Overtone.SFXVolume);
                 Rating rating = GetNoteRating(_targetZones[i].Position);
                 _targetZonesPressed[i] = true;
 
                 if(rating.GetRating() == Rating.RatingType.Perfect || rating.GetRating() == Rating.RatingType.Great)
+                {
                     _combo++;
+                    _noteHitGood.play(Overtone.SFXVolume);
+                }
                 else if(rating.GetRating() == Rating.RatingType.Bad || rating.GetRating() == Rating.RatingType.Miss)
+                {
                     _combo = 0;
+                    _noteHitBad.play(Overtone.SFXVolume);
+                }
                 else if(rating.GetRating() == Rating.RatingType.Ok || rating.GetRating() == Rating.RatingType.None)
+                {
                     _combo += 0;
+                    _noteHitGood.play(Overtone.SFXVolume);
+                }
 
                 _score += rating.GetRating().Score * _combo;
 
@@ -542,7 +552,7 @@ public class GameplayScreen extends OvertoneScreen
         else if(minDistance <= Target.Radius  && minDistance > Target.Radius * 0.55f)
         {
             _goodCounter++;
-            return new Rating(Rating.RatingType.Ok, target);
+            return new Rating(Rating.RatingType.Ok, closestNote.GetCenter());
         }
         else if(minDistance < Target.Radius * 2.0f  && minDistance > Target.Radius)
         {
@@ -628,5 +638,7 @@ public class GameplayScreen extends OvertoneScreen
         _cleared.dispose();
         _failure.dispose();
         _losing.dispose();
+        _noteHitGood.dispose();
+        _noteHitBad.dispose();
     }
 }
