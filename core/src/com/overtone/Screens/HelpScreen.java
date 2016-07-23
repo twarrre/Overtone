@@ -41,7 +41,7 @@ public class HelpScreen extends OvertoneScreen
         backButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {_buttonPress.play(); Overtone.SetScreen(Overtone.Screens.MainMenu);}});
 
-        final ImageButton next = CreateImageButton("nextButton",_screenWidth * 0.025f, _screenWidth * 0.025f, new Vector2(_screenWidth * 0.6875f, _screenHeight * 0.85f), _stage);
+        final ImageButton next = CreateImageButton("nextButton",_screenWidth * 0.025f, _screenWidth * 0.025f, new Vector2(_screenWidth * 0.6875f, _screenHeight * 0.82f), _stage);
         next.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _helpIndex++;
 
@@ -50,7 +50,7 @@ public class HelpScreen extends OvertoneScreen
             _buttonPress.play();
         }});
 
-        final ImageButton back = CreateImageButton("backButton",_screenWidth * 0.025f, _screenWidth * 0.025f, new Vector2(_screenWidth * 0.2875f, _screenHeight * 0.85f), _stage);
+        final ImageButton back = CreateImageButton("backButton",_screenWidth * 0.025f, _screenWidth * 0.025f, new Vector2(_screenWidth * 0.2875f, _screenHeight * 0.82f), _stage);
         back.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _helpIndex--;
 
@@ -67,12 +67,15 @@ public class HelpScreen extends OvertoneScreen
 
         _batch.begin();
 
+        _glyphLayout.setText(_font36, "Help");
+        _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - _glyphLayout.width / 2.0f, _screenHeight * 0.92f);
+
         for(int i = 0; i < _help.length; i++)
         {
             if(i == _helpIndex)
-                _batch.draw(_circleFilled, _screenWidth * 0.375f + (_screenWidth * (0.3f / (float)_help.length) * (float)i), _screenHeight * 0.85f, _screenWidth * 0.025f, _screenWidth * 0.025f);
+                _batch.draw(_circleFilled, _screenWidth * 0.375f + (_screenWidth * (0.3f / (float)_help.length) * (float)i), _screenHeight * 0.82f, _screenWidth * 0.025f, _screenWidth * 0.025f);
             else
-                _batch.draw(_circleNotFilled, _screenWidth * 0.375f + (_screenWidth *  (0.3f / (float)_help.length) * (float)i), _screenHeight * 0.85f, _screenWidth * 0.025f, _screenWidth * 0.025f);
+                _batch.draw(_circleNotFilled, _screenWidth * 0.375f + (_screenWidth *  (0.3f / (float)_help.length) * (float)i), _screenHeight * 0.82f, _screenWidth * 0.025f, _screenWidth * 0.025f);
         }
 
         _batch.draw(_help[_helpIndex], _screenWidth * 0.125f, _screenHeight * 0.05f, _screenWidth * 0.75f, _screenHeight * 0.75f);

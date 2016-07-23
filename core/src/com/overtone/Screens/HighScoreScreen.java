@@ -160,7 +160,7 @@ public class HighScoreScreen extends OvertoneScreen
         _batch.begin();
 
         _glyphLayout.setText(_font36,  "High Scores");
-        _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.95f);
+        _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.92f);
 
         for(int i = 0; i < 5; i++)
         {

@@ -95,7 +95,7 @@ public class DifficultySelectScreen extends OvertoneScreen
         _font24.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.43f);
 
         _glyphLayout.setText(_font36,  "Choose your Difficulty");
-        _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.9f);
+        _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.92f);
         _batch.end();
     }
 
