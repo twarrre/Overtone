@@ -48,4 +48,13 @@ public class RatingRenderer
             }
         }
     }
+
+    public void dispose()
+    {
+        _ratingTextures[0].dispose();
+        _ratingTextures[1].dispose();
+        _ratingTextures[2].dispose();
+        _ratingTextures[3].dispose();
+        _ratingTextures[4].dispose();
+    }
 }

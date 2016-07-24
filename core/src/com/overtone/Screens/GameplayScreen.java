@@ -152,7 +152,7 @@ public class GameplayScreen extends OvertoneScreen
         _targetZonesPressed[1] = false;
         _targetZonesPressed[2] = false;
         _targetZonesPressed[3] = false;
-        _totalTime      = 3.0f + (float)27 * 2.0f;
+        _totalTime      = 3.0f + (float)28 * 2.0f;
         _elapsedTime    = 0;
         _combo          = 0;
         _score          = 0;
@@ -218,17 +218,17 @@ public class GameplayScreen extends OvertoneScreen
         _noteQueue.add(d1);
         _noteQueue.add(d2);
 
-        Note d3 = new Note(Note.NoteType.Double,
+        Note d3 = new Note(Note.NoteType.Hold,
                 new Vector2(_screenWidth * 0.025f, _screenWidth * 0.025f),
                 new Vector2(_screenWidth / 2.0f, _screenHeight / 2.0f),
                 _targetZones[0],
                 3.0f + (float)1 * 2.0f);
 
-        Note d4 = new Note(Note.NoteType.Double,
+        Note d4 = new Note(Note.NoteType.Hold,
                 new Vector2(_screenWidth * 0.025f, _screenWidth * 0.025f),
                 new Vector2(_screenWidth / 2.0f, _screenHeight / 2.0f),
-                _targetZones[2],
-                3.0f + (float)1 * 2.0f);
+                _targetZones[0],
+                3.0f + (float)2 * 2.0f);
 
         d3.SetOtherNote(d4);
         d4.SetOtherNote(d3);
@@ -238,7 +238,7 @@ public class GameplayScreen extends OvertoneScreen
 
 
         // Load notes
-        for(int i = 2; i < 27; i++)
+        for(int i = 3; i < 28; i++)
         {
            // Note(NoteType type, Vector2 scale, Vector2[] center, Target[] target, float[] timer)
             Note n = new Note(Note.NoteType.Single,
@@ -640,5 +640,7 @@ public class GameplayScreen extends OvertoneScreen
         _losing.dispose();
         _noteHitGood.dispose();
         _noteHitBad.dispose();
+        _noteRenderer.dispose();
+        _ratingRenderer.dispose();
     }
 }

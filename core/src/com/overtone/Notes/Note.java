@@ -45,7 +45,7 @@ public class Note
 
     private Note _partnerNote;
 
-    private boolean _rendered;
+    private boolean _connectorRendered;
 
     /**
      * Constructor
@@ -64,15 +64,15 @@ public class Note
         _center = new Vector2(center.x + _direction.x, center.y + _direction.y);
 
         // Calculate the speed of the note based on difficulty and distance to the target
-        _speed     = ((float)Math.sqrt(Math.pow((target.Position.x - _center.x), 2) + Math.pow((target.Position.y - _center.y), 2))) / Overtone.Difficulty.Multiplier;
+        _speed                = ((float)Math.sqrt(Math.pow((target.Position.x - _center.x), 2) + Math.pow((target.Position.y - _center.y), 2))) / Overtone.Difficulty.Multiplier;
 
-        _target      = target;
-        _timer       = timer;
-        _type        = type;
-        _isVisible   = false;
-        _scale       = scale;
-        _partnerNote = null;
-        _rendered    = false;
+        _target               = target;
+        _timer                = timer;
+        _type                 = type;
+        _isVisible            = false;
+        _scale                = scale;
+        _partnerNote          = null;
+        _connectorRendered    = false;
     }
 
     /**
@@ -103,7 +103,7 @@ public class Note
         else
             _isVisible = false;
 
-        _rendered = false;
+        _connectorRendered = false;
     }
 
     /**
@@ -166,7 +166,7 @@ public class Note
 
     public Note GetOtherNote() {return _partnerNote;}
 
-    public void SetRendered(boolean b){_rendered = b;}
+    public void SetConnectorRendered(boolean b){_connectorRendered = b;}
 
-    public boolean IsRendered() {return _rendered;}
+    public boolean IsConnectorRendered() {return _connectorRendered;}
 }
