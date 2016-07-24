@@ -7,7 +7,7 @@ import com.overtone.Overtone;
  * Represents a note object in the game
  * Created by trevor on 2016-06-21.
  */
-public class Note
+public class Note implements Comparable<Note>
 {
     /**
      * All of the different types of notes
@@ -169,4 +169,14 @@ public class Note
     public void SetConnectorRendered(boolean b){_connectorRendered = b;}
 
     public boolean IsConnectorRendered() {return _connectorRendered;}
+
+    public int compareTo(Note o)
+    {
+        if(_timer < o.GetTime())
+            return -1;
+        else if (_timer == o.GetTime())
+            return 0;
+        else
+            return 1;
+    }
 }

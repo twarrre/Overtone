@@ -20,6 +20,7 @@ import com.overtone.Ratings.Rating;
 import com.overtone.Ratings.RatingRenderer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Screen used during gameplay
@@ -250,6 +251,7 @@ public class GameplayScreen extends OvertoneScreen
             _noteQueue.add(n);
         }
 
+        Collections.sort(_noteQueue);
         _onScreenNotes   = new Quadtree(new Rectangle(0, 0, screenWidth, screenHeight));
         _onScreenRatings = new ArrayList<Rating>();
     }
