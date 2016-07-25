@@ -35,7 +35,7 @@ public class OptionsScreen extends OvertoneScreen
         _dataCleared            = true;
 
         // Create back button
-        _backButton = CreateButton("back", "default",  Overtone.ScreenWidth * 0.11f, Overtone.ScreenHeight * 0.08f, new Vector2(Overtone.ScreenWidth * 0.075f, Overtone.ScreenHeight * 0.845f), _stage);
+        _backButton = CreateButton("back", "small",  Overtone.ScreenWidth * 0.08f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.02f, Overtone.ScreenHeight * 0.92f), _stage);
         _backButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 if(_backButton.isDisabled())

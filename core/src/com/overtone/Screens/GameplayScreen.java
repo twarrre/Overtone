@@ -98,6 +98,7 @@ public class GameplayScreen extends OvertoneScreen
     private final Button _resumeButton;
     private final Button          _retryButton;
     private final Button          _quitButton;
+    private final Button          _difficultyButton;
 
     /**
      * Constructor
@@ -171,7 +172,9 @@ public class GameplayScreen extends OvertoneScreen
         _missCounter    = 0;
         _ratingScale  = new Vector2(Overtone.ScreenWidth * 0.1f, Overtone.ScreenHeight * 0.09f);
 
-        _resumeButton = CreateButton("RESUME", "default", Overtone.ScreenWidth * 0.5f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.25f, Overtone.ScreenHeight * 0.475f), _stage);
+        _resumeButton = CreateButton("RESUME", "small", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.725f), _stage);
+        _resumeButton.setDisabled(true);
+        _resumeButton.setVisible(false);
         _resumeButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 _resumeDelay = true;
@@ -181,27 +184,74 @@ public class GameplayScreen extends OvertoneScreen
                 _resumeButton.setVisible(false);
                 _retryButton.setVisible(false);
                 _quitButton.setVisible(false);
+                _difficultyButton.setVisible(false);
+                _difficultyButton.setDisabled(true);
+                Overtone.WriteVolume();
             }
         });
-        _resumeButton.setDisabled(true);
-        _resumeButton.setVisible(false);
 
-        _retryButton = CreateButton("RETRY", "default", Overtone.ScreenWidth * 0.5f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.25f, Overtone.ScreenHeight * 0.275f), _stage);
+        _retryButton = CreateButton("RETRY", "small", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.625f), _stage);
         _retryButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {_buttonPress.play(Overtone.SFXVolume); Overtone.SetScreen(Overtone.Screens.Gameplay);}
+            public void clicked (InputEvent i, float x, float y) { Overtone.WriteVolume(); _buttonPress.play(Overtone.SFXVolume); Overtone.SetScreen(Overtone.Screens.Gameplay);}
         });
         _retryButton.setDisabled(true);
         _retryButton.setVisible(false);
 
-        _quitButton = CreateButton("MAIN MENU", "default", Overtone.ScreenWidth * 0.5f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.25f, Overtone.ScreenHeight * 0.075f), _stage);
+        _difficultyButton = CreateButton("Difficulty", "small", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.525f), _stage);
+        _difficultyButton.addListener(new ClickListener() {
+            public void clicked (InputEvent i, float x, float y) {Overtone.WriteVolume(); _buttonPress.play(Overtone.SFXVolume); Overtone.SetScreen(Overtone.Screens.DifficultySelect);}
+        });
+        _difficultyButton.setDisabled(true);
+        _difficultyButton.setVisible(false);
+
+        _quitButton = CreateButton("MAIN MENU", "small", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.425f), _stage);
         _quitButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {_buttonPress.play(Overtone.SFXVolume); Overtone.SetScreen(Overtone.Screens.MainMenu);}
+            public void clicked (InputEvent i, float x, float y) {Overtone.WriteVolume(); _buttonPress.play(Overtone.SFXVolume); Overtone.SetScreen(Overtone.Screens.MainMenu);}
         });
         _quitButton.setDisabled(true);
         _quitButton.setVisible(false);
 
-        _noteQueue = new ArrayList<Note>();
+        // Create next button for music volume
+        final Button musicNext = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.02f, Overtone.ScreenWidth * 0.02f, new Vector2(Overtone.ScreenWidth * 0.58f, Overtone.ScreenHeight * 0.325f), _stage);
+        musicNext.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+            _buttonPress.play(Overtone.SFXVolume);
+            Overtone.MusicVolume += 0.01f;
+            if(Overtone.MusicVolume > 1.0f)
+                Overtone.MusicVolume = 1.0f;
+        }});
 
+        // Create back button for music volume
+        final Button musicBack = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.02f, Overtone.ScreenWidth * 0.02f, new Vector2(Overtone.ScreenWidth * 0.55f,  Overtone.ScreenHeight * 0.325f), _stage);
+        musicBack.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+            _buttonPress.play(Overtone.SFXVolume);
+            Overtone.MusicVolume -= 0.01f;
+            if(Overtone.MusicVolume < 0.0f)
+                Overtone.MusicVolume = 0.0f;
+        }});
+
+        // Create the next button for sfx
+        final Button sfxNext = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.02f, Overtone.ScreenWidth * 0.02f, new Vector2(Overtone.ScreenWidth * 0.58f,  Overtone.ScreenHeight * 0.225f), _stage);
+        sfxNext.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+            _buttonPress.play(Overtone.SFXVolume);
+            Overtone.SFXVolume += 0.01f;
+            if(Overtone.SFXVolume > 1.0f)
+                Overtone.SFXVolume = 1.0f;
+        }});
+
+        // Create the back button for sfx
+        final Button sfxBack = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.02f, Overtone.ScreenWidth * 0.02f,  new Vector2(Overtone.ScreenWidth * 0.55f, Overtone.ScreenHeight * 0.225f), _stage);
+        sfxBack.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+            _buttonPress.play(Overtone.SFXVolume);
+            Overtone.SFXVolume -= 0.01f;
+            if(Overtone.SFXVolume < 0.0f)
+                Overtone.SFXVolume = 0.0f;
+        }});
+
+
+
+
+
+        _noteQueue = new ArrayList<Note>();
         Note d1 = new Note(Note.NoteType.Double,
                  new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f),
                  new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),
@@ -237,7 +287,6 @@ public class GameplayScreen extends OvertoneScreen
 
         _noteQueue.add(d3);
         _noteQueue.add(d4);
-
 
         // Load notes
         for(int i = 3; i < 28; i++)
@@ -316,16 +365,22 @@ public class GameplayScreen extends OvertoneScreen
 
         if(_paused && !_resumeDelay)
         {
-            _batch.draw(_background, 0, 0, Overtone.ScreenWidth, Overtone.ScreenHeight);
+            _batch.draw(_background, Overtone.ScreenWidth * 0.375f, 0, Overtone.ScreenWidth * 0.25f, Overtone.ScreenHeight);
             _glyphLayout.setText(_font36,  "Paused");
-            _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.85f);
+            _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.92f);
+
+            _glyphLayout.setText(_font18, "Music: " + (int)(Overtone.MusicVolume * 100.0f) + "%");
+            _font18.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.325f + _glyphLayout.height);
+
+            _glyphLayout.setText(_font18, "SFX: " + (int)(Overtone.SFXVolume * 100.0f) + "%");
+            _font18.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.225f + _glyphLayout.height);
         }
 
         if(_resumeDelay)
         {
-            _batch.draw(_background, 0, 0, Overtone.ScreenWidth, Overtone.ScreenHeight);
-            _glyphLayout.setText(_font36,  "Game will resume in");
-            _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.85f);
+            _batch.draw(_background, Overtone.ScreenWidth * 0.375f, 0, Overtone.ScreenWidth * 0.25f, Overtone.ScreenHeight);
+            _glyphLayout.setText(_font18,  "Game will resume in");
+            _font18.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.85f);
 
             _glyphLayout.setText(_font36, (3 - (int)_resumeTimer) + "");
             _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.5f);
@@ -502,6 +557,8 @@ public class GameplayScreen extends OvertoneScreen
                 _resumeButton.setVisible(true);
                 _retryButton.setVisible(true);
                 _quitButton.setVisible(true);
+                _difficultyButton.setVisible(true);
+                _difficultyButton.setDisabled(false);
             }
         }
     }

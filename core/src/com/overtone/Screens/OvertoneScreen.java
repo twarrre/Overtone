@@ -107,6 +107,7 @@ public class OvertoneScreen implements OvertoneScreenInterface
         pixmap.fill();
 
         _skin.add("default", _font30);
+        _skin.add("small", _font18);
         _skin.add("white", new Texture(pixmap));
         _skin.add("yes", _yes);
         _skin.add("yesHover", _yesHover);
@@ -128,6 +129,14 @@ public class OvertoneScreen implements OvertoneScreenInterface
 
         textButtonStyle.font = _skin.getFont("default");
         _skin.add("default", textButtonStyle);
+
+        TextButton.TextButtonStyle textButtonStyleSmall = new TextButton.TextButtonStyle();
+        textButtonStyleSmall.up      = _skin.newDrawable("white", new Color(0.157f, 0.325f, 0.424f, 0.75f));
+        textButtonStyleSmall.down    = _skin.newDrawable("white", new Color(0.012f, 0.137f, 0.212f, 0.75f));
+        textButtonStyleSmall.over    = _skin.newDrawable("white", new Color(0.067f, 0.224f, 0.318f, 0.75f));
+
+        textButtonStyleSmall.font = _skin.getFont("small");
+        _skin.add("small", textButtonStyleSmall);
 
         TextButton.TextButtonStyle buttonGroupStyle = new TextButton.TextButtonStyle();
         buttonGroupStyle.up         = _skin.newDrawable("white", new Color(0.157f, 0.325f, 0.424f, 0.75f));

@@ -41,7 +41,7 @@ public class DifficultySelectScreen extends OvertoneScreen
         }});
 
         // Create the back button
-        final Button backButton = CreateButton("BACK", "default", Overtone.ScreenWidth * 0.11f, Overtone.ScreenHeight * 0.08f, new Vector2(Overtone.ScreenWidth * 0.075f, Overtone.ScreenHeight * 0.845f), _stage);
+        final Button backButton = CreateButton("BACK", "small", Overtone.ScreenWidth * 0.08f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.02f, Overtone.ScreenHeight * 0.92f), _stage);
         backButton.addListener(new ChangeListener() {
             public void changed (ChangeEvent event, Actor actor) {
             _buttonPress.play(Overtone.SFXVolume);

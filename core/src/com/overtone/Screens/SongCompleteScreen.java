@@ -65,7 +65,7 @@ public class SongCompleteScreen extends OvertoneScreen
         });
 
         // Set up change difficulty button
-        _difficultyButton = CreateButton("MODIFY DIFFICULTY", "default", Overtone.ScreenWidth * 0.25f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.675f, Overtone.ScreenHeight * 0.075f), _stage);
+        _difficultyButton = CreateButton("DIFFICULTY", "default", Overtone.ScreenWidth * 0.25f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.675f, Overtone.ScreenHeight * 0.075f), _stage);
         _difficultyButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 ButtonPress(Overtone.Screens.DifficultySelect);
