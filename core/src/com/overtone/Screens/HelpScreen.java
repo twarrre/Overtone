@@ -22,6 +22,8 @@ public class HelpScreen extends OvertoneScreen
     private final Texture[] _help;            // Array of images that are tutorial images
     private final Texture   _circleFilled;    // Texture of a filled circle, signifies that you are on that texture
     private final Texture   _circleNotFilled; // Texture of a unfilled circle, signifies that you are not on that texture
+    private final Button    _backArrow;       // Represents the back arrow for the help menu
+    private final Button    _nextArrow;       // Represents the next arrow for the help menu
     private int             _helpIndex;       // Which texture are you on right now
 
     public HelpScreen()
@@ -46,8 +48,8 @@ public class HelpScreen extends OvertoneScreen
          }});
 
         // Create the next button
-        final Button next = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.6875f, Overtone.ScreenHeight * 0.82f), _stage);
-        next.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+        _nextArrow = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.85f, Overtone.ScreenHeight * 0.02f), _stage);
+        _nextArrow.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _helpIndex++;
 
             if(_helpIndex >= _help.length)
@@ -57,8 +59,8 @@ public class HelpScreen extends OvertoneScreen
         }});
 
         // Create the back button
-        final Button back = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.2875f, Overtone.ScreenHeight * 0.82f), _stage);
-        back.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+        _backArrow = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.125f, Overtone.ScreenHeight * 0.02f), _stage);
+        _backArrow.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _helpIndex--;
 
             if(_helpIndex < 0)
@@ -76,15 +78,16 @@ public class HelpScreen extends OvertoneScreen
         _glyphLayout.setText(_font36, "Help");
         _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - _glyphLayout.width / 2.0f, Overtone.ScreenHeight * 0.92f);
 
+        float start = Overtone.ScreenWidth * 0.5f - ((Overtone.ScreenWidth * 0.05f * NUM_HELP_SCREENS) / 2.0f);
         for(int i = 0; i < _help.length; i++)
         {
             if(i == _helpIndex)
-                _batch.draw(_circleFilled, Overtone.ScreenWidth * 0.375f + (Overtone.ScreenWidth * (0.3f / (float)_help.length) * (float)i), Overtone.ScreenHeight * 0.82f, Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f);
+                _batch.draw(_circleFilled, start + (Overtone.ScreenWidth * 0.05f * (float)i), Overtone.ScreenHeight * 0.02f, Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f);
             else
-                _batch.draw(_circleNotFilled, Overtone.ScreenWidth * 0.375f + (Overtone.ScreenWidth *  (0.3f / (float)_help.length) * (float)i), Overtone.ScreenHeight * 0.82f, Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f);
+                _batch.draw(_circleNotFilled, start + (Overtone.ScreenWidth * 0.05f * (float)i), Overtone.ScreenHeight * 0.02f, Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f);
         }
 
-        _batch.draw(_help[_helpIndex], Overtone.ScreenWidth * 0.125f, Overtone.ScreenHeight * 0.05f, Overtone.ScreenWidth * 0.75f, Overtone.ScreenHeight * 0.75f);
+        _batch.draw(_help[_helpIndex], Overtone.ScreenWidth * 0.125f, Overtone.ScreenHeight * 0.08f, Overtone.ScreenWidth * 0.75f, Overtone.ScreenHeight * 0.75f);
 
         _batch.end();
         _stage.draw();
