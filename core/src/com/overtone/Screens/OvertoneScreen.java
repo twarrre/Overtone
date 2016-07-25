@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -23,33 +24,37 @@ import com.overtone.Overtone;
  */
 public class OvertoneScreen implements OvertoneScreenInterface
 {
-    protected final SpriteBatch _batch;
-    protected final BitmapFont  _font12;
-    protected final BitmapFont  _font18;
-    protected final BitmapFont  _font24;
-    protected final BitmapFont  _font30;
-    protected final BitmapFont  _font36;
-    protected final GlyphLayout _glyphLayout;
-    protected final Skin        _skin;
-    protected final Texture     _yes;
-    protected final Texture     _yesHover;
-    protected final Texture     _yesDown;
-    protected final Texture     _no;
-    protected final Texture     _noHover;
-    protected final Texture     _noDown;
+    protected final SpriteBatch _batch;       // Sprite batch to draw to
 
-    protected final Texture     _next;
-    protected final Texture     _nextHover;
-    protected final Texture     _nextDown;
-    protected final Texture     _back;
-    protected final Texture     _backHover;
-    protected final Texture     _backDown;
+    // Fonts
+    protected final GlyphLayout _glyphLayout; // Stores font date
+    protected final Skin        _skin;        // Stores the color and layout of the fonts
+    protected final BitmapFont  _font12;      // 12 point font
+    protected final BitmapFont  _font18;      // 18 point font
+    protected final BitmapFont  _font24;      // 24 point font
+    protected final BitmapFont  _font30;      // 30 point font
+    protected final BitmapFont  _font36;      // 36 point font
 
-    protected final Sound _accept;
-    protected final Sound _decline;
-    protected final Sound _buttonPress;
-    protected final Sound _warning;
-    protected final Sound _countdown;
+    // Textures
+    protected final Texture     _yes;         // Texture for the yes button
+    protected final Texture     _yesHover;    // Texture for the yes button hover
+    protected final Texture     _yesDown;     // Texture for the yes button down
+    protected final Texture     _no;          // Texture for the no button
+    protected final Texture     _noHover;     // Texture for the no button hover
+    protected final Texture     _noDown;      // Texture for the no button down
+    protected final Texture     _next;        // Texture for the next button
+    protected final Texture     _nextHover;   // Texture for the next button hover
+    protected final Texture     _nextDown;    // Texture for the next button down
+    protected final Texture     _back;        // Texture for the back button
+    protected final Texture     _backHover;   // Texture for the back button hover
+    protected final Texture     _backDown;    // Texture for the back button down
+
+    // Sounds
+    protected final Sound       _accept;      // Sound effect for accepting
+    protected final Sound       _decline;     // Sound effect for declining
+    protected final Sound       _buttonPress; // Sound effect for a button press
+    protected final Sound       _warning;     // Sound effect for a waring to be displayed
+    protected final Sound       _countdown;   // Sound effect for the pause menu countdown
 
     /**
      * Constructor
@@ -60,12 +65,14 @@ public class OvertoneScreen implements OvertoneScreenInterface
         _glyphLayout  = new GlyphLayout();
         _skin         = new Skin();
 
+        // Load Sounder
         _accept      = Gdx.audio.newSound(Gdx.files.internal("Sounds\\accept.wav"));
         _decline     = Gdx.audio.newSound(Gdx.files.internal("Sounds\\decline.wav"));
         _buttonPress = Gdx.audio.newSound(Gdx.files.internal("Sounds\\press.wav"));
         _warning     = Gdx.audio.newSound(Gdx.files.internal("Sounds\\warning.wav"));
         _countdown   = Gdx.audio.newSound(Gdx.files.internal("Sounds\\countdown.wav"));
 
+        // Load Fonts
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Fonts\\Furore.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 12;
@@ -80,6 +87,7 @@ public class OvertoneScreen implements OvertoneScreenInterface
         _font36 = generator.generateFont(parameter);
         generator.dispose();
 
+        // load Textures
         _yes          = new Texture(Gdx.files.internal("Textures\\yes.png"));
         _yesHover     = new Texture(Gdx.files.internal("Textures\\yesHover.png"));
         _yesDown      = new Texture(Gdx.files.internal("Textures\\yesDown.png"));
@@ -93,6 +101,7 @@ public class OvertoneScreen implements OvertoneScreenInterface
         _backHover    = new Texture(Gdx.files.internal("Textures\\backHover.png"));
         _backDown     = new Texture(Gdx.files.internal("Textures\\backDown.png"));
 
+        // Create button arrangements
         Pixmap pixmap = new Pixmap(100, 100, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
@@ -154,26 +163,37 @@ public class OvertoneScreen implements OvertoneScreenInterface
         _skin.add("backButton", imageButtonStyleBack);
     }
 
-    public TextButton CreateTextButton(String label, String style, float width, float height, Vector2 pos, Stage stage)
+    /**
+     * Creates a new button
+     * @param label The label of the button, null if image button
+     * @param style The style of the button
+     * @param width The width of the button
+     * @param height The height of the button
+     * @param pos The position of the button
+     * @param stage The stage to add the button to
+     * @return Returns a new text button
+     */
+    public Button CreateButton(String label, String style, float width, float height, Vector2 pos, Stage stage)
     {
-        final TextButton button = new TextButton(label, _skin.get(style, TextButton.TextButtonStyle.class));
-        button.setWidth(width);
-        button.setHeight(height);
-        button.setPosition(pos.x,pos.y);
-        stage.addActor(button);
+        if (label == null)
+        {
+            final ImageButton button = new ImageButton(_skin.get(style, ImageButton.ImageButtonStyle.class));
+            button.setWidth(width);
+            button.setHeight(height);
+            button.setPosition(pos.x,pos.y);
+            stage.addActor(button);
 
-        return button;
-    }
-
-    public ImageButton CreateImageButton(String style, float width, float height, Vector2 pos, Stage stage)
-    {
-        final ImageButton button = new ImageButton(_skin.get(style, ImageButton.ImageButtonStyle.class));
-        button.setWidth(width);
-        button.setHeight(height);
-        button.setPosition(pos.x,pos.y);
-        stage.addActor(button);
-
-        return button;
+            return button;
+        }
+        else
+        {
+            final TextButton button = new TextButton(label, _skin.get(style, TextButton.TextButtonStyle.class));
+            button.setWidth(width);
+            button.setHeight(height);
+            button.setPosition(pos.x,pos.y);
+            stage.addActor(button);
+            return button;
+        }
     }
 
     public void resize (int width, int height)
@@ -185,9 +205,11 @@ public class OvertoneScreen implements OvertoneScreenInterface
     public void dispose ()
     {
         _batch.dispose();
-        _batch.dispose();
         _skin.dispose();
+        _font12.dispose();
         _font18.dispose();
+        _font24.dispose();
+        _font30.dispose();
         _font36.dispose();
         _yes.dispose();
         _yesHover.dispose();
@@ -195,17 +217,17 @@ public class OvertoneScreen implements OvertoneScreenInterface
         _no.dispose();
         _noHover.dispose();
         _noDown.dispose();
-        _accept.dispose();
-        _decline.dispose();
-        _buttonPress.dispose();
-        _warning.dispose();
-        _countdown.dispose();
         _next.dispose();
         _nextHover.dispose();
         _nextDown.dispose();
         _back.dispose();
         _backHover.dispose();
         _backDown.dispose();
+        _accept.dispose();
+        _decline.dispose();
+        _buttonPress.dispose();
+        _warning.dispose();
+        _countdown.dispose();
     }
 
     public void pause () {}

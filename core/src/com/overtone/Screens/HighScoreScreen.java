@@ -1,16 +1,12 @@
 package com.overtone.Screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.overtone.Overtone;
-import sun.util.resources.cldr.de.CalendarData_de_LI;
 
 /**
  * Screen used for high scores
@@ -18,62 +14,55 @@ import sun.util.resources.cldr.de.CalendarData_de_LI;
  */
 public class HighScoreScreen extends OvertoneScreen
 {
-    private final Stage       _stage;
-    private final TextButton  _easyButton;
-    private final TextButton  _normalButton;
-    private final TextButton  _hardButton;
-    private final TextButton  _backButton;
-    private TextButton        _currentButton;
-    private int               _difficultyIndex;
+    private final Stage  _stage;           // The stage to hold stuff and thangs
+    private final Button _easyButton;      // The easy button
+    private final Button _normalButton;    // The normal button
+    private final Button _hardButton;      // The hard button
+    private final Button _backButton;      // The back button
+    private Button       _currentButton;   // The current difficulty button pressed
+    private int          _difficultyIndex; // The currently selected difficulty
 
+    /**
+     * Constructor
+     */
     public HighScoreScreen()
     {
         super();
-
         _stage           = new Stage();
         _difficultyIndex = 0;
 
-        _backButton = CreateTextButton("back", "default", Overtone.ScreenWidth * 0.11f, Overtone.ScreenHeight * 0.08f, new Vector2(Overtone.ScreenWidth * 0.075f, Overtone.ScreenHeight * 0.845f), _stage);
+        // Create the back button
+        _backButton = CreateButton("back", "default", Overtone.ScreenWidth * 0.11f, Overtone.ScreenHeight * 0.08f, new Vector2(Overtone.ScreenWidth * 0.075f, Overtone.ScreenHeight * 0.845f), _stage);
         _backButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
-                if(_backButton.isDisabled())
-                    return;
-                _buttonPress.play(Overtone.SFXVolume);
-                Overtone.SetScreen(Overtone.Screens.MainMenu);
+            if(_backButton.isDisabled())
+                return;
+
+            _buttonPress.play(Overtone.SFXVolume);
+            Overtone.SetScreen(Overtone.Screens.MainMenu);
             }
         });
 
-        _easyButton   = CreateTextButton("EASY", "group", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.1f, new Vector2(Overtone.ScreenWidth * 0.2075f, Overtone.ScreenHeight * 0.75f),_stage);
+        // Create the easy button
+        _easyButton   = CreateButton("EASY", "group", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.1f, new Vector2(Overtone.ScreenWidth * 0.2075f, Overtone.ScreenHeight * 0.75f), _stage);
         _easyButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
-                _currentButton.setChecked(false);
-                _easyButton.setChecked(true);
-                _currentButton = _easyButton;
-                _difficultyIndex = 0;
-                _buttonPress.play(Overtone.SFXVolume);
+                ButtonPress(0, _easyButton);
             }
         });
 
-        _normalButton = CreateTextButton("NORMAL", "group", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.1f, new Vector2(Overtone.ScreenWidth * 0.4075f, Overtone.ScreenHeight * 0.75f), _stage);
+        // Create the normal button
+        _normalButton = CreateButton("NORMAL", "group", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.1f, new Vector2(Overtone.ScreenWidth * 0.4075f, Overtone.ScreenHeight * 0.75f), _stage);
         _normalButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {
-                _currentButton.setChecked(false);
-                _normalButton.setChecked(true);
-                _currentButton = _normalButton;
-                _difficultyIndex = 1;
-                _buttonPress.play(Overtone.SFXVolume);
+            public void clicked (InputEvent i, float x, float y) {ButtonPress(1, _normalButton);
             }
         });
 
-        _hardButton   = CreateTextButton("HARD", "group", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.1f, new Vector2(Overtone.ScreenWidth * 0.6075f, Overtone.ScreenHeight * 0.75f), _stage);
+        // Create the hard button
+        _hardButton   = CreateButton("HARD", "group", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.1f, new Vector2(Overtone.ScreenWidth * 0.6075f, Overtone.ScreenHeight * 0.75f), _stage);
         _hardButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
-                _currentButton.setChecked(false);
-                _hardButton.setChecked(true);
-                _currentButton = _hardButton;
-                _difficultyIndex = 2;
-                _buttonPress.play(Overtone.SFXVolume);
-
+                ButtonPress(2, _hardButton);
             }
         });
 
@@ -84,7 +73,6 @@ public class HighScoreScreen extends OvertoneScreen
     public void render (float deltaTime)
     {
         super.render(deltaTime);
-
         _batch.begin();
 
         _glyphLayout.setText(_font36,  "High Scores");
@@ -111,23 +99,40 @@ public class HighScoreScreen extends OvertoneScreen
         super.update(deltaTime);
         _stage.act(deltaTime);
     }
-
     public void resize(int width, int height)
     {
         super.resize(width, height);
         _stage.getViewport().update(width, height, true);
     }
-
     public void show()
     {
+        super.show();
         Gdx.input.setInputProcessor(_stage);
     }
-
-    public void hide() {Gdx.input.setInputProcessor(null);}
-
+    public void hide()
+    {
+        super.hide();
+        Gdx.input.setInputProcessor(null);
+    }
     public void dispose ()
     {
         super.dispose();
         _stage.dispose();
+    }
+
+    /**
+     * Called when a difficulty button is pressed
+     * @param idx The index of the difficulty
+     * @param currButton The current button pressed
+     */
+    public void ButtonPress(int idx, Button currButton)
+    {
+        _difficultyIndex = idx;
+
+        _currentButton.setChecked(false);
+        _currentButton = currButton;
+        currButton.setChecked(true);
+
+        _buttonPress.play(Overtone.SFXVolume);
     }
 }

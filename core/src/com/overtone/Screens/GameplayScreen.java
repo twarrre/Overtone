@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.overtone.InputManager;
@@ -94,9 +95,9 @@ public class GameplayScreen extends OvertoneScreen
     private final Target[] _targetZones;
     private final boolean[] _targetZonesPressed;
 
-    private final TextButton          _resumeButton;
-    private final TextButton          _retryButton;
-    private final TextButton          _quitButton;
+    private final Button _resumeButton;
+    private final Button          _retryButton;
+    private final Button          _quitButton;
 
     /**
      * Constructor
@@ -170,7 +171,7 @@ public class GameplayScreen extends OvertoneScreen
         _missCounter    = 0;
         _ratingScale  = new Vector2(Overtone.ScreenWidth * 0.1f, Overtone.ScreenHeight * 0.09f);
 
-        _resumeButton = CreateTextButton("RESUME", "default", Overtone.ScreenWidth * 0.5f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.25f, Overtone.ScreenHeight * 0.475f), _stage);
+        _resumeButton = CreateButton("RESUME", "default", Overtone.ScreenWidth * 0.5f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.25f, Overtone.ScreenHeight * 0.475f), _stage);
         _resumeButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 _resumeDelay = true;
@@ -185,14 +186,14 @@ public class GameplayScreen extends OvertoneScreen
         _resumeButton.setDisabled(true);
         _resumeButton.setVisible(false);
 
-        _retryButton = CreateTextButton("RETRY", "default", Overtone.ScreenWidth * 0.5f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.25f, Overtone.ScreenHeight * 0.275f), _stage);
+        _retryButton = CreateButton("RETRY", "default", Overtone.ScreenWidth * 0.5f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.25f, Overtone.ScreenHeight * 0.275f), _stage);
         _retryButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {_buttonPress.play(Overtone.SFXVolume); Overtone.SetScreen(Overtone.Screens.Gameplay);}
         });
         _retryButton.setDisabled(true);
         _retryButton.setVisible(false);
 
-        _quitButton = CreateTextButton("MAIN MENU", "default", Overtone.ScreenWidth * 0.5f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.25f, Overtone.ScreenHeight * 0.075f), _stage);
+        _quitButton = CreateButton("MAIN MENU", "default", Overtone.ScreenWidth * 0.5f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.25f, Overtone.ScreenHeight * 0.075f), _stage);
         _quitButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {_buttonPress.play(Overtone.SFXVolume); Overtone.SetScreen(Overtone.Screens.MainMenu);}
         });
