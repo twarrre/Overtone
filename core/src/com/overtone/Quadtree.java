@@ -11,28 +11,19 @@ import java.util.ArrayList;
  */
 public class Quadtree
 {
-    /**
-     * The number of levels in the quadtree
-     */
+    /**The number of levels in the quadtree*/
     public static final int NUM_LEVELS = 2;
 
-    /**
-     * Represents a node in the tree
-     */
+    /**Represents a node in the tree*/
     protected class Node
     {
-
-        public Node topLeft;
-        public Node topRight;
-        public Node bottomLeft;
-        public Node bottomRight;
-        public Node parent;
-
-        // The bounds of the quad
-        private final Rectangle _bounds;
-
-        // The objects stored in this quad
-        private ArrayList<Note> _objects;
+        public Node              topLeft;     // Top left quad
+        public Node              topRight;    // Top right quad
+        public Node              bottomLeft;  // Bottom left quad
+        public Node              bottomRight; // Bottom right quad
+        public Node              parent;      // The parent of this node
+        private final Rectangle _bounds;      // The bounds of the quad
+        private ArrayList<Note> _objects;     // The objects stored in this quad
 
         /**
          * Constructor
@@ -41,17 +32,14 @@ public class Quadtree
          */
         public Node(Rectangle bounds, Node parent)
         {
-            _bounds = bounds;
-            _objects = new ArrayList<Note>();
+            _bounds     = bounds;
+            _objects    = new ArrayList<Note>();
             this.parent = parent;
         }
     }
 
-    // The root of the tree
-    private final Node _root;
-
-    // Storage when getting notes from all of the nodes
-    private ArrayList<Note> _notes;
+    private final Node      _root;  // The root of the tree
+    private ArrayList<Note> _notes; // Storage when getting notes from all of the nodes
 
     /**
      * Constructor
@@ -164,7 +152,7 @@ public class Quadtree
     }
 
     /**
-     * Recusivly tries to insert the element into the highest level node
+     * Recursively tries to insert the element into the highest level node
      * @param note The element to be inserted
      * @param node The node that the element is trying to be inserted into
      * @return True is successfully inserted, false otherwise

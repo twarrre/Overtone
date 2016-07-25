@@ -3,7 +3,6 @@ package com.overtone.Ratings;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
 import java.util.ArrayList;
 
 /**
@@ -12,8 +11,7 @@ import java.util.ArrayList;
  */
 public class RatingRenderer
 {
-    // Textures for all of the ratings
-    private final Texture[] _ratingTextures;
+    private final Texture[] _ratingTextures;  // Textures for all of the ratings
 
     /**
      * Constructor
@@ -38,17 +36,13 @@ public class RatingRenderer
         for(Rating r : ratings)
         {
             if(r.IsVisible())
-            {
-                batch.draw(_ratingTextures[r.GetRating().ordinal()],
-                        r.GetCenter().x - (_ratingTextures[r.GetRating().ordinal()].getWidth() / 4.0f),
-                        r.GetCenter().y - (_ratingTextures[r.GetRating().ordinal()].getHeight() / 4.0f),
-                        _ratingTextures[r.GetRating().ordinal()].getWidth() / 2.0f,
-                        _ratingTextures[r.GetRating().ordinal()].getHeight() / 2.0f
-                );
-            }
+                batch.draw(_ratingTextures[r.GetRating().ordinal()], r.GetDrawingPosition().x, r.GetDrawingPosition().y, r.GetScale().x, r.GetScale().y);
         }
     }
 
+    /**
+     * Disposes of textures upon destruction
+     */
     public void dispose()
     {
         _ratingTextures[0].dispose();

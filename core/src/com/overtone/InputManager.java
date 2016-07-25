@@ -12,20 +12,16 @@ import java.util.Map;
  */
 public class InputManager
 {
-    /**
-     * Represents all of the different types of inputs taken from the keyboard
-     */
+    /**Represents all of the different types of inputs taken from the keyboard*/
     public enum ActionType
     {
         Pressed,
         Held,
         Released,
-        Up;
+        Up
     }
 
-    /**
-     * Stores all of the different key codes that are being tracked in the game
-     */
+    /**Stores all of the different key codes that are being tracked in the game*/
     public enum KeyBinding
     {
         TopLeft     (Input.Keys.E),
@@ -36,23 +32,11 @@ public class InputManager
         Enter       (Input.Keys.ENTER);
 
         KeyBinding(int key) { this.keyCode = key; }
-
-        // The code for the enum value
-        public int keyCode;
-
-        // The size of the enum
-        public static final int size = KeyBinding.values().length;
+        public int keyCode; // The code for the enum value
     }
 
-    /**
-     * Stores the state of the keyboard from the previous frame
-     */
-    private Map<Integer, Boolean> _prevKeyboardState;
-
-    /**
-     *  Stores the current keyboard state for this frame.
-     */
-    private Map<Integer, Boolean> _currentKeyBoardState;
+    private Map<Integer, Boolean> _prevKeyboardState;    // Stores the state of the keyboard from the previous frame
+    private Map<Integer, Boolean> _currentKeyBoardState; // Stores the current keyboard state for this frame.
 
     /**
      * Constructor
@@ -61,9 +45,10 @@ public class InputManager
     {
         // Initialize the keyboard states to false
         _currentKeyBoardState = new HashMap<Integer, Boolean>();
-        _prevKeyboardState = new HashMap<Integer, Boolean>();
+        _prevKeyboardState    = new HashMap<Integer, Boolean>();
         KeyBinding[] bindings = KeyBinding.values();
-        for(int i = 0; i < KeyBinding.size; ++i)
+
+        for(int i = 0; i < KeyBinding.values().length; ++i)
         {
             _currentKeyBoardState.put(bindings[i].keyCode, false);
             _prevKeyboardState.put(bindings[i].keyCode, false);

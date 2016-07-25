@@ -25,23 +25,22 @@ public class DifficultySelectScreen extends OvertoneScreen
     private TextButton       _currentButton;
     private int              _difficultyIndex;
 
-    public DifficultySelectScreen(int screenWidth, int screenHeight)
+    public DifficultySelectScreen()
     {
-        super(screenWidth, screenHeight);
-
+        super();
         _stage           = new Stage();
         _difficultyIndex = 0;
 
-        final TextButton startButton = CreateTextButton("START", "default", _screenWidth * 0.85f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.075f),_stage);
+        final TextButton startButton = CreateTextButton("START", "default", Overtone.ScreenWidth * 0.85f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.075f, Overtone.ScreenHeight * 0.075f),_stage);
         startButton.addListener(new ChangeListener() {
             public void changed (ChangeEvent event, Actor actor) {_buttonPress.play(Overtone.SFXVolume); Overtone.SetScreen(Overtone.Screens.Gameplay);}
         });
 
-        final TextButton backButton = CreateTextButton("BACK", "default", _screenWidth * 0.11f, _screenHeight * 0.08f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.845f), _stage);
+        final TextButton backButton = CreateTextButton("BACK", "default", Overtone.ScreenWidth * 0.11f, Overtone.ScreenHeight * 0.08f, new Vector2(Overtone.ScreenWidth * 0.075f, Overtone.ScreenHeight * 0.845f), _stage);
         backButton.addListener(new ChangeListener() {
             public void changed (ChangeEvent event, Actor actor) {_buttonPress.play(Overtone.SFXVolume); Overtone.SetScreen(Overtone.Screens.MainMenu);}});
 
-        _easyButton   = CreateTextButton("EASY", "group", _screenWidth * 0.1325f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.3f),_stage);
+        _easyButton   = CreateTextButton("EASY", "group", Overtone.ScreenWidth * 0.1325f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.075f, Overtone.ScreenHeight * 0.3f),_stage);
         _easyButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 Overtone.Difficulty = Overtone.Difficulty.Easy;
@@ -53,7 +52,7 @@ public class DifficultySelectScreen extends OvertoneScreen
             }
         });
 
-        _normalButton = CreateTextButton("NORMAL", "group", _screenWidth * 0.1325f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.2075f, _screenHeight * 0.3f), _stage);
+        _normalButton = CreateTextButton("NORMAL", "group", Overtone.ScreenWidth * 0.1325f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.2075f, Overtone.ScreenHeight * 0.3f), _stage);
         _normalButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 Overtone.Difficulty = Overtone.Difficulty.Normal;
@@ -65,7 +64,7 @@ public class DifficultySelectScreen extends OvertoneScreen
             }
         });
 
-        _hardButton   = CreateTextButton("HARD", "group", _screenWidth * 0.1325f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.34f, _screenHeight * 0.3f), _stage);
+        _hardButton   = CreateTextButton("HARD", "group", Overtone.ScreenWidth * 0.1325f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.34f, Overtone.ScreenHeight * 0.3f), _stage);
         _hardButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 Overtone.Difficulty = Overtone.Difficulty.Hard;
@@ -89,13 +88,13 @@ public class DifficultySelectScreen extends OvertoneScreen
         _batch.begin();
 
         _glyphLayout.setText(_font24,  "High Score: " + Overtone.HighScores[_difficultyIndex][0]);
-        _font24.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.355f);
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.575f, Overtone.ScreenHeight * 0.355f);
 
         _glyphLayout.setText(_font24,  "Rating: " +  Overtone.CrowdRatings[_difficultyIndex][0].toString());
-        _font24.draw(_batch, _glyphLayout, _screenWidth * 0.575f, _screenHeight * 0.43f);
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.575f, Overtone.ScreenHeight * 0.43f);
 
         _glyphLayout.setText(_font36,  "Choose your Difficulty");
-        _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.92f);
+        _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.92f);
         _batch.end();
     }
 

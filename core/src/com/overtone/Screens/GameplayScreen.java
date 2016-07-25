@@ -87,6 +87,7 @@ public class GameplayScreen extends OvertoneScreen
     private int                       _goodCounter;
     private int                       _badCounter;
     private int                       _missCounter;
+    private final Vector2             _ratingScale;
 
     private Vector2                   _shipDirection;
 
@@ -99,12 +100,10 @@ public class GameplayScreen extends OvertoneScreen
 
     /**
      * Constructor
-     * @param screenWidth The width of the screen
-     * @param screenHeight The height of the screen
      */
-    public GameplayScreen(int screenWidth, int screenHeight)
+    public GameplayScreen()
     {
-        super(screenWidth, screenHeight);
+        super();
 
         // Initialize objects
         _input          = new InputManager();
@@ -132,7 +131,7 @@ public class GameplayScreen extends OvertoneScreen
         _currentCrowdRating = _cleared;
 
         _ship               = new Sprite(new Texture(Gdx.files.internal("Textures\\ship.png")));
-        _ship.setCenter(_screenWidth * 0.5f, _screenHeight * 0.5f);
+        _ship.setCenter(Overtone.ScreenWidth * 0.5f, Overtone.ScreenHeight * 0.5f);
         _ship.setScale(0.75f);
         _shipDirection = new Vector2(0, 0);
         _ship.setRotation(0);
@@ -169,8 +168,9 @@ public class GameplayScreen extends OvertoneScreen
         _goodCounter    = 0;
         _badCounter     = 0;
         _missCounter    = 0;
+        _ratingScale  = new Vector2(Overtone.ScreenWidth * 0.1f, Overtone.ScreenHeight * 0.09f);
 
-        _resumeButton = CreateTextButton("RESUME", "default", _screenWidth * 0.5f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.25f, _screenHeight * 0.475f), _stage);
+        _resumeButton = CreateTextButton("RESUME", "default", Overtone.ScreenWidth * 0.5f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.25f, Overtone.ScreenHeight * 0.475f), _stage);
         _resumeButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 _resumeDelay = true;
@@ -185,14 +185,14 @@ public class GameplayScreen extends OvertoneScreen
         _resumeButton.setDisabled(true);
         _resumeButton.setVisible(false);
 
-        _retryButton = CreateTextButton("RETRY", "default", _screenWidth * 0.5f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.25f, _screenHeight * 0.275f), _stage);
+        _retryButton = CreateTextButton("RETRY", "default", Overtone.ScreenWidth * 0.5f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.25f, Overtone.ScreenHeight * 0.275f), _stage);
         _retryButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {_buttonPress.play(Overtone.SFXVolume); Overtone.SetScreen(Overtone.Screens.Gameplay);}
         });
         _retryButton.setDisabled(true);
         _retryButton.setVisible(false);
 
-        _quitButton = CreateTextButton("MAIN MENU", "default", _screenWidth * 0.5f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.25f, _screenHeight * 0.075f), _stage);
+        _quitButton = CreateTextButton("MAIN MENU", "default", Overtone.ScreenWidth * 0.5f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.25f, Overtone.ScreenHeight * 0.075f), _stage);
         _quitButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {_buttonPress.play(Overtone.SFXVolume); Overtone.SetScreen(Overtone.Screens.MainMenu);}
         });
@@ -202,14 +202,14 @@ public class GameplayScreen extends OvertoneScreen
         _noteQueue = new ArrayList<Note>();
 
         Note d1 = new Note(Note.NoteType.Double,
-                 new Vector2(_screenWidth * 0.025f, _screenWidth * 0.025f),
-                 new Vector2(_screenWidth / 2.0f, _screenHeight / 2.0f),
+                 new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f),
+                 new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),
                  _targetZones[0],
                  3.0f + (float)0 * 2.0f);
 
         Note d2 = new Note(Note.NoteType.Double,
-                new Vector2(_screenWidth * 0.025f, _screenWidth * 0.025f),
-                new Vector2(_screenWidth / 2.0f, _screenHeight / 2.0f),
+                new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f),
+                new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),
                 _targetZones[1],
                 3.0f + (float)0 * 2.0f);
 
@@ -220,14 +220,14 @@ public class GameplayScreen extends OvertoneScreen
         _noteQueue.add(d2);
 
         Note d3 = new Note(Note.NoteType.Hold,
-                new Vector2(_screenWidth * 0.025f, _screenWidth * 0.025f),
-                new Vector2(_screenWidth / 2.0f, _screenHeight / 2.0f),
+                new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f),
+                new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),
                 _targetZones[0],
                 3.0f + (float)1 * 2.0f);
 
         Note d4 = new Note(Note.NoteType.Hold,
-                new Vector2(_screenWidth * 0.025f, _screenWidth * 0.025f),
-                new Vector2(_screenWidth / 2.0f, _screenHeight / 2.0f),
+                new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f),
+                new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),
                 _targetZones[0],
                 3.0f + (float)2 * 2.0f);
 
@@ -243,8 +243,8 @@ public class GameplayScreen extends OvertoneScreen
         {
            // Note(NoteType type, Vector2 scale, Vector2[] center, Target[] target, float[] timer)
             Note n = new Note(Note.NoteType.Single,
-                     new Vector2(_screenWidth * 0.025f, _screenWidth * 0.025f),
-                     new Vector2(_screenWidth / 2.0f, _screenHeight / 2.0f),
+                     new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f),
+                     new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),
                     _targetZones[i %_targetZones.length],
                      3.0f + (float)i * 2.0f
             );
@@ -252,7 +252,7 @@ public class GameplayScreen extends OvertoneScreen
         }
 
         Collections.sort(_noteQueue);
-        _onScreenNotes   = new Quadtree(new Rectangle(0, 0, screenWidth, screenHeight));
+        _onScreenNotes   = new Quadtree(new Rectangle(0, 0, Overtone.ScreenWidth, Overtone.ScreenHeight));
         _onScreenRatings = new ArrayList<Rating>();
     }
 
@@ -267,35 +267,35 @@ public class GameplayScreen extends OvertoneScreen
 
         // Draw progress bar
         float songProgress = _elapsedTime / _totalTime;
-        _batch.draw(_progressBar, _screenWidth * 0.225f, _screenHeight * 0.95f,  _screenWidth * 0.55f,                 _screenHeight * 0.03f);
-        _batch.draw(_progress,    _screenWidth * 0.23f,  _screenHeight * 0.955f, _screenWidth * 0.54f * songProgress , _screenHeight * 0.02f);
-        _batch.draw(_progressArrow,       _screenWidth * 0.23f - (_progressArrow.getWidth() / 2.0f) + (_screenWidth * 0.54f * songProgress), _screenHeight * 0.94f, _progressArrow.getWidth(), _progressArrow.getHeight());
+        _batch.draw(_progressBar, Overtone.ScreenWidth * 0.225f, Overtone.ScreenHeight * 0.95f,  Overtone.ScreenWidth * 0.55f,                 Overtone.ScreenHeight * 0.03f);
+        _batch.draw(_progress,    Overtone.ScreenWidth * 0.23f,  Overtone.ScreenHeight * 0.955f, Overtone.ScreenWidth * 0.54f * songProgress , Overtone.ScreenHeight * 0.02f);
+        _batch.draw(_progressArrow,       Overtone.ScreenWidth * 0.23f - (_progressArrow.getWidth() / 2.0f) + (Overtone.ScreenWidth * 0.54f * songProgress), Overtone.ScreenHeight * 0.94f, _progressArrow.getWidth(), _progressArrow.getHeight());
 
         // Draw the letter borders
-        float letterWidth = _screenWidth * 0.2f;
+        float letterWidth = Overtone.ScreenWidth * 0.2f;
         _batch.draw(_d, 0,                   0,                           letterWidth, letterWidth);
-        _batch.draw(_k, _screenWidth * 0.8f, 0,                           letterWidth, letterWidth);
-        _batch.draw(_i, _screenWidth * 0.8f, _screenHeight - letterWidth, letterWidth, letterWidth);
-        _batch.draw(_e, 0,                   _screenHeight - letterWidth, letterWidth, letterWidth);
+        _batch.draw(_k, Overtone.ScreenWidth * 0.8f, 0,                           letterWidth, letterWidth);
+        _batch.draw(_i, Overtone.ScreenWidth * 0.8f, Overtone.ScreenHeight - letterWidth, letterWidth, letterWidth);
+        _batch.draw(_e, 0,                   Overtone.ScreenHeight - letterWidth, letterWidth, letterWidth);
 
         // Draw the target zones
         for(int i = 0; i < _targetZones.length; i++)
         {
-            _batch.draw(_targetZonesPressed[i] ? _targetZonePressed : _targetZone, _targetZones[i].GetDrawingPosition().x, _targetZones[i].GetDrawingPosition().y, Target.Radius, Target.Radius);
+            _batch.draw(_targetZonesPressed[i] ? _targetZonePressed : _targetZone, _targetZones[i].GetDrawingPosition().x, _targetZones[i].GetDrawingPosition().y, Target.Diameter, Target.Diameter);
         }
 
         // Draw the combo and score
         _glyphLayout.setText(_font18,  "Combo: " + _combo);
-        _font18.draw(_batch, _glyphLayout, _screenWidth * 0.7f - (_glyphLayout.width / 2.0f), _screenHeight * 0.05f);
+        _font18.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.7f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.05f);
 
         _glyphLayout.setText(_font18, "Score: " + _score);
-        _font18.draw(_batch, _glyphLayout, _screenWidth * 0.3f - (_glyphLayout.width / 2.0f), _screenHeight * 0.05f);
+        _font18.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.3f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.05f);
 
         _glyphLayout.setText(_font18, "High Score: " + Overtone.HighScores[Overtone.Difficulty.ordinal()][0]);
-        _font18.draw(_batch, _glyphLayout, _screenWidth * 0.775f - _glyphLayout.width, _screenHeight * 0.92f);
+        _font18.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.775f - _glyphLayout.width, Overtone.ScreenHeight * 0.92f);
 
         _glyphLayout.setText(_font18, "Difficulty: " + Overtone.Difficulty.toString());
-        _font18.draw(_batch, _glyphLayout, _screenWidth * 0.225f, _screenHeight * 0.92f);
+        _font18.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.225f, Overtone.ScreenHeight * 0.92f);
 
         _noteRenderer.Draw(_onScreenNotes.GetAll(), _batch);
         _ratingRenderer.Draw(_onScreenRatings, _batch);
@@ -306,35 +306,35 @@ public class GameplayScreen extends OvertoneScreen
 
         for(int i = 0; i <  5; i++)
         {
-            _batch.draw(_currentCrowdRating, _screenWidth * 0.40f + (_screenWidth * 0.04f * (float)i), _screenHeight * 0.02f, _screenWidth * 0.04f, _screenWidth * 0.04f);
+            _batch.draw(_currentCrowdRating, Overtone.ScreenWidth * 0.40f + (Overtone.ScreenWidth * 0.04f * (float)i), Overtone.ScreenHeight * 0.02f, Overtone.ScreenWidth * 0.04f, Overtone.ScreenWidth * 0.04f);
         }
 
         _batch.setColor(1.0f, 1.0f, 1.0f, (_failureTimer / FAILURE_TIMER[Overtone.Difficulty.ordinal()]));
-        _batch.draw(_losing, 0, 0, _screenWidth, _screenHeight);
+        _batch.draw(_losing, 0, 0, Overtone.ScreenWidth, Overtone.ScreenHeight);
         _batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         if(_paused && !_resumeDelay)
         {
-            _batch.draw(_background, 0, 0, _screenWidth, _screenHeight);
+            _batch.draw(_background, 0, 0, Overtone.ScreenWidth, Overtone.ScreenHeight);
             _glyphLayout.setText(_font36,  "Paused");
-            _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.85f);
+            _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.85f);
         }
 
         if(_resumeDelay)
         {
-            _batch.draw(_background, 0, 0, _screenWidth, _screenHeight);
+            _batch.draw(_background, 0, 0, Overtone.ScreenWidth, Overtone.ScreenHeight);
             _glyphLayout.setText(_font36,  "Game will resume in");
-            _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.85f);
+            _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.85f);
 
             _glyphLayout.setText(_font36, (3 - (int)_resumeTimer) + "");
-            _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.5f);
+            _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.5f);
         }
 
         if(_songDone)
         {
-            _batch.draw(_background, 0, 0, _screenWidth, _screenHeight);
+            _batch.draw(_background, 0, 0, Overtone.ScreenWidth, Overtone.ScreenHeight);
             _glyphLayout.setText(_font36, _elapsedTime < _totalTime ? "Game Over..." : "Finished!!");
-            _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.5f);
+            _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.5f);
         }
 
         _batch.end();
@@ -397,17 +397,17 @@ public class GameplayScreen extends OvertoneScreen
                 {
                     float amount = Math.abs(forRemoval.get(0).GetCenter().x - forRemoval.get(1).GetCenter().x) / 2.0f;
                     float x = forRemoval.get(0).GetCenter().x > forRemoval.get(1).GetCenter().x ? forRemoval.get(0).GetCenter().x : forRemoval.get(1).GetCenter().x;
-                    _shipDirection = new Vector2(((x - amount) - _screenWidth * 0.5f), (forRemoval.get(0).GetCenter().y - _screenHeight * 0.5f));
+                    _shipDirection = new Vector2(((x - amount) - Overtone.ScreenWidth * 0.5f), (forRemoval.get(0).GetCenter().y - Overtone.ScreenHeight * 0.5f));
                 }
                 else
                 {
                     float amount = Math.abs(forRemoval.get(0).GetCenter().y - forRemoval.get(1).GetCenter().y) / 2.0f;
                     float y = forRemoval.get(0).GetCenter().y > forRemoval.get(1).GetCenter().y ? forRemoval.get(0).GetCenter().y : forRemoval.get(1).GetCenter().y;
-                    _shipDirection = new Vector2((forRemoval.get(0).GetCenter().x - _screenWidth * 0.5f), (y - amount) - _screenHeight * 0.5f);
+                    _shipDirection = new Vector2((forRemoval.get(0).GetCenter().x - Overtone.ScreenWidth * 0.5f), (y - amount) - Overtone.ScreenHeight * 0.5f);
                 }
             }
             else if (!forRemoval.isEmpty())
-                _shipDirection = new Vector2(forRemoval.get(0).GetCenter().x - (_screenWidth * 0.5f), forRemoval.get(0).GetCenter().y - (_screenHeight * 0.5f));
+                _shipDirection = new Vector2(forRemoval.get(0).GetCenter().x - (Overtone.ScreenWidth * 0.5f), forRemoval.get(0).GetCenter().y - (Overtone.ScreenHeight * 0.5f));
             _noteQueue.removeAll(forRemoval);
         }
 
@@ -432,7 +432,7 @@ public class GameplayScreen extends OvertoneScreen
                 for(Vector2 v : removedNotes)
                 {
                     _missCounter++;
-                    _onScreenRatings.add(new Rating(Rating.RatingType.Miss, v));
+                    _onScreenRatings.add(new Rating(Rating.RatingType.Miss, v, _ratingScale));
                 }
                 _combo = 0;
             }
@@ -521,7 +521,7 @@ public class GameplayScreen extends OvertoneScreen
         ArrayList<Note> notes = _onScreenNotes.Get(target);
 
         if(notes.isEmpty())
-            return new Rating(Rating.RatingType.None, target);
+            return new Rating(Rating.RatingType.None, target, _ratingScale);
 
         float minDistance = Float.MAX_VALUE;
         Note closestNote  = null;
@@ -541,30 +541,30 @@ public class GameplayScreen extends OvertoneScreen
         _onScreenNotes.Remove(closestNote);
 
         // Return a rating based on how close it was to the target
-        if(minDistance <= Target.Radius * 0.15f)
+        if(minDistance <= Target.Diameter * 0.15f)
         {
             _perfectCounter++;
-            return new Rating(Rating.RatingType.Perfect, closestNote.GetCenter());
+            return new Rating(Rating.RatingType.Perfect, closestNote.GetCenter(), _ratingScale);
         }
-        else if(minDistance <= Target.Radius * 0.55f && minDistance > Target.Radius * 0.15f)
+        else if(minDistance <= Target.Diameter * 0.55f && minDistance > Target.Diameter * 0.15f)
         {
             _greatCounter++;
-            return new Rating(Rating.RatingType.Great, closestNote.GetCenter());
+            return new Rating(Rating.RatingType.Great, closestNote.GetCenter(), _ratingScale);
         }
-        else if(minDistance <= Target.Radius  && minDistance > Target.Radius * 0.55f)
+        else if(minDistance <= Target.Diameter && minDistance > Target.Diameter * 0.55f)
         {
             _goodCounter++;
-            return new Rating(Rating.RatingType.Ok, closestNote.GetCenter());
+            return new Rating(Rating.RatingType.Ok, closestNote.GetCenter(), _ratingScale);
         }
-        else if(minDistance < Target.Radius * 2.0f  && minDistance > Target.Radius)
+        else if(minDistance < Target.Diameter * 2.0f  && minDistance > Target.Diameter)
         {
             _badCounter++;
-            return new Rating(Rating.RatingType.Bad, closestNote.GetCenter());
+            return new Rating(Rating.RatingType.Bad, closestNote.GetCenter(), _ratingScale);
         }
         else
         {
             _missCounter++;
-            return new Rating(Rating.RatingType.Miss, closestNote.GetCenter());
+            return new Rating(Rating.RatingType.Miss, closestNote.GetCenter(), _ratingScale);
         }
 
     }

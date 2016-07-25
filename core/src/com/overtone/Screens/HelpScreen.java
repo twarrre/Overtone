@@ -22,9 +22,9 @@ public class HelpScreen extends OvertoneScreen
     private final Texture _circleNotFilled;
     private int _helpIndex;
 
-    public HelpScreen(int screenWidth, int screenHeight)
+    public HelpScreen()
     {
-        super(screenWidth, screenHeight);
+        super();
 
         _stage = new Stage();
 
@@ -37,11 +37,11 @@ public class HelpScreen extends OvertoneScreen
         _circleNotFilled = new Texture(Gdx.files.internal("Textures\\circle.png"));
         _helpIndex = 0;
 
-        final TextButton backButton = CreateTextButton("BACK", "default", _screenWidth * 0.11f, _screenHeight * 0.08f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.845f), _stage);
+        final TextButton backButton = CreateTextButton("BACK", "default", Overtone.ScreenWidth * 0.11f, Overtone.ScreenHeight * 0.08f, new Vector2(Overtone.ScreenWidth * 0.075f, Overtone.ScreenHeight * 0.845f), _stage);
         backButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {_buttonPress.play(Overtone.SFXVolume); Overtone.SetScreen(Overtone.Screens.MainMenu);}});
 
-        final ImageButton next = CreateImageButton("nextButton",_screenWidth * 0.025f, _screenWidth * 0.025f, new Vector2(_screenWidth * 0.6875f, _screenHeight * 0.82f), _stage);
+        final ImageButton next = CreateImageButton("nextButton",Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.6875f, Overtone.ScreenHeight * 0.82f), _stage);
         next.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _helpIndex++;
 
@@ -50,7 +50,7 @@ public class HelpScreen extends OvertoneScreen
             _buttonPress.play(Overtone.SFXVolume);
         }});
 
-        final ImageButton back = CreateImageButton("backButton",_screenWidth * 0.025f, _screenWidth * 0.025f, new Vector2(_screenWidth * 0.2875f, _screenHeight * 0.82f), _stage);
+        final ImageButton back = CreateImageButton("backButton",Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.2875f, Overtone.ScreenHeight * 0.82f), _stage);
         back.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _helpIndex--;
 
@@ -68,17 +68,17 @@ public class HelpScreen extends OvertoneScreen
         _batch.begin();
 
         _glyphLayout.setText(_font36, "Help");
-        _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - _glyphLayout.width / 2.0f, _screenHeight * 0.92f);
+        _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - _glyphLayout.width / 2.0f, Overtone.ScreenHeight * 0.92f);
 
         for(int i = 0; i < _help.length; i++)
         {
             if(i == _helpIndex)
-                _batch.draw(_circleFilled, _screenWidth * 0.375f + (_screenWidth * (0.3f / (float)_help.length) * (float)i), _screenHeight * 0.82f, _screenWidth * 0.025f, _screenWidth * 0.025f);
+                _batch.draw(_circleFilled, Overtone.ScreenWidth * 0.375f + (Overtone.ScreenWidth * (0.3f / (float)_help.length) * (float)i), Overtone.ScreenHeight * 0.82f, Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f);
             else
-                _batch.draw(_circleNotFilled, _screenWidth * 0.375f + (_screenWidth *  (0.3f / (float)_help.length) * (float)i), _screenHeight * 0.82f, _screenWidth * 0.025f, _screenWidth * 0.025f);
+                _batch.draw(_circleNotFilled, Overtone.ScreenWidth * 0.375f + (Overtone.ScreenWidth *  (0.3f / (float)_help.length) * (float)i), Overtone.ScreenHeight * 0.82f, Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f);
         }
 
-        _batch.draw(_help[_helpIndex], _screenWidth * 0.125f, _screenHeight * 0.05f, _screenWidth * 0.75f, _screenHeight * 0.75f);
+        _batch.draw(_help[_helpIndex], Overtone.ScreenWidth * 0.125f, Overtone.ScreenHeight * 0.05f, Overtone.ScreenWidth * 0.75f, Overtone.ScreenHeight * 0.75f);
 
         _batch.end();
     }

@@ -11,9 +11,7 @@ public class Rating
     /** How long to keep the rating on screen*/
     public static final float ONSCREEN_TIME = 0.75f;
 
-    /**
-     * Represents the ratings of how well the player hit the button
-     */
+    /**Represents the ratings of how well the player hit the button*/
     public enum RatingType
     {
         Perfect (700),
@@ -23,26 +21,28 @@ public class Rating
         Miss    (0),
         None    (0);
 
-        public int Score;
+        public int Score; // The score associated with each rating
         RatingType(int score) {Score = score;}
     }
 
-    private final RatingType _rating;
-    private float            _screenTime;
-    private Vector2          _center;
-    private boolean          _isVisible;
+    private final RatingType _rating;     // The type of the rating
+    private float            _screenTime; // How long the rating has been on screen
+    private Vector2          _center;     // The center point of the rating
+    private boolean          _isVisible;  // True if it is visible on screen, false otherwise
+    private Vector2          _scale;      // The scale of the rating
 
     /**
      * Constructor
      * @param rating The type of the rating this is
      * @param center The position of the rating based on the center
      */
-    public Rating(RatingType rating, Vector2 center)
+    public Rating(RatingType rating, Vector2 center, Vector2 scale)
     {
         _rating     = rating;
         _center     = center;
         _screenTime = 0;
         _isVisible  = true;
+        _scale      = scale;
     }
 
     /**
@@ -57,10 +57,35 @@ public class Rating
         if(_screenTime >= ONSCREEN_TIME)
             _isVisible = false;
     }
-
+    /**
+     * @return True if visible on screen, false otherwise
+     */
     public boolean IsVisible() {return _isVisible;}
+
+    /**
+     * @return The center point of the rating
+     */
     public Vector2 GetCenter() {return _center;}
+
+    /**
+     * @return The position of the bottom left conner of the rating, for drawing on screen
+     */
+    public Vector2 GetDrawingPosition() {return new Vector2(_center.x - (_scale.x / 2.0f), _center.y - (_scale.y / 2.0f));}
+
+    /**
+     * @return the scale of the rating
+     */
+    public Vector2 GetScale() {return _scale;}
+
+    /**
+     * @return The type of this rating
+     */
     public RatingType GetRating() {return _rating;}
+
+    /**
+     * Sets the visibility of the rating
+     * @param v Trus if visible on screen, false otherwise
+     */
     public void SetVisibility(boolean v) {_isVisible = v;}
 
 }

@@ -25,15 +25,15 @@ public class OptionsScreen extends OvertoneScreen
     private  final TextButton _backButton;
     private boolean _dataCleared;
 
-    public OptionsScreen(int screenWidth, int screenHeight)
+    public OptionsScreen()
     {
-        super(screenWidth, screenHeight);
+        super();
 
         _stage = new Stage();
         _showConfirmationScreen = false;
         _dataCleared = true;
 
-        _backButton = CreateTextButton("back", "default",  _screenWidth * 0.11f, _screenHeight * 0.08f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.845f), _stage);
+        _backButton = CreateTextButton("back", "default",  Overtone.ScreenWidth * 0.11f, Overtone.ScreenHeight * 0.08f, new Vector2(Overtone.ScreenWidth * 0.075f, Overtone.ScreenHeight * 0.845f), _stage);
         _backButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 if(_backButton.isDisabled())
@@ -44,7 +44,7 @@ public class OptionsScreen extends OvertoneScreen
             }
         });
 
-        final ImageButton musicNext = CreateImageButton("nextButton",_screenWidth * 0.025f, _screenWidth * 0.025f, new Vector2(_screenWidth * 0.7725f, _screenHeight * 0.65f - _screenWidth * 0.025f), _stage);
+        final ImageButton musicNext = CreateImageButton("nextButton",Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.7725f, Overtone.ScreenHeight * 0.65f - Overtone.ScreenWidth * 0.025f), _stage);
         musicNext.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             Overtone.MusicVolume += 0.01f;
             if(Overtone.MusicVolume > 1.0f)
@@ -52,7 +52,7 @@ public class OptionsScreen extends OvertoneScreen
             _buttonPress.play(Overtone.SFXVolume);
         }});
 
-        final ImageButton musicBack = CreateImageButton("backButton",_screenWidth * 0.025f, _screenWidth * 0.025f, new Vector2(_screenWidth * 0.6f, _screenHeight * 0.65f - _screenWidth * 0.025f), _stage);
+        final ImageButton musicBack = CreateImageButton("backButton",Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.6f, Overtone.ScreenHeight * 0.65f - Overtone.ScreenWidth * 0.025f), _stage);
         musicBack.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             Overtone.MusicVolume -= 0.01f;
             if(Overtone.MusicVolume < 0.0f)
@@ -60,7 +60,7 @@ public class OptionsScreen extends OvertoneScreen
             _buttonPress.play(Overtone.SFXVolume);
         }});
 
-        final ImageButton sfxNext = CreateImageButton("nextButton",_screenWidth * 0.025f, _screenWidth * 0.025f, new Vector2(_screenWidth * 0.7725f, _screenHeight * 0.5f - _screenWidth * 0.025f), _stage);
+        final ImageButton sfxNext = CreateImageButton("nextButton",Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.7725f, Overtone.ScreenHeight * 0.5f - Overtone.ScreenWidth * 0.025f), _stage);
         sfxNext.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             Overtone.SFXVolume += 0.01f;
             if(Overtone.SFXVolume > 1.0f)
@@ -68,7 +68,7 @@ public class OptionsScreen extends OvertoneScreen
             _buttonPress.play(Overtone.SFXVolume);
         }});
 
-        final ImageButton sfxBack = CreateImageButton("backButton",_screenWidth * 0.025f, _screenWidth * 0.025f,  new Vector2(_screenWidth * 0.6f, _screenHeight * 0.5f - _screenWidth * 0.025f), _stage);
+        final ImageButton sfxBack = CreateImageButton("backButton",Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.6f, Overtone.ScreenHeight * 0.5f - Overtone.ScreenWidth * 0.025f), _stage);
         sfxBack.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             Overtone.SFXVolume -= 0.01f;
             if(Overtone.SFXVolume < 0.0f)
@@ -76,7 +76,7 @@ public class OptionsScreen extends OvertoneScreen
             _buttonPress.play(Overtone.SFXVolume);
         }});
 
-        final TextButton clearDataButton = CreateTextButton("Clear Data", "default", _screenWidth * 0.2f, _screenHeight * 0.08f, new Vector2(_screenWidth * 0.6f, _screenHeight * 0.31f), _stage);
+        final TextButton clearDataButton = CreateTextButton("Clear Data", "default", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.08f, new Vector2(Overtone.ScreenWidth * 0.6f, Overtone.ScreenHeight * 0.31f), _stage);
         clearDataButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 _backButton.setDisabled(true);
@@ -92,7 +92,7 @@ public class OptionsScreen extends OvertoneScreen
             }
         });
 
-        final TextButton clearScoresButton = CreateTextButton("Clear Scores", "default", _screenWidth * 0.2f, _screenHeight * 0.08f, new Vector2(_screenWidth * 0.6f, _screenHeight * 0.16f), _stage);
+        final TextButton clearScoresButton = CreateTextButton("Clear Scores", "default", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.08f, new Vector2(Overtone.ScreenWidth * 0.6f, Overtone.ScreenHeight * 0.16f), _stage);
         clearScoresButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 _backButton.setDisabled(true);
@@ -109,13 +109,13 @@ public class OptionsScreen extends OvertoneScreen
         });
 
         _background = new Image(new Texture(Gdx.files.internal("Textures\\background.png")));
-        _background.setWidth(_screenWidth * 0.85f);
-        _background.setHeight(_screenHeight * 0.75f);
-        _background.setPosition(screenWidth * 0.075f, _screenHeight * 0.125f);
+        _background.setWidth(Overtone.ScreenWidth * 0.85f);
+        _background.setHeight(Overtone.ScreenHeight * 0.75f);
+        _background.setPosition(Overtone.ScreenWidth * 0.075f, Overtone.ScreenHeight * 0.125f);
         _stage.addActor(_background);
         _background.setVisible(false);
 
-        _yesButton = CreateImageButton("yesButtons",_screenWidth * 0.1f, _screenWidth * 0.1f, new Vector2(_screenWidth * 0.375f, _screenHeight * 0.2f), _stage);
+        _yesButton = CreateImageButton("yesButtons",Overtone.ScreenWidth * 0.1f, Overtone.ScreenWidth * 0.1f, new Vector2(Overtone.ScreenWidth * 0.375f, Overtone.ScreenHeight * 0.2f), _stage);
         _yesButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 if(_yesButton.isDisabled())
@@ -138,7 +138,7 @@ public class OptionsScreen extends OvertoneScreen
         _yesButton.setDisabled(true);
         _yesButton.setVisible(false);
 
-        _noButton = CreateImageButton("noButtons",_screenWidth * 0.1f, _screenWidth * 0.1f, new Vector2(_screenWidth * 0.525f, _screenHeight * 0.2f), _stage);
+        _noButton = CreateImageButton("noButtons",Overtone.ScreenWidth * 0.1f, Overtone.ScreenWidth * 0.1f, new Vector2(Overtone.ScreenWidth * 0.525f, Overtone.ScreenHeight * 0.2f), _stage);
         _noButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 if(_noButton.isDisabled())
@@ -163,25 +163,25 @@ public class OptionsScreen extends OvertoneScreen
         _batch.begin();
 
         _glyphLayout.setText(_font36, "Options");
-        _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - _glyphLayout.width / 2.0f, _screenHeight * 0.92f);
+        _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - _glyphLayout.width / 2.0f, Overtone.ScreenHeight * 0.92f);
 
         _glyphLayout.setText(_font24, "Music Volume:");
-        _font24.draw(_batch, _glyphLayout, _screenWidth * 0.2175f, _screenHeight * 0.65f);
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.2175f, Overtone.ScreenHeight * 0.65f);
 
         _glyphLayout.setText(_font24, (int)(Overtone.MusicVolume * 100.0f) + "%");
-        _font24.draw(_batch, _glyphLayout, _screenWidth * 0.7f - (_glyphLayout.width / 2.0f), _screenHeight * 0.65f);
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.7f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.65f);
 
         _glyphLayout.setText(_font24, "SFX Volume:");
-        _font24.draw(_batch, _glyphLayout, _screenWidth * 0.2175f, _screenHeight * 0.5f);
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.2175f, Overtone.ScreenHeight * 0.5f);
 
         _glyphLayout.setText(_font24, (int)(Overtone.SFXVolume * 100.0f) + "%");
-        _font24.draw(_batch, _glyphLayout, _screenWidth * 0.7f - (_glyphLayout.width / 2.0f), _screenHeight * 0.5f);
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.7f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.5f);
 
         _glyphLayout.setText(_font24, "Saved Data:");
-        _font24.draw(_batch, _glyphLayout, _screenWidth * 0.2175f, _screenHeight * 0.35f);
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.2175f, Overtone.ScreenHeight * 0.35f);
 
         _glyphLayout.setText(_font24, "High Scores:");
-        _font24.draw(_batch, _glyphLayout, _screenWidth * 0.2175f, _screenHeight * 0.2f);
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.2175f, Overtone.ScreenHeight * 0.2f);
 
         _batch.end();
 
@@ -190,7 +190,7 @@ public class OptionsScreen extends OvertoneScreen
         {
             _batch.begin();
             _glyphLayout.setText(_font36,  "Are you sure?");
-            _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.7f);
+            _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.7f);
             _batch.end();
         }
     }

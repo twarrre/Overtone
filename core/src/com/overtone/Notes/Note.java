@@ -9,83 +9,61 @@ import com.overtone.Overtone;
  */
 public class Note implements Comparable<Note>
 {
-    /**
-     * All of the different types of notes
-     */
+    /**All of the different types of notes*/
     public enum  NoteType
     {
-        Single,
-        Double,
-        Hold
+        Single, // One single note
+        Double, // Two notes at the same time
+        Hold    // Note must be held for a certain amount of time
     }
 
-    // Stores the type of note that this is
-    private final NoteType _type;
-
-    // The target of where this note is heading
-    private final Target _target;
-
-    // The direction that the note is heading
-    private final Vector2 _direction;
-
-    // Time that the note must be at the target zone at
-    private final float _timer;
-
-    // The speed that the note travels at
-    private final float _speed;
-
-    // True if visible on screen, false otherwise
-    private boolean _isVisible;
-
-    // The scale of the note
-    private Vector2 _scale;
-
-    // The note's center point in the world
-    private Vector2 _center;
-
-    private Note _partnerNote;
-
-    private boolean _connectorRendered;
+    private final NoteType _type;              // Stores the type of note that this one is
+    private final Target   _target;            // The target point of where this note is heading
+    private final Vector2  _direction;         // The direction that the note is heading in
+    private final float    _time;              // Time that the note must be at the target zone at
+    private final float    _speed;             // The speed that the note travels at
+    private final Vector2  _scale;             // The scale of the note
+    private Vector2        _center;            // The note's center point in the world
+    private boolean        _isVisible;         // True if visible on screen, false otherwise
+    private boolean        _connectorRendered; // True if the note is double or hold and it's connector has been rendered on screen
+    private Note           _partnerNote;       // Stores a reference to the partner note if it is a hold or double note, null otherwise
 
     /**
      * Constructor
      * @param type The type of note
+     * @param scale The scale of the note
      * @param center The center point
      * @param target The target of where to the note is going
-     * @param scale The scale of the note
      * @param timer The time signature of the note
      */
     public Note(NoteType type, Vector2 scale, Vector2 center, Target target, float timer)
     {
-        // Calculate the direction the note is heading
-        _direction = new Vector2(target.Position.x - center.x, target.Position.y - center.y).nor();
+        float distance     = target.Position.dst(center);                                                   // Find the distance from the target to the center of the note
 
-        // Shift the center into the proper quad based on the direction it is going
-        _center = new Vector2(center.x + _direction.x, center.y + _direction.y);
-
-        // Calculate the speed of the note based on difficulty and distance to the target
-        _speed                = ((float)Math.sqrt(Math.pow((target.Position.x - _center.x), 2) + Math.pow((target.Position.y - _center.y), 2))) / Overtone.Difficulty.Multiplier;
-
-        _target               = target;
-        _timer                = timer;
-        _type                 = type;
-        _isVisible            = false;
-        _scale                = scale;
-        _partnerNote          = null;
-        _connectorRendered    = false;
+        _direction         = new Vector2(target.Position.x - center.x, target.Position.y - center.y).nor(); // Creates a vector point in the direction of the target zone
+        _center            = new Vector2(center.x + _direction.x, center.y + _direction.y);                 // Shift the center into the proper quad based on the direction it is going
+        _speed             = distance / Overtone.Difficulty.Multiplier;                                     // Calculate the speed of note (dist / time)
+        _target            = target;
+        _time              = timer;
+        _type              = type;
+        _scale             = scale;
+        _partnerNote       = null;
+        _connectorRendered = false;
+        _isVisible         = false;
     }
 
     /**
      * Checks if the note has passed the target position
-     * @return returns true if hit has passed the target position, false otherwise
+     * @return returns true if the note has passed the target position, false otherwise
      */
     private boolean IsPassedTarget(Vector2 pos, Target target, Vector2 dir)
     {
-        // Create a vector where the head is the target and the tail is the center of the note
+        // Create a vector pointing to the target from the note position
         Vector2 noteDir = new Vector2(target.Position.x - pos.x, target.Position.y - pos.y);
 
         // If the dot product is negative we know that the note has passed the target
-        if(noteDir.dot(dir) < 0 && pos.dst(target.Position) > Target.Radius * 0.75f)
+        if(noteDir.dot(dir) < 0
+                && pos.dst(target.Position) > Target.Diameter * 0.75f) // and if it has passed an acceptable radius of the target zone
             return true;
 
        return false;
@@ -97,13 +75,13 @@ public class Note implements Comparable<Note>
      */
     public void Update(float deltaTime)
     {
-        // Keep moving if the note has not passed the target, otherwise it is now invisible
+        // if the target has not passed the target, move it in the direction, else make it not visible anymore
         if(!IsPassedTarget(_center, _target, _direction))
             _center.add(new Vector2(_direction.x * _speed * deltaTime, _direction.y * _speed * deltaTime));
         else
             _isVisible = false;
 
-        _connectorRendered = false;
+        _connectorRendered = false; // The connector has not been rendered this frame
     }
 
     /**
@@ -120,7 +98,7 @@ public class Note implements Comparable<Note>
     public Vector2 GetCenter() {return _center;}
 
     /**
-     * @return The position of the note's target
+     * @return The target for the note
      */
     public Target GetTarget() {return _target;}
 
@@ -137,7 +115,7 @@ public class Note implements Comparable<Note>
     /**
      * @return The time signature of the note
      */
-    public float GetTime() {return _timer;}
+    public float GetTime() {return _time;}
 
     /**
      * @return The direction the note is heading
@@ -145,7 +123,7 @@ public class Note implements Comparable<Note>
     public Vector2 GetDirection() {return _direction;}
 
     /**
-     * @return Trye if the note is visiblle on screen, false otherwise
+     * @return True if the note is visible on screen, false otherwise
      */
     public boolean IsVisible() {return _isVisible;}
 
@@ -156,25 +134,45 @@ public class Note implements Comparable<Note>
     public void SetVisibility(boolean b) {_isVisible = b;}
 
     /**
-     * Sets the scale of the note
-     * @param x The x scale
-     * @param y The y scale
+     * Sets the partner note if the note is a double, or hold
+     * @param n the other note in the pair
      */
-    public void SetScale(float x, float y) {_scale = new Vector2(x, y);}
+    public void SetOtherNote(Note n)
+    {
+        if(_type == NoteType.Double || _type == NoteType.Hold)
+            _partnerNote = n;
+    }
 
-    public void SetOtherNote(Note n){_partnerNote = n;}
-
+    /**
+     * @return The partner note of this note, null if a single note
+     */
     public Note GetOtherNote() {return _partnerNote;}
 
-    public void SetConnectorRendered(boolean b){_connectorRendered = b;}
+    /**
+     * Sets if the connector has been rendered or not
+     * @param b True if the connector has been rendered, false otherwise
+     */
+    public void SetConnectorRendered(boolean b)
+    {
+        if(_type == NoteType.Double || _type == NoteType.Hold)
+            _connectorRendered = b;
+    }
 
+    /**
+     * @return True if the connector has been rendered, false otherwise
+     */
     public boolean IsConnectorRendered() {return _connectorRendered;}
 
+    /**
+     * Compares the notes based on their time signature
+     * @param o The other note to compare to
+     * @return -1 if this note is less than o, 0 if they are equal, 1 if this note is greater than o
+     */
     public int compareTo(Note o)
     {
-        if(_timer < o.GetTime())
+        if(_time < o.GetTime())
             return -1;
-        else if (_timer == o.GetTime())
+        else if (_time == o.GetTime())
             return 0;
         else
             return 1;

@@ -26,14 +26,14 @@ public class HighScoreScreen extends OvertoneScreen
     private TextButton        _currentButton;
     private int               _difficultyIndex;
 
-    public HighScoreScreen(int screenWidth, int screenHeight)
+    public HighScoreScreen()
     {
-        super(screenWidth, screenHeight);
+        super();
 
         _stage           = new Stage();
         _difficultyIndex = 0;
 
-        _backButton = CreateTextButton("back", "default", _screenWidth * 0.11f, _screenHeight * 0.08f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.845f), _stage);
+        _backButton = CreateTextButton("back", "default", Overtone.ScreenWidth * 0.11f, Overtone.ScreenHeight * 0.08f, new Vector2(Overtone.ScreenWidth * 0.075f, Overtone.ScreenHeight * 0.845f), _stage);
         _backButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 if(_backButton.isDisabled())
@@ -43,7 +43,7 @@ public class HighScoreScreen extends OvertoneScreen
             }
         });
 
-        _easyButton   = CreateTextButton("EASY", "group", _screenWidth * 0.2f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.2075f, _screenHeight * 0.75f),_stage);
+        _easyButton   = CreateTextButton("EASY", "group", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.1f, new Vector2(Overtone.ScreenWidth * 0.2075f, Overtone.ScreenHeight * 0.75f),_stage);
         _easyButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 _currentButton.setChecked(false);
@@ -54,7 +54,7 @@ public class HighScoreScreen extends OvertoneScreen
             }
         });
 
-        _normalButton = CreateTextButton("NORMAL", "group", _screenWidth * 0.2f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.4075f, _screenHeight * 0.75f), _stage);
+        _normalButton = CreateTextButton("NORMAL", "group", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.1f, new Vector2(Overtone.ScreenWidth * 0.4075f, Overtone.ScreenHeight * 0.75f), _stage);
         _normalButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 _currentButton.setChecked(false);
@@ -65,7 +65,7 @@ public class HighScoreScreen extends OvertoneScreen
             }
         });
 
-        _hardButton   = CreateTextButton("HARD", "group", _screenWidth * 0.2f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.6075f, _screenHeight * 0.75f), _stage);
+        _hardButton   = CreateTextButton("HARD", "group", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.1f, new Vector2(Overtone.ScreenWidth * 0.6075f, Overtone.ScreenHeight * 0.75f), _stage);
         _hardButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 _currentButton.setChecked(false);
@@ -88,18 +88,18 @@ public class HighScoreScreen extends OvertoneScreen
         _batch.begin();
 
         _glyphLayout.setText(_font36,  "High Scores");
-        _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.92f);
+        _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.92f);
 
         for(int i = 0; i < Overtone.NUM_SCORES; i++)
         {
             _glyphLayout.setText(_font24, (i + 1) + "");
-            _font24.draw(_batch, _glyphLayout, _screenWidth * 0.3075f - (_glyphLayout.width / 2.0f), _screenHeight * 0.7f - (_screenHeight * 0.07f * (float)i));
+            _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.3075f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.7f - (Overtone.ScreenHeight * 0.07f * (float)i));
 
             _glyphLayout.setText(_font24, Overtone.HighScores[_difficultyIndex][i] + "");
-            _font24.draw(_batch, _glyphLayout, _screenWidth * 0.5075f - (_glyphLayout.width / 2.0f), _screenHeight * 0.7f - (_screenHeight * 0.07f * (float)i));
+            _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5075f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.7f - (Overtone.ScreenHeight * 0.07f * (float)i));
 
             _glyphLayout.setText(_font24, Overtone.CrowdRatings[_difficultyIndex][i] + "");
-            _font24.draw(_batch, _glyphLayout, _screenWidth * 0.7075f - (_glyphLayout.width / 2.0f), _screenHeight * 0.7f - (_screenHeight * 0.07f * (float)i));
+            _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.7075f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.7f - (Overtone.ScreenHeight * 0.07f * (float)i));
         }
 
         _batch.end();

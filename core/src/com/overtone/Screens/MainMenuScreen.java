@@ -18,28 +18,28 @@ public class MainMenuScreen extends OvertoneScreen
     private final Stage _stage;
     private final Texture _logo;
 
-    public MainMenuScreen(int screenWidth, int screenHeight)
+    public MainMenuScreen()
     {
-        super(screenWidth, screenHeight);
+        super();
 
         _stage = new Stage();
         _logo  = new Texture(Gdx.files.internal("Textures\\logo.png"));
 
-        final TextButton playButton = CreateTextButton("PLAY", "default", _screenWidth * 0.85f, _screenHeight * 0.15f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.21f), _stage);
+        final TextButton playButton = CreateTextButton("PLAY", "default", Overtone.ScreenWidth * 0.85f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.075f, Overtone.ScreenHeight * 0.21f), _stage);
         playButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 _buttonPress.play(Overtone.SFXVolume);
                 Overtone.SetScreen(Overtone.Screens.DifficultySelect); }
         });
 
-        final TextButton highScoreButton = CreateTextButton("HIGH SCORES", "default", _screenWidth * 0.18f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.075f, _screenHeight * 0.075f), _stage);
+        final TextButton highScoreButton = CreateTextButton("HIGH SCORES", "default", Overtone.ScreenWidth * 0.18f, Overtone.ScreenHeight * 0.1f, new Vector2(Overtone.ScreenWidth * 0.075f, Overtone.ScreenHeight * 0.075f), _stage);
         highScoreButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 _buttonPress.play(Overtone.SFXVolume);
                 Overtone.SetScreen(Overtone.Screens.HighScore);
             }});
 
-        final TextButton optionsButton = CreateTextButton("OPTIONS", "default", _screenWidth * 0.18f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.2983f, _screenHeight * 0.075f), _stage);
+        final TextButton optionsButton = CreateTextButton("OPTIONS", "default", Overtone.ScreenWidth * 0.18f, Overtone.ScreenHeight * 0.1f, new Vector2(Overtone.ScreenWidth * 0.2983f, Overtone.ScreenHeight * 0.075f), _stage);
         optionsButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 _buttonPress.play(Overtone.SFXVolume);
@@ -47,7 +47,7 @@ public class MainMenuScreen extends OvertoneScreen
             }
         });
 
-        final TextButton helpButton = CreateTextButton("HELP", "default", _screenWidth * 0.18f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.5217f, _screenHeight * 0.075f), _stage);
+        final TextButton helpButton = CreateTextButton("HELP", "default", Overtone.ScreenWidth * 0.18f, Overtone.ScreenHeight * 0.1f, new Vector2(Overtone.ScreenWidth * 0.5217f, Overtone.ScreenHeight * 0.075f), _stage);
         helpButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 _buttonPress.play(Overtone.SFXVolume);
@@ -55,7 +55,7 @@ public class MainMenuScreen extends OvertoneScreen
             }
         });
 
-        final TextButton quitButton = CreateTextButton("QUIT", "default", _screenWidth * 0.18f, _screenHeight * 0.1f, new Vector2(_screenWidth * 0.745f, _screenHeight * 0.075f), _stage);
+        final TextButton quitButton = CreateTextButton("QUIT", "default", Overtone.ScreenWidth * 0.18f, Overtone.ScreenHeight * 0.1f, new Vector2(Overtone.ScreenWidth * 0.745f, Overtone.ScreenHeight * 0.075f), _stage);
         quitButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 _buttonPress.play(Overtone.SFXVolume);
@@ -70,12 +70,12 @@ public class MainMenuScreen extends OvertoneScreen
 
         _batch.begin();
         _glyphLayout.setText(_font12, "Trevor Ware ");
-        _font12.draw(_batch, _glyphLayout, _screenWidth * 0.955f - (_glyphLayout.width / 2.0f), _screenHeight * 0.035f - (_glyphLayout.height / 2.0f));
+        _font12.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.955f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.035f - (_glyphLayout.height / 2.0f));
 
         _glyphLayout.setText(_font12, "Version 1.0");
-        _font12.draw(_batch, _glyphLayout, _screenWidth * 0.045f - (_glyphLayout.width / 2.0f), _screenHeight * 0.035f - (_glyphLayout.height / 2.0f));
+        _font12.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.045f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.035f - (_glyphLayout.height / 2.0f));
 
-        _batch.draw(_logo, _screenWidth * 0.5f - (_logo.getWidth() / 2.0f), _screenHeight * 0.7f - (_logo.getHeight() / 2.0f), _logo.getWidth(), _logo.getHeight());
+        _batch.draw(_logo, Overtone.ScreenWidth * 0.5f - (_logo.getWidth() / 2.0f), Overtone.ScreenHeight * 0.7f - (_logo.getHeight() / 2.0f), _logo.getWidth(), _logo.getHeight());
         _batch.end();
         _stage.draw();
     }

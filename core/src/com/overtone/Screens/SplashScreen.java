@@ -21,12 +21,10 @@ public class SplashScreen extends OvertoneScreen
 
     /**
      * Constructor
-     * @param screenWidth The width of the screen
-     * @param screenHeight The height of the screen
      */
-    public SplashScreen(int screenWidth, int screenHeight)
+    public SplashScreen()
     {
-        super(screenWidth, screenHeight);
+        super();
 
         _input       = new InputManager();
         _elapsedTime = 0;
@@ -39,10 +37,10 @@ public class SplashScreen extends OvertoneScreen
         _batch.begin();
 
         _glyphLayout.setText(_font36, "Trevor Ware");
-        _font36.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.6f - (_glyphLayout.height / 2.0f));
+        _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.6f - (_glyphLayout.height / 2.0f));
 
         _glyphLayout.setText(_font24, "A00844405");
-        _font24.draw(_batch, _glyphLayout, _screenWidth * 0.5f - (_glyphLayout.width / 2.0f), _screenHeight * 0.1f - (_glyphLayout.height / 2.0f));
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.1f - (_glyphLayout.height / 2.0f));
 
         _batch.end();
     }

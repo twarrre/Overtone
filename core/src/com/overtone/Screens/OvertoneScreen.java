@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.overtone.Overtone;
 
 /**
  * Base class for all screens in Overtone.
@@ -44,9 +45,6 @@ public class OvertoneScreen implements OvertoneScreenInterface
     protected final Texture     _backHover;
     protected final Texture     _backDown;
 
-    protected float             _screenWidth;
-    protected float             _screenHeight;
-
     protected final Sound _accept;
     protected final Sound _decline;
     protected final Sound _buttonPress;
@@ -55,13 +53,9 @@ public class OvertoneScreen implements OvertoneScreenInterface
 
     /**
      * Constructor
-     * @param screenWidth The screen width
-     * @param screenHeight The screen height
      */
-    public OvertoneScreen(float screenWidth, float screenHeight)
+    public OvertoneScreen()
     {
-        _screenWidth  = screenWidth;
-        _screenHeight = screenHeight;
         _batch        = new SpriteBatch();
         _glyphLayout  = new GlyphLayout();
         _skin         = new Skin();
@@ -184,8 +178,8 @@ public class OvertoneScreen implements OvertoneScreenInterface
 
     public void resize (int width, int height)
     {
-        _screenWidth  = width;
-        _screenHeight = height;
+        Overtone.ScreenWidth  = width;
+        Overtone.ScreenHeight = height;
     }
 
     public void dispose ()

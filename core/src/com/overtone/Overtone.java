@@ -6,16 +6,17 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.overtone.Screens.*;
-
 import java.io.*;
 
+/**
+ * Manager for everything in the game, handles updating everything
+ */
 public class Overtone extends ApplicationAdapter
 {
-
+	/**Maximum number of scores that are saved for each difficulty*/
 	public static final int NUM_SCORES = 10;
-	/**
-	 * Enum for the different types of screens
-	 */
+
+	/**Enum for the different types of screens*/
 	public enum Screens
 	{
 		MainMenu,
@@ -28,22 +29,18 @@ public class Overtone extends ApplicationAdapter
 		Splash
 	}
 
-	/**
-	 * The available difficulties for the game.
-	 */
+	/**The available difficulties for the game.*/
 	public enum Difficulty
 	{
 		Easy(5),
 		Normal(4),
 		Hard(3);
 
-		public float Multiplier;
+		public float Multiplier; // The amount of time the note must be on screen
 		Difficulty(float multiplier) { this.Multiplier = multiplier; }
 	}
 
-	/**
-	 * Enum for the different ratings for the score
-	 */
+	/**Enum for the different ratings for the score*/
 	public enum CrowdRating
 	{
 		Perfection,
@@ -53,6 +50,11 @@ public class Overtone extends ApplicationAdapter
 		Failure,
 		None;
 
+		/**
+		 * Determines the rating based on counters collected in game
+		 * @param counters counters collected in game, used to determine rating
+         * @return a rating based on the counters passed in
+         */
 		public static CrowdRating GetRating(int ... counters)
 		{
 			float score = 0;
@@ -61,11 +63,11 @@ public class Overtone extends ApplicationAdapter
 			for(int i = 0; i < counters.length; i++)
 				totalNotes += counters[i];
 
-			score += 1.0f * ((float)counters[0] / totalNotes);
-			score += 0.5f * ((float)counters[1] / totalNotes);
-			score += 0.3f * ((float)counters[2] / totalNotes);
-			score += 0.1f * ((float)counters[3] / totalNotes);
-			score += 0.0f * ((float)counters[4] / totalNotes);
+			score += 1.0f * ((float)counters[0] / totalNotes); // 1 point for each perfect
+			score += 0.5f * ((float)counters[1] / totalNotes); // half a point for each great
+			score += 0.3f * ((float)counters[2] / totalNotes); // a third of a point for each okay
+			score += 0.1f * ((float)counters[3] / totalNotes); // a tenth of a point for each bad
+			score += 0.0f * ((float)counters[4] / totalNotes); // no points for each miss
 
 			if(score >= 1.0f)
 				return Perfection;
@@ -81,6 +83,11 @@ public class Overtone extends ApplicationAdapter
 				return None;
 		}
 
+		/**
+		 * Returns a rating that corresponds to the string passed in, used for reading in scores / ratings from a file
+		 * @param rating The string of the rating read in from a file
+         * @return The rating corresponding to the string passed in
+         */
 		public static CrowdRating GetRating(String rating)
 		{
 			if(rating.compareTo("Perfection") == 0)
@@ -119,51 +126,48 @@ public class Overtone extends ApplicationAdapter
 		}
 	}
 
-	/**
-	 * Represents the four targets of the screen
-	 */
+	/**Represents the four targets of the screen*/
 	public enum TargetZone
 	{
 		TopLeft,
 		TopRight,
 		BottomLeft,
-		BottomRight;
+		BottomRight
 	}
 
 	// Variables
-	private static OvertoneScreen _currentScreen;
-	public static int[][]         HighScores;
-    public static CrowdRating[][] CrowdRatings;
-	public static Difficulty      Difficulty;
-	public static float           MusicVolume;
-	public static float           SFXVolume;
-
-	private SpriteBatch _batch;
-	private Sprite _farBackground;
-	private Sprite _closeBackground;
-	private float _farRotation;
-	private float _closeRotation;
+	public static float           ScreenWidth;      // The width of the screen;
+	public static float           ScreenHeight;     // The height of the screen;
+	public static int[][]         HighScores;       // Stores the high scores for each difficulty
+    public static CrowdRating[][] CrowdRatings;     // Stores the associated crowd ratings for each high score
+	public static Difficulty      Difficulty;       // Stores the chosen difficulty of the game
+	public static float           MusicVolume;      // Stores the music volume for all music in the game
+	public static float           SFXVolume;        // Stores the sound effects volume for all sound effects in the game
+	private static OvertoneScreen _currentScreen;   // The current screen displayed on screen
+	private SpriteBatch           _batch;           // Sprite batch to draw to
+	private Sprite                _farBackground;   // The star background for the whole app
+	private Sprite                _closeBackground; // The cloud background over-top of the star background (for depth)
 
 	@Override
 	public void create ()
 	{
-		Difficulty     = Difficulty.Easy;
-		HighScores     = new int[Difficulty.values().length][NUM_SCORES];
-        CrowdRatings   = new CrowdRating[Difficulty.values().length][NUM_SCORES];
-		MusicVolume    = 1.0f;
-		SFXVolume      = 1.0f;
-		_currentScreen = new SplashScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		ScreenWidth      = Gdx.graphics.getWidth();
+		ScreenHeight     = Gdx.graphics.getHeight();
+		Difficulty       = Difficulty.Easy;
+		HighScores       = new int[Difficulty.values().length][NUM_SCORES];
+        CrowdRatings     = new CrowdRating[Difficulty.values().length][NUM_SCORES];
+		MusicVolume      = 1.0f;
+		SFXVolume        = 1.0f;
+		_currentScreen   = new SplashScreen();
+		_batch           = new SpriteBatch();
+		_farBackground   = new Sprite(new Texture("Textures\\space.jpg"));
+		_closeBackground = new Sprite(new Texture("Textures\\clouds.png"));
+
+		_farBackground.setCenter(ScreenWidth / 2.0f, ScreenHeight / 2.0f);
+		_closeBackground.setCenter(ScreenWidth / 2.0f, ScreenHeight / 2.0f);
 		_currentScreen.show();
 		LoadHighScores();
 		LoadVolume();
-
-		_batch          = new SpriteBatch();
-		_farBackground = new Sprite(new Texture("Textures\\space.jpg"));
-		_farBackground.setCenter(Gdx.graphics.getWidth() / 2.0f, Gdx.graphics.getHeight() / 2.0f);
-		_closeBackground = new Sprite(new Texture("Textures\\clouds.png"));
-		_closeBackground.setCenter(Gdx.graphics.getWidth() / 2.0f, Gdx.graphics.getHeight() / 2.0f);
-		_farRotation = 0;
-		_closeRotation = 0;
 	}
 
 	@Override
@@ -175,11 +179,13 @@ public class Overtone extends ApplicationAdapter
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		// Render the background
 		_batch.begin();
 		_farBackground.draw(_batch);
 		_closeBackground.draw(_batch);
 		_batch.end();
 
+		// Render the current screen
 		_currentScreen.render(deltaTime);
 	}
 
@@ -189,9 +195,11 @@ public class Overtone extends ApplicationAdapter
      */
 	public void Update(float deltaTime)
 	{
+		// Update the rotation of the background
 		_farBackground.rotate(1.0f * deltaTime);
 		_closeBackground.rotate(2.0f * deltaTime);
 
+		// Update the current screen
 		_currentScreen.update(deltaTime);
 	}
 
@@ -207,7 +215,7 @@ public class Overtone extends ApplicationAdapter
 		_currentScreen.hide();
 
 		if (s == Screens.SongComplete)
-			_currentScreen = new SongCompleteScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), completed, score, counters);
+			_currentScreen = new SongCompleteScreen(completed, score, counters);
 
 		_currentScreen.show();
 	}
@@ -221,25 +229,25 @@ public class Overtone extends ApplicationAdapter
 		_currentScreen.hide();
 
 		if(s == Screens.MainMenu)
-			_currentScreen = new MainMenuScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			_currentScreen = new MainMenuScreen();
 		else if (s == Screens.DifficultySelect)
-			_currentScreen = new DifficultySelectScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		if (s == Screens.Gameplay)
-			_currentScreen = new GameplayScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			_currentScreen = new DifficultySelectScreen();
+		else if (s == Screens.Gameplay)
+			_currentScreen = new GameplayScreen();
 		else if (s == Screens.Options)
-			_currentScreen = new OptionsScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			_currentScreen = new OptionsScreen();
 		else if (s == Screens.Help)
-			_currentScreen = new HelpScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			_currentScreen = new HelpScreen();
 		else if (s == Screens.HighScore)
-			_currentScreen = new HighScoreScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			_currentScreen = new HighScoreScreen();
 		else if (s == Screens.Splash)
-			_currentScreen = new SplashScreen(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			_currentScreen = new SplashScreen();
 
 		_currentScreen.show();
 	}
 
 	/**
-	 * Loads high scores from a file.
+	 * Loads high scores & crowd ratings from a file.
 	 */
 	public static void LoadHighScores()
 	{
@@ -252,37 +260,37 @@ public class Overtone extends ApplicationAdapter
 			int diffCounter  = -1;
 			int scoreCounter = 0;
 
-			while ((line = reader.readLine())!= null)
+			while ((line = reader.readLine())!= null) // While there is a lind to read
 			{
-                String[] tokens = line.split(" ");
+                String[] tokens = line.split(" "); // Tokenize it into "score" and "rating"
 
-				if(tokens[0].compareTo("e") == 0  || tokens[0].compareTo("n") == 0  || tokens[0].compareTo("h") == 0 )
+				if(tokens[0].compareTo("e") == 0  || tokens[0].compareTo("n") == 0  || tokens[0].compareTo("h") == 0 ) // Check the line is one of the difficulty markers
 				{
+					// Move onto the next difficulty (next dimension in the array)
 					diffCounter++;
 					scoreCounter = 0;
 					continue;
 				}
 
+				// Store the high score and the associated crowd rating
 				HighScores[diffCounter][scoreCounter]   = Integer.parseInt(tokens[0]);
                 CrowdRatings[diffCounter][scoreCounter] = CrowdRating.GetRating("" + tokens[1]);
 				scoreCounter++;
 			}
-
 			reader.close();
 		}
 		catch (IOException e)
 		{
-			System.out.print("Data Cannot be loaded at this time.");
+			System.out.print("Data cannot be loaded at this time.");
 		}
 	}
 
 	/**
-	 * Writes the scores to a file
+	 * Writes the scores and crowd ratings to a file
 	 * @param reset true if you want to reset the high scores, false otherwise
      */
 	public static void WriteScores(boolean reset)
 	{
-
 		if(reset)
 		{
 			HighScores   = new int[Difficulty.values().length][NUM_SCORES];
@@ -323,7 +331,7 @@ public class Overtone extends ApplicationAdapter
 		}
 		catch(IOException x)
 		{
-			System.out.print("Data Cannot be saved at this time.");
+			System.out.print("Data cannot be saved at this time.");
 		}
 	}
 
@@ -362,6 +370,9 @@ public class Overtone extends ApplicationAdapter
 			WriteScores(false);
 	}
 
+	/**
+	 * Loads the music and sound effects volumes from a file
+	 */
 	public static void LoadVolume()
 	{
 		try
@@ -370,8 +381,9 @@ public class Overtone extends ApplicationAdapter
 			BufferedReader reader = new BufferedReader(new FileReader("Storage\\Volume.txt"));
 
 			String line      = null;
-			int counter = 0;
+			int counter      = 0;
 
+			// Read two lines from the file and store in the appropriate variables
 			while ((line = reader.readLine())!= null)
 			{
 				if(counter == 0)
@@ -387,10 +399,13 @@ public class Overtone extends ApplicationAdapter
 		}
 		catch (IOException e)
 		{
-			System.out.print("Data Cannot be loaded at this time.");
+			System.out.print("Volume data cannot be loaded at this time.");
 		}
 	}
 
+	/**
+	 * Writes the new volume values to a file
+	 */
 	public static void WriteVolume()
 	{
 		try
@@ -411,7 +426,7 @@ public class Overtone extends ApplicationAdapter
 		}
 		catch(IOException x)
 		{
-			System.out.print("Data Cannot be saved at this time.");
+			System.out.print("Volume data cannot be saved at this time.");
 		}
 	}
 }
