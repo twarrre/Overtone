@@ -282,6 +282,10 @@ public class Quadtree
             Remove(note, node.topLeft);
         }
         else
+        {
             node._objects.remove(note);
+            note.SetVisibility(false);
+        }
+
     }
 }

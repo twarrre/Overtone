@@ -378,6 +378,9 @@ public class GameplayScreen extends OvertoneScreen
         // If song has finished delay a bit
         if(_songComplete)
         {
+            _pauseButton.setDisabled(true);
+            _pauseButton.setVisible(false);
+
             _completionTimer += deltaTime;
             if(_completionTimer > COMPLETION_DELAY)
                 Overtone.SetScreen(Overtone.Screens.SongComplete, _elapsedTime < _totalTime ? false : true, _score, _perfectCounter, _greatCounter, _goodCounter, _badCounter, _missCounter);
@@ -391,8 +394,6 @@ public class GameplayScreen extends OvertoneScreen
         {
             PlaySongCompletionSFX(true);
             _songComplete = true;
-            _pauseButton.setDisabled(true);
-            _pauseButton.setVisible(false);
         }
 
         // Move notes from the note queue to the quadtree if they are ready to be displayed on screen

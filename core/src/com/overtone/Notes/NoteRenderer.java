@@ -43,9 +43,9 @@ public class NoteRenderer
         {
             if(n.IsVisible())
             {
-                if(CheckDoubleNoteConditions(n))       // if this note is a double note, draw the connector
+                if(CheckDoubleNoteConditions(n) && !n.IsConnectorRendered())       // if this note is a double note, draw the connector
                     DrawDoubleNoteConnector(n, batch);
-                else if(CheckHoldNoteConditions(n))    // if this note is a hold note, draw the connector
+                else if(CheckHoldNoteConditions(n) && !n.IsConnectorRendered())    // if this note is a hold note, draw the connector
                     DrawHoldNoteConnector(n, batch);
 
                 batch.draw(_noteTextures[n.GetType().ordinal()], n.GetPosition().x, n.GetPosition().y, n.GetScale().x, n.GetScale().y); // Draw this note
@@ -60,6 +60,9 @@ public class NoteRenderer
      */
     private void DrawDoubleNoteConnector(Note n, SpriteBatch batch)
     {
+        if(!n.IsVisible() || !n.GetOtherNote().IsVisible())
+            return;
+
         Vector2 notePos  = n.GetPosition();
         Vector2 otherPos = n.GetOtherNote().GetPosition();
 
