@@ -14,15 +14,17 @@ public class Rating
     /**Represents the ratings of how well the player hit the button*/
     public enum RatingType
     {
-        Perfect (700),
-        Great   (500),
-        Ok      (300),
-        Bad     (100),
-        Miss    (0),
-        None    (0);
+        Perfect (700, 1, 0),
+        Great   (500, 1, 0),
+        Ok      (300, 0, 0),
+        Bad     (100, -1, 1),
+        Miss    (0, -1, 1),
+        None    (0, 0, 2);
 
         public int Score; // The score associated with each rating
-        RatingType(int score) {Score = score;}
+        public int ComboMultiplier;
+        public int SoundIndex;
+        RatingType(int score, int combo, int sound) {Score = score; ComboMultiplier = combo; SoundIndex = sound;}
     }
 
     private final RatingType _rating;     // The type of the rating

@@ -163,19 +163,15 @@ public class SongCompleteScreen extends OvertoneScreen
         }
     }
 
-    public void update(float deltaTime)
-    {
+    public void update(float deltaTime) {
         super.update(deltaTime);
         _stage.act(deltaTime);
     }
-
-    public void resize(int width, int height)
-    {
+    public void resize(int width, int height) {
         super.resize(width, height);
         _stage.getViewport().update(width, height, true);
     }
-    public void show()
-    {
+    public void show() {
         super.show();
         Gdx.input.setInputProcessor(_stage);
     }
@@ -183,8 +179,7 @@ public class SongCompleteScreen extends OvertoneScreen
         super.hide();
         Gdx.input.setInputProcessor(null);
     }
-    public void dispose ()
-    {
+    public void dispose () {
         super.dispose();
         _stage.dispose();
     }

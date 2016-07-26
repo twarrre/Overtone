@@ -34,16 +34,16 @@ public class DifficultySelectScreen extends OvertoneScreen
 
         // Create the star button
         final Button startButton = CreateButton("START", "default", Overtone.ScreenWidth * 0.85f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.075f, Overtone.ScreenHeight * 0.075f), _stage);
-        startButton.addListener(new ChangeListener() {
-            public void changed (ChangeEvent event, Actor actor) {
+        startButton.addListener(new ClickListener() {
+            public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.SetScreen(Overtone.Screens.Gameplay);
         }});
 
         // Create the back button
         final Button backButton = CreateButton("BACK", "small", Overtone.ScreenWidth * 0.08f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.02f, Overtone.ScreenHeight * 0.92f), _stage);
-        backButton.addListener(new ChangeListener() {
-            public void changed (ChangeEvent event, Actor actor) {
+        backButton.addListener(new ClickListener() {
+            public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.SetScreen(Overtone.Screens.MainMenu);
         }});
@@ -94,28 +94,23 @@ public class DifficultySelectScreen extends OvertoneScreen
         _stage.draw();
     }
 
-    public void update(float deltaTime)
-    {
+    public void update(float deltaTime) {
         super.update(deltaTime);
         _stage.act(deltaTime);
     }
-    public void resize(int width, int height)
-    {
+    public void resize(int width, int height) {
         super.resize(width, height);
         _stage.getViewport().update(width, height, true);
     }
-    public void show()
-    {
+    public void show() {
         super.show();
         Gdx.input.setInputProcessor(_stage);
     }
-    public void hide()
-    {
+    public void hide() {
         super.hide();
         Gdx.input.setInputProcessor(null);
     }
-    public void dispose ()
-    {
+    public void dispose () {
         super.dispose();
         _stage.dispose();
     }

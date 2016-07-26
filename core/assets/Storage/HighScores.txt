@@ -10,6 +10,8 @@ e
 0 ---
 0 ---
 n
+226900 Great
+48400 Cleared
 2400 Failure
 700 Failure
 0 ---
@@ -18,13 +20,11 @@ n
 0 ---
 0 ---
 0 ---
-0 ---
-0 ---
 h
+287500 Brilliant
+214700 Great
+8600 Failure
 700 Failure
-0 ---
-0 ---
-0 ---
 0 ---
 0 ---
 0 ---

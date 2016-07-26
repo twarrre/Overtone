@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.overtone.InputManager;
 import com.overtone.Notes.Note;
@@ -19,7 +18,6 @@ import com.overtone.Overtone;
 import com.overtone.Quadtree;
 import com.overtone.Ratings.Rating;
 import com.overtone.Ratings.RatingRenderer;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -29,76 +27,85 @@ import java.util.Collections;
  */
 public class GameplayScreen extends OvertoneScreen
 {
-    public static final float ERROR           = 0.000045f;
-    public static final float PAUSE_DELAY     = 3.0f;
-    public static final float DONE_DELAY      = 3.0f;
-    public static final float[] FAILURE_TIMER = {10.0f, 8.0f, 5.0f};
+    /** Maximum time error for putting notes on screen */
+    public static final float ERROR            = 0.000045f;
+
+    /** The delay for the pause resuming */
+    public static final float RESUME_DELAY     = 3.0f;
+
+    /** The delay for the completion or failure of the song */
+    public static final float COMPLETION_DELAY = 3.0f;
+
+    /** Timers that determine if you fail for each difficulty */
+    public static final float[] FAILURE_TIMER  = { 10.0f, 8.0f, 5.0f };
 
     // Objects
-    private final NoteRenderer    _noteRenderer;
-    private final InputManager    _input;
-    private final RatingRenderer  _ratingRenderer;
-    private final Stage           _stage;
+    private final NoteRenderer      _noteRenderer;       // Renders the notes on to the screen
+    private final RatingRenderer    _ratingRenderer;     // Renders ratings on screen
+    private final InputManager      _input;              // Manager input for the screen
+    private final Stage             _stage;              // Stage to render buttons and stuff
 
     // Textures
-    private final Texture _targetZone;
-    private final Texture _targetZonePressed;
-    private final Texture _progressBar;
-    private final Texture _progress;
-    private final Texture _progressArrow;
-    private final Texture _d;
-    private final Texture _e;
-    private final Texture _i;
-    private final Texture _k;
-    private final Texture _background;
-    private final Texture _perfection;
-    private final Texture _brilliant;
-    private final Texture _great;
-    private final Texture _cleared;
-    private final Texture _failure;
-    private final Texture _losing;
-    private final Sprite  _ship;
-    private Texture       _currentCrowdRating;
+    private final Texture           _targetZone;         // Texture for the target zones
+    private final Texture           _targetZonePressed;  // Texture for when a target zone is pressed
+    private final Texture           _progressBar;        // Texture for the progress bar
+    private final Texture           _progress;           // Texture for the progress of the progress bar
+    private final Texture           _progressArrow;      // Texture for arrow in the progress bar
+    private final Texture           _d;                  // Texture for the bottom left target zone
+    private final Texture           _e;                  // Texture for the top left target zone
+    private final Texture           _i;                  // Texture for the top right target zone
+    private final Texture           _k;                  // Texture for the bottom right target zone
+    private final Texture           _background;         // Texture for background of the pause menu
+    private final Texture           _perfection;         // Texture for Perfection crowd rating
+    private final Texture           _brilliant;          // Texture for brilliant crowd rating
+    private final Texture           _great;              // Texture for great crowd rating
+    private final Texture           _cleared;            // Texture for cleared crowd rating
+    private final Texture           _failure;            // Texture for failure crowd rating
+    private final Texture           _losing;             // Texture for the losing animation
+    private final Sprite            _ship;               // Texture for the ship in the center of the screen
+    private Texture                 _currentCrowdRating; // Texture for the current crowd ratings on screen
 
     // Data Structures
-    private final Quadtree          _onScreenNotes;
-    private final ArrayList<Note>   _noteQueue;
-    private final ArrayList<Rating> _onScreenRatings;
+    private Quadtree                _onScreenNotes;      // Stores notes that are on screen
+    private ArrayList<Note>         _noteQueue;          // Storage for notes that are not on screen
+    private ArrayList<Rating>       _onScreenRatings;    // Stores ratings that are on screen
 
     // Sound
-    private final Sound _noteHitGood;
-    private final Sound _noteHitBad;
-    private final Sound _noteShot;
+    private final Sound[]           _noteSFX;           // Stores the note sound effects for good, bad, and none
+    private final Sound             _noteShot;           // Sound effect for when the ship shoots a note
+    private final Sound             _success;            // Sound effect for when you successfully complete a song
+    private final Sound             _fail;               // Sound effect for when you fail a song
 
     // Variables
-    private int                       _combo;
-    private int                       _score;
-    private boolean                   _paused;
-    private boolean                   _resumeDelay;
-    private boolean                   _songDone;
-    private final float               _totalTime;
-    private float                     _elapsedTime;
-    private float                     _resumeTimer;
-    private float                     _prevResumeTimer;
-    private float                     _doneTimer;
-    private float                     _failureTimer;
-
-    private int                       _perfectCounter;
-    private int                       _greatCounter;
-    private int                       _goodCounter;
-    private int                       _badCounter;
-    private int                       _missCounter;
-    private final Vector2             _ratingScale;
-
-    private Vector2                   _shipDirection;
-
-    private final Target[] _targetZones;
-    private final boolean[] _targetZonesPressed;
-
-    private final Button _resumeButton;
-    private final Button          _retryButton;
-    private final Button          _quitButton;
-    private final Button          _difficultyButton;
+    private final Target[]          _targetZones;        // Array of targets that represent the four target zones
+    private final boolean[]         _targetZonesPressed; // Boolean to say if the particular target zone has been pressed
+    private final Button            _resumeButton;       // Resume Button for the pause menu
+    private final Button            _retryButton;        // Retry button for the pause menu
+    private final Button            _quitButton;         // Main menu button for the pause menu
+    private final Button            _difficultyButton;   // Difficulty select button for the pause menu
+    private final Button            _musicNext;          // Music volume up button for pause menu
+    private final Button            _sfxNext;            // SFX volume up button for pause menu
+    private final Button            _musicBack;          // Music volume down button for pause menu
+    private final Button            _sfxBack;            // SFX volume down button for pause menu
+    private final Button            _pauseButton;        // Pause button to bring up pause menu
+    private final Vector2           _ratingScale;        // Scale for a rating to show up on screen
+    private final float             _totalTime;          // Total time the song is going to play for
+    private Vector2                 _shipDirection;      // The direction that the sound is pointing
+    private boolean                 _paused;             // True if game is paused, false otherwise
+    private boolean                 _resuming;           // True if in resuming state, false otherwise
+    private boolean                 _songComplete;       // True if the song is complete, false otherwise
+    private float                   _elapsedTime;        // Amount of time the song has been playing
+    private float                   _resumeTimer;        // Amount of time that has passed in the resume state
+    private float                   _prevResumeTimer;    // Amount of time that has passed in the resume state, last frame
+    private float                   _completionTimer;    // Amount of time in the completion state
+    private float                   _failureTimer;       // Amount of time spent in the fail state
+    private int                     _perfectCounter;     // The number of perfect notes
+    private int                     _greatCounter;       // The number of great notes
+    private int                     _goodCounter;        // The number of good notes
+    private int                     _badCounter;         // The number of bad notes
+    private int                     _missCounter;        // The number of missed notes
+    private int                     _combo;              // The current combo
+    private int                     _score;              // The current score
 
     /**
      * Constructor
@@ -131,7 +138,6 @@ public class GameplayScreen extends OvertoneScreen
         _failure            = new Texture(Gdx.files.internal("Textures\\failure.png"));
         _losing             = new Texture(Gdx.files.internal("Textures\\losing.png"));
         _currentCrowdRating = _cleared;
-
         _ship               = new Sprite(new Texture(Gdx.files.internal("Textures\\ship.png")));
         _ship.setCenter(Overtone.ScreenWidth * 0.5f, Overtone.ScreenHeight * 0.5f);
         _ship.setScale(0.75f);
@@ -139,171 +145,119 @@ public class GameplayScreen extends OvertoneScreen
         _ship.setRotation(0);
 
         // Load sounds
-        _noteHitGood  = Gdx.audio.newSound(Gdx.files.internal("Sounds\\note_good.wav"));
-        _noteHitBad  = Gdx.audio.newSound(Gdx.files.internal("Sounds\\note_bad.wav"));
-        _noteShot = Gdx.audio.newSound(Gdx.files.internal("Sounds\\laser.wav"));
+        _noteSFX    = new Sound[3];
+        _noteSFX[0] = Gdx.audio.newSound(Gdx.files.internal("Sounds\\note_good.wav"));
+        _noteSFX[1] = Gdx.audio.newSound(Gdx.files.internal("Sounds\\note_bad.wav"));
+        _noteSFX[2] = Gdx.audio.newSound(Gdx.files.internal("Sounds\\note_none.wav"));
+        _noteShot   = Gdx.audio.newSound(Gdx.files.internal("Sounds\\laser.wav"));
+        _success    = Gdx.audio.newSound(Gdx.files.internal("Sounds\\complete.wav"));
+        _fail       = Gdx.audio.newSound(Gdx.files.internal("Sounds\\fail.wav"));
 
         // Initialize variables
-        _targetZones = new Target[4];
-        _targetZones[0] = new Target(Overtone.TargetZone.TopLeft);
-        _targetZones[1] = new Target(Overtone.TargetZone.TopRight);
-        _targetZones[2] = new Target(Overtone.TargetZone.BottomLeft);
-        _targetZones[3] = new Target(Overtone.TargetZone.BottomRight);
-        _targetZonesPressed = new boolean[4];
+        _targetZones           = new Target[4];
+        _targetZones[0]        = new Target(Overtone.TargetZone.TopLeft);
+        _targetZones[1]        = new Target(Overtone.TargetZone.TopRight);
+        _targetZones[2]        = new Target(Overtone.TargetZone.BottomLeft);
+        _targetZones[3]        = new Target(Overtone.TargetZone.BottomRight);
+        _targetZonesPressed    = new boolean[4];
         _targetZonesPressed[0] = false;
         _targetZonesPressed[1] = false;
         _targetZonesPressed[2] = false;
         _targetZonesPressed[3] = false;
-        _totalTime      = 3.0f + (float)28 * 2.0f;
-        _elapsedTime    = 0;
-        _combo          = 0;
-        _score          = 0;
-        _paused         = false;
-        _resumeDelay    = false;
-        _resumeTimer    = 0;
-        _prevResumeTimer    = 0;
-        _songDone       = false;
-        _doneTimer      = 0.0f;
-        _failureTimer   = 0.0f;
-        _perfectCounter = 0;
-        _greatCounter   = 0;
-        _goodCounter    = 0;
-        _badCounter     = 0;
-        _missCounter    = 0;
-        _ratingScale  = new Vector2(Overtone.ScreenWidth * 0.1f, Overtone.ScreenHeight * 0.09f);
+        _totalTime             = 3.0f + (float)28 * 2.0f;
+        _elapsedTime           = 0.0f;
+        _resumeTimer           = 0.0f;
+        _prevResumeTimer       = 0.0f;
+        _completionTimer       = 0.0f;
+        _failureTimer          = 0.0f;
+        _songComplete          = false;
+        _paused                = false;
+        _resuming              = false;
+        _perfectCounter        = 0;
+        _greatCounter          = 0;
+        _goodCounter           = 0;
+        _badCounter            = 0;
+        _missCounter           = 0;
+        _combo                 = 0;
+        _score                 = 0;
+        _ratingScale           = new Vector2(Overtone.ScreenWidth * 0.1f, Overtone.ScreenHeight * 0.09f);
 
+        // Create the resume button on the paused menu
         _resumeButton = CreateButton("RESUME", "small", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.725f), _stage);
         _resumeButton.setDisabled(true);
         _resumeButton.setVisible(false);
         _resumeButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
-                _resumeDelay = true;
-                _resumeButton.setDisabled(true);
-                _retryButton.setDisabled(true);
-                _quitButton.setDisabled(true);
-                _resumeButton.setVisible(false);
-                _retryButton.setVisible(false);
-                _quitButton.setVisible(false);
-                _difficultyButton.setVisible(false);
-                _difficultyButton.setDisabled(true);
-                Overtone.WriteVolume();
+                ResumeButtonPressed();
             }
         });
 
+        // Create the retry button on the paused menu
         _retryButton = CreateButton("RETRY", "small", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.625f), _stage);
-        _retryButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) { Overtone.WriteVolume(); _buttonPress.play(Overtone.SFXVolume); Overtone.SetScreen(Overtone.Screens.Gameplay);}
-        });
         _retryButton.setDisabled(true);
         _retryButton.setVisible(false);
+        _retryButton.addListener(new ClickListener() {
+            public void clicked (InputEvent i, float x, float y) {
+                PausedMenuButtonPressed(Overtone.Screens.Gameplay);}});
 
+        // Create the change difficulty button on the paused menu
         _difficultyButton = CreateButton("Difficulty", "small", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.525f), _stage);
-        _difficultyButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {Overtone.WriteVolume(); _buttonPress.play(Overtone.SFXVolume); Overtone.SetScreen(Overtone.Screens.DifficultySelect);}
-        });
         _difficultyButton.setDisabled(true);
         _difficultyButton.setVisible(false);
+        _difficultyButton.addListener(new ClickListener() {
+            public void clicked (InputEvent i, float x, float y) {
+                PausedMenuButtonPressed(Overtone.Screens.DifficultySelect);}});
 
+        // Create the main menu button on the paused menu
         _quitButton = CreateButton("MAIN MENU", "small", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.425f), _stage);
-        _quitButton.addListener(new ClickListener() {
-            public void clicked (InputEvent i, float x, float y) {Overtone.WriteVolume(); _buttonPress.play(Overtone.SFXVolume); Overtone.SetScreen(Overtone.Screens.MainMenu);}
-        });
         _quitButton.setDisabled(true);
         _quitButton.setVisible(false);
+        _quitButton.addListener(new ClickListener() {
+            public void clicked (InputEvent i, float x, float y) {
+                PausedMenuButtonPressed(Overtone.Screens.MainMenu);}
+        });
 
         // Create next button for music volume
-        final Button musicNext = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.02f, Overtone.ScreenWidth * 0.02f, new Vector2(Overtone.ScreenWidth * 0.58f, Overtone.ScreenHeight * 0.325f), _stage);
-        musicNext.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
-            _buttonPress.play(Overtone.SFXVolume);
-            Overtone.MusicVolume += 0.01f;
-            if(Overtone.MusicVolume > 1.0f)
-                Overtone.MusicVolume = 1.0f;
+        _musicNext = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.02f, Overtone.ScreenWidth * 0.02f, new Vector2(Overtone.ScreenWidth * 0.58f, Overtone.ScreenHeight * 0.325f), _stage);
+        _musicNext.setDisabled(true);
+        _musicNext.setVisible(false);
+        _musicNext.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+            VolumeButtonPressed(false, 1);
         }});
 
         // Create back button for music volume
-        final Button musicBack = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.02f, Overtone.ScreenWidth * 0.02f, new Vector2(Overtone.ScreenWidth * 0.55f,  Overtone.ScreenHeight * 0.325f), _stage);
-        musicBack.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
-            _buttonPress.play(Overtone.SFXVolume);
-            Overtone.MusicVolume -= 0.01f;
-            if(Overtone.MusicVolume < 0.0f)
-                Overtone.MusicVolume = 0.0f;
+        _musicBack = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.02f, Overtone.ScreenWidth * 0.02f, new Vector2(Overtone.ScreenWidth * 0.55f,  Overtone.ScreenHeight * 0.325f), _stage);
+        _musicBack.setDisabled(true);
+        _musicBack.setVisible(false);
+        _musicBack.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+            VolumeButtonPressed(false, -1);
         }});
 
         // Create the next button for sfx
-        final Button sfxNext = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.02f, Overtone.ScreenWidth * 0.02f, new Vector2(Overtone.ScreenWidth * 0.58f,  Overtone.ScreenHeight * 0.225f), _stage);
-        sfxNext.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
-            _buttonPress.play(Overtone.SFXVolume);
-            Overtone.SFXVolume += 0.01f;
-            if(Overtone.SFXVolume > 1.0f)
-                Overtone.SFXVolume = 1.0f;
+        _sfxNext = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.02f, Overtone.ScreenWidth * 0.02f, new Vector2(Overtone.ScreenWidth * 0.58f,  Overtone.ScreenHeight * 0.225f), _stage);
+        _sfxNext.setDisabled(true);
+        _sfxNext.setVisible(false);
+        _sfxNext.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+            VolumeButtonPressed(true, 1);
         }});
 
         // Create the back button for sfx
-        final Button sfxBack = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.02f, Overtone.ScreenWidth * 0.02f,  new Vector2(Overtone.ScreenWidth * 0.55f, Overtone.ScreenHeight * 0.225f), _stage);
-        sfxBack.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
-            _buttonPress.play(Overtone.SFXVolume);
-            Overtone.SFXVolume -= 0.01f;
-            if(Overtone.SFXVolume < 0.0f)
-                Overtone.SFXVolume = 0.0f;
+        _sfxBack = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.02f, Overtone.ScreenWidth * 0.02f,  new Vector2(Overtone.ScreenWidth * 0.55f, Overtone.ScreenHeight * 0.225f), _stage);
+        _sfxBack.setDisabled(true);
+        _sfxBack.setVisible(false);
+        _sfxBack.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+            VolumeButtonPressed(true, -1);
         }});
 
+        // Create the pause button
+        _pauseButton = CreateButton("Pause", "small", Overtone.ScreenWidth * 0.08f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.46f, Overtone.ScreenHeight * 0.87f), _stage);
+        _pauseButton.addListener(new ClickListener() {
+            public void clicked (InputEvent i, float x, float y) {
+              PausedButtonPressed();
+            }});
 
-
-
-
-        _noteQueue = new ArrayList<Note>();
-        Note d1 = new Note(Note.NoteType.Double,
-                 new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f),
-                 new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),
-                 _targetZones[0],
-                 3.0f + (float)0 * 2.0f);
-
-        Note d2 = new Note(Note.NoteType.Double,
-                new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f),
-                new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),
-                _targetZones[1],
-                3.0f + (float)0 * 2.0f);
-
-        d1.SetOtherNote(d2);
-        d2.SetOtherNote(d1);
-
-        _noteQueue.add(d1);
-        _noteQueue.add(d2);
-
-        Note d3 = new Note(Note.NoteType.Hold,
-                new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f),
-                new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),
-                _targetZones[0],
-                3.0f + (float)1 * 2.0f);
-
-        Note d4 = new Note(Note.NoteType.Hold,
-                new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f),
-                new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),
-                _targetZones[0],
-                3.0f + (float)2 * 2.0f);
-
-        d3.SetOtherNote(d4);
-        d4.SetOtherNote(d3);
-
-        _noteQueue.add(d3);
-        _noteQueue.add(d4);
-
-        // Load notes
-        for(int i = 3; i < 28; i++)
-        {
-           // Note(NoteType type, Vector2 scale, Vector2[] center, Target[] target, float[] timer)
-            Note n = new Note(Note.NoteType.Single,
-                     new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f),
-                     new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),
-                    _targetZones[i %_targetZones.length],
-                     3.0f + (float)i * 2.0f
-            );
-            _noteQueue.add(n);
-        }
-
-        Collections.sort(_noteQueue);
-        _onScreenNotes   = new Quadtree(new Rectangle(0, 0, Overtone.ScreenWidth, Overtone.ScreenHeight));
-        _onScreenRatings = new ArrayList<Rating>();
+        // Load the notes
+        LoadNotes();
     }
 
     /**
@@ -317,53 +271,58 @@ public class GameplayScreen extends OvertoneScreen
 
         // Draw progress bar
         float songProgress = _elapsedTime / _totalTime;
-        _batch.draw(_progressBar, Overtone.ScreenWidth * 0.225f, Overtone.ScreenHeight * 0.95f,  Overtone.ScreenWidth * 0.55f,                 Overtone.ScreenHeight * 0.03f);
-        _batch.draw(_progress,    Overtone.ScreenWidth * 0.23f,  Overtone.ScreenHeight * 0.955f, Overtone.ScreenWidth * 0.54f * songProgress , Overtone.ScreenHeight * 0.02f);
-        _batch.draw(_progressArrow,       Overtone.ScreenWidth * 0.23f - (_progressArrow.getWidth() / 2.0f) + (Overtone.ScreenWidth * 0.54f * songProgress), Overtone.ScreenHeight * 0.94f, _progressArrow.getWidth(), _progressArrow.getHeight());
+        _batch.draw(_progressBar, Overtone.ScreenWidth * 0.225f, Overtone.ScreenHeight * 0.95f, Overtone.ScreenWidth * 0.55f, Overtone.ScreenHeight * 0.03f);
+        _batch.draw(_progress, Overtone.ScreenWidth * 0.23f, Overtone.ScreenHeight * 0.955f, Overtone.ScreenWidth * 0.54f * songProgress , Overtone.ScreenHeight * 0.02f);
+        _batch.draw(_progressArrow, Overtone.ScreenWidth * 0.23f - (_progressArrow.getWidth() / 2.0f) + (Overtone.ScreenWidth * 0.54f * songProgress), Overtone.ScreenHeight * 0.94f, _progressArrow.getWidth(), _progressArrow.getHeight());
 
         // Draw the letter borders
         float letterWidth = Overtone.ScreenWidth * 0.2f;
-        _batch.draw(_d, 0,                   0,                           letterWidth, letterWidth);
-        _batch.draw(_k, Overtone.ScreenWidth * 0.8f, 0,                           letterWidth, letterWidth);
+        _batch.draw(_d, 0, 0,letterWidth, letterWidth);
+        _batch.draw(_k, Overtone.ScreenWidth * 0.8f, 0, letterWidth, letterWidth);
         _batch.draw(_i, Overtone.ScreenWidth * 0.8f, Overtone.ScreenHeight - letterWidth, letterWidth, letterWidth);
-        _batch.draw(_e, 0,                   Overtone.ScreenHeight - letterWidth, letterWidth, letterWidth);
+        _batch.draw(_e, 0, Overtone.ScreenHeight - letterWidth, letterWidth, letterWidth);
 
         // Draw the target zones
         for(int i = 0; i < _targetZones.length; i++)
-        {
             _batch.draw(_targetZonesPressed[i] ? _targetZonePressed : _targetZone, _targetZones[i].GetDrawingPosition().x, _targetZones[i].GetDrawingPosition().y, Target.Diameter, Target.Diameter);
-        }
 
-        // Draw the combo and score
+        // Draw the combo
         _glyphLayout.setText(_font18,  "Combo: " + _combo);
         _font18.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.7f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.05f);
 
+        // Draw the score
         _glyphLayout.setText(_font18, "Score: " + _score);
         _font18.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.3f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.05f);
 
+        // Draw the high score
         _glyphLayout.setText(_font18, "High Score: " + Overtone.HighScores[Overtone.Difficulty.ordinal()][0]);
         _font18.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.775f - _glyphLayout.width, Overtone.ScreenHeight * 0.92f);
 
+        // Draw the difficulty
         _glyphLayout.setText(_font18, "Difficulty: " + Overtone.Difficulty.toString());
         _font18.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.225f, Overtone.ScreenHeight * 0.92f);
 
+        // render the notes and ratings
         _noteRenderer.Draw(_onScreenNotes.GetAll(), _batch);
         _ratingRenderer.Draw(_onScreenRatings, _batch);
 
+        // Render the ship
         _ship.setRotation(0);
         _ship.rotate((float)Math.toDegrees(Math.atan2(_shipDirection.y, _shipDirection.x )));
         _ship.draw(_batch);
 
+        // Draw the crowd
+        float crowdRatingScale = Overtone.ScreenWidth * 0.04f;
         for(int i = 0; i <  5; i++)
-        {
-            _batch.draw(_currentCrowdRating, Overtone.ScreenWidth * 0.40f + (Overtone.ScreenWidth * 0.04f * (float)i), Overtone.ScreenHeight * 0.02f, Overtone.ScreenWidth * 0.04f, Overtone.ScreenWidth * 0.04f);
-        }
+            _batch.draw(_currentCrowdRating, Overtone.ScreenWidth * 0.40f + (crowdRatingScale * (float)i), Overtone.ScreenHeight * 0.02f, crowdRatingScale, crowdRatingScale);
 
+        // Draw the failure effect
         _batch.setColor(1.0f, 1.0f, 1.0f, (_failureTimer / FAILURE_TIMER[Overtone.Difficulty.ordinal()]));
         _batch.draw(_losing, 0, 0, Overtone.ScreenWidth, Overtone.ScreenHeight);
         _batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-        if(_paused && !_resumeDelay)
+        // Draw the pause menu
+        if(_paused)
         {
             _batch.draw(_background, Overtone.ScreenWidth * 0.375f, 0, Overtone.ScreenWidth * 0.25f, Overtone.ScreenHeight);
             _glyphLayout.setText(_font36,  "Paused");
@@ -376,7 +335,8 @@ public class GameplayScreen extends OvertoneScreen
             _font18.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.225f + _glyphLayout.height);
         }
 
-        if(_resumeDelay)
+        // Draw the resume countdown
+        if(_resuming)
         {
             _batch.draw(_background, Overtone.ScreenWidth * 0.375f, 0, Overtone.ScreenWidth * 0.25f, Overtone.ScreenHeight);
             _glyphLayout.setText(_font18,  "Game will resume in");
@@ -386,7 +346,8 @@ public class GameplayScreen extends OvertoneScreen
             _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.5f);
         }
 
-        if(_songDone)
+        // Draw the song complete screen
+        if(_songComplete)
         {
             _batch.draw(_background, 0, 0, Overtone.ScreenWidth, Overtone.ScreenHeight);
             _glyphLayout.setText(_font36, _elapsedTime < _totalTime ? "Game Over..." : "Finished!!");
@@ -394,11 +355,7 @@ public class GameplayScreen extends OvertoneScreen
         }
 
         _batch.end();
-
-        if(_paused && !_resumeDelay)
-        {
-            _stage.draw();
-        }
+        _stage.draw();
     }
 
     public void update(float deltaTime)
@@ -407,30 +364,41 @@ public class GameplayScreen extends OvertoneScreen
         _stage.act(deltaTime);
         _input.Update();
 
+        // Do nothing if paused
         if(_paused)
+            return;
+
+        // If resuming update timers
+        if(_resuming)
         {
-            CheckInputPaused();
-            if(_resumeDelay)
-            {
-                _prevResumeTimer = _resumeTimer;
-                _resumeTimer += deltaTime;
-
-                if(_prevResumeTimer == 0 && _resumeTimer >= 0 || _prevResumeTimer < 1 && _resumeTimer >= 1 || _prevResumeTimer < 2 && _resumeTimer >= 2 || _prevResumeTimer < 3 && _resumeTimer >= 3)
-                    _countdown.play(Overtone.SFXVolume);
-
-                if(_resumeTimer > PAUSE_DELAY)
-                {
-                    _paused          = false;
-                    _resumeDelay     = false;
-                    _resumeTimer     = 0;
-                    _prevResumeTimer = 0;
-                }
-            }
+            UpdateResumingState(deltaTime);
             return;
         }
 
+        // If song has finished delay a bit
+        if(_songComplete)
+        {
+            _completionTimer += deltaTime;
+            if(_completionTimer > COMPLETION_DELAY)
+                Overtone.SetScreen(Overtone.Screens.SongComplete, _elapsedTime < _totalTime ? false : true, _score, _perfectCounter, _greatCounter, _goodCounter, _badCounter, _missCounter);
+            return;
+        }
+
+        if(_elapsedTime < _totalTime && !_songComplete)
+            _elapsedTime += deltaTime;
+
+        if(_elapsedTime >= _totalTime && !_songComplete)
+        {
+            PlaySongCompletionSFX(true);
+            _songComplete = true;
+            _pauseButton.setDisabled(true);
+            _pauseButton.setVisible(false);
+        }
+
+        // Move notes from the note queue to the quadtree if they are ready to be displayed on screen
         if(!_noteQueue.isEmpty())
         {
+            // Get notes that's time has come to put on screen
             ArrayList<Note> forRemoval = new ArrayList<Note>();
             for(int i = 0; i < _targetZones.length; i++)
             {
@@ -446,73 +414,42 @@ public class GameplayScreen extends OvertoneScreen
                     }
                 }
             }
-
-            if(forRemoval.size() > 1)
-            {
-                if(forRemoval.get(0).GetCenter().y == forRemoval.get(1).GetCenter().y)
-                {
-                    float amount = Math.abs(forRemoval.get(0).GetCenter().x - forRemoval.get(1).GetCenter().x) / 2.0f;
-                    float x = forRemoval.get(0).GetCenter().x > forRemoval.get(1).GetCenter().x ? forRemoval.get(0).GetCenter().x : forRemoval.get(1).GetCenter().x;
-                    _shipDirection = new Vector2(((x - amount) - Overtone.ScreenWidth * 0.5f), (forRemoval.get(0).GetCenter().y - Overtone.ScreenHeight * 0.5f));
-                }
-                else
-                {
-                    float amount = Math.abs(forRemoval.get(0).GetCenter().y - forRemoval.get(1).GetCenter().y) / 2.0f;
-                    float y = forRemoval.get(0).GetCenter().y > forRemoval.get(1).GetCenter().y ? forRemoval.get(0).GetCenter().y : forRemoval.get(1).GetCenter().y;
-                    _shipDirection = new Vector2((forRemoval.get(0).GetCenter().x - Overtone.ScreenWidth * 0.5f), (y - amount) - Overtone.ScreenHeight * 0.5f);
-                }
-            }
-            else if (!forRemoval.isEmpty())
-                _shipDirection = new Vector2(forRemoval.get(0).GetCenter().x - (Overtone.ScreenWidth * 0.5f), forRemoval.get(0).GetCenter().y - (Overtone.ScreenHeight * 0.5f));
+           DetermineShipDirection(forRemoval);
             _noteQueue.removeAll(forRemoval);
         }
 
-        if(_elapsedTime < _totalTime && !_songDone)
-            _elapsedTime += deltaTime;
-
-        if(_elapsedTime >= _totalTime)
-            _songDone = true;
-
-        if(_songDone)
+        // Update the note positions
+        ArrayList<Vector2> removedNotes = _onScreenNotes.Update(deltaTime);
+        if(!removedNotes.isEmpty())
         {
-            _doneTimer += deltaTime;
-            if(_doneTimer > DONE_DELAY)
-                Overtone.SetScreen(Overtone.Screens.SongComplete, _elapsedTime < _totalTime ? false : true, _score, _perfectCounter, _greatCounter, _goodCounter, _badCounter, _missCounter);
+            for(Vector2 v : removedNotes)
+            {
+                _missCounter++;
+                _onScreenRatings.add(new Rating(Rating.RatingType.Miss, v, _ratingScale));
+            }
+            _combo = 0;
         }
-        else
+
+        // Update on screen ratings
+        ArrayList<Rating> done = new ArrayList<Rating>();
+        for(Rating r : _onScreenRatings)
         {
-            // Update the note positions
-            ArrayList<Vector2> removedNotes = _onScreenNotes.Update(deltaTime);
-            if(!removedNotes.isEmpty())
-            {
-                for(Vector2 v : removedNotes)
-                {
-                    _missCounter++;
-                    _onScreenRatings.add(new Rating(Rating.RatingType.Miss, v, _ratingScale));
-                }
-                _combo = 0;
-            }
-
-            // Update on screen ratings
-            ArrayList<Rating> done = new ArrayList<Rating>();
-            for(Rating r : _onScreenRatings)
-            {
-                r.Update(deltaTime);
-                if(!r.IsVisible())
-                    done.add(r);
-            }
-            _onScreenRatings.removeAll(done);
-
-            CheckInput();
-            UpdateCrowdRating(deltaTime);
+            r.Update(deltaTime);
+            if(!r.IsVisible())
+                done.add(r);
         }
+        _onScreenRatings.removeAll(done);
+
+        CheckInput();
+        UpdateCrowdRating(deltaTime);
     }
 
     /**
-     * Handles the input when not paused
+     * Handles the input
      */
     private void CheckInput()
     {
+        // Check each input related to each target zone
         for(int i = 0; i <_targetZones.length; i++)
         {
             _targetZonesPressed[i] = false;
@@ -521,52 +458,18 @@ public class GameplayScreen extends OvertoneScreen
                 Rating rating = GetNoteRating(_targetZones[i].Position);
                 _targetZonesPressed[i] = true;
 
-                if(rating.GetRating() == Rating.RatingType.Perfect || rating.GetRating() == Rating.RatingType.Great)
-                {
-                    _combo++;
-                    _noteHitGood.play(Overtone.SFXVolume);
-                }
-                else if(rating.GetRating() == Rating.RatingType.Bad || rating.GetRating() == Rating.RatingType.Miss)
-                {
+                if(rating.GetRating().ComboMultiplier == -1)
                     _combo = 0;
-                    _noteHitBad.play(Overtone.SFXVolume);
-                }
-                else if(rating.GetRating() == Rating.RatingType.Ok || rating.GetRating() == Rating.RatingType.None)
-                {
-                    _combo += 0;
-                    _noteHitGood.play(Overtone.SFXVolume);
-                }
+                else
+                    _combo += rating.GetRating().ComboMultiplier;
 
+                _noteSFX[rating.GetRating().SoundIndex].play(Overtone.SFXVolume);
                 _score += rating.GetRating().Score * _combo;
 
                 if(rating.GetRating() != Rating.RatingType.None)
                     _onScreenRatings.add(rating);
             }
         }
-
-        if(_input.ActionOccurred(InputManager.KeyBinding.Pause, InputManager.ActionType.Pressed) && !_songDone)
-        {
-            _paused = !_paused;
-
-            if(_paused)
-            {
-                _buttonPress.play(Overtone.SFXVolume);
-                _resumeButton.setDisabled(false);
-                _retryButton.setDisabled(false);
-                _quitButton.setDisabled(false);
-                _resumeButton.setVisible(true);
-                _retryButton.setVisible(true);
-                _quitButton.setVisible(true);
-                _difficultyButton.setVisible(true);
-                _difficultyButton.setDisabled(false);
-            }
-        }
-    }
-
-    private void CheckInputPaused()
-    {
-        if(_input.ActionOccurred(InputManager.KeyBinding.Pause, InputManager.ActionType.Pressed))
-            _resumeDelay = true;
     }
 
     /**
@@ -624,7 +527,6 @@ public class GameplayScreen extends OvertoneScreen
             _missCounter++;
             return new Rating(Rating.RatingType.Miss, closestNote.GetCenter(), _ratingScale);
         }
-
     }
 
     /**
@@ -635,14 +537,20 @@ public class GameplayScreen extends OvertoneScreen
     {
         Overtone.CrowdRating rating = Overtone.CrowdRating.GetRating(_perfectCounter, _greatCounter, _goodCounter, _badCounter, _missCounter);
 
+        // If you are in failure state, update the timer
         if(rating == Overtone.CrowdRating.Failure)
             _failureTimer += deltaTime;
         else
             _failureTimer = 0.0f;
 
-        if(_failureTimer > FAILURE_TIMER[Overtone.Difficulty.ordinal()])
-            _songDone = true;
+        // If the timer reaches the maximum time in fail state, then the song is over
+        if(_failureTimer > FAILURE_TIMER[Overtone.Difficulty.ordinal()] && !_songComplete)
+        {
+            PlaySongCompletionSFX(false);
+            _songComplete = true;
+        }
 
+        // Update the crowd, to refelect the rating
         switch(rating.ordinal())
         {
             case 0:
@@ -666,23 +574,26 @@ public class GameplayScreen extends OvertoneScreen
         }
     }
 
-    public void resize(int width, int height)
-    {
+    public void resize(int width, int height) {
         super.resize(width, height);
         _stage.getViewport().update(width, height, true);
     }
-
-    public void show()
-    {
+    public void show() {
+        super.show();
         Gdx.input.setInputProcessor(_stage);
     }
-
-    public void hide() {Gdx.input.setInputProcessor(null);}
-
-    public void dispose ()
-    {
+    public void hide() {
+        super.hide();
+        Gdx.input.setInputProcessor(null);
+    }
+    public void dispose () {
         super.dispose();
+        _noteRenderer.dispose();
+        _ratingRenderer.dispose();
+        _input.dispose();
+        _stage.dispose();
         _targetZone.dispose();
+        _targetZonePressed.dispose();
         _progressBar.dispose();
         _progress.dispose();
         _progressArrow.dispose();
@@ -690,7 +601,6 @@ public class GameplayScreen extends OvertoneScreen
         _e.dispose();
         _i.dispose();
         _k.dispose();
-        _stage.dispose();
         _background.dispose();
         _perfection.dispose();
         _brilliant.dispose();
@@ -698,9 +608,209 @@ public class GameplayScreen extends OvertoneScreen
         _cleared.dispose();
         _failure.dispose();
         _losing.dispose();
-        _noteHitGood.dispose();
-        _noteHitBad.dispose();
-        _noteRenderer.dispose();
-        _ratingRenderer.dispose();
+        _currentCrowdRating.dispose();
+        _noteShot.dispose();
+        _success.dispose();
+        _fail.dispose();
+
+        for(int i = 0; i < _noteSFX.length; i++)
+            _noteSFX[1].dispose();
+    }
+
+    /**
+     * Called when the song is complete, plays the fail or success sound effect
+     * @param completed True if the song was completed successfully, false otherwise
+     */
+    private void PlaySongCompletionSFX(boolean completed)
+    {
+        if(completed)
+            _success.play(Overtone.SFXVolume);
+        else
+            _fail.play(Overtone.SFXVolume);
+    }
+
+    /**
+     * Called when a menu button in the pause menu is clicked
+     * @param screen The next screen to transition to
+     */
+    private void PausedMenuButtonPressed(Overtone.Screens screen)
+    {
+        Overtone.WriteVolume();
+        _buttonPress.play(Overtone.SFXVolume);
+        Overtone.SetScreen(screen);
+    }
+
+    /**
+     * Called when a volume button is pressed from the pause menu
+     * @param sfx True if the sfx volume button was pressed, false means the music volume button was pressed
+     * @param up 1 if volume is going up, -1 if going down
+     */
+    private void VolumeButtonPressed(boolean sfx, int up)
+    {
+        _buttonPress.play(Overtone.SFXVolume);
+
+        if(sfx)
+            Overtone.SFXVolume += (0.01f * up);
+        else
+            Overtone.MusicVolume += (0.01f * up);
+
+        if(Overtone.SFXVolume > 1.0f)
+            Overtone.SFXVolume = 1.0f;
+        if(Overtone.SFXVolume < 0.0f)
+            Overtone.SFXVolume = 0.0f;
+    }
+
+    /**
+     * Called when the resume button from the pause menu is pressed
+     */
+    public void ResumeButtonPressed()
+    {
+        _paused   = false;
+        _resuming = true;
+        _resumeButton.setDisabled(true);
+        _retryButton.setDisabled(true);
+        _quitButton.setDisabled(true);
+        _difficultyButton.setDisabled(true);
+        _musicBack.setDisabled(true);
+        _musicNext.setDisabled(true);
+        _sfxNext.setDisabled(true);
+        _sfxBack.setDisabled(true);
+        _resumeButton.setVisible(false);
+        _retryButton.setVisible(false);
+        _quitButton.setVisible(false);
+        _difficultyButton.setVisible(false);
+        _musicBack.setVisible(false);
+        _musicNext.setVisible(false);
+        _sfxNext.setVisible(false);
+        _sfxBack.setVisible(false);
+        Overtone.WriteVolume();
+    }
+
+    /**
+     * Called when the paused button is pressed
+     */
+    public void PausedButtonPressed()
+    {
+        _paused = true;
+        _buttonPress.play(Overtone.SFXVolume);
+        _resumeButton.setDisabled(false);
+        _retryButton.setDisabled(false);
+        _quitButton.setDisabled(false);
+        _difficultyButton.setDisabled(false);
+        _musicBack.setDisabled(false);
+        _musicNext.setDisabled(false);
+        _sfxNext.setDisabled(false);
+        _sfxBack.setDisabled(false);
+        _resumeButton.setVisible(true);
+        _retryButton.setVisible(true);
+        _quitButton.setVisible(true);
+        _difficultyButton.setVisible(true);
+        _musicBack.setVisible(true);
+        _musicNext.setVisible(true);
+        _sfxNext.setVisible(true);
+        _sfxBack.setVisible(true);
+        _pauseButton.setDisabled(true);
+        _pauseButton.setVisible(false);
+    }
+
+    /**
+     * Called when in the resuming state to update things
+     * @param deltaTime the time since last frame
+     */
+    private void UpdateResumingState(float deltaTime)
+    {
+        _prevResumeTimer = _resumeTimer;
+        _resumeTimer     += deltaTime;
+
+        // Play countdown SFX on 3 2 1 0
+        if(_prevResumeTimer == 0 && _resumeTimer >= 0 || _prevResumeTimer < 1 && _resumeTimer >= 1 || _prevResumeTimer < 2 && _resumeTimer >= 2 || _prevResumeTimer < 3 && _resumeTimer >= 3)
+            _countdown.play(Overtone.SFXVolume);
+
+        // Once the resume delay is done
+        if(_resumeTimer > RESUME_DELAY)
+        {
+            _paused          = false;
+            _resuming        = false;
+            _resumeTimer     = 0;
+            _prevResumeTimer = 0;
+            _pauseButton.setDisabled(false);
+            _pauseButton.setVisible(true);
+        }
+    }
+
+    /**
+     * Determines which direction the ship points in based on the notes added to the screen
+     * @param notes notes added to the screen
+     */
+    private void DetermineShipDirection(ArrayList<Note> notes)
+    {
+        // If there is more then one note on screen at the same time, else there is only one on screen at a time
+        if(notes.size() > 1)
+        {
+            // If they ys are equal then it is a horizontal double note, else it is a vertical double note
+            if(notes.get(0).GetCenter().y == notes.get(1).GetCenter().y)
+            {
+                // Find the half way point between the horizontal double note
+                float half = Math.abs(notes.get(0).GetCenter().x - notes.get(1).GetCenter().x) / 2.0f;
+
+                // Calculate the leftmost of the two note (this is the starting point
+                float x = notes.get(0).GetCenter().x > notes.get(1).GetCenter().x ? notes.get(0).GetCenter().x : notes.get(1).GetCenter().x;
+
+                // Calculate the direction
+                _shipDirection = new Vector2(((x - half) - Overtone.ScreenWidth * 0.5f), (notes.get(0).GetCenter().y - Overtone.ScreenHeight * 0.5f));
+            }
+            else
+            {
+                // Calculate the half way point in the vertical direction
+                float half = Math.abs(notes.get(0).GetCenter().y - notes.get(1).GetCenter().y) / 2.0f;
+
+                // Find the lowest of the two points
+                float y = notes.get(0).GetCenter().y > notes.get(1).GetCenter().y ? notes.get(0).GetCenter().y : notes.get(1).GetCenter().y;
+
+                // Calculate the direction
+                _shipDirection = new Vector2((notes.get(0).GetCenter().x - Overtone.ScreenWidth * 0.5f), (y - half) - Overtone.ScreenHeight * 0.5f);
+            }
+        }
+        else if (notes.size() == 1)
+        {
+            // Calculate the direction
+            _shipDirection = new Vector2(notes.get(0).GetCenter().x - (Overtone.ScreenWidth * 0.5f), notes.get(0).GetCenter().y - (Overtone.ScreenHeight * 0.5f));
+        }
+    }
+
+    /**
+     * Loads the notes into the data structures
+     */
+    private void LoadNotes()
+    {
+        _noteQueue       = new ArrayList<Note>();
+        _onScreenNotes   = new Quadtree(new Rectangle(0, 0, Overtone.ScreenWidth, Overtone.ScreenHeight));
+        _onScreenRatings = new ArrayList<Rating>();
+
+        // Create a double note
+        Note d1 = new Note(Note.NoteType.Double, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f), _targetZones[0], 3.0f + (float)0 * 2.0f);
+        Note d2 = new Note(Note.NoteType.Double, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f), _targetZones[1], 3.0f + (float)0 * 2.0f);
+        d1.SetOtherNote(d2);
+        d2.SetOtherNote(d1);
+        _noteQueue.add(d1);
+        _noteQueue.add(d2);
+
+        // Create a hold note
+        Note d3 = new Note(Note.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f), _targetZones[0], 3.0f + (float)1 * 2.0f);
+        Note d4 = new Note(Note.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f), _targetZones[0], 3.0f + (float)2 * 2.0f);
+        d3.SetOtherNote(d4);
+        d4.SetOtherNote(d3);
+        _noteQueue.add(d3);
+        _noteQueue.add(d4);
+
+        // Load notes
+        for(int i = 3; i < 28; i++)
+        {
+            Note n = new Note(Note.NoteType.Single, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f), _targetZones[i %_targetZones.length], 3.0f + (float)i * 2.0f);
+            _noteQueue.add(n);
+        }
+
+        // Sort notes based on the time they appear on screen
+        Collections.sort(_noteQueue);
     }
 }

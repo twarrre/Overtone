@@ -141,4 +141,10 @@ public class InputManager
         else
             return false;
     }
+
+    public void dispose()
+    {
+        _prevKeyboardState.clear();
+        _currentKeyBoardState.clear();
+    }
 }

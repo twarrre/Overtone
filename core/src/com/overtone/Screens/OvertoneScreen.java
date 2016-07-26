@@ -205,14 +205,11 @@ public class OvertoneScreen implements OvertoneScreenInterface
         }
     }
 
-    public void resize (int width, int height)
-    {
+    public void resize (int width, int height) {
         Overtone.ScreenWidth  = width;
         Overtone.ScreenHeight = height;
     }
-
-    public void dispose ()
-    {
+    public void dispose () {
         _batch.dispose();
         _skin.dispose();
         _font12.dispose();
@@ -238,7 +235,6 @@ public class OvertoneScreen implements OvertoneScreenInterface
         _warning.dispose();
         _countdown.dispose();
     }
-
     public void pause () {}
     public void resume () {}
     public void hide () {}
