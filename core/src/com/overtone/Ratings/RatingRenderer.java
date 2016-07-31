@@ -36,7 +36,8 @@ public class RatingRenderer
         for(Rating r : ratings)
         {
             if(r.IsVisible())
-                batch.draw(_ratingTextures[r.GetRating().ordinal()], r.GetDrawingPosition().x, r.GetDrawingPosition().y, r.GetScale().x, r.GetScale().y);
+                for(int i = 0; i < r.GetDrawCounter(); i++)
+                    batch.draw(_ratingTextures[r.GetRating().ordinal()], r.GetDrawingPosition().x, r.GetDrawingPosition().y, r.GetScale().x, r.GetScale().y);
         }
     }
 

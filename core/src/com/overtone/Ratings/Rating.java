@@ -27,11 +27,12 @@ public class Rating
         RatingType(int score, int combo, int sound) {Score = score; ComboMultiplier = combo; SoundIndex = sound;}
     }
 
-    private final RatingType _rating;     // The type of the rating
-    private float            _screenTime; // How long the rating has been on screen
-    private Vector2          _center;     // The center point of the rating
-    private boolean          _isVisible;  // True if it is visible on screen, false otherwise
-    private Vector2          _scale;      // The scale of the rating
+    private final RatingType _rating;      // The type of the rating
+    private float            _screenTime;  // How long the rating has been on screen
+    private Vector2          _center;      // The center point of the rating
+    private boolean          _isVisible;   // True if it is visible on screen, false otherwise
+    private Vector2          _scale;       // The scale of the rating
+    private int              _drawCounter; // Says how many times to draw the rating
 
     /**
      * Constructor
@@ -40,11 +41,12 @@ public class Rating
      */
     public Rating(RatingType rating, Vector2 center, Vector2 scale)
     {
-        _rating     = rating;
-        _center     = center;
-        _screenTime = 0;
-        _isVisible  = true;
-        _scale      = scale;
+        _rating      = rating;
+        _center      = center;
+        _screenTime  = 0;
+        _isVisible   = true;
+        _scale       = scale;
+        _drawCounter = 1;
     }
 
     /**
@@ -54,7 +56,12 @@ public class Rating
     public void Update(float deltaTime)
     {
         if(_isVisible)
+        {
             _screenTime += deltaTime;
+
+            if(_screenTime % 0.05f < 0.0045f)
+                _drawCounter++;
+        }
 
         if(_screenTime >= ONSCREEN_TIME)
             _isVisible = false;
@@ -90,4 +97,8 @@ public class Rating
      */
     public void SetVisibility(boolean v) {_isVisible = v;}
 
+    /**
+     * @return the number of times to draw the rating (makes it look more like an explosion)
+     */
+    public int GetDrawCounter() {return _drawCounter;}
 }

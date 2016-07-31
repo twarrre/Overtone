@@ -20,6 +20,8 @@ import com.overtone.Ratings.Rating;
 import com.overtone.Ratings.RatingRenderer;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Screen used during gameplay
@@ -37,7 +39,7 @@ public class GameplayScreen extends OvertoneScreen
     public static final float COMPLETION_DELAY = 3.0f;
 
     /** Timers that determine if you fail for each difficulty */
-    public static final float[] FAILURE_TIMER  = { 10.0f, 8.0f, 5.0f };
+    public static final float[] FAILURE_TIMER  = { 15.0f, 12.0f, 10.0f };
 
     // Objects
     private final NoteRenderer      _noteRenderer;       // Renders the notes on to the screen
@@ -69,6 +71,7 @@ public class GameplayScreen extends OvertoneScreen
     private Quadtree                _onScreenNotes;      // Stores notes that are on screen
     private ArrayList<Note>         _noteQueue;          // Storage for notes that are not on screen
     private ArrayList<Rating>       _onScreenRatings;    // Stores ratings that are on screen
+    private HashMap<Note, InputManager.KeyBinding> _holdNotesOnScreen;  // List of current hold notes on screen
 
     // Sound
     private final Sound[]           _noteSFX;           // Stores the note sound effects for good, bad, and none
@@ -181,6 +184,7 @@ public class GameplayScreen extends OvertoneScreen
         _combo                 = 0;
         _score                 = 0;
         _ratingScale           = new Vector2(Overtone.ScreenWidth * 0.1f, Overtone.ScreenHeight * 0.09f);
+        _holdNotesOnScreen     = new HashMap<Note, InputManager.KeyBinding>();
 
         // Create the resume button on the paused menu
         _resumeButton = CreateButton("RESUME", "small", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.725f), _stage);
@@ -450,40 +454,80 @@ public class GameplayScreen extends OvertoneScreen
      */
     private void CheckInput()
     {
+        // Handle all hold notes
+        Iterator<Note> it = _holdNotesOnScreen.keySet().iterator();
+        while(it.hasNext())
+        {
+            Note currentNote = it.next();
+            InputManager.KeyBinding currentKey = _holdNotesOnScreen.get(currentNote);
+
+            // If they are no longer holding the note
+            if(!_input.ActionOccurred(currentKey, InputManager.ActionType.Held) && currentNote.GetOtherNote().IsVisible())
+            {
+                // Get its rating
+                Rating rating = GetNoteRating(currentNote.GetTarget().Position, currentNote.GetOtherNote());
+                HandleRating(rating);
+
+                // Remove it from the game
+                if(!_onScreenNotes.Remove(currentNote.GetOtherNote()))
+                {
+                    currentNote.GetOtherNote().SetVisibility(false);
+                    _noteQueue.remove(currentNote.GetOtherNote());
+                }
+                it.remove();
+            }
+        }
+
         // Check each input related to each target zone
         for(int i = 0; i <_targetZones.length; i++)
         {
             _targetZonesPressed[i] = false;
             if(_input.ActionOccurred(InputManager.KeyBinding.values()[i], InputManager.ActionType.Pressed))
             {
-                Rating rating = GetNoteRating(_targetZones[i].Position);
+                Note close = GetClosestNote(_targetZones[i].Position, InputManager.KeyBinding.values()[i]);
+                Rating rating = GetNoteRating(_targetZones[i].Position, close);
+
+                // If the player missed the first hold note, then remove the other one.
+                if(rating.GetRating() == Rating.RatingType.Miss && close.GetType() == Note.NoteType.Hold)
+                {
+                    if(!_onScreenNotes.Remove(close.GetOtherNote()))
+                    {
+                        close.GetOtherNote().SetVisibility(false);
+                        _noteQueue.remove(close.GetOtherNote());
+                    }
+                }
                 _targetZonesPressed[i] = true;
-
-                if(rating.GetRating().ComboMultiplier == -1)
-                    _combo = 0;
-                else
-                    _combo += rating.GetRating().ComboMultiplier;
-
-                _noteSFX[rating.GetRating().SoundIndex].play(Overtone.SFXVolume);
-                _score += rating.GetRating().Score * _combo;
-
-                if(rating.GetRating() != Rating.RatingType.None)
-                    _onScreenRatings.add(rating);
+               HandleRating(rating);
             }
         }
     }
 
+    private void HandleRating(Rating rating)
+    {
+        if(rating.GetRating().ComboMultiplier == -1)
+            _combo = 0;
+        else
+            _combo += rating.GetRating().ComboMultiplier;
+
+        _noteSFX[rating.GetRating().SoundIndex].play(Overtone.SFXVolume);
+        _score += rating.GetRating().Score * _combo;
+
+        if(rating.GetRating() != Rating.RatingType.None)
+            _onScreenRatings.add(rating);
+    }
+
     /**
-     * Finds the closest note for the particular target and rates how close it was
-     * @param target The target position
-     * @return A rating as to how close the note was to the target
+     * Returns the closest on screen note to the passed in target
+     * @param target The target to find the closest note to
+     * @param key The key binding for this target
+     * @return The closest on screen note to the target
      */
-    Rating GetNoteRating(Vector2 target)
+    private Note GetClosestNote(Vector2 target, InputManager.KeyBinding key)
     {
         ArrayList<Note> notes = _onScreenNotes.Get(target);
 
         if(notes.isEmpty())
-            return new Rating(Rating.RatingType.None, target, _ratingScale);
+            return null;
 
         float minDistance = Float.MAX_VALUE;
         Note closestNote  = null;
@@ -501,6 +545,24 @@ public class GameplayScreen extends OvertoneScreen
 
         // Remove it from the quadtree
         _onScreenNotes.Remove(closestNote);
+        if(closestNote.GetType() == Note.NoteType.Hold)
+            _holdNotesOnScreen.put(closestNote, key);
+
+        return closestNote;
+    }
+
+    /**
+     * Returns the rating of the note based on the distance from the target zone
+     * @param target The target the note is heading to
+     * @param closestNote The note that was closest to it
+     * @return A rating based on how close the note was to the target
+     */
+    private Rating GetNoteRating(Vector2 target, Note closestNote)
+    {
+        if(closestNote == null)
+            return new Rating(Rating.RatingType.None, new Vector2(), _ratingScale);
+
+        float minDistance = Vector2.dst(target.x, target.y, closestNote.GetCenter().x, closestNote.GetCenter().y);
 
         // Return a rating based on how close it was to the target
         if(minDistance <= Target.Diameter * 0.15f)

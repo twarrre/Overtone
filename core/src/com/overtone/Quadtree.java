@@ -79,10 +79,11 @@ public class Quadtree
     /**
      * Removes a particular element from the quadtree
      * @param n The element to be removed
+     * @return Returns true if the item was removed, false otherwise
      */
-    public void Remove(Note n)
+    public boolean Remove(Note n)
     {
-        Remove(n, _root);
+        return Remove(n, _root);
     }
 
     /**
@@ -264,28 +265,39 @@ public class Quadtree
      * Remove a particular element from the tree
      * @param note The element to be removed
      * @param node The node we are checking to see if it has this element
+     * @return True if the object was removed, false if it was not there
      */
-    private void Remove(Note note, Node node)
+    private boolean Remove(Note note, Node node)
     {
         if(note == null)
-            return;
+            return false;
 
         if (!node._bounds.contains(note.GetPosition().x, note.GetPosition().y))
-            return;
+            return false;
 
         // Check if it is in the children
         if(node.bottomLeft != null)
         {
-            Remove(note, node.bottomLeft);
-            Remove(note, node.bottomRight);
-            Remove(note, node.topRight);
-            Remove(note, node.topLeft);
+            boolean b1 = Remove(note, node.bottomLeft);
+            boolean b2 = Remove(note, node.bottomRight);
+            boolean b3 = Remove(note, node.topRight);
+            boolean b4 = Remove(note, node.topLeft);
+
+            if(!b1 && !b2 && !b3 && !b4)
+                return false;
+            else
+                return true;
         }
         else
         {
-            node._objects.remove(note);
-            note.SetVisibility(false);
-        }
+            if(node._objects.remove(note))
+            {
+                note.SetVisibility(false);
+                return true;
+            }
+            else
+                return false;
 
+        }
     }
 }
