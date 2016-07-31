@@ -4,7 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Handles rendering the notes so that only one instance of each note texture exists
@@ -37,15 +40,25 @@ public class NoteRenderer
      * @param notes All of the notes on screen to be rendered
      * @param batch The sprite batch to draw to.
      */
-    public void Draw(ArrayList<Note> notes, SpriteBatch batch)
+    public void Draw(ArrayList<Note> notes, Set<Note> holdNotes, SpriteBatch batch)
     {
+        // Draw the hold notes
+        Iterator<Note> it = holdNotes.iterator();
+        while(it.hasNext())
+        {
+            Note n = it.next();
+            if(!n.IsVisible() && !n.GetOtherNote().IsVisible())
+                DrawHoldNoteConnector(n.GetOtherNote(), batch);
+        }
+
+        // Draw the rest of the notes
         for(Note n : notes)
         {
             if(n.IsVisible())
             {
-                if(CheckDoubleNoteConditions(n) && !n.IsConnectorRendered())       // if this note is a double note, draw the connector
+                if(CheckDoubleNoteConditions(n))       // if this note is a double note, draw the connector
                     DrawDoubleNoteConnector(n, batch);
-                else if(CheckHoldNoteConditions(n) && !n.IsConnectorRendered())    // if this note is a hold note, draw the connector
+                else if(CheckHoldNoteConditions(n))    // if this note is a hold note, draw the connector
                     DrawHoldNoteConnector(n, batch);
 
                 batch.draw(_noteTextures[n.GetType().ordinal()], n.GetPosition().x, n.GetPosition().y, n.GetScale().x, n.GetScale().y); // Draw this note

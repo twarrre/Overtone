@@ -167,7 +167,7 @@ public class GameplayScreen extends OvertoneScreen
         _targetZonesPressed[1] = false;
         _targetZonesPressed[2] = false;
         _targetZonesPressed[3] = false;
-        _totalTime             = 3.0f + (float)28 * 2.0f;
+        _totalTime             = 3.0f + (float)32 * 2.0f;
         _elapsedTime           = 0.0f;
         _resumeTimer           = 0.0f;
         _prevResumeTimer       = 0.0f;
@@ -307,7 +307,7 @@ public class GameplayScreen extends OvertoneScreen
         _font18.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.225f, Overtone.ScreenHeight * 0.92f);
 
         // render the notes and ratings
-        _noteRenderer.Draw(_onScreenNotes.GetAll(), _batch);
+        _noteRenderer.Draw(_onScreenNotes.GetAll(), _holdNotesOnScreen.keySet(), _batch);
         _ratingRenderer.Draw(_onScreenRatings, _batch);
 
         // Render the ship
@@ -474,6 +474,7 @@ public class GameplayScreen extends OvertoneScreen
                     currentNote.GetOtherNote().SetVisibility(false);
                     _noteQueue.remove(currentNote.GetOtherNote());
                 }
+
                 it.remove();
             }
         }
@@ -495,6 +496,7 @@ public class GameplayScreen extends OvertoneScreen
                         close.GetOtherNote().SetVisibility(false);
                         _noteQueue.remove(close.GetOtherNote());
                     }
+                    _holdNotesOnScreen.remove(close);
                 }
                 _targetZonesPressed[i] = true;
                HandleRating(rating);
@@ -866,8 +868,24 @@ public class GameplayScreen extends OvertoneScreen
         _noteQueue.add(d3);
         _noteQueue.add(d4);
 
+        // Create a hold note
+        Note d5 = new Note(Note.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f), _targetZones[1], 3.0f + (float)3 * 2.0f);
+        Note d6 = new Note(Note.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f), _targetZones[1], 3.0f + (float)5 * 2.0f);
+        d5.SetOtherNote(d6);
+        d6.SetOtherNote(d5);
+        _noteQueue.add(d5);
+        _noteQueue.add(d6);
+
+        // Create a hold note
+        Note d7 = new Note(Note.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f), _targetZones[2], 3.0f + (float)4 * 2.0f);
+        Note d8 = new Note(Note.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f), _targetZones[2], 3.0f + (float)6 * 2.0f);
+        d7.SetOtherNote(d8);
+        d8.SetOtherNote(d7);
+        _noteQueue.add(d7);
+        _noteQueue.add(d8);
+
         // Load notes
-        for(int i = 3; i < 28; i++)
+        for(int i = 7; i < 32; i++)
         {
             Note n = new Note(Note.NoteType.Single, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f), _targetZones[i %_targetZones.length], 3.0f + (float)i * 2.0f);
             _noteQueue.add(n);

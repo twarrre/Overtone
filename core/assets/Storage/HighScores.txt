@@ -21,6 +21,8 @@ n
 500 Failure
 500 Failure
 h
+350700 Great
+333100 Great
 287500 Brilliant
 214700 Great
 8600 Failure
@@ -28,6 +30,4 @@ h
 1500 Failure
 700 Failure
 700 Failure
-0 ---
-0 ---
 0 ---
