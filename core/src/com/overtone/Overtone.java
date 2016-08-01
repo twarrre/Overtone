@@ -67,7 +67,7 @@ public class Overtone extends ApplicationAdapter
 			score += 0.7f * ((float)counters[1] / totalNotes); // seventh of a point for each great
 			score += 0.5f * ((float)counters[2] / totalNotes); // fourth of a point for each okay
 			score += 0.1f * ((float)counters[3] / totalNotes); // a tenth of a point for each bad
-			score -= 0.1f * ((float)counters[4] / totalNotes); // no points for each miss
+			score -= 0.2f * ((float)counters[4] / totalNotes); // negative points for a miss
 
 			if(score >= 1.0f)
 				return Perfection;

@@ -429,7 +429,6 @@ public class GameplayScreen extends OvertoneScreen
         {
             for(Note n : removedNotes)
             {
-                System.out.println("Miss Update");
                 _missCounter++;
                 _onScreenRatings.add(new Rating(Rating.RatingType.Miss, n.GetPosition(), _ratingScale));
                 if(n.GetType() == Note.NoteType.Hold)

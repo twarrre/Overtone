@@ -211,33 +211,30 @@ public class Quadtree
     {
         // If the node is not visible anymore, then remove it from the tree
         ArrayList<Note> toBeRemoved = new ArrayList();
-        ArrayList<Note> removed = new ArrayList();
 
         if (node == null)
-            return removed;
+            return toBeRemoved;
 
         // Update all of the elements at this node
         for (Note n : node._objects)
         {
             n.Update(deltaTime);
             if(!n.IsVisible())
-            {
                 toBeRemoved.add(n);
-                removed.add(n);
-            }
         }
-
-        // Update all nodes in the children nodes
-        removed.addAll(Update(deltaTime, node.topLeft));
-        removed.addAll(Update(deltaTime, node.topRight));
-        removed.addAll(Update(deltaTime, node.bottomLeft));
-        removed.addAll(Update(deltaTime, node.bottomRight));
 
         // If there are elements to be removed, remove them now
         for(Note n : toBeRemoved)
             Remove(n, node);
 
-        return removed;
+        // Update all nodes in the children nodes
+        toBeRemoved.addAll(Update(deltaTime, node.topLeft));
+        toBeRemoved.addAll(Update(deltaTime, node.topRight));
+        toBeRemoved.addAll(Update(deltaTime, node.bottomLeft));
+        toBeRemoved.addAll(Update(deltaTime, node.bottomRight));
+
+
+        return toBeRemoved;
     }
 
     /**
