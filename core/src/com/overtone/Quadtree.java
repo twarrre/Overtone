@@ -90,7 +90,7 @@ public class Quadtree
      * Updates every element in the quadtree
      * @param deltaTime The time since the last frame
      */
-    public ArrayList<Vector2> Update(float deltaTime)
+    public ArrayList<Note> Update(float deltaTime)
     {
         return Update(deltaTime, _root);
     }
@@ -207,11 +207,11 @@ public class Quadtree
      * @param deltaTime The time since the last frame
      * @param node The node we are currently updating
      */
-    private ArrayList<Vector2> Update(float deltaTime, Node node)
+    private ArrayList<Note> Update(float deltaTime, Node node)
     {
         // If the node is not visible anymore, then remove it from the tree
         ArrayList<Note> toBeRemoved = new ArrayList();
-        ArrayList<Vector2> removed = new ArrayList();
+        ArrayList<Note> removed = new ArrayList();
 
         if (node == null)
             return removed;
@@ -223,7 +223,7 @@ public class Quadtree
             if(!n.IsVisible())
             {
                 toBeRemoved.add(n);
-                removed.add(n.GetTarget().Position);
+                removed.add(n);
             }
         }
 

@@ -32,9 +32,9 @@ public class Overtone extends ApplicationAdapter
 	/**The available difficulties for the game.*/
 	public enum Difficulty
 	{
-		Easy(5),
+		Easy(6),
 		Normal(4),
-		Hard(3);
+		Hard(2);
 
 		public float Multiplier; // The amount of time the note must be on screen
 		Difficulty(float multiplier) { this.Multiplier = multiplier; }
@@ -64,10 +64,10 @@ public class Overtone extends ApplicationAdapter
 				totalNotes += counters[i];
 
 			score += 1.0f * ((float)counters[0] / totalNotes); // 1 point for each perfect
-			score += 0.5f * ((float)counters[1] / totalNotes); // half a point for each great
-			score += 0.3f * ((float)counters[2] / totalNotes); // a third of a point for each okay
+			score += 0.7f * ((float)counters[1] / totalNotes); // seventh of a point for each great
+			score += 0.5f * ((float)counters[2] / totalNotes); // fourth of a point for each okay
 			score += 0.1f * ((float)counters[3] / totalNotes); // a tenth of a point for each bad
-			score += 0.0f * ((float)counters[4] / totalNotes); // no points for each miss
+			score -= 0.1f * ((float)counters[4] / totalNotes); // no points for each miss
 
 			if(score >= 1.0f)
 				return Perfection;
