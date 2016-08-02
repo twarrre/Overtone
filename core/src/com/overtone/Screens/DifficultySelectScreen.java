@@ -29,15 +29,16 @@ public class DifficultySelectScreen extends OvertoneScreen
     public DifficultySelectScreen()
     {
         super();
-        _stage           = new Stage();
-        _difficultyIndex = 0;
+        _stage              = new Stage();
+        _difficultyIndex    = 0;
+        Overtone.Difficulty = Overtone.Difficulty.Easy;
 
-        // Create the star button
+        // Create the start button
         final Button startButton = CreateButton("START", "default", Overtone.ScreenWidth * 0.85f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.075f, Overtone.ScreenHeight * 0.075f), _stage);
         startButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
-            Overtone.SetScreen(Overtone.Screens.Gameplay);
+            Overtone.SetScreen(Overtone.Screens.Loading);
         }});
 
         // Create the back button

@@ -22,12 +22,12 @@ n
 3900 Failure
 h
 350700 Great
+344500 Great
 333100 Great
 287500 Brilliant
 214700 Great
 8600 Failure
 8100 Failure
 5500 Failure
+5200 Failure
 4700 Failure
-4500 Failure
-4100 Failure

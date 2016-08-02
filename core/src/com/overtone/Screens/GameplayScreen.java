@@ -69,7 +69,6 @@ public class GameplayScreen extends OvertoneScreen
 
     // Data Structures
     private Quadtree                               _onScreenNotes;      // Stores notes that are on screen
-    private ArrayList<Note>                        _noteQueue;          // Storage for notes that are not on screen
     private ArrayList<Rating>                      _onScreenRatings;    // Stores ratings that are on screen
     private HashMap<Note, InputManager.KeyBinding> _holdNotesOnScreen;  // List of current hold notes on screen
 
@@ -80,7 +79,6 @@ public class GameplayScreen extends OvertoneScreen
     private final Sound                            _fail;               // Sound effect for when you fail a song
 
     // Variables
-    private final Target[]                         _targetZones;        // Array of targets that represent the four target zones
     private final boolean[]                        _targetZonesPressed; // Boolean to say if the particular target zone has been pressed
     private final Button                           _resumeButton;       // Resume Button for the pause menu
     private final Button                           _retryButton;        // Retry button for the pause menu
@@ -92,7 +90,6 @@ public class GameplayScreen extends OvertoneScreen
     private final Button                           _sfxBack;            // SFX volume down button for pause menu
     private final Button                           _pauseButton;        // Pause button to bring up pause menu
     private final Vector2                          _ratingScale;        // Scale for a rating to show up on screen
-    private final float                            _totalTime;          // Total time the song is going to play for
     private Vector2                                _shipDirection;      // The direction that the sound is pointing
     private boolean                                _paused;             // True if game is paused, false otherwise
     private boolean                                _resuming;           // True if in resuming state, false otherwise
@@ -157,17 +154,11 @@ public class GameplayScreen extends OvertoneScreen
         _fail       = Gdx.audio.newSound(Gdx.files.internal("Sounds\\fail.wav"));
 
         // Initialize variables
-        _targetZones           = new Target[4];
-        _targetZones[0]        = new Target(Overtone.TargetZone.TopLeft);
-        _targetZones[1]        = new Target(Overtone.TargetZone.TopRight);
-        _targetZones[2]        = new Target(Overtone.TargetZone.BottomLeft);
-        _targetZones[3]        = new Target(Overtone.TargetZone.BottomRight);
         _targetZonesPressed    = new boolean[4];
         _targetZonesPressed[0] = false;
         _targetZonesPressed[1] = false;
         _targetZonesPressed[2] = false;
         _targetZonesPressed[3] = false;
-        _totalTime             = 3.0f + (float)32 * 2.0f;
         _elapsedTime           = 0.0f;
         _resumeTimer           = 0.0f;
         _prevResumeTimer       = 0.0f;
@@ -185,6 +176,8 @@ public class GameplayScreen extends OvertoneScreen
         _score                 = 0;
         _ratingScale           = new Vector2(Overtone.ScreenWidth * 0.1f, Overtone.ScreenHeight * 0.09f);
         _holdNotesOnScreen     = new HashMap<Note, InputManager.KeyBinding>();
+        _onScreenNotes         = new Quadtree(new Rectangle(0, 0, Overtone.ScreenWidth, Overtone.ScreenHeight));
+        _onScreenRatings       = new ArrayList<Rating>();
 
         // Create the resume button on the paused menu
         _resumeButton = CreateButton("RESUME", "small", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.725f), _stage);
@@ -202,7 +195,9 @@ public class GameplayScreen extends OvertoneScreen
         _retryButton.setVisible(false);
         _retryButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
-                PausedMenuButtonPressed(Overtone.Screens.Gameplay);}});
+                PausedMenuButtonPressed(Overtone.Screens.Loading);
+                Overtone.Regenerate = false;
+            }});
 
         // Create the change difficulty button on the paused menu
         _difficultyButton = CreateButton("Difficulty", "small", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.525f), _stage);
@@ -210,7 +205,9 @@ public class GameplayScreen extends OvertoneScreen
         _difficultyButton.setVisible(false);
         _difficultyButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
-                PausedMenuButtonPressed(Overtone.Screens.DifficultySelect);}});
+                PausedMenuButtonPressed(Overtone.Screens.DifficultySelect);
+                Overtone.Regenerate = false;
+            }});
 
         // Create the main menu button on the paused menu
         _quitButton = CreateButton("MAIN MENU", "small", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.425f), _stage);
@@ -259,9 +256,6 @@ public class GameplayScreen extends OvertoneScreen
             public void clicked (InputEvent i, float x, float y) {
               PausedButtonPressed();
             }});
-
-        // Load the notes
-        LoadNotes();
     }
 
     /**
@@ -274,7 +268,7 @@ public class GameplayScreen extends OvertoneScreen
         _batch.begin();
 
         // Draw progress bar
-        float songProgress = _elapsedTime / _totalTime;
+        float songProgress = _elapsedTime / Overtone.TotalTime;
         _batch.draw(_progressBar, Overtone.ScreenWidth * 0.225f, Overtone.ScreenHeight * 0.95f, Overtone.ScreenWidth * 0.55f, Overtone.ScreenHeight * 0.03f);
         _batch.draw(_progress, Overtone.ScreenWidth * 0.23f, Overtone.ScreenHeight * 0.955f, Overtone.ScreenWidth * 0.54f * songProgress , Overtone.ScreenHeight * 0.02f);
         _batch.draw(_progressArrow, Overtone.ScreenWidth * 0.23f - (_progressArrow.getWidth() / 2.0f) + (Overtone.ScreenWidth * 0.54f * songProgress), Overtone.ScreenHeight * 0.94f, _progressArrow.getWidth(), _progressArrow.getHeight());
@@ -287,8 +281,8 @@ public class GameplayScreen extends OvertoneScreen
         _batch.draw(_e, 0, Overtone.ScreenHeight - letterWidth, letterWidth, letterWidth);
 
         // Draw the target zones
-        for(int i = 0; i < _targetZones.length; i++)
-            _batch.draw(_targetZonesPressed[i] ? _targetZonePressed : _targetZone, _targetZones[i].GetDrawingPosition().x, _targetZones[i].GetDrawingPosition().y, Target.Diameter, Target.Diameter);
+        for(int i = 0; i < Overtone.TargetZones.length; i++)
+            _batch.draw(_targetZonesPressed[i] ? _targetZonePressed : _targetZone,  Overtone.TargetZones[i].GetDrawingPosition().x,  Overtone.TargetZones[i].GetDrawingPosition().y, Target.Diameter, Target.Diameter);
 
         // Draw the combo
         _glyphLayout.setText(_font18,  "Combo: " + _combo);
@@ -354,7 +348,7 @@ public class GameplayScreen extends OvertoneScreen
         if(_songComplete)
         {
             _batch.draw(_background, 0, 0, Overtone.ScreenWidth, Overtone.ScreenHeight);
-            _glyphLayout.setText(_font36, _elapsedTime < _totalTime ? "Game Over..." : "Finished!!");
+            _glyphLayout.setText(_font36, _elapsedTime <  Overtone.TotalTime ? "Game Over..." : "Finished!!");
             _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.5f);
         }
 
@@ -387,40 +381,40 @@ public class GameplayScreen extends OvertoneScreen
 
             _completionTimer += deltaTime;
             if(_completionTimer > COMPLETION_DELAY)
-                Overtone.SetScreen(Overtone.Screens.SongComplete, _elapsedTime < _totalTime ? false : true, _score, _perfectCounter, _greatCounter, _goodCounter, _badCounter, _missCounter);
+                Overtone.SetScreen(Overtone.Screens.SongComplete, _elapsedTime <  Overtone.TotalTime ? false : true, _score, _perfectCounter, _greatCounter, _goodCounter, _badCounter, _missCounter);
             return;
         }
 
-        if(_elapsedTime < _totalTime && !_songComplete)
+        if(_elapsedTime <  Overtone.TotalTime && !_songComplete)
             _elapsedTime += deltaTime;
 
-        if(_elapsedTime >= _totalTime && !_songComplete)
+        if(_elapsedTime >=  Overtone.TotalTime && !_songComplete)
         {
             PlaySongCompletionSFX(true);
             _songComplete = true;
         }
 
         // Move notes from the note queue to the quadtree if they are ready to be displayed on screen
-        if(!_noteQueue.isEmpty())
+        if(!Overtone.NoteQueue.isEmpty())
         {
             // Get notes that's time has come to put on screen
             ArrayList<Note> forRemoval = new ArrayList<Note>();
-            for(int i = 0; i < _targetZones.length; i++)
+            for(int i = 0; i <  Overtone.TargetZones.length; i++)
             {
-                if(i < _noteQueue.size())
+                if(i < Overtone.NoteQueue.size())
                 {
-                    if(_noteQueue.get(i).GetTime() - Overtone.Difficulty.Multiplier <=  _elapsedTime + ERROR)
+                    if(Overtone.NoteQueue.get(i).GetTime() - Overtone.Difficulty.Multiplier <=  _elapsedTime + ERROR)
                     {
-                        Note n = _noteQueue.get(i);
+                        Note n = Overtone.NoteQueue.get(i);
                         n.SetVisibility(true);
                         _onScreenNotes.Insert(n);
-                        forRemoval.add(_noteQueue.get(i));
+                        forRemoval.add(Overtone.NoteQueue.get(i));
                         _noteShot.play(Overtone.SFXVolume);
                     }
                 }
             }
            DetermineShipDirection(forRemoval);
-            _noteQueue.removeAll(forRemoval);
+            Overtone.NoteQueue.removeAll(forRemoval);
         }
 
         // Update the note positions
@@ -477,13 +471,13 @@ public class GameplayScreen extends OvertoneScreen
         }
 
         // Check each input related to each target zone
-        for(int i = 0; i <_targetZones.length; i++)
+        for(int i = 0; i < Overtone.TargetZones.length; i++)
         {
             _targetZonesPressed[i] = false;
             if(_input.ActionOccurred(InputManager.KeyBinding.values()[i], InputManager.ActionType.Pressed))
             {
-                Note close = GetClosestNote(_targetZones[i].Position, InputManager.KeyBinding.values()[i]);
-                Rating rating = GetNoteRating(_targetZones[i].Position, close);
+                Note close = GetClosestNote( Overtone.TargetZones[i].Position, InputManager.KeyBinding.values()[i]);
+                Rating rating = GetNoteRating( Overtone.TargetZones[i].Position, close);
 
                 // If the player missed the first hold note, then remove the other one.
                 if(rating.GetRating() == Rating.RatingType.Miss && close.GetType() == Note.NoteType.Hold)
@@ -839,58 +833,6 @@ public class GameplayScreen extends OvertoneScreen
     }
 
     /**
-     * Loads the notes into the data structures
-     */
-    private void LoadNotes()
-    {
-        _noteQueue       = new ArrayList<Note>();
-        _onScreenNotes   = new Quadtree(new Rectangle(0, 0, Overtone.ScreenWidth, Overtone.ScreenHeight));
-        _onScreenRatings = new ArrayList<Rating>();
-
-        // Create a double note
-        Note d1 = new Note(Note.NoteType.Double, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f), _targetZones[0], 3.0f + (float)0 * 2.0f);
-        Note d2 = new Note(Note.NoteType.Double, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f), _targetZones[1], 3.0f + (float)0 * 2.0f);
-        d1.SetOtherNote(d2);
-        d2.SetOtherNote(d1);
-        _noteQueue.add(d1);
-        _noteQueue.add(d2);
-
-        // Create a hold note
-        Note d3 = new Note(Note.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f), _targetZones[0], 3.0f + (float)1 * 2.0f);
-        Note d4 = new Note(Note.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f), _targetZones[0], 3.0f + (float)2 * 2.0f);
-        d3.SetOtherNote(d4);
-        d4.SetOtherNote(d3);
-        _noteQueue.add(d3);
-        _noteQueue.add(d4);
-
-        // Create a hold note
-        Note d5 = new Note(Note.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f), _targetZones[1], 3.0f + (float)3 * 2.0f);
-        Note d6 = new Note(Note.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f), _targetZones[1], 3.0f + (float)5 * 2.0f);
-        d5.SetOtherNote(d6);
-        d6.SetOtherNote(d5);
-        _noteQueue.add(d5);
-        _noteQueue.add(d6);
-
-        // Create a hold note
-        Note d7 = new Note(Note.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f), _targetZones[2], 3.0f + (float)4 * 2.0f);
-        Note d8 = new Note(Note.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f), _targetZones[2], 3.0f + (float)6 * 2.0f);
-        d7.SetOtherNote(d8);
-        d8.SetOtherNote(d7);
-        _noteQueue.add(d7);
-        _noteQueue.add(d8);
-
-        // Load notes
-        for(int i = 7; i < 32; i++)
-        {
-            Note n = new Note(Note.NoteType.Single, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f), _targetZones[i %_targetZones.length], 3.0f + (float)i * 2.0f);
-            _noteQueue.add(n);
-        }
-
-        // Sort notes based on the time they appear on screen
-        Collections.sort(_noteQueue);
-    }
-
-    /**
      * Removes a hold note from the game
      * @param n The note to remove
      * @param it The iterator it came from is necessary
@@ -900,7 +842,7 @@ public class GameplayScreen extends OvertoneScreen
         if(!_onScreenNotes.Remove(n.GetOtherNote()))
         {
             n.GetOtherNote().SetVisibility(false);
-            _noteQueue.remove(n.GetOtherNote());
+            Overtone.NoteQueue.remove(n.GetOtherNote());
         }
 
         if(it != null)

@@ -24,8 +24,9 @@ public class MainMenuScreen extends OvertoneScreen
     public MainMenuScreen()
     {
         super();
-        _stage = new Stage();
-        _logo  = new Texture(Gdx.files.internal("Textures\\logo.png"));
+        _stage              = new Stage();
+        _logo               = new Texture(Gdx.files.internal("Textures\\logo.png"));
+        Overtone.Regenerate = true;
 
         // Create the play button
         final Button playButton = CreateButton("PLAY", "default", Overtone.ScreenWidth * 0.85f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.075f, Overtone.ScreenHeight * 0.21f), _stage);

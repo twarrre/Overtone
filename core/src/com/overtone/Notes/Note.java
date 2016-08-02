@@ -27,6 +27,7 @@ public class Note implements Comparable<Note>
     private boolean        _isVisible;         // True if visible on screen, false otherwise
     private boolean        _connectorRendered; // True if the note is double or hold and it's connector has been rendered on screen
     private Note           _partnerNote;       // Stores a reference to the partner note if it is a hold or double note, null otherwise
+    private float          _otherNoteTime;     // Time that the note must be at the target zone at
 
     /**
      * Constructor
@@ -48,6 +49,28 @@ public class Note implements Comparable<Note>
         _type              = type;
         _scale             = scale;
         _partnerNote       = null;
+        _otherNoteTime     = 0;
+        _connectorRendered = false;
+        _isVisible         = false;
+    }
+
+    /**
+     * Copy Constructor
+     * @param n
+     */
+    public Note(Note n)
+    {
+        float distance     = n.GetTarget().Position.dst(n.GetCenter());                                                                 // Find the distance from the target to the center of the note
+
+        _direction         = new Vector2(n.GetTarget().Position.x - n.GetCenter().x, n.GetTarget().Position.y - n.GetCenter().y).nor(); // Creates a vector point in the direction of the target zone
+        _center            = new Vector2(n.GetCenter().x + _direction.x, n.GetCenter().y + _direction.y);                               // Shift the center into the proper quad based on the direction it is going
+        _speed             = distance / Overtone.Difficulty.Multiplier;                                                                 // Calculate the speed of note (dist / time)
+        _target            = n.GetTarget();
+        _time              = n.GetTime();
+        _type              = n.GetType();
+        _scale             = n.GetScale();
+        _partnerNote       = null;
+        _otherNoteTime     = (n.GetType() == NoteType.Hold || n.GetType() == NoteType.Double) ? n.GetOtherNote().GetTime() : 0.0f;
         _connectorRendered = false;
         _isVisible         = false;
     }
@@ -144,9 +167,24 @@ public class Note implements Comparable<Note>
     }
 
     /**
+     * Sets the time stamp of the other note
+     * @param t the time stamp of the other note.
+     */
+    public void SetOtherNoteTime(float t)
+    {
+        if(_type == NoteType.Double || _type == NoteType.Hold)
+            _otherNoteTime = t;
+    }
+
+    /**
      * @return The partner note of this note, null if a single note
      */
     public Note GetOtherNote() {return _partnerNote;}
+
+    /**
+     * @return the time signature of the other note.
+     */
+    public float GetOtherNoteTime() {return _otherNoteTime;}
 
     /**
      * Sets if the connector has been rendered or not
