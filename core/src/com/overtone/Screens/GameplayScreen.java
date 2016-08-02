@@ -18,6 +18,8 @@ import com.overtone.Overtone;
 import com.overtone.Quadtree;
 import com.overtone.Ratings.Rating;
 import com.overtone.Ratings.RatingRenderer;
+import com.overtone.Utilities;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -689,7 +691,7 @@ public class GameplayScreen extends OvertoneScreen
      */
     private void PausedMenuButtonPressed(Overtone.Screens screen)
     {
-        Overtone.WriteVolume();
+        Utilities.WriteVolume();
         _buttonPress.play(Overtone.SFXVolume);
         Overtone.SetScreen(screen);
     }
@@ -737,7 +739,7 @@ public class GameplayScreen extends OvertoneScreen
         _musicNext.setVisible(false);
         _sfxNext.setVisible(false);
         _sfxBack.setVisible(false);
-        Overtone.WriteVolume();
+        Utilities.WriteVolume();
     }
 
     /**

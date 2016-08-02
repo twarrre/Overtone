@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.overtone.GeneticAlgorithm.GeneticAlgorithm;
 import com.overtone.Overtone;
+import com.overtone.Utilities;
 
 /**
  * Loading screen for generating the notes of the game
@@ -40,7 +41,7 @@ public class LoadingScreen extends OvertoneScreen
         }
         else
         {
-            Overtone.SortNotes(Overtone.BackupQueue);
+            Utilities.SortNotes(Overtone.BackupQueue);
         }
     }
 

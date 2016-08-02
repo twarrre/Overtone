@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.overtone.Overtone;
+import com.overtone.Utilities;
 
 /**
  * Screen used for options
@@ -42,7 +43,6 @@ public class OptionsScreen extends OvertoneScreen
                     return;
 
                 _buttonPress.play(Overtone.SFXVolume);
-                Overtone.WriteVolume();
                 Overtone.SetScreen(Overtone.Screens.MainMenu);
             }
         });
@@ -120,7 +120,7 @@ public class OptionsScreen extends OvertoneScreen
             if(_dataCleared)
                 System.out.println("Data has been Cleared.");
             else
-                Overtone.WriteScores(true);
+                Utilities.WriteScores(true);
             }
         });
 

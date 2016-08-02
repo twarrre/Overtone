@@ -3,6 +3,8 @@ package com.overtone.GeneticAlgorithm;
 import com.badlogic.gdx.math.Vector2;
 import com.overtone.Notes.Note;
 import com.overtone.Overtone;
+import com.overtone.Utilities;
+
 import java.util.ArrayList;
 
 /**
@@ -99,7 +101,7 @@ public class GeneticAlgorithm implements Runnable
             tempNote.add(n);
         }
 
-        Overtone.SortNotes(tempNote);
+        Utilities.SortNotes(tempNote);
         Overtone.TotalTime   = 3.0f + (float)32 * 2.0f;
 
         for(int i = 0; i < NUM_ITERATIONS; i++){_currentIteration++;}

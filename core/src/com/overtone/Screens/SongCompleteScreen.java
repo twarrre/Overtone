@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.overtone.Overtone;
 import com.overtone.Ratings.Rating;
+import com.overtone.Utilities;
 
 /**
  * Screen used for the song complete screen
@@ -101,7 +102,7 @@ public class SongCompleteScreen extends OvertoneScreen
         }});
 
         // Update the score if necessary
-        Overtone.UpdateScore(_score, Overtone.CrowdRating.GetRating(_counters), Overtone.Difficulty);
+        Utilities.UpdateScore(_score, Overtone.CrowdRating.GetRating(_counters), Overtone.Difficulty);
     }
 
     public void render (float deltaTime)
