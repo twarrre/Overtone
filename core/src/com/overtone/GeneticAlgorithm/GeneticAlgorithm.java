@@ -103,6 +103,10 @@ public class GeneticAlgorithm implements Runnable
 
         Utilities.SortNotes(tempNote);
         Overtone.TotalTime   = 3.0f + (float)32 * 2.0f;
+        for(int i = 0; i < Overtone.CurrentRaterValues.length; i++)
+        {
+            Overtone.CurrentRaterValues[i] = Utilities.Clamp(Overtone.BestRaterValues[i] + 0.01f, 0.0f, 1.0f);
+        }
 
         for(int i = 0; i < NUM_ITERATIONS; i++){_currentIteration++;}
     }

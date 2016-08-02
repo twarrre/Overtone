@@ -261,6 +261,15 @@ public class Utilities
     }
 
     /**
+     * Clears rater values for next generation
+     */
+    public static void ClearRaterValues()
+    {
+        for(int i = 0; i < Overtone.NUM_RATERS; i++)
+            Overtone.CurrentRaterValues[i] = 0.0f;
+    }
+
+    /**
      * Resorts the notes and saves a backup of them.
      * @param notes The notes to sort and create a backup from
      */
@@ -325,7 +334,7 @@ public class Utilities
      * @param high the upper bound
      * @return returns the float, clamped if necessary
      */
-    public float Clamp(float number, float low, float high)
+    public static float Clamp(float number, float low, float high)
     {
         if(number > high)
             return high;

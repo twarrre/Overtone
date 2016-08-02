@@ -89,6 +89,8 @@ public class SongCompleteScreen extends OvertoneScreen
         _yesButton.setVisible(false);
         _yesButton.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _accept.play(Overtone.SFXVolume);
+            Utilities.AverageRaterValues();
+            Utilities.WriteRaterValues();
             Overtone.SetScreen(_nextScreen);
         }});
 
@@ -98,6 +100,7 @@ public class SongCompleteScreen extends OvertoneScreen
         _noButton.setVisible(false);
         _noButton.addListener(new ClickListener() { public void clicked (InputEvent i, float x, float y) {
             _decline.play(Overtone.SFXVolume);
+            Utilities.ClearRaterValues();
             Overtone.SetScreen(_nextScreen);
         }});
 
