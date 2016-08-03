@@ -1,6 +1,6 @@
 package com.overtone;
 
-import com.overtone.Notes.Note;
+import com.overtone.Notes.OvertoneNote;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -273,23 +273,23 @@ public class Utilities
      * Resorts the notes and saves a backup of them.
      * @param notes The notes to sort and create a backup from
      */
-    public static void SortNotes(ArrayList<Note> notes)
+    public static void SortNotes(ArrayList<OvertoneNote> notes)
     {
         // Sort notes based on the time they appear on screen
         Collections.sort(notes);
 
-        Overtone.NoteQueue   = new ArrayList<Note>();
-        Overtone.BackupQueue = new ArrayList<Note>();
+        Overtone.NoteQueue   = new ArrayList<OvertoneNote>();
+        Overtone.BackupQueue = new ArrayList<OvertoneNote>();
 
         for(int i = 0; i < notes.size(); i++)
         {
-            Overtone.NoteQueue.add(new Note(notes.get(i)));
-            Overtone.BackupQueue.add(new Note(notes.get(i)));
+            Overtone.NoteQueue.add(new OvertoneNote(notes.get(i)));
+            Overtone.BackupQueue.add(new OvertoneNote(notes.get(i)));
         }
 
         for(int i = 0; i < Overtone.NoteQueue.size(); i++)
         {
-            if((Overtone.NoteQueue.get(i).GetType() == Note.NoteType.Hold || Overtone.NoteQueue.get(i).GetType() == Note.NoteType.Double) && Overtone.NoteQueue.get(i).GetOtherNote() == null )
+            if((Overtone.NoteQueue.get(i).GetType() == OvertoneNote.NoteType.Hold || Overtone.NoteQueue.get(i).GetType() == OvertoneNote.NoteType.Double) && Overtone.NoteQueue.get(i).GetOtherNote() == null )
             {
                 int index = BinarySearch(Overtone.NoteQueue, Overtone.NoteQueue.get(i).GetOtherNoteTime(), 0, Overtone.NoteQueue.size() - 1);
                 Overtone.NoteQueue.get(i).SetOtherNote(Overtone.NoteQueue.get(index));
@@ -309,7 +309,7 @@ public class Utilities
      * @param high high index of the array
      * @return the index of the found note, -1 otherwise
      */
-    private static int BinarySearch(ArrayList<Note> n, float search, int low, int high)
+    private static int BinarySearch(ArrayList<OvertoneNote> n, float search, int low, int high)
     {
         int len = (high - low);
         int index = (high + low) / 2;

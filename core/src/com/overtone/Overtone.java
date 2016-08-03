@@ -5,10 +5,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.overtone.Notes.Note;
+import com.overtone.Notes.OvertoneNote;
 import com.overtone.Notes.Target;
 import com.overtone.Screens.*;
 import java.util.ArrayList;
+
+import jm.JMC;
+import jm.music.data.*;
+import jm.util.*;
 
 /**
  * Manager for everything in the game, handles updating everything
@@ -148,8 +152,8 @@ public class Overtone extends ApplicationAdapter
 	public static Difficulty      Difficulty;         // Stores the chosen difficulty of the game
 	public static float           MusicVolume;        // Stores the music volume for all music in the game
 	public static float           SFXVolume;          // Stores the sound effects volume for all sound effects in the game
-	public static ArrayList<Note> NoteQueue;          // Storage for notes that are not on screen
-	public static ArrayList<Note> BackupQueue;        // Backup for the whole notes in the song
+	public static ArrayList<OvertoneNote> NoteQueue;          // Storage for notes that are not on screen
+	public static ArrayList<OvertoneNote> BackupQueue;        // Backup for the whole notes in the song
 	public static float           TotalTime;          // The amount of time the song takes
 	public static float[]         BestRaterValues;    // The stored rater values
 	public static float[]         CurrentRaterValues; // The currently generated rating values
@@ -189,6 +193,9 @@ public class Overtone extends ApplicationAdapter
 		Utilities.LoadHighScores();
 		Utilities.LoadVolume();
 		Utilities.LoadRaterValues();
+
+		//Score s = new Score(new Part(new Phrase(new Note(C4, MINIM))));
+		//Write.midi(s, "Test.mid");
 	}
 
 	@Override

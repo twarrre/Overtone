@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.overtone.InputManager;
-import com.overtone.Notes.Note;
+import com.overtone.Notes.OvertoneNote;
 import com.overtone.Notes.NoteRenderer;
 import com.overtone.Notes.Target;
 import com.overtone.Overtone;
@@ -21,7 +21,6 @@ import com.overtone.Ratings.RatingRenderer;
 import com.overtone.Utilities;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -72,7 +71,7 @@ public class GameplayScreen extends OvertoneScreen
     // Data Structures
     private Quadtree                               _onScreenNotes;      // Stores notes that are on screen
     private ArrayList<Rating>                      _onScreenRatings;    // Stores ratings that are on screen
-    private HashMap<Note, InputManager.KeyBinding> _holdNotesOnScreen;  // List of current hold notes on screen
+    private HashMap<OvertoneNote, InputManager.KeyBinding> _holdNotesOnScreen;  // List of current hold notes on screen
 
     // Sound
     private final Sound[]                          _noteSFX;            // Stores the note sound effects for good, bad, and none
@@ -177,7 +176,7 @@ public class GameplayScreen extends OvertoneScreen
         _combo                 = 0;
         _score                 = 0;
         _ratingScale           = new Vector2(Overtone.ScreenWidth * 0.1f, Overtone.ScreenHeight * 0.09f);
-        _holdNotesOnScreen     = new HashMap<Note, InputManager.KeyBinding>();
+        _holdNotesOnScreen     = new HashMap<OvertoneNote, InputManager.KeyBinding>();
         _onScreenNotes         = new Quadtree(new Rectangle(0, 0, Overtone.ScreenWidth, Overtone.ScreenHeight));
         _onScreenRatings       = new ArrayList<Rating>();
 
@@ -400,14 +399,14 @@ public class GameplayScreen extends OvertoneScreen
         if(!Overtone.NoteQueue.isEmpty())
         {
             // Get notes that's time has come to put on screen
-            ArrayList<Note> forRemoval = new ArrayList<Note>();
+            ArrayList<OvertoneNote> forRemoval = new ArrayList<OvertoneNote>();
             for(int i = 0; i <  Overtone.TargetZones.length; i++)
             {
                 if(i < Overtone.NoteQueue.size())
                 {
                     if(Overtone.NoteQueue.get(i).GetTime() - Overtone.Difficulty.Multiplier <=  _elapsedTime + ERROR)
                     {
-                        Note n = Overtone.NoteQueue.get(i);
+                        OvertoneNote n = Overtone.NoteQueue.get(i);
                         n.SetVisibility(true);
                         _onScreenNotes.Insert(n);
                         forRemoval.add(Overtone.NoteQueue.get(i));
@@ -415,19 +414,19 @@ public class GameplayScreen extends OvertoneScreen
                     }
                 }
             }
-           DetermineShipDirection(forRemoval);
+            DetermineShipDirection(forRemoval);
             Overtone.NoteQueue.removeAll(forRemoval);
         }
 
         // Update the note positions
-        ArrayList<Note> removedNotes = _onScreenNotes.Update(deltaTime);
+        ArrayList<OvertoneNote> removedNotes = _onScreenNotes.Update(deltaTime);
         if(!removedNotes.isEmpty())
         {
-            for(Note n : removedNotes)
+            for(OvertoneNote n : removedNotes)
             {
                 _missCounter++;
                 _onScreenRatings.add(new Rating(Rating.RatingType.Miss, n.GetPosition(), _ratingScale));
-                if(n.GetType() == Note.NoteType.Hold)
+                if(n.GetType() == OvertoneNote.NoteType.Hold)
                 {
                     _missCounter++;
                     RemoveHoldNote(n, null);
@@ -456,10 +455,10 @@ public class GameplayScreen extends OvertoneScreen
     private void CheckInput()
     {
         // Handle all hold notes
-        Iterator<Note> it = _holdNotesOnScreen.keySet().iterator();
+        Iterator<OvertoneNote> it = _holdNotesOnScreen.keySet().iterator();
         while(it.hasNext())
         {
-            Note currentNote = it.next();
+            OvertoneNote currentNote = it.next();
             InputManager.KeyBinding currentKey = _holdNotesOnScreen.get(currentNote);
 
             // If they are no longer holding the note
@@ -478,11 +477,11 @@ public class GameplayScreen extends OvertoneScreen
             _targetZonesPressed[i] = false;
             if(_input.ActionOccurred(InputManager.KeyBinding.values()[i], InputManager.ActionType.Pressed))
             {
-                Note close = GetClosestNote( Overtone.TargetZones[i].Position, InputManager.KeyBinding.values()[i]);
+                OvertoneNote close = GetClosestNote( Overtone.TargetZones[i].Position, InputManager.KeyBinding.values()[i]);
                 Rating rating = GetNoteRating( Overtone.TargetZones[i].Position, close);
 
                 // If the player missed the first hold note, then remove the other one.
-                if(rating.GetRating() == Rating.RatingType.Miss && close.GetType() == Note.NoteType.Hold)
+                if(rating.GetRating() == Rating.RatingType.Miss && close.GetType() == OvertoneNote.NoteType.Hold)
                 {
                     _missCounter++;
                     RemoveHoldNote(close, null);
@@ -515,18 +514,18 @@ public class GameplayScreen extends OvertoneScreen
      * @param key The key binding for this target
      * @return The closest on screen note to the target
      */
-    private Note GetClosestNote(Vector2 target, InputManager.KeyBinding key)
+    private OvertoneNote GetClosestNote(Vector2 target, InputManager.KeyBinding key)
     {
-        ArrayList<Note> notes = _onScreenNotes.Get(target);
+        ArrayList<OvertoneNote> notes = _onScreenNotes.Get(target);
 
         if(notes.isEmpty())
             return null;
 
         float minDistance = Float.MAX_VALUE;
-        Note closestNote  = null;
+        OvertoneNote closestNote  = null;
 
         // Find the closest note and store it
-        for(Note n : notes)
+        for(OvertoneNote n : notes)
         {
             float distance = Vector2.dst(target.x, target.y, n.GetCenter().x, n.GetCenter().y);
             if(distance < minDistance)
@@ -538,7 +537,7 @@ public class GameplayScreen extends OvertoneScreen
 
         // Remove it from the quadtree
         _onScreenNotes.Remove(closestNote);
-        if(closestNote.GetType() == Note.NoteType.Hold)
+        if(closestNote.GetType() == OvertoneNote.NoteType.Hold)
             _holdNotesOnScreen.put(closestNote, key);
 
         return closestNote;
@@ -550,7 +549,7 @@ public class GameplayScreen extends OvertoneScreen
      * @param closestNote The note that was closest to it
      * @return A rating based on how close the note was to the target
      */
-    private Rating GetNoteRating(Vector2 target, Note closestNote)
+    private Rating GetNoteRating(Vector2 target, OvertoneNote closestNote)
     {
         if(closestNote == null)
             return new Rating(Rating.RatingType.None, new Vector2(), _ratingScale);
@@ -798,7 +797,7 @@ public class GameplayScreen extends OvertoneScreen
      * Determines which direction the ship points in based on the notes added to the screen
      * @param notes notes added to the screen
      */
-    private void DetermineShipDirection(ArrayList<Note> notes)
+    private void DetermineShipDirection(ArrayList<OvertoneNote> notes)
     {
         // If there is more then one note on screen at the same time, else there is only one on screen at a time
         if(notes.size() > 1)
@@ -839,7 +838,7 @@ public class GameplayScreen extends OvertoneScreen
      * @param n The note to remove
      * @param it The iterator it came from is necessary
      */
-    private void RemoveHoldNote(Note n, Iterator it)
+    private void RemoveHoldNote(OvertoneNote n, Iterator it)
     {
         if(!_onScreenNotes.Remove(n.GetOtherNote()))
         {

@@ -7,7 +7,7 @@ import com.overtone.Overtone;
  * Represents a note object in the game
  * Created by trevor on 2016-06-21.
  */
-public class Note implements Comparable<Note>
+public class OvertoneNote implements Comparable<OvertoneNote>
 {
     /**All of the different types of notes*/
     public enum  NoteType
@@ -26,7 +26,7 @@ public class Note implements Comparable<Note>
     private Vector2        _center;            // The note's center point in the world
     private boolean        _isVisible;         // True if visible on screen, false otherwise
     private boolean        _connectorRendered; // True if the note is double or hold and it's connector has been rendered on screen
-    private Note           _partnerNote;       // Stores a reference to the partner note if it is a hold or double note, null otherwise
+    private OvertoneNote   _partnerNote;       // Stores a reference to the partner note if it is a hold or double note, null otherwise
     private float          _otherNoteTime;     // Time that the note must be at the target zone at
 
     /**
@@ -37,7 +37,7 @@ public class Note implements Comparable<Note>
      * @param target The target of where to the note is going
      * @param timer The time signature of the note
      */
-    public Note(NoteType type, Vector2 scale, Vector2 center, Target target, float timer)
+    public OvertoneNote(NoteType type, Vector2 scale, Vector2 center, Target target, float timer)
     {
         float distance     = target.Position.dst(center);                                                   // Find the distance from the target to the center of the note
 
@@ -58,7 +58,7 @@ public class Note implements Comparable<Note>
      * Copy Constructor
      * @param n
      */
-    public Note(Note n)
+    public OvertoneNote(OvertoneNote n)
     {
         float distance     = n.GetTarget().Position.dst(n.GetCenter());                                                                 // Find the distance from the target to the center of the note
 
@@ -160,7 +160,7 @@ public class Note implements Comparable<Note>
      * Sets the partner note if the note is a double, or hold
      * @param n the other note in the pair
      */
-    public void SetOtherNote(Note n)
+    public void SetOtherNote(OvertoneNote n)
     {
         if(_type == NoteType.Double || _type == NoteType.Hold)
             _partnerNote = n;
@@ -179,7 +179,7 @@ public class Note implements Comparable<Note>
     /**
      * @return The partner note of this note, null if a single note
      */
-    public Note GetOtherNote() {return _partnerNote;}
+    public OvertoneNote GetOtherNote() {return _partnerNote;}
 
     /**
      * @return the time signature of the other note.
@@ -206,7 +206,7 @@ public class Note implements Comparable<Note>
      * @param o The other note to compare to
      * @return -1 if this note is less than o, 0 if they are equal, 1 if this note is greater than o
      */
-    public int compareTo(Note o)
+    public int compareTo(OvertoneNote o)
     {
         if(_time < o.GetTime())
             return -1;

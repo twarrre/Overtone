@@ -2,7 +2,7 @@ package com.overtone;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.overtone.Notes.Note;
+import com.overtone.Notes.OvertoneNote;
 import java.util.ArrayList;
 
 /**
@@ -23,7 +23,7 @@ public class Quadtree
         public Node              bottomRight; // Bottom right quad
         public Node              parent;      // The parent of this node
         private final Rectangle _bounds;      // The bounds of the quad
-        private ArrayList<Note> _objects;     // The objects stored in this quad
+        private ArrayList<OvertoneNote> _objects;     // The objects stored in this quad
 
         /**
          * Constructor
@@ -33,13 +33,13 @@ public class Quadtree
         public Node(Rectangle bounds, Node parent)
         {
             _bounds     = bounds;
-            _objects    = new ArrayList<Note>();
+            _objects    = new ArrayList<OvertoneNote>();
             this.parent = parent;
         }
     }
 
-    private final Node      _root;  // The root of the tree
-    private ArrayList<Note> _notes; // Storage when getting notes from all of the nodes
+    private final Node              _root;  // The root of the tree
+    private ArrayList<OvertoneNote> _notes; // Storage when getting notes from all of the nodes
 
     /**
      * Constructor
@@ -59,7 +59,7 @@ public class Quadtree
      * @param n the element to be inserted
      * @return returns true if successfully inserted, false otherwise
      */
-    public boolean Insert(Note n)
+    public boolean Insert(OvertoneNote n)
     {
         return Insert(n, _root);
     }
@@ -69,9 +69,9 @@ public class Quadtree
      * @param point The point used to get the elements at a particular quad
      * @return
      */
-    public ArrayList<Note> Get(Vector2 point)
+    public ArrayList<OvertoneNote> Get(Vector2 point)
     {
-        _notes = new ArrayList<Note>();
+        _notes = new ArrayList<OvertoneNote>();
         Get(point, _root);
         return _notes;
     }
@@ -81,7 +81,7 @@ public class Quadtree
      * @param n The element to be removed
      * @return Returns true if the item was removed, false otherwise
      */
-    public boolean Remove(Note n)
+    public boolean Remove(OvertoneNote n)
     {
         return Remove(n, _root);
     }
@@ -90,7 +90,7 @@ public class Quadtree
      * Updates every element in the quadtree
      * @param deltaTime The time since the last frame
      */
-    public ArrayList<Note> Update(float deltaTime)
+    public ArrayList<OvertoneNote> Update(float deltaTime)
     {
         return Update(deltaTime, _root);
     }
@@ -99,9 +99,9 @@ public class Quadtree
      * Gets all of the elements in the quadtree into a list
      * @return A list of all elements in the tree
      */
-    public ArrayList<Note> GetAll()
+    public ArrayList<OvertoneNote> GetAll()
     {
-        ArrayList<Note> notes = new ArrayList<Note>();
+        ArrayList<OvertoneNote> notes = new ArrayList<OvertoneNote>();
         notes.addAll(GetAll(_root));
         return notes;
     }
@@ -158,7 +158,7 @@ public class Quadtree
      * @param node The node that the element is trying to be inserted into
      * @return True is successfully inserted, false otherwise
      */
-    private boolean Insert(Note note, Node node)
+    private boolean Insert(OvertoneNote note, Node node)
     {
         if (!node._bounds.contains(note.GetCenter().x, note.GetCenter().y))
             return false;
@@ -207,16 +207,16 @@ public class Quadtree
      * @param deltaTime The time since the last frame
      * @param node The node we are currently updating
      */
-    private ArrayList<Note> Update(float deltaTime, Node node)
+    private ArrayList<OvertoneNote> Update(float deltaTime, Node node)
     {
         // If the node is not visible anymore, then remove it from the tree
-        ArrayList<Note> toBeRemoved = new ArrayList();
+        ArrayList<OvertoneNote> toBeRemoved = new ArrayList();
 
         if (node == null)
             return toBeRemoved;
 
         // Update all of the elements at this node
-        for (Note n : node._objects)
+        for (OvertoneNote n : node._objects)
         {
             n.Update(deltaTime);
             if(!n.IsVisible())
@@ -224,7 +224,7 @@ public class Quadtree
         }
 
         // If there are elements to be removed, remove them now
-        for(Note n : toBeRemoved)
+        for(OvertoneNote n : toBeRemoved)
             Remove(n, node);
 
         // Update all nodes in the children nodes
@@ -242,9 +242,9 @@ public class Quadtree
      * @param n The node we are processing now
      * @return A list of all elements at this node
      */
-    private ArrayList<Note> GetAll(Node n)
+    private ArrayList<OvertoneNote> GetAll(Node n)
     {
-        ArrayList<Note> notes = new ArrayList<Note>();
+        ArrayList<OvertoneNote> notes = new ArrayList<OvertoneNote>();
 
         if(n == null)
             return notes;
@@ -264,7 +264,7 @@ public class Quadtree
      * @param node The node we are checking to see if it has this element
      * @return True if the object was removed, false if it was not there
      */
-    private boolean Remove(Note note, Node node)
+    private boolean Remove(OvertoneNote note, Node node)
     {
         if(note == null)
             return false;

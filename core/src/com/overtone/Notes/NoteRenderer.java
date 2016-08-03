@@ -40,19 +40,19 @@ public class NoteRenderer
      * @param notes All of the notes on screen to be rendered
      * @param batch The sprite batch to draw to.
      */
-    public void Draw(ArrayList<Note> notes, Set<Note> holdNotes, SpriteBatch batch)
+    public void Draw(ArrayList<OvertoneNote> notes, Set<OvertoneNote> holdNotes, SpriteBatch batch)
     {
         // Draw the hold notes
-        Iterator<Note> it = holdNotes.iterator();
+        Iterator<OvertoneNote> it = holdNotes.iterator();
         while(it.hasNext())
         {
-            Note n = it.next();
+            OvertoneNote n = it.next();
             if(!n.IsVisible() && !n.GetOtherNote().IsVisible())
                 DrawHoldNoteConnector(n.GetOtherNote(), batch);
         }
 
         // Draw the rest of the notes
-        for(Note n : notes)
+        for(OvertoneNote n : notes)
         {
             if(n.IsVisible())
             {
@@ -71,7 +71,7 @@ public class NoteRenderer
      * @param n The note to draw a connector for
      * @param batch The sprite batch to draw to.
      */
-    private void DrawDoubleNoteConnector(Note n, SpriteBatch batch)
+    private void DrawDoubleNoteConnector(OvertoneNote n, SpriteBatch batch)
     {
         if(!n.IsVisible() || !n.GetOtherNote().IsVisible())
             return;
@@ -100,7 +100,7 @@ public class NoteRenderer
      * @param n The note to draw the connector to
      * @param batch The sprite batch to draw to.
      */
-    private void DrawHoldNoteConnector(Note n, SpriteBatch batch)
+    private void DrawHoldNoteConnector(OvertoneNote n, SpriteBatch batch)
     {
         Vector2 noteCenter      = n.GetCenter();
         Vector2 otherCenter     = n.GetOtherNote().GetCenter();
@@ -138,9 +138,9 @@ public class NoteRenderer
      * @param n the double note to be checked
      * @return True if a connector is to be drawn, false otherwise
      */
-    private boolean CheckDoubleNoteConditions(Note n)
+    private boolean CheckDoubleNoteConditions(OvertoneNote n)
     {
-        return (n.GetType() == Note.NoteType.Double && n.GetOtherNote().IsVisible() && !n.IsConnectorRendered());
+        return (n.GetType() == OvertoneNote.NoteType.Double && n.GetOtherNote().IsVisible() && !n.IsConnectorRendered());
     }
 
     /**
@@ -148,8 +148,8 @@ public class NoteRenderer
      * @param n the note to be checked
      * @return True is a hold note connector is drawn, false otherwise
      */
-    private boolean CheckHoldNoteConditions(Note n)
+    private boolean CheckHoldNoteConditions(OvertoneNote n)
     {
-        return (n.GetType() == Note.NoteType.Hold && !n.IsConnectorRendered());
+        return (n.GetType() == OvertoneNote.NoteType.Hold && !n.IsConnectorRendered());
     }
 }

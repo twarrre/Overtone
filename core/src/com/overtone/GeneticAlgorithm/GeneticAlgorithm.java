@@ -1,7 +1,7 @@
 package com.overtone.GeneticAlgorithm;
 
 import com.badlogic.gdx.math.Vector2;
-import com.overtone.Notes.Note;
+import com.overtone.Notes.OvertoneNote;
 import com.overtone.Overtone;
 import com.overtone.Utilities;
 
@@ -52,11 +52,11 @@ public class GeneticAlgorithm implements Runnable
      */
     public void Generate()
     {
-        ArrayList<Note> tempNote = new ArrayList<Note>();
+        ArrayList<OvertoneNote> tempNote = new ArrayList<OvertoneNote>();
 
         // Create a double note
-        Note d1 = new Note(Note.NoteType.Double, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[0], 3.0f + (float)0 * 2.0f);
-        Note d2 = new Note(Note.NoteType.Double, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[1], 3.0f + (float)0 * 2.0f);
+        OvertoneNote d1 = new OvertoneNote(OvertoneNote.NoteType.Double, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[0], 3.0f + (float)0 * 2.0f);
+        OvertoneNote d2 = new OvertoneNote(OvertoneNote.NoteType.Double, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[1], 3.0f + (float)0 * 2.0f);
         d1.SetOtherNote(d2);
         d2.SetOtherNote(d1);
         d1.SetOtherNoteTime(3.0f + (float)0 * 2.0f);
@@ -65,8 +65,8 @@ public class GeneticAlgorithm implements Runnable
         tempNote.add(d2);
 
         // Create a hold note
-        Note d3 = new Note(Note.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[0], 3.0f + (float)1 * 2.0f);
-        Note d4 = new Note(Note.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[0], 3.0f + (float)2 * 2.0f);
+        OvertoneNote d3 = new OvertoneNote(OvertoneNote.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[0], 3.0f + (float)1 * 2.0f);
+        OvertoneNote d4 = new OvertoneNote(OvertoneNote.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[0], 3.0f + (float)2 * 2.0f);
         d3.SetOtherNote(d4);
         d4.SetOtherNote(d3);
         d3.SetOtherNoteTime(3.0f + (float)2 * 2.0f);
@@ -75,8 +75,8 @@ public class GeneticAlgorithm implements Runnable
         tempNote.add(d4);
 
         // Create a hold note
-        Note d5 = new Note(Note.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[1], 3.0f + (float)3 * 2.0f);
-        Note d6 = new Note(Note.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[1], 3.0f + (float)5 * 2.0f);
+        OvertoneNote d5 = new OvertoneNote(OvertoneNote.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[1], 3.0f + (float)3 * 2.0f);
+        OvertoneNote d6 = new OvertoneNote(OvertoneNote.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[1], 3.0f + (float)5 * 2.0f);
         d5.SetOtherNote(d6);
         d6.SetOtherNote(d5);
         d5.SetOtherNoteTime(3.0f + (float)5 * 2.0f);
@@ -85,8 +85,8 @@ public class GeneticAlgorithm implements Runnable
         tempNote.add(d6);
 
         // Create a hold note
-        Note d7 = new Note(Note.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[2], 3.0f + (float)4 * 2.0f);
-        Note d8 = new Note(Note.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[2], 3.0f + (float)6 * 2.0f);
+        OvertoneNote d7 = new OvertoneNote(OvertoneNote.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[2], 3.0f + (float)4 * 2.0f);
+        OvertoneNote d8 = new OvertoneNote(OvertoneNote.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[2], 3.0f + (float)6 * 2.0f);
         d7.SetOtherNote(d8);
         d8.SetOtherNote(d7);
         d7.SetOtherNoteTime(3.0f + (float)6 * 2.0f);
@@ -97,7 +97,7 @@ public class GeneticAlgorithm implements Runnable
         // Load notes
         for(int i = 7; i < 32; i++)
         {
-            Note n = new Note(Note.NoteType.Single, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[i % Overtone.TargetZones.length], 3.0f + (float)i * 2.0f);
+            OvertoneNote n = new OvertoneNote(OvertoneNote.NoteType.Single, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[i % Overtone.TargetZones.length], 3.0f + (float)i * 2.0f);
             tempNote.add(n);
         }
 
