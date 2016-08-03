@@ -17,7 +17,7 @@ import jm.util.*;
 /**
  * Manager for everything in the game, handles updating everything
  */
-public class Overtone extends ApplicationAdapter
+public class Overtone extends ApplicationAdapter implements  JMC
 {
 	/**Maximum number of scores that are saved for each difficulty*/
 	public static final int NUM_SCORES = 10;
@@ -194,8 +194,8 @@ public class Overtone extends ApplicationAdapter
 		Utilities.LoadVolume();
 		Utilities.LoadRaterValues();
 
-		//Score s = new Score(new Part(new Phrase(new Note(C4, MINIM))));
-		//Write.midi(s, "Test.mid");
+		Score s = new Score(new Part(new Phrase(new Note(C4, MINIM))));
+		Write.midi(s, "Test.mid");
 	}
 
 	@Override
