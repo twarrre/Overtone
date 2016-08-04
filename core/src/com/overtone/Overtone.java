@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import jm.JMC;
 import jm.music.data.*;
+import jm.music.tools.ga.PhrGeneticAlgorithm;
 import jm.util.*;
 
 /**
@@ -145,24 +146,25 @@ public class Overtone extends ApplicationAdapter implements  JMC
 	}
 
 	// Variables
-	public static float           ScreenWidth;        // The width of the screen;
-	public static float           ScreenHeight;       // The height of the screen;
-	public static int[][]         HighScores;         // Stores the high scores for each difficulty
-    public static CrowdRating[][] CrowdRatings;       // Stores the associated crowd ratings for each high score
-	public static Difficulty      Difficulty;         // Stores the chosen difficulty of the game
-	public static float           MusicVolume;        // Stores the music volume for all music in the game
-	public static float           SFXVolume;          // Stores the sound effects volume for all sound effects in the game
+	public static float                   ScreenWidth;        // The width of the screen;
+	public static float                   ScreenHeight;       // The height of the screen;
+	public static int[][]                 HighScores;         // Stores the high scores for each difficulty
+    public static CrowdRating[][]         CrowdRatings;       // Stores the associated crowd ratings for each high score
+	public static Difficulty              Difficulty;         // Stores the chosen difficulty of the game
+	public static float                   MusicVolume;        // Stores the music volume for all music in the game
+	public static float                   SFXVolume;          // Stores the sound effects volume for all sound effects in the game
 	public static ArrayList<OvertoneNote> NoteQueue;          // Storage for notes that are not on screen
 	public static ArrayList<OvertoneNote> BackupQueue;        // Backup for the whole notes in the song
-	public static float           TotalTime;          // The amount of time the song takes
-	public static float[]         BestRaterValues;    // The stored rater values
-	public static float[]         CurrentRaterValues; // The currently generated rating values
-	public static Target[]        TargetZones;        // Array of targets that represent the four target zones
-	public static boolean         Regenerate;         // True if you want to regenerate the music or not
-	private static OvertoneScreen _currentScreen;     // The current screen displayed on screen
-	private SpriteBatch           _batch;             // Sprite batch to draw to
-	private Sprite                _farBackground;     // The star background for the whole app
-	private Sprite                _closeBackground;   // The cloud background over-top of the star background (for depth)
+	public static float                   TotalTime;          // The amount of time the song takes
+	public static float[]                 BestRaterValues;    // The stored rater values
+	public static float[]                 CurrentRaterValues; // The currently generated rating values
+	public static Target[]                TargetZones;        // Array of targets that represent the four target zones
+	public static boolean                 Regenerate;         // True if you want to regenerate the music or not
+	public static Score                   Music;              // True if you want to regenerate the music or not
+	private static OvertoneScreen         _currentScreen;     // The current screen displayed on screen
+	private SpriteBatch                   _batch;             // Sprite batch to draw to
+	private Sprite                        _farBackground;     // The star background for the whole app
+	private Sprite                        _closeBackground;   // The cloud background over-top of the star background (for depth)
 
 	@Override
 	public void create ()
@@ -194,8 +196,12 @@ public class Overtone extends ApplicationAdapter implements  JMC
 		Utilities.LoadVolume();
 		Utilities.LoadRaterValues();
 
-		Score s = new Score(new Part(new Phrase(new Note(C4, MINIM))));
-		Write.midi(s, "Test.mid");
+		Note[] array = new Note[10];
+		for(int i = 0; i < array.length; i++)
+		{
+			array[i] = new Note(C2, MINIM_TRIPLET);
+		}
+		Music = new Score(new Part(new Phrase(array)));
 	}
 
 	@Override

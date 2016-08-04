@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.overtone.GeneticAlgorithm.MusicPlayer;
 import com.overtone.InputManager;
 import com.overtone.Notes.OvertoneNote;
 import com.overtone.Notes.NoteRenderer;
@@ -107,6 +108,8 @@ public class GameplayScreen extends OvertoneScreen
     private int                                    _missCounter;        // The number of missed notes
     private int                                    _combo;              // The current combo
     private int                                    _score;              // The current score
+    private Thread                                 _musicThread;        // Thread to play music
+    private MusicPlayer                            _musicPlayer;        // Handles playing the music in another thread
 
     /**
      * Constructor
@@ -257,6 +260,11 @@ public class GameplayScreen extends OvertoneScreen
             public void clicked (InputEvent i, float x, float y) {
               PausedButtonPressed();
             }});
+
+        // Play the music generated from the algorithm
+        _musicPlayer = new MusicPlayer();
+        _musicThread = new Thread(_musicPlayer);
+        _musicThread.start();
     }
 
     /**
@@ -393,6 +401,7 @@ public class GameplayScreen extends OvertoneScreen
         {
             PlaySongCompletionSFX(true);
             _songComplete = true;
+            _musicPlayer.StopMusicPlayer();
         }
 
         // Move notes from the note queue to the quadtree if they are ready to be displayed on screen
@@ -603,6 +612,7 @@ public class GameplayScreen extends OvertoneScreen
         {
             PlaySongCompletionSFX(false);
             _songComplete = true;
+            _musicPlayer.StopMusicPlayer();
         }
 
         // Update the crowd, to refelect the rating
