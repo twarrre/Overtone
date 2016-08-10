@@ -5,20 +5,20 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.overtone.Instraments.SineInst;
 import com.overtone.Notes.OvertoneNote;
 import com.overtone.Notes.Target;
 import com.overtone.Screens.*;
 import java.util.ArrayList;
 
 import jm.JMC;
+import jm.audio.Instrument;
 import jm.music.data.*;
-import jm.music.tools.ga.PhrGeneticAlgorithm;
-import jm.util.*;
 
 /**
  * Manager for everything in the game, handles updating everything
  */
-public class Overtone extends ApplicationAdapter implements  JMC
+public class Overtone extends ApplicationAdapter implements JMC
 {
 	/**Maximum number of scores that are saved for each difficulty*/
 	public static final int NUM_SCORES = 10;
@@ -160,11 +160,13 @@ public class Overtone extends ApplicationAdapter implements  JMC
 	public static float[]                 CurrentRaterValues; // The currently generated rating values
 	public static Target[]                TargetZones;        // Array of targets that represent the four target zones
 	public static boolean                 Regenerate;         // True if you want to regenerate the music or not
-	public static Score                   Music;              // True if you want to regenerate the music or not
+	public static Score                   GameMusic;          // Music for the game
+	public static Instrument[]            GameInstruments;    // Instruments for the game music
 	private static OvertoneScreen         _currentScreen;     // The current screen displayed on screen
 	private SpriteBatch                   _batch;             // Sprite batch to draw to
 	private Sprite                        _farBackground;     // The star background for the whole app
 	private Sprite                        _closeBackground;   // The cloud background over-top of the star background (for depth)
+
 
 	@Override
 	public void create ()
@@ -196,12 +198,21 @@ public class Overtone extends ApplicationAdapter implements  JMC
 		Utilities.LoadVolume();
 		Utilities.LoadRaterValues();
 
-		Note[] array = new Note[10];
-		for(int i = 0; i < array.length; i++)
+		GameMusic = new Score();
+		GameMusic.setTempo(60);
+		int numbOfTones = 100;
+		GameInstruments = new Instrument[numbOfTones];
+
+		for(int i = 0; i < numbOfTones; i++)
 		{
-			array[i] = new Note(C2, MINIM_TRIPLET);
+			Note n = new Note((int)(Math.random() * 40 + 60), SEMIBREVE, (int)(Math.random() * 60 + 60));
+			n.setPan(Math.random());
+			Phrase phr = new Phrase(n, Math.random() * 10.0);
+			Part p = new Part("Sine", i);
+			p.addPhrase(phr);
+			GameMusic.addPart(p);
+			GameInstruments[i] = new SineInst(44100);
 		}
-		Music = new Score(new Part(new Phrase(array)));
 	}
 
 	@Override
@@ -280,5 +291,10 @@ public class Overtone extends ApplicationAdapter implements  JMC
 			_currentScreen = new LoadingScreen();
 
 		_currentScreen.show();
+	}
+
+	public void dispose()
+	{
+		_batch.dispose();
 	}
 }

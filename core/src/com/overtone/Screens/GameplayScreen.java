@@ -20,6 +20,7 @@ import com.overtone.Quadtree;
 import com.overtone.Ratings.Rating;
 import com.overtone.Ratings.RatingRenderer;
 import com.overtone.Utilities;
+import jm.util.Play;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -261,10 +262,7 @@ public class GameplayScreen extends OvertoneScreen
               PausedButtonPressed();
             }});
 
-        // Play the music generated from the algorithm
-        _musicPlayer = new MusicPlayer();
-        _musicThread = new Thread(_musicPlayer);
-        _musicThread.start();
+        //Play.audio(Overtone.GameMusic, Overtone.GameInstruments);
     }
 
     /**
@@ -401,7 +399,7 @@ public class GameplayScreen extends OvertoneScreen
         {
             PlaySongCompletionSFX(true);
             _songComplete = true;
-            _musicPlayer.StopMusicPlayer();
+            //Play.stopAudio();
         }
 
         // Move notes from the note queue to the quadtree if they are ready to be displayed on screen
@@ -612,7 +610,7 @@ public class GameplayScreen extends OvertoneScreen
         {
             PlaySongCompletionSFX(false);
             _songComplete = true;
-            _musicPlayer.StopMusicPlayer();
+            //Play.stopAudio();
         }
 
         // Update the crowd, to refelect the rating
@@ -647,11 +645,13 @@ public class GameplayScreen extends OvertoneScreen
         super.show();
         Gdx.input.setInputProcessor(_stage);
     }
-    public void hide() {
+    public void hide()
+    {
         super.hide();
         Gdx.input.setInputProcessor(null);
     }
-    public void dispose () {
+    public void dispose ()
+    {
         super.dispose();
         _noteRenderer.dispose();
         _ratingRenderer.dispose();
@@ -680,6 +680,16 @@ public class GameplayScreen extends OvertoneScreen
 
         for(int i = 0; i < _noteSFX.length; i++)
             _noteSFX[1].dispose();
+
+        try
+        {
+            _musicThread.join();
+            System.out.println("Thread Interrupted dispose");
+        }
+        catch (InterruptedException e)
+        {
+            System.out.println("Thread Interrupted");
+        }
     }
 
     /**
@@ -700,6 +710,7 @@ public class GameplayScreen extends OvertoneScreen
      */
     private void PausedMenuButtonPressed(Overtone.Screens screen)
     {
+        //Play.stopAudio();
         Utilities.WriteVolume();
         _buttonPress.play(Overtone.SFXVolume);
         Overtone.SetScreen(screen);
@@ -749,6 +760,7 @@ public class GameplayScreen extends OvertoneScreen
         _sfxNext.setVisible(false);
         _sfxBack.setVisible(false);
         Utilities.WriteVolume();
+        //Play.unPauseAudio();
     }
 
     /**
@@ -776,6 +788,7 @@ public class GameplayScreen extends OvertoneScreen
         _sfxBack.setVisible(true);
         _pauseButton.setDisabled(true);
         _pauseButton.setVisible(false);
+        //Play.pauseAudio();
     }
 
     /**

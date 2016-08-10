@@ -1,6 +1,7 @@
 package com.overtone.GeneticAlgorithm;
 
-import com.overtone.Overtone;
+import jm.audio.Instrument;
+import jm.music.data.Score;
 import jm.util.Play;
 
 /**
@@ -8,32 +9,38 @@ import jm.util.Play;
  */
 public class MusicPlayer implements Runnable
 {
-    private volatile boolean Stopped;
+    private Score _music;
+    private Instrument[] _inst;
 
-    public MusicPlayer()
+    public MusicPlayer(Score s, Instrument[] i)
     {
-        Stopped = false;
+
+        _music = s;
+        _inst = i;
     }
 
     public void run()
     {
         StartMusicPlayer();
-        while (!Stopped)
-        {
-            if (Stopped)
-                Play.stopMidi();
-            Stopped = Play.cycleIsPlaying();
-        }
     }
 
-    public void StopMusicPlayer()
+    public synchronized void StopMusicPlayer()
     {
-        Stopped = true;
+        Play.stopAudio();
     }
 
     public void StartMusicPlayer()
     {
-        Stopped = false;
-        Play.midi(Overtone.Music);
+        Play.audio(_music, _inst);
+    }
+
+    public void PauseMusicPlayer()
+    {
+        Play.pauseAudio();
+    }
+
+    public void UnPauseMusicPlayer()
+    {
+        Play.unPauseAudio();
     }
 }
