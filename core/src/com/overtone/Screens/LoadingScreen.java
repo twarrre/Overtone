@@ -6,6 +6,8 @@ import com.overtone.GeneticAlgorithm.GeneticAlgorithm;
 import com.overtone.Overtone;
 import com.overtone.Utilities;
 
+import java.util.Random;
+
 /**
  * Loading screen for generating the notes of the game
  * Created by trevor on 2016-08-01.
@@ -21,6 +23,20 @@ public class LoadingScreen extends OvertoneScreen
     private GeneticAlgorithm _genetic;          // Genetic algorithm object used to generate the notes
     private boolean          _completed;        // True if the thread has completed, false otherwise
     private float            _elapsedTime;      // Amount of time passed so far
+    private Random           _random;           // Random number generator for string array
+    private int              _stringIndex;      // Index for the loading strings
+    private int              _timeInterval;     // Interval between switch loading sting
+
+    private String[]         _loadingStrings = new String[] {
+            "Tuning Instruments",
+            "Replacing Strings",
+            "Turing on Amp",
+            "Practicing Riffs",
+            "Rehearsing Songs",
+            "Writing Music",
+            "Warming Up Voice",
+            "Practicing Scales"
+    };
 
     /**
      * Constructor
@@ -32,6 +48,9 @@ public class LoadingScreen extends OvertoneScreen
         _progressBar     = new Texture(Gdx.files.internal("Textures\\progressbar.png"));
         _progress        = new Texture(Gdx.files.internal("Textures\\red.png"));
         _elapsedTime     = 0.0f;
+        _random          = new Random();
+        _stringIndex     = 0;
+        _timeInterval    = 1;
 
         if(Overtone.Regenerate)
         {
@@ -51,7 +70,10 @@ public class LoadingScreen extends OvertoneScreen
 
         _batch.begin();
         _glyphLayout.setText(_font36,  "Loading");
-        _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.25f);
+        _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.85f);
+
+        _glyphLayout.setText(_font30,  _loadingStrings[_stringIndex] + "...");
+        _font30.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.25f);
 
         _batch.draw(_progressBar, Overtone.ScreenWidth * 0.125f, Overtone.ScreenHeight * 0.07f, Overtone.ScreenWidth * 0.75f, Overtone.ScreenHeight * 0.1f);
         _batch.draw(_progress, Overtone.ScreenWidth * 0.1325f, Overtone.ScreenHeight * 0.08f, Overtone.ScreenWidth * 0.735f * (Overtone.Regenerate ? _genetic.GetPercentComplete() : _elapsedTime / LOADING_TIMER), Overtone.ScreenHeight * 0.08f);
@@ -80,6 +102,13 @@ public class LoadingScreen extends OvertoneScreen
         else
         {
             _elapsedTime += deltaTime;
+
+            if(_elapsedTime > _timeInterval)
+            {
+                _stringIndex =  _random.nextInt(_loadingStrings.length);
+                _timeInterval++;
+            }
+            
             if(_elapsedTime >= LOADING_TIMER)
             {
                 _completed = true;
