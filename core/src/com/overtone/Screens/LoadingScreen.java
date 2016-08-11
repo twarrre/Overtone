@@ -35,7 +35,9 @@ public class LoadingScreen extends OvertoneScreen
             "Rehearsing Songs",
             "Writing Music",
             "Warming Up Voice",
-            "Practicing Scales"
+            "Practicing Scales",
+            "Improvising Solos",
+            "Replacing Reeds",
     };
 
     /**
@@ -108,7 +110,7 @@ public class LoadingScreen extends OvertoneScreen
                 _stringIndex =  _random.nextInt(_loadingStrings.length);
                 _timeInterval++;
             }
-            
+
             if(_elapsedTime >= LOADING_TIMER)
             {
                 _completed = true;

@@ -85,7 +85,7 @@ public class DifficultySelectScreen extends OvertoneScreen
         _glyphLayout.setText(_font24,  "High Score: " + Overtone.HighScores[_difficultyIndex][0]);
         _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.575f, Overtone.ScreenHeight * 0.355f);
 
-        _glyphLayout.setText(_font24,  "Rating: " +  Overtone.CrowdRatings[_difficultyIndex][0].toString());
+        _glyphLayout.setText(_font24,  "Best Rating: " +  Overtone.CrowdRatings[_difficultyIndex][0].toString());
         _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.575f, Overtone.ScreenHeight * 0.43f);
 
         _glyphLayout.setText(_font36,  "Choose your Difficulty");

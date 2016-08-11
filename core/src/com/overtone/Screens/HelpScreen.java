@@ -16,7 +16,7 @@ import com.overtone.Overtone;
 public class HelpScreen extends OvertoneScreen
 {
     /**The number of help screens that there are*/
-    public static final int NUM_HELP_SCREENS = 4;
+    public static final int NUM_HELP_SCREENS = 7;
 
     private final Stage     _stage;           // Stage to hold buttons and such
     private final Texture[] _help;            // Array of images that are tutorial images
@@ -25,6 +25,17 @@ public class HelpScreen extends OvertoneScreen
     private final Button    _backArrow;       // Represents the back arrow for the help menu
     private final Button    _nextArrow;       // Represents the next arrow for the help menu
     private int             _helpIndex;       // Which texture are you on right now
+
+    private final String[] _headerString = new String[] // Stores the strings for the headers of the help menu
+            {
+                    "Controls",
+                    "Notes",
+                    "Note Ratings",
+                    "Crowd Ratings",
+                    "GUI",
+                    "Game Over",
+                    "Misc."
+            };
 
     public HelpScreen()
     {
@@ -37,7 +48,7 @@ public class HelpScreen extends OvertoneScreen
 
         // Load help textures
         for(int i = 0; i < NUM_HELP_SCREENS; i++)
-            _help[i] = new Texture(Gdx.files.internal("Textures\\background.png"));
+            _help[i] = new Texture(Gdx.files.internal("Textures\\help" + (i + 1) + ".png"));
 
         // Create the back button
         final Button backButton = CreateButton("BACK", "small", Overtone.ScreenWidth * 0.08f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.02f, Overtone.ScreenHeight * 0.92f), _stage);
@@ -75,7 +86,7 @@ public class HelpScreen extends OvertoneScreen
         super.render(deltaTime);
         _batch.begin();
 
-        _glyphLayout.setText(_font36, "Help");
+        _glyphLayout.setText(_font36, _headerString[_helpIndex]);
         _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - _glyphLayout.width / 2.0f, Overtone.ScreenHeight * 0.92f);
 
         float start = Overtone.ScreenWidth * 0.5f - ((Overtone.ScreenWidth * 0.05f * NUM_HELP_SCREENS) / 2.0f);
