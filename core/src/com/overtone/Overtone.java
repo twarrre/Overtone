@@ -167,7 +167,8 @@ public class Overtone extends ApplicationAdapter
 	public static boolean                 Regenerate;         // True if you want to regenerate the music or not
 	public static Score                   GameMusic;          // Music for the game
 	public static Instrument[]            GameInstruments;    // Instruments for the game music
-	public static Sequencer               Sequencer;          // Plays the midi sound
+	public static Sequencer               GameplaySequencer;  // Plays the midi sound
+	public static Sequencer               MenuSequencer;      // Plays the midi sound
 	private static OvertoneScreen         _currentScreen;     // The current screen displayed on screen
 	private SpriteBatch                   _batch;             // Sprite batch to draw to
 	private Sprite                        _farBackground;     // The star background for the whole app
@@ -204,6 +205,7 @@ public class Overtone extends ApplicationAdapter
 		Utilities.LoadHighScores();
 		Utilities.LoadVolume();
 		Utilities.LoadRaterValues();
+		LoadMidiMusic(true);
 	}
 
 	@Override
@@ -250,6 +252,9 @@ public class Overtone extends ApplicationAdapter
 	{
 		_currentScreen.hide();
 
+		if(!MenuSequencer.isRunning())
+			MenuSequencer.start();
+
 		if (s == Screens.SongComplete)
 			_currentScreen = new SongCompleteScreen(completed, score, counters);
 
@@ -263,6 +268,11 @@ public class Overtone extends ApplicationAdapter
 	public static void SetScreen(Screens s)
 	{
 		_currentScreen.hide();
+
+		if(s != Screens.Gameplay && !MenuSequencer.isRunning())
+			MenuSequencer.start();
+		else if(s == Screens.Gameplay && MenuSequencer.isRunning())
+			MenuSequencer.stop();
 
 		if(s == Screens.MainMenu)
 			_currentScreen = new MainMenuScreen();
@@ -285,17 +295,29 @@ public class Overtone extends ApplicationAdapter
 	}
 
 	/**
-	 * Loads the midi file that was generated from the genetic algortihm to play during game play
+	 * Loads the midi file that was generated from the genetic algorithm to play during game play
 	 */
-	public static void LoadMidiMusic()
+	public static void LoadMidiMusic(boolean repeating)
 	{
 		try
 		{
-			Sequencer = MidiSystem.getSequencer();
-			Sequencer.open();
-			InputStream is = new BufferedInputStream(new FileInputStream(new File("GeneratedMusic.mid")));
-			Sequencer.setSequence(is);
-			Sequencer.start();
+			if(repeating)
+			{
+				MenuSequencer = MidiSystem.getSequencer();
+				MenuSequencer.open();
+				InputStream is = new BufferedInputStream(new FileInputStream(new File("Music\\MenuMusic.mid")));
+				MenuSequencer.setSequence(is);
+				MenuSequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+				MenuSequencer.start();
+			}
+			else
+			{
+				GameplaySequencer = MidiSystem.getSequencer();
+				GameplaySequencer.open();
+				InputStream is = new BufferedInputStream(new FileInputStream(new File("Music\\GeneratedMusic.mid")));
+				GameplaySequencer.setSequence(is);
+				GameplaySequencer.start();
+			}
 		}
 		catch(MidiUnavailableException x)
 		{
@@ -322,12 +344,20 @@ public class Overtone extends ApplicationAdapter
 	public void dispose()
 	{
 		_batch.dispose();
-		if(Sequencer != null)
+		if(GameplaySequencer != null)
 		{
-			if(Sequencer.isRunning())
-				Sequencer.stop();
+			if(GameplaySequencer.isRunning())
+				GameplaySequencer.stop();
 
-			Sequencer.close();
+			GameplaySequencer.close();
+		}
+
+		if(MenuSequencer != null)
+		{
+			if(MenuSequencer.isRunning())
+				MenuSequencer.stop();
+
+			MenuSequencer.close();
 		}
 	}
 }

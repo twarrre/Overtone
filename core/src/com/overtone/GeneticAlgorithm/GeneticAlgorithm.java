@@ -140,7 +140,7 @@ public class GeneticAlgorithm implements Runnable, JMC
             Overtone.CurrentRaterValues[i] = Utilities.Clamp(Overtone.BestRaterValues[i] + 0.01f, 0.0f, 1.0f);
         }
 
-        Write.midi(Overtone.GameMusic, "GeneratedMusic.mid");
+        Write.midi(Overtone.GameMusic, "Music\\GeneratedMusic.mid");
         for(int i = 0; i < NUM_ITERATIONS; i++){_currentIteration++;}
     }
 
