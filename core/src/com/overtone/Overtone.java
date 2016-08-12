@@ -5,20 +5,25 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.overtone.Instraments.SineInst;
 import com.overtone.Notes.OvertoneNote;
 import com.overtone.Notes.Target;
 import com.overtone.Screens.*;
+
+import java.io.*;
 import java.util.ArrayList;
 
-import jm.JMC;
 import jm.audio.Instrument;
 import jm.music.data.*;
+
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Sequencer;
 
 /**
  * Manager for everything in the game, handles updating everything
  */
-public class Overtone extends ApplicationAdapter implements JMC
+public class Overtone extends ApplicationAdapter
 {
 	/**Maximum number of scores that are saved for each difficulty*/
 	public static final int NUM_SCORES = 10;
@@ -162,6 +167,7 @@ public class Overtone extends ApplicationAdapter implements JMC
 	public static boolean                 Regenerate;         // True if you want to regenerate the music or not
 	public static Score                   GameMusic;          // Music for the game
 	public static Instrument[]            GameInstruments;    // Instruments for the game music
+	public static Sequencer               Sequencer;          // Plays the midi sound
 	private static OvertoneScreen         _currentScreen;     // The current screen displayed on screen
 	private SpriteBatch                   _batch;             // Sprite batch to draw to
 	private Sprite                        _farBackground;     // The star background for the whole app
@@ -180,6 +186,7 @@ public class Overtone extends ApplicationAdapter implements JMC
 		SFXVolume          = 1.0f;
 		BestRaterValues    = new float[NUM_RATERS];
 		CurrentRaterValues = new float[NUM_RATERS];
+		NoteQueue          = new ArrayList<>();
 		_currentScreen     = new SplashScreen();
 		_batch             = new SpriteBatch();
 		_farBackground     = new Sprite(new Texture("Textures\\space.jpg"));
@@ -197,22 +204,6 @@ public class Overtone extends ApplicationAdapter implements JMC
 		Utilities.LoadHighScores();
 		Utilities.LoadVolume();
 		Utilities.LoadRaterValues();
-
-		GameMusic = new Score();
-		GameMusic.setTempo(60);
-		int numbOfTones = 100;
-		GameInstruments = new Instrument[numbOfTones];
-
-		for(int i = 0; i < numbOfTones; i++)
-		{
-			Note n = new Note((int)(Math.random() * 40 + 60), SEMIBREVE, (int)(Math.random() * 60 + 60));
-			n.setPan(Math.random());
-			Phrase phr = new Phrase(n, Math.random() * 10.0);
-			Part p = new Part("Sine", i);
-			p.addPhrase(phr);
-			GameMusic.addPart(p);
-			GameInstruments[i] = new SineInst(44100);
-		}
 	}
 
 	@Override
@@ -293,8 +284,50 @@ public class Overtone extends ApplicationAdapter implements JMC
 		_currentScreen.show();
 	}
 
+	/**
+	 * Loads the midi file that was generated from the genetic algortihm to play during game play
+	 */
+	public static void LoadMidiMusic()
+	{
+		try
+		{
+			Sequencer = MidiSystem.getSequencer();
+			Sequencer.open();
+			InputStream is = new BufferedInputStream(new FileInputStream(new File("GeneratedMusic.mid")));
+			Sequencer.setSequence(is);
+			Sequencer.start();
+		}
+		catch(MidiUnavailableException x)
+		{
+			System.out.println("Midi Unavailable");
+			Gdx.app.exit();
+		}
+		catch(FileNotFoundException e)
+		{
+			System.out.println("File not found");
+			Gdx.app.exit();
+		}
+		catch(InvalidMidiDataException m)
+		{
+			System.out.println("Invalid Midi Data");
+			Gdx.app.exit();
+		}
+		catch(IOException i)
+		{
+			System.out.println("IO exception");
+			Gdx.app.exit();
+		}
+	}
+
 	public void dispose()
 	{
 		_batch.dispose();
+		if(Sequencer != null)
+		{
+			if(Sequencer.isRunning())
+				Sequencer.stop();
+
+			Sequencer.close();
+		}
 	}
 }

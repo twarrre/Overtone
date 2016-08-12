@@ -1,9 +1,17 @@
 package com.overtone.GeneticAlgorithm;
 
 import com.badlogic.gdx.math.Vector2;
+import com.overtone.Instraments.SineInst;
 import com.overtone.Notes.OvertoneNote;
 import com.overtone.Overtone;
 import com.overtone.Utilities;
+import jm.JMC;
+import jm.audio.Instrument;
+import jm.music.data.Note;
+import jm.music.data.Part;
+import jm.music.data.Phrase;
+import jm.music.data.Score;
+import jm.util.Write;
 
 import java.util.ArrayList;
 
@@ -11,7 +19,7 @@ import java.util.ArrayList;
  * Object to generate the music for the game
  * Created by trevor on 2016-08-01.
  */
-public class GeneticAlgorithm implements Runnable
+public class GeneticAlgorithm implements Runnable, JMC
 {
     /** Represents the number of iterations the algorithm is going to go through*/
     public static final int NUM_ITERATIONS = Integer.MAX_VALUE;
@@ -52,6 +60,30 @@ public class GeneticAlgorithm implements Runnable
      */
     public void Generate()
     {
+
+        Overtone.GameMusic = new Score();
+        Overtone.GameMusic.setTempo(60);
+        int numbOfTones = 10;
+        Overtone.GameInstruments = new Instrument[numbOfTones];
+
+        Part p = new Part();
+        for(int i = 0; i < numbOfTones; i++)
+        {
+            Note n = new Note(C4, QUARTER_NOTE);
+            Phrase phr = new Phrase();
+            phr.addNote(n);
+            p.addPhrase(phr);
+        }
+
+        for(int i = 0; i < numbOfTones; i++)
+        {
+            Note n = new Note(C3, QUARTER_NOTE);
+            Phrase phr = new Phrase();
+            phr.addNote(n);
+            p.addPhrase(phr);
+        }
+        Overtone.GameMusic.addPart(p);
+
         ArrayList<OvertoneNote> tempNote = new ArrayList<OvertoneNote>();
 
         // Create a double note
@@ -108,6 +140,7 @@ public class GeneticAlgorithm implements Runnable
             Overtone.CurrentRaterValues[i] = Utilities.Clamp(Overtone.BestRaterValues[i] + 0.01f, 0.0f, 1.0f);
         }
 
+        Write.midi(Overtone.GameMusic, "GeneratedMusic.mid");
         for(int i = 0; i < NUM_ITERATIONS; i++){_currentIteration++;}
     }
 

@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.overtone.GeneticAlgorithm.MusicPlayer;
 import com.overtone.InputManager;
 import com.overtone.Notes.OvertoneNote;
 import com.overtone.Notes.NoteRenderer;
@@ -108,8 +107,7 @@ public class GameplayScreen extends OvertoneScreen
     private int                                    _missCounter;        // The number of missed notes
     private int                                    _combo;              // The current combo
     private int                                    _score;              // The current score
-    private Thread                                 _musicThread;        // Thread to play music
-    private MusicPlayer                            _musicPlayer;        // Handles playing the music in another thread
+
 
     /**
      * Constructor
@@ -261,7 +259,7 @@ public class GameplayScreen extends OvertoneScreen
               PausedButtonPressed();
             }});
 
-        //Play.audio(Overtone.GameMusic, Overtone.GameInstruments);
+        Overtone.LoadMidiMusic();
     }
 
     /**
@@ -398,7 +396,8 @@ public class GameplayScreen extends OvertoneScreen
         {
             PlaySongCompletionSFX(true);
             _songComplete = true;
-            //Play.stopAudio();
+            if(Overtone.Sequencer.isRunning())
+                Overtone.Sequencer.stop();
         }
 
         // Move notes from the note queue to the quadtree if they are ready to be displayed on screen
@@ -609,7 +608,8 @@ public class GameplayScreen extends OvertoneScreen
         {
             PlaySongCompletionSFX(false);
             _songComplete = true;
-            //Play.stopAudio();
+            if( Overtone.Sequencer.isRunning())
+                Overtone.Sequencer.stop();
         }
 
         // Update the crowd, to refelect the rating
@@ -648,6 +648,8 @@ public class GameplayScreen extends OvertoneScreen
     {
         super.hide();
         Gdx.input.setInputProcessor(null);
+        if(Overtone.Sequencer.isRunning())
+            Overtone.Sequencer.stop();
     }
     public void dispose ()
     {
@@ -680,15 +682,10 @@ public class GameplayScreen extends OvertoneScreen
         for(int i = 0; i < _noteSFX.length; i++)
             _noteSFX[1].dispose();
 
-        try
-        {
-            _musicThread.join();
-            System.out.println("Thread Interrupted dispose");
-        }
-        catch (InterruptedException e)
-        {
-            System.out.println("Thread Interrupted");
-        }
+        if(Overtone.Sequencer.isRunning())
+            Overtone.Sequencer.stop();
+
+        Overtone.Sequencer.close();
     }
 
     /**
@@ -709,7 +706,6 @@ public class GameplayScreen extends OvertoneScreen
      */
     private void PausedMenuButtonPressed(Overtone.Screens screen)
     {
-        //Play.stopAudio();
         Utilities.WriteVolume();
         _buttonPress.play(Overtone.SFXVolume);
         Overtone.SetScreen(screen);
@@ -759,7 +755,6 @@ public class GameplayScreen extends OvertoneScreen
         _sfxNext.setVisible(false);
         _sfxBack.setVisible(false);
         Utilities.WriteVolume();
-        //Play.unPauseAudio();
     }
 
     /**
@@ -787,7 +782,8 @@ public class GameplayScreen extends OvertoneScreen
         _sfxBack.setVisible(true);
         _pauseButton.setDisabled(true);
         _pauseButton.setVisible(false);
-        //Play.pauseAudio();
+        if(Overtone.Sequencer.isRunning())
+            Overtone.Sequencer.stop();
     }
 
     /**
@@ -812,6 +808,7 @@ public class GameplayScreen extends OvertoneScreen
             _prevResumeTimer = 0;
             _pauseButton.setDisabled(false);
             _pauseButton.setVisible(true);
+            Overtone.Sequencer.start();
         }
     }
 
