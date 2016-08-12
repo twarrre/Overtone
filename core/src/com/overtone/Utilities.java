@@ -1,9 +1,16 @@
 package com.overtone;
 
+import com.badlogic.gdx.Gdx;
 import com.overtone.Notes.OvertoneNote;
+
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Sequencer;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 /**
  * Has static utility methods
@@ -278,8 +285,8 @@ public class Utilities
         // Sort notes based on the time they appear on screen
         Collections.sort(notes);
 
-        Overtone.NoteQueue   = new ArrayList<OvertoneNote>();
-        Overtone.BackupQueue = new ArrayList<OvertoneNote>();
+        Overtone.NoteQueue   = new ArrayList<>();
+        Overtone.BackupQueue = new ArrayList<>();
 
         for(int i = 0; i < notes.size(); i++)
         {
@@ -342,5 +349,84 @@ public class Utilities
             return low;
         else
             return number;
+    }
+
+    /**
+     * Randomly returns one of either idx1 and idx2
+     * @param idx1 The first index
+     * @param idx2 The second index
+     * @param prob1 The probability of getting the first idx
+     * @param prob2 The probability of getting the second idx
+     * @return One of the two indexes
+     */
+    public static int GetRandom(int idx1, int idx2, float prob1, float prob2)
+    {
+        ArrayList<Integer> probability = new ArrayList<>();
+        int len1 = (int)((float)1000 * prob1);
+
+        for(int i = 0; i < 1000; i++)
+        {
+            if(i < len1)
+                probability.add(idx1);
+            else
+                probability.add(idx2);
+        }
+
+        long seed = System.nanoTime();
+        Collections.shuffle(probability, new Random(seed));
+
+        seed = System.nanoTime();
+        Random r = new Random(seed);
+
+        int value = r.nextInt(999);
+        return probability.get(value);
+    }
+
+    /**
+     * Loads the midi files for either the gameplay screen or the menus.
+     * @param menu If true, load menu music, else load gameplay music
+     */
+    public static void LoadMidiMusic(boolean menu)
+    {
+        try
+        {
+            if(menu)
+            {
+                Overtone.MenuSequencer = MidiSystem.getSequencer();
+                Overtone.MenuSequencer.open();
+                InputStream is = new BufferedInputStream(new FileInputStream(new File("Music\\MenuMusic.mid")));
+                Overtone.MenuSequencer.setSequence(is);
+                Overtone.MenuSequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+                Overtone.MenuSequencer.start();
+            }
+            else
+            {
+                Overtone.GameplaySequencer = MidiSystem.getSequencer();
+                Overtone.GameplaySequencer.open();
+                InputStream is = new BufferedInputStream(new FileInputStream(new File("Music\\GeneratedMusic.mid")));
+                Overtone.GameplaySequencer.setSequence(is);
+                Overtone.GameplaySequencer.start();
+            }
+        }
+        catch(MidiUnavailableException x)
+        {
+            System.out.println("Midi Unavailable");
+            Gdx.app.exit();
+        }
+        catch(FileNotFoundException e)
+        {
+            System.out.println("File not found");
+            Gdx.app.exit();
+        }
+        catch(InvalidMidiDataException m)
+        {
+            System.out.println("Invalid Midi Data");
+            Gdx.app.exit();
+        }
+        catch(IOException i)
+        {
+            System.out.println("IO exception");
+            Gdx.app.exit();
+        }
     }
 }

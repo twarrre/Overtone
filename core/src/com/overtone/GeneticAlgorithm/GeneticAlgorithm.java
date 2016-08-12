@@ -60,30 +60,59 @@ public class GeneticAlgorithm implements Runnable, JMC
      */
     public void Generate()
     {
-
+        //Generate the tones
         Overtone.GameMusic = new Score();
         Overtone.GameMusic.setTempo(60);
         int numbOfTones = 10;
         Overtone.GameInstruments = new Instrument[numbOfTones];
 
-        Part p = new Part();
+        Phrase phr1 = new Phrase();
         for(int i = 0; i < numbOfTones; i++)
         {
-            Note n = new Note(C4, QUARTER_NOTE);
-            Phrase phr = new Phrase();
-            phr.addNote(n);
-            p.addPhrase(phr);
+            Note[] n = new Note[1];
+            n[0] = new Note(C4, QUARTER_NOTE);
+            phr1.addNoteList(n);
         }
 
+        Phrase phr2 = new Phrase();
         for(int i = 0; i < numbOfTones; i++)
         {
-            Note n = new Note(C3, QUARTER_NOTE);
-            Phrase phr = new Phrase();
-            phr.addNote(n);
-            p.addPhrase(phr);
+            Note[] n = new Note[1];
+            n[0] = new Note(C3, QUARTER_NOTE);
+            phr2.addNoteList(n);
         }
+
+        Phrase[] phrases = Crossover(phr1, phr2);
+        Part p = new Part();
+        p.addPhraseList(phrases);
         Overtone.GameMusic.addPart(p);
 
+        // Generate the notes and store them in the game and backup arrays
+        ArrayList<OvertoneNote> tempNote = GenerateGameNotes();
+        Utilities.SortNotes(tempNote);
+
+        // Set the total time
+        Overtone.TotalTime   = 3.0f + (float)32 * 2.0f;
+
+        // Set the current rater values
+        for(int i = 0; i < Overtone.CurrentRaterValues.length; i++)
+        {
+            Overtone.CurrentRaterValues[i] = Utilities.Clamp(Overtone.BestRaterValues[i] + 0.01f, 0.0f, 1.0f);
+        }
+
+        // Write the music to a file for playback
+        Write.midi(Overtone.GameMusic, "Music\\GeneratedMusic.mid");
+
+        // Some extra work just cause
+        for(int i = 0; i < NUM_ITERATIONS; i++){_currentIteration++;}
+    }
+
+    /**
+     * Goes through the generated tones to create note objects for gameplay
+     * @return an array of notes for gameplay
+     */
+    private ArrayList<OvertoneNote> GenerateGameNotes()
+    {
         ArrayList<OvertoneNote> tempNote = new ArrayList<OvertoneNote>();
 
         // Create a double note
@@ -132,17 +161,59 @@ public class GeneticAlgorithm implements Runnable, JMC
             OvertoneNote n = new OvertoneNote(OvertoneNote.NoteType.Single, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[i % Overtone.TargetZones.length], 3.0f + (float)i * 2.0f);
             tempNote.add(n);
         }
-
-        Utilities.SortNotes(tempNote);
-        Overtone.TotalTime   = 3.0f + (float)32 * 2.0f;
-        for(int i = 0; i < Overtone.CurrentRaterValues.length; i++)
-        {
-            Overtone.CurrentRaterValues[i] = Utilities.Clamp(Overtone.BestRaterValues[i] + 0.01f, 0.0f, 1.0f);
-        }
-
-        Write.midi(Overtone.GameMusic, "Music\\GeneratedMusic.mid");
-        for(int i = 0; i < NUM_ITERATIONS; i++){_currentIteration++;}
+        return tempNote;
     }
 
+    /**
+     * Crossover method for the genetic algorithm.
+     * Takes two phrases and creates two children that are a mixture of both.
+     * @param p1 The first phrase
+     * @param p2 The second phrase
+     * @return an array of children phrases
+     */
+    private Phrase[] Crossover(Phrase p1, Phrase p2)
+    {
+        // Create two children
+        Phrase[] children = new Phrase[2];
+        children[0] = new Phrase();
+        children[1] = new Phrase();
 
+        // Find the shorter of the two lengths (used as base length)
+        int length = p1.length() < p2.length() ? p1.length() : p2.length();
+
+        // Crossover
+        for(int i = 0; i < length; i++)
+        {
+            Note n1 = p1.getNote(i);
+            Note n2 = p2.getNote(i);
+
+            int index = Utilities.GetRandom(0, 1, 0.6f, 0.4f);
+            if(index == 0)
+            {
+                children[0].addNote(n1);
+                children[1].addNote(n2);
+            }
+            else
+            {
+                children[0].addNote(n2);
+                children[1].addNote(n1);
+            }
+        }
+
+        // Add remaining notes to the proper child phrase
+        if(length - p1.length() == 0)
+        {
+            int remainingLength = Math.abs(length - p2.length());
+            for(int i = 0; i < remainingLength; i++)
+                children[1].addNote(p2.getNote(length + i));
+        }
+        else
+        {
+            int remainingLength = Math.abs(length - p1.length());
+            for(int i = 0; i < remainingLength; i++)
+                children[0].addNote(p1.getNote(length + i));
+        }
+
+        return children;
+    }
 }

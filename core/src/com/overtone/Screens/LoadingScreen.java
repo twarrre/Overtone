@@ -5,8 +5,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.overtone.GeneticAlgorithm.GeneticAlgorithm;
 import com.overtone.Overtone;
 import com.overtone.Utilities;
-import jm.util.Write;
-
 import java.util.Random;
 
 /**

@@ -8,16 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.overtone.Notes.OvertoneNote;
 import com.overtone.Notes.Target;
 import com.overtone.Screens.*;
-
-import java.io.*;
 import java.util.ArrayList;
-
 import jm.audio.Instrument;
 import jm.music.data.*;
-
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Sequencer;
 
 /**
@@ -205,7 +198,7 @@ public class Overtone extends ApplicationAdapter
 		Utilities.LoadHighScores();
 		Utilities.LoadVolume();
 		Utilities.LoadRaterValues();
-		LoadMidiMusic(true);
+		Utilities.LoadMidiMusic(true);
 	}
 
 	@Override
@@ -269,9 +262,9 @@ public class Overtone extends ApplicationAdapter
 	{
 		_currentScreen.hide();
 
-		if(s != Screens.Gameplay && !MenuSequencer.isRunning())
+		if((s != Screens.Gameplay && s != Screens.Loading) && !MenuSequencer.isRunning())
 			MenuSequencer.start();
-		else if(s == Screens.Gameplay && MenuSequencer.isRunning())
+		else if((s == Screens.Gameplay || s == Screens.Loading) && MenuSequencer.isRunning())
 			MenuSequencer.stop();
 
 		if(s == Screens.MainMenu)
@@ -294,56 +287,11 @@ public class Overtone extends ApplicationAdapter
 		_currentScreen.show();
 	}
 
-	/**
-	 * Loads the midi file that was generated from the genetic algorithm to play during game play
-	 */
-	public static void LoadMidiMusic(boolean repeating)
-	{
-		try
-		{
-			if(repeating)
-			{
-				MenuSequencer = MidiSystem.getSequencer();
-				MenuSequencer.open();
-				InputStream is = new BufferedInputStream(new FileInputStream(new File("Music\\MenuMusic.mid")));
-				MenuSequencer.setSequence(is);
-				MenuSequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
-				MenuSequencer.start();
-			}
-			else
-			{
-				GameplaySequencer = MidiSystem.getSequencer();
-				GameplaySequencer.open();
-				InputStream is = new BufferedInputStream(new FileInputStream(new File("Music\\GeneratedMusic.mid")));
-				GameplaySequencer.setSequence(is);
-				GameplaySequencer.start();
-			}
-		}
-		catch(MidiUnavailableException x)
-		{
-			System.out.println("Midi Unavailable");
-			Gdx.app.exit();
-		}
-		catch(FileNotFoundException e)
-		{
-			System.out.println("File not found");
-			Gdx.app.exit();
-		}
-		catch(InvalidMidiDataException m)
-		{
-			System.out.println("Invalid Midi Data");
-			Gdx.app.exit();
-		}
-		catch(IOException i)
-		{
-			System.out.println("IO exception");
-			Gdx.app.exit();
-		}
-	}
-
 	public void dispose()
 	{
 		_batch.dispose();
+
+		// Dispose the gameplay sequencer
 		if(GameplaySequencer != null)
 		{
 			if(GameplaySequencer.isRunning())
@@ -352,6 +300,7 @@ public class Overtone extends ApplicationAdapter
 			GameplaySequencer.close();
 		}
 
+		// Dispose the menu sequencer
 		if(MenuSequencer != null)
 		{
 			if(MenuSequencer.isRunning())

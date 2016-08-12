@@ -19,7 +19,6 @@ import com.overtone.Quadtree;
 import com.overtone.Ratings.Rating;
 import com.overtone.Ratings.RatingRenderer;
 import com.overtone.Utilities;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -43,71 +42,70 @@ public class GameplayScreen extends OvertoneScreen
     public static final float[] FAILURE_TIMER  = { 12.0f, 10.0f, 8.0f };
 
     // Objects
-    private final NoteRenderer                     _noteRenderer;       // Renders the notes on to the screen
-    private final RatingRenderer                   _ratingRenderer;     // Renders ratings on screen
-    private final InputManager                     _input;              // Manager input for the screen
-    private final Stage                            _stage;              // Stage to render buttons and stuff
+    private final NoteRenderer                             _noteRenderer;       // Renders the notes on to the screen
+    private final RatingRenderer                           _ratingRenderer;     // Renders ratings on screen
+    private final InputManager                             _input;              // Manager input for the screen
+    private final Stage                                    _stage;              // Stage to render buttons and stuff
 
     // Textures
-    private final Texture                          _targetZone;         // Texture for the target zones
-    private final Texture                          _targetZonePressed;  // Texture for when a target zone is pressed
-    private final Texture                          _progressBar;        // Texture for the progress bar
-    private final Texture                          _progress;           // Texture for the progress of the progress bar
-    private final Texture                          _progressArrow;      // Texture for arrow in the progress bar
-    private final Texture                          _d;                  // Texture for the bottom left target zone
-    private final Texture                          _e;                  // Texture for the top left target zone
-    private final Texture                          _i;                  // Texture for the top right target zone
-    private final Texture                          _k;                  // Texture for the bottom right target zone
-    private final Texture                          _background;         // Texture for background of the pause menu
-    private final Texture                          _perfection;         // Texture for Perfection crowd rating
-    private final Texture                          _brilliant;          // Texture for brilliant crowd rating
-    private final Texture                          _great;              // Texture for great crowd rating
-    private final Texture                          _cleared;            // Texture for cleared crowd rating
-    private final Texture                          _failure;            // Texture for failure crowd rating
-    private final Texture                          _losing;             // Texture for the losing animation
-    private final Sprite                           _ship;               // Texture for the ship in the center of the screen
-    private Texture                                _currentCrowdRating; // Texture for the current crowd ratings on screen
+    private final Texture                                  _targetZone;         // Texture for the target zones
+    private final Texture                                  _targetZonePressed;  // Texture for when a target zone is pressed
+    private final Texture                                  _progressBar;        // Texture for the progress bar
+    private final Texture                                  _progress;           // Texture for the progress of the progress bar
+    private final Texture                                  _progressArrow;      // Texture for arrow in the progress bar
+    private final Texture                                  _d;                  // Texture for the bottom left target zone
+    private final Texture                                  _e;                  // Texture for the top left target zone
+    private final Texture                                  _i;                  // Texture for the top right target zone
+    private final Texture                                  _k;                  // Texture for the bottom right target zone
+    private final Texture                                  _background;         // Texture for background of the pause menu
+    private final Texture                                  _perfection;         // Texture for Perfection crowd rating
+    private final Texture                                  _brilliant;          // Texture for brilliant crowd rating
+    private final Texture                                  _great;              // Texture for great crowd rating
+    private final Texture                                  _cleared;            // Texture for cleared crowd rating
+    private final Texture                                  _failure;            // Texture for failure crowd rating
+    private final Texture                                  _losing;             // Texture for the losing animation
+    private final Sprite                                   _ship;               // Texture for the ship in the center of the screen
+    private Texture                                        _currentCrowdRating; // Texture for the current crowd ratings on screen
 
     // Data Structures
-    private Quadtree                               _onScreenNotes;      // Stores notes that are on screen
-    private ArrayList<Rating>                      _onScreenRatings;    // Stores ratings that are on screen
+    private Quadtree                                       _onScreenNotes;      // Stores notes that are on screen
+    private ArrayList<Rating>                              _onScreenRatings;    // Stores ratings that are on screen
     private HashMap<OvertoneNote, InputManager.KeyBinding> _holdNotesOnScreen;  // List of current hold notes on screen
 
     // Sound
-    private final Sound[]                          _noteSFX;            // Stores the note sound effects for good, bad, and none
-    private final Sound                            _noteShot;           // Sound effect for when the ship shoots a note
-    private final Sound                            _success;            // Sound effect for when you successfully complete a song
-    private final Sound                            _fail;               // Sound effect for when you fail a song
+    private final Sound[]                                   _noteSFX;            // Stores the note sound effects for good, bad, and none
+    private final Sound                                     _noteShot;           // Sound effect for when the ship shoots a note
+    private final Sound                                     _success;            // Sound effect for when you successfully complete a song
+    private final Sound                                     _fail;               // Sound effect for when you fail a song
 
     // Variables
-    private final boolean[]                        _targetZonesPressed; // Boolean to say if the particular target zone has been pressed
-    private final Button                           _resumeButton;       // Resume Button for the pause menu
-    private final Button                           _retryButton;        // Retry button for the pause menu
-    private final Button                           _quitButton;         // Main menu button for the pause menu
-    private final Button                           _difficultyButton;   // Difficulty select button for the pause menu
-    private final Button                           _musicNext;          // Music volume up button for pause menu
-    private final Button                           _sfxNext;            // SFX volume up button for pause menu
-    private final Button                           _musicBack;          // Music volume down button for pause menu
-    private final Button                           _sfxBack;            // SFX volume down button for pause menu
-    private final Button                           _pauseButton;        // Pause button to bring up pause menu
-    private final Vector2                          _ratingScale;        // Scale for a rating to show up on screen
-    private Vector2                                _shipDirection;      // The direction that the sound is pointing
-    private boolean                                _paused;             // True if game is paused, false otherwise
-    private boolean                                _resuming;           // True if in resuming state, false otherwise
-    private boolean                                _songComplete;       // True if the song is complete, false otherwise
-    private float                                  _elapsedTime;        // Amount of time the song has been playing
-    private float                                  _resumeTimer;        // Amount of time that has passed in the resume state
-    private float                                  _prevResumeTimer;    // Amount of time that has passed in the resume state, last frame
-    private float                                  _completionTimer;    // Amount of time in the completion state
-    private float                                  _failureTimer;       // Amount of time spent in the fail state
-    private int                                    _perfectCounter;     // The number of perfect notes
-    private int                                    _greatCounter;       // The number of great notes
-    private int                                    _goodCounter;        // The number of good notes
-    private int                                    _badCounter;         // The number of bad notes
-    private int                                    _missCounter;        // The number of missed notes
-    private int                                    _combo;              // The current combo
-    private int                                    _score;              // The current score
-
+    private final boolean[]                                 _targetZonesPressed; // Boolean to say if the particular target zone has been pressed
+    private final Button                                    _resumeButton;       // Resume Button for the pause menu
+    private final Button                                    _retryButton;        // Retry button for the pause menu
+    private final Button                                    _quitButton;         // Main menu button for the pause menu
+    private final Button                                    _difficultyButton;   // Difficulty select button for the pause menu
+    private final Button                                    _musicNext;          // Music volume up button for pause menu
+    private final Button                                    _sfxNext;            // SFX volume up button for pause menu
+    private final Button                                    _musicBack;          // Music volume down button for pause menu
+    private final Button                                    _sfxBack;            // SFX volume down button for pause menu
+    private final Button                                    _pauseButton;        // Pause button to bring up pause menu
+    private final Vector2                                   _ratingScale;        // Scale for a rating to show up on screen
+    private Vector2                                         _shipDirection;      // The direction that the sound is pointing
+    private boolean                                         _paused;             // True if game is paused, false otherwise
+    private boolean                                         _resuming;           // True if in resuming state, false otherwise
+    private boolean                                         _songComplete;       // True if the song is complete, false otherwise
+    private float                                           _elapsedTime;        // Amount of time the song has been playing
+    private float                                           _resumeTimer;        // Amount of time that has passed in the resume state
+    private float                                           _prevResumeTimer;    // Amount of time that has passed in the resume state, last frame
+    private float                                           _completionTimer;    // Amount of time in the completion state
+    private float                                           _failureTimer;       // Amount of time spent in the fail state
+    private int                                             _perfectCounter;     // The number of perfect notes
+    private int                                             _greatCounter;       // The number of great notes
+    private int                                             _goodCounter;        // The number of good notes
+    private int                                             _badCounter;         // The number of bad notes
+    private int                                             _missCounter;        // The number of missed notes
+    private int                                             _combo;              // The current combo
+    private int                                             _score;              // The current score
 
     /**
      * Constructor
@@ -177,9 +175,9 @@ public class GameplayScreen extends OvertoneScreen
         _combo                 = 0;
         _score                 = 0;
         _ratingScale           = new Vector2(Overtone.ScreenWidth * 0.1f, Overtone.ScreenHeight * 0.09f);
-        _holdNotesOnScreen     = new HashMap<OvertoneNote, InputManager.KeyBinding>();
+        _holdNotesOnScreen     = new HashMap<>();
         _onScreenNotes         = new Quadtree(new Rectangle(0, 0, Overtone.ScreenWidth, Overtone.ScreenHeight));
-        _onScreenRatings       = new ArrayList<Rating>();
+        _onScreenRatings       = new ArrayList<>();
 
         // Create the resume button on the paused menu
         _resumeButton = CreateButton("RESUME", "small", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.725f), _stage);
@@ -259,7 +257,7 @@ public class GameplayScreen extends OvertoneScreen
               PausedButtonPressed();
             }});
 
-        Overtone.LoadMidiMusic(false);
+        Utilities.LoadMidiMusic(false);
     }
 
     /**
@@ -499,6 +497,10 @@ public class GameplayScreen extends OvertoneScreen
         }
     }
 
+    /**
+     * Handles the rating in specific ways
+     * @param rating The rating to handle
+     */
     private void HandleRating(Rating rating)
     {
         if(rating.GetRating().ComboMultiplier == -1)
@@ -612,7 +614,7 @@ public class GameplayScreen extends OvertoneScreen
                 Overtone.GameplaySequencer.stop();
         }
 
-        // Update the crowd, to refelect the rating
+        // Update the crowd, to reflect the rating
         switch(rating.ordinal())
         {
             case 0:
