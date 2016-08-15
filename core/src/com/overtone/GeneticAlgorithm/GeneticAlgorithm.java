@@ -17,6 +17,8 @@ import jm.music.data.Phrase;
 import jm.music.data.Score;
 import jm.util.Write;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
 /**
  * Object to generate the music for the game
@@ -29,9 +31,9 @@ public class GeneticAlgorithm implements Runnable, JMC
     /** The size of the population of tracks. */
     public static final int POPULATION_SIZE = 100;
 
-    private int       _currentIteration; // The current iteration of the algorithm
-    private Mutator[] _mutators;         // Array of all of the mutators that may mutate a track.
-    private Rater[]   _raters;           // Array of raters to rate the tracks
+    private int                _currentIteration; // The current iteration of the algorithm
+    private ArrayList<Mutator> _mutators;         // Array of all of the mutators that may mutate a track.
+    private Rater[]            _raters;           // Array of raters to rate the tracks
 
     /**
      * Constructor
@@ -39,16 +41,16 @@ public class GeneticAlgorithm implements Runnable, JMC
     public GeneticAlgorithm()
     {
         _currentIteration = 0;
-        _mutators         = new Mutator[3];
-        _mutators[0]      = new NotePitchMutator();
-        _mutators[1]      = new SimplifyMutator();
-        _mutators[2]      = new SwapMutator();
         _raters           = new Rater[5];
         _raters[0]        = new NeighboringPitchRater();
         _raters[1]        = new PitchDirectionRater();
         _raters[2]        = new PitchRangerRater();
         _raters[3]        = new UniqueNoteRater();
         _raters[4]        = new RepetitionRater();
+        _mutators         = new ArrayList<>();
+        _mutators.add(new NotePitchMutator());
+        _mutators.add(new SimplifyMutator());
+        _mutators.add(new SwapMutator());
     }
 
     public void run()
@@ -200,9 +202,14 @@ public class GeneticAlgorithm implements Runnable, JMC
      */
     private Organism Mutation(Organism o)
     {
+        // Randomize the order of the mutators
+        long seed = System.nanoTime();
+        Collections.shuffle(_mutators, new Random(seed));
+
+        // Mutate the phrase
         Phrase mutation = o.GetTrack();
-        for(int i = 0; i < _mutators.length; i++)
-            mutation = _mutators[i].Mutate(mutation, o.GetProbability());
+        for(int i = 0; i < _mutators.size(); i++)
+            mutation = _mutators.get(i).Mutate(mutation, o.GetProbability());
         o.SetTrack(mutation);
         return o;
     }
