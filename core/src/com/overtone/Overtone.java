@@ -21,7 +21,7 @@ public class Overtone extends ApplicationAdapter
 	/**Maximum number of scores that are saved for each difficulty*/
 	public static final int NUM_SCORES = 10;
 
-	public static final int NUM_RATERS  = 4;
+	public static final int NUM_RATERS  = 5;
 
 	/**Enum for the different types of screens*/
 	public enum Screens
