@@ -1,5 +1,5 @@
 package com.overtone.GeneticAlgorithm.Mutators;
-import com.overtone.GeneticAlgorithm.Organism;
+import jm.music.data.Phrase;
 
 /**
  * Mutates the phrase so that the note's pitch will match the note before it.
@@ -7,7 +7,7 @@ import com.overtone.GeneticAlgorithm.Organism;
  */
 public class SimplifyMutator extends Mutator
 {
-    public Organism Mutate(Organism p)
+    public Phrase Mutate(Phrase p)
     {
         return p;
     }

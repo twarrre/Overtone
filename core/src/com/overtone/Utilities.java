@@ -355,14 +355,13 @@ public class Utilities
      * Randomly returns one of either idx1 and idx2
      * @param idx1 The first index
      * @param idx2 The second index
-     * @param prob1 The probability of getting the first idx
-     * @param prob2 The probability of getting the second idx
+     * @param prob The probability of getting the first idx
      * @return One of the two indexes
      */
-    public static int GetRandom(int idx1, int idx2, float prob1, float prob2)
+    public static int GetRandom(int idx1, int idx2, float prob)
     {
         ArrayList<Integer> probability = new ArrayList<>();
-        int len1 = (int)((float)1000 * prob1);
+        int len1 = (int)((float)1000 * prob);
 
         for(int i = 0; i < 1000; i++)
         {

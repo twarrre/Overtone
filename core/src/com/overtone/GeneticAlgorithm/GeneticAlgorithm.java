@@ -162,7 +162,7 @@ public class GeneticAlgorithm implements Runnable, JMC
             tracks[1].addNoteList(n2);
         }
 
-        return new Organism[] {new Organism(tracks[0]), new Organism(tracks[1])};
+        return new Organism[] {new Organism(tracks[0], 1.0f), new Organism(tracks[1], 1.0f)};
     }
 
     /**
@@ -200,12 +200,15 @@ public class GeneticAlgorithm implements Runnable, JMC
      */
     private Organism Mutation(Organism o)
     {
-        Organism mutated = o;
-
+        Phrase mutation = o.GetTrack();
         for(int i = 0; i < _mutators.length; i++)
-            mutated = _mutators[i].Mutate(mutated);
-
-        return mutated;
+        {
+            int random = Utilities.GetRandom(0, 1, o.GetProbability());
+            if(random == 0)
+                mutation = _mutators[i].Mutate(mutation);
+        }
+        o.SetTrack(mutation);
+        return o;
     }
 
     /**
@@ -234,7 +237,7 @@ public class GeneticAlgorithm implements Runnable, JMC
             Note n1 = p1.getNote(i);
             Note n2 = p2.getNote(i);
 
-            int index = Utilities.GetRandom(0, 1, 0.6f, 0.4f);
+            int index = Utilities.GetRandom(0, 1, 0.6f);
             if(index == 0)
             {
                 children[0].addNote(n1);
@@ -261,7 +264,7 @@ public class GeneticAlgorithm implements Runnable, JMC
                 children[0].addNote(p1.getNote(length + i));
         }
 
-        return new Organism[] { new Organism(children[0]), new Organism(children[1])};
+        return new Organism[] { new Organism(children[0], parent1.GetProbability() - Organism.MUTATION_STEP), new Organism(children[1], parent2.GetProbability() - Organism.MUTATION_STEP)};
     }
 
     /**

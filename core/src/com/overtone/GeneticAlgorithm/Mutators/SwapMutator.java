@@ -1,5 +1,5 @@
 package com.overtone.GeneticAlgorithm.Mutators;
-import com.overtone.GeneticAlgorithm.Organism;
+import jm.music.data.Phrase;
 
 /**
  * Mutator that swaps portions of the phrase and changes the order.
@@ -7,7 +7,7 @@ import com.overtone.GeneticAlgorithm.Organism;
  */
 public class SwapMutator extends Mutator
 {
-    public Organism Mutate(Organism p)
+    public Phrase Mutate(Phrase p)
     {
         return p;
     }
