@@ -162,7 +162,7 @@ public class GeneticAlgorithm implements Runnable, JMC
             tracks[1].addNoteList(n2);
         }
 
-        return new Organism[] {new Organism(tracks[0], 1.0f), new Organism(tracks[1], 1.0f)};
+        return new Organism[] {new Organism(tracks[0], Organism.STARTING_PROBABILITY), new Organism(tracks[1], Organism.STARTING_PROBABILITY)};
     }
 
     /**
@@ -264,7 +264,17 @@ public class GeneticAlgorithm implements Runnable, JMC
                 children[0].addNote(p1.getNote(length + i));
         }
 
-        return new Organism[] { new Organism(children[0], parent1.GetProbability() - Organism.MUTATION_STEP), new Organism(children[1], parent2.GetProbability() - Organism.MUTATION_STEP)};
+        return new Organism[] { new Organism(children[0], GetProbability(parent1)), new Organism(children[1], GetProbability(parent2))};
+    }
+
+    /**
+     * Calculates the probability for mutation of the child organism
+     * @param o the parent organism
+     * @return The probability for mutation for the child organism.
+     */
+    private float GetProbability(Organism o)
+    {
+        return o.GetProbability() - (Organism.MUTATION_STEP / (float)(_currentIteration / NUM_ITERATIONS));
     }
 
     /**

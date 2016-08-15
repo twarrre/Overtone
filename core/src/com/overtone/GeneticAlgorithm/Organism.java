@@ -11,7 +11,10 @@ import jm.music.data.Phrase;
 public class Organism
 {
     /** Amount do drop probability of mutation after each generation */
-    public static final float MUTATION_STEP = 0.05f;
+    public static final float MUTATION_STEP = 0.0005f;
+
+    /** The starting probability for how a note can mutate */
+    public static final float STARTING_PROBABILITY = 0.6f;
 
     private  Phrase _track;               // The track for this organism
     private float[] _rating;              // The fitness rating for this organism
@@ -25,7 +28,7 @@ public class Organism
     {
         _track               = p;
         _rating              = new float[Overtone.NUM_RATERS];
-        _mutationProbability = Utilities.Clamp(mutation, 0.01f, 1.0f);
+        _mutationProbability = Utilities.Clamp(mutation, 0.001f, 1.0f);
     }
 
     /** Sets the rating of this organism. */
