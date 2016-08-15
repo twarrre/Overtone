@@ -7,7 +7,7 @@ import jm.music.data.Phrase;
  */
 public class NotePitchMutator extends Mutator
 {
-    public Phrase Mutate(Phrase p)
+    public Phrase Mutate(Phrase p, float probability)
     {
         return p;
     }

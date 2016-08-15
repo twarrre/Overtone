@@ -202,11 +202,7 @@ public class GeneticAlgorithm implements Runnable, JMC
     {
         Phrase mutation = o.GetTrack();
         for(int i = 0; i < _mutators.length; i++)
-        {
-            int random = Utilities.GetRandom(0, 1, o.GetProbability());
-            if(random == 0)
-                mutation = _mutators[i].Mutate(mutation);
-        }
+            mutation = _mutators[i].Mutate(mutation, o.GetProbability());
         o.SetTrack(mutation);
         return o;
     }

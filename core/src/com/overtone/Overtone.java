@@ -5,6 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.overtone.GeneticAlgorithm.Mutators.Mutator;
+import com.overtone.GeneticAlgorithm.Mutators.SimplifyMutator;
 import com.overtone.Notes.OvertoneNote;
 import com.overtone.Notes.Target;
 import com.overtone.Screens.*;
@@ -12,11 +14,12 @@ import java.util.ArrayList;
 import jm.audio.Instrument;
 import jm.music.data.*;
 import javax.sound.midi.Sequencer;
+import jm.JMC;
 
 /**
  * Manager for everything in the game, handles updating everything
  */
-public class Overtone extends ApplicationAdapter
+public class Overtone extends ApplicationAdapter implements JMC
 {
 	/**Maximum number of scores that are saved for each difficulty*/
 	public static final int NUM_SCORES = 10;
@@ -199,6 +202,23 @@ public class Overtone extends ApplicationAdapter
 		Utilities.LoadVolume();
 		Utilities.LoadRaterValues();
 		Utilities.LoadMidiMusic(true);
+
+		// Debug track
+		/*Phrase t = new Phrase();
+		t.addNote(new Note(C0, QUARTER_NOTE));
+		t.addNote(new Note(C1, QUARTER_NOTE));
+		t.addNote(new Note(C2, QUARTER_NOTE));
+		t.addNote(new Note(C3, QUARTER_NOTE));
+		t.addNote(new Note(C4, QUARTER_NOTE));
+		t.addNote(new Note(C5, QUARTER_NOTE));
+		t.addNote(new Note(C6, QUARTER_NOTE));
+		t.addNote(new Note(C7, QUARTER_NOTE));
+		t.addNote(new Note(C8, QUARTER_NOTE));
+		t.addNote(new Note(C9, QUARTER_NOTE));
+
+		Mutator m = new SimplifyMutator();
+		t = m.Mutate(t, 0.5f);
+		return;*/
 	}
 
 	@Override

@@ -1,4 +1,5 @@
 package com.overtone.GeneticAlgorithm.Mutators;
+import com.overtone.Utilities;
 import jm.music.data.Phrase;
 
 /**
@@ -7,8 +8,17 @@ import jm.music.data.Phrase;
  */
 public class SwapMutator extends Mutator
 {
-    public Phrase Mutate(Phrase p)
+    public Phrase Mutate(Phrase p, float probability)
     {
+        Phrase mutation = new Phrase();
+        for(int i = 0; i < p.length(); i++)
+        {
+            int random = Utilities.GetRandom(0, 1, probability);
+            if(random == 0)
+            {
+
+            }
+        }
         return p;
     }
 }

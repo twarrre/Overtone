@@ -8,5 +8,5 @@ import jm.music.data.Phrase;
  */
 public abstract class Mutator
 {
-    public abstract Phrase Mutate(Phrase p);
+    public abstract Phrase Mutate(Phrase p, float probability);
 }
