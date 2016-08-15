@@ -2,6 +2,7 @@ package com.overtone;
 
 import com.badlogic.gdx.Gdx;
 import com.overtone.Notes.OvertoneNote;
+import jm.JMC;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiSystem;
@@ -16,7 +17,7 @@ import java.util.Random;
  * Has static utility methods
  * Created by trevor on 2016-08-02.
  */
-public class Utilities
+public class Utilities implements JMC
 {
     /**
      * Loads high scores & crowd ratings from a file.
@@ -379,6 +380,49 @@ public class Utilities
 
         int value = r.nextInt(999);
         return probability.get(value);
+    }
+
+    /**
+     * Gets random number based on normal distribution
+     * @param mean The mean of the normal distribution
+     * @param deviation The deviation of the normal distribution
+     * @return A random number
+     */
+    public static int GetRandomRangeNormalDistribution(float mean, float deviation)
+    {
+        long seed = System.nanoTime();
+        Random rand = new Random(seed);
+        int val =  (int)Clamp(Math.round(rand.nextGaussian() * deviation + mean), CN1, G9);
+
+        // Don't want it to be the mean value
+        if(val == mean)
+        {
+            int shift = GetRandom(1, -1, 0.5f);
+            val = GetRandomRangeNormalDistributionShifted(mean + shift, deviation, mean, 0);
+        }
+
+        return val;
+    }
+
+    /**
+     * Called if the value gotten from the normal distribution is the mean
+     * @param mean The new mean to try
+     * @param deviation The deviation
+     * @param original The original mean to try and avoid
+     * @param counter A counter to break out of loop is necessary
+     * @return Another random number
+     */
+    private static int GetRandomRangeNormalDistributionShifted(float mean, float deviation, float original, int counter)
+    {
+        counter++;
+        long seed = System.nanoTime();
+        Random rand = new Random(seed);
+        int val =  (int)Clamp(Math.round(rand.nextGaussian() * deviation + mean), CN1, G9);
+
+        if(val == original && counter < 20)
+            val = GetRandomRangeNormalDistributionShifted(mean, deviation, mean, counter);
+
+        return val;
     }
 
     /**

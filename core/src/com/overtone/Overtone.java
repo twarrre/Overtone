@@ -6,11 +6,14 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.overtone.GeneticAlgorithm.Mutators.Mutator;
-import com.overtone.GeneticAlgorithm.Mutators.SimplifyMutator;
+import com.overtone.GeneticAlgorithm.Mutators.NotePitchMutator;
 import com.overtone.Notes.OvertoneNote;
 import com.overtone.Notes.Target;
 import com.overtone.Screens.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import jm.audio.Instrument;
 import jm.music.data.*;
 import javax.sound.midi.Sequencer;
@@ -216,9 +219,9 @@ public class Overtone extends ApplicationAdapter implements JMC
 		t.addNote(new Note(C8, QUARTER_NOTE));
 		t.addNote(new Note(C9, QUARTER_NOTE));
 
-		Mutator m = new SimplifyMutator();
-		t = m.Mutate(t, 0.5f);
-		return;*/
+		Mutator m = new NotePitchMutator();
+		t = m.Mutate(t, 0.95f);*/
+		return;
 	}
 
 	@Override
