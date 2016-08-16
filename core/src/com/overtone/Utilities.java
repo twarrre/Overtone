@@ -375,9 +375,7 @@ public class Utilities implements JMC
         long seed = System.nanoTime();
         Collections.shuffle(probability, new Random(seed));
 
-        seed = System.nanoTime();
-        Random r = new Random(seed);
-
+        Random r = new Random( System.nanoTime());
         int value = r.nextInt(999);
         return probability.get(value);
     }
@@ -390,8 +388,7 @@ public class Utilities implements JMC
      */
     public static int GetRandomRangeNormalDistribution(float mean, float deviation)
     {
-        long seed = System.nanoTime();
-        Random rand = new Random(seed);
+        Random rand = new Random(System.nanoTime());
         int val =  (int)Clamp(Math.round(rand.nextGaussian() * deviation + mean), CN1, G9);
 
         // Don't want it to be the mean value

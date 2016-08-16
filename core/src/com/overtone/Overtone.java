@@ -5,15 +5,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.overtone.GeneticAlgorithm.Mutators.Mutator;
-import com.overtone.GeneticAlgorithm.Mutators.NotePitchMutator;
 import com.overtone.Notes.OvertoneNote;
 import com.overtone.Notes.Target;
 import com.overtone.Screens.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import jm.audio.Instrument;
 import jm.music.data.*;
 import javax.sound.midi.Sequencer;
@@ -208,18 +203,20 @@ public class Overtone extends ApplicationAdapter implements JMC
 
 		// Debug track
 		/*Phrase t = new Phrase();
-		t.addNote(new Note(C0, QUARTER_NOTE));
-		t.addNote(new Note(C1, QUARTER_NOTE));
-		t.addNote(new Note(C2, QUARTER_NOTE));
-		t.addNote(new Note(C3, QUARTER_NOTE));
 		t.addNote(new Note(C4, QUARTER_NOTE));
-		t.addNote(new Note(C5, QUARTER_NOTE));
+		t.addNote(new Note(C4, QUARTER_NOTE));
+		t.addNote(new Note(C4, QUARTER_NOTE));
 		t.addNote(new Note(C6, QUARTER_NOTE));
+		t.addNote(new Note(C6, QUARTER_NOTE));
+		t.addNote(new Note(C6, QUARTER_NOTE));
+		t.addNote(new Note(C5, QUARTER_NOTE));
+		t.addNote(new Note(C5, QUARTER_NOTE));
+		t.addNote(new Note(C5, QUARTER_NOTE));
 		t.addNote(new Note(C7, QUARTER_NOTE));
-		t.addNote(new Note(C8, QUARTER_NOTE));
-		t.addNote(new Note(C9, QUARTER_NOTE));
+		t.addNote(new Note(C7, QUARTER_NOTE));
+		t.addNote(new Note(C7, QUARTER_NOTE));
 
-		Mutator m = new NotePitchMutator();
+		Mutator m = new SwapMutator();
 		t = m.Mutate(t, 0.95f);*/
 		return;
 	}
