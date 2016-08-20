@@ -1,5 +1,6 @@
 e
 98300 Great
+49600 Failure
 3300 Failure
 0 ---
 0 ---
@@ -8,8 +9,8 @@ e
 0 ---
 0 ---
 0 ---
-0 ---
 n
+836600 Great
 226900 Great
 187600 Great
 171200 Great
@@ -19,15 +20,14 @@ n
 8400 Failure
 7500 Failure
 4800 Failure
-3900 Failure
 h
+944900 Great
+633000 Great
+525800 Great
+391800 Great
 350700 Great
+348800 Great
 344500 Great
 333100 Great
 321300 Great
 287500 Brilliant
-282800 Great
-214700 Great
-209400 Great
-109800 Cleared
-33900 Failure

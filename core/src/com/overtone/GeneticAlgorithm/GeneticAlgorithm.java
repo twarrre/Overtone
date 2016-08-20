@@ -8,6 +8,7 @@ import com.overtone.GeneticAlgorithm.Mutators.SwapMutator;
 import com.overtone.GeneticAlgorithm.Raters.*;
 import com.overtone.Notes.OvertoneNote;
 import com.overtone.Overtone;
+import com.overtone.Screens.GameplayScreen;
 import com.overtone.Utilities;
 import jm.JMC;
 import jm.audio.Instrument;
@@ -17,8 +18,10 @@ import jm.music.data.Phrase;
 import jm.music.data.Score;
 import jm.util.Write;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
+import java.util.stream.Stream;
 
 /**
  * Object to generate the music for the game
@@ -80,20 +83,20 @@ public class GeneticAlgorithm implements Runnable, JMC
     public void Generate()
     {
         // Initialize score for game music
-        Overtone.GameMusic = new Score();
+        Overtone.GameMusic       = new Score();
         Overtone.GameInstruments = new Instrument[10];
 
         //Get Back the best two phrase from the genetic algorithm
-        Organism[] bestTwoTracks = GenerateTracks();
+        Organism[] bestThreeTracks = GenerateTracks();
 
-        // Create phases that create the song. Structure of the song is verse, chorus, verse, chorus, verse, chorus. Mutate each one so that there is a bit of variation between them
+        // Create phases that create the song. Structure of the song is verse, chorus, verse, chorus, bridge, chorus. Mutate each one so that there is a bit of variation between them
         Phrase[] song = new Phrase[6];
-        song[0] = Mutation(bestTwoTracks[1]).GetTrack(); // Verse 1
-        song[1] = Mutation(bestTwoTracks[0]).GetTrack(); // Chorus 1
-        song[2] = Mutation(bestTwoTracks[1]).GetTrack(); // Verse 2
-        song[3] = Mutation(bestTwoTracks[0]).GetTrack(); // Chorus 2
-        song[4] = Mutation(bestTwoTracks[1]).GetTrack(); // Verse 3
-        song[5] = Mutation(bestTwoTracks[1]).GetTrack(); // Chorus 3
+        song[0] = Mutation(bestThreeTracks[1]).GetTrack(); // Verse 1
+        song[1] = Mutation(bestThreeTracks[0]).GetTrack(); // Chorus 1
+        song[2] = Mutation(bestThreeTracks[1]).GetTrack(); // Verse 2
+        song[3] = Mutation(bestThreeTracks[0]).GetTrack(); // Chorus 2
+        song[4] = Mutation(bestThreeTracks[2]).GetTrack(); // bridge 1
+        song[5] = Mutation(bestThreeTracks[1]).GetTrack(); // Chorus 3
 
         // Adds the song to the game track
         Part p = new Part();
@@ -103,9 +106,6 @@ public class GeneticAlgorithm implements Runnable, JMC
         // Generate the notes and store them in the game and backup arrays
         ArrayList<OvertoneNote> tempNote = GenerateGameNotes();
         Utilities.SortNotes(tempNote);
-
-        // Set the total time
-        Overtone.TotalTime   = 3.0f + (float)32 * 2.0f;
 
         // Set the current rater values
         for(int i = 0; i < Overtone.CurrentRaterValues.length; i++)
@@ -135,10 +135,9 @@ public class GeneticAlgorithm implements Runnable, JMC
             // TODO: Do iteration stuff in here
             // TODO: Selection / Fitness Rating
             // TODO: Crossover
-            //
         }
 
-        return Crossover(initialPopulation[0], initialPopulation[1]);
+        return new Organism[] {initialPopulation[0], initialPopulation[1], initialPopulation[0]};
     }
 
     /**
@@ -149,10 +148,14 @@ public class GeneticAlgorithm implements Runnable, JMC
     {
         Organism[] population = new Organism[POPULATION_SIZE];
         // TODO: Generate the initial population here
+        //Mess with dynamics (loudness, softness)
+        //Mess with rest can check if rest
+        //mess with pan
 
-        Phrase[] tracks = new Phrase[2];
+        Phrase[] tracks = new Phrase[3];
         tracks[0] = new Phrase();
         tracks[1] = new Phrase();
+        tracks[2] = new Phrase();
         for(int i = 0; i < 10; i++)
         {
             Note[] n = new Note[1];
@@ -160,11 +163,15 @@ public class GeneticAlgorithm implements Runnable, JMC
             tracks[0].addNoteList(n);
 
             Note[] n2 = new Note[1];
-            n2[0] = new Note(C3, QUARTER_NOTE);
+            n2[0] = new Note(C3, WHOLE_NOTE);
             tracks[1].addNoteList(n2);
+
+            Note[] n3 = new Note[1];
+            n3[0] = new Note(C2, QUARTER_NOTE);
+            tracks[2].addNoteList(n3);
         }
 
-        return new Organism[] {new Organism(tracks[0], Organism.STARTING_PROBABILITY), new Organism(tracks[1], Organism.STARTING_PROBABILITY)};
+        return new Organism[] {new Organism(tracks[0], Organism.STARTING_PROBABILITY), new Organism(tracks[1], Organism.STARTING_PROBABILITY), new Organism(tracks[2], Organism.STARTING_PROBABILITY)};
     }
 
     /**
@@ -177,6 +184,11 @@ public class GeneticAlgorithm implements Runnable, JMC
         return o;
     }
 
+    /**
+     * Selects orgganisms to crossover
+     * @param parents The parents to crossover
+     * @return
+     */
     private Organism[] Selection(Organism[] parents)
     {
         return parents;
@@ -286,54 +298,70 @@ public class GeneticAlgorithm implements Runnable, JMC
      */
     private ArrayList<OvertoneNote> GenerateGameNotes()
     {
+        long seed = System.nanoTime();
+        Random r = new Random(seed);
         ArrayList<OvertoneNote> tempNote = new ArrayList<OvertoneNote>();
+        Part[] parts = Overtone.GameMusic.getPartArray();
+        float elapsedTime = GameplayScreen.START_DELAY + 0.001f;
+        int prevTarget = 0;
+        int target     = 0;
 
-        // Create a double note
-        OvertoneNote d1 = new OvertoneNote(OvertoneNote.NoteType.Double, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[0], 3.0f + (float)0 * 2.0f);
-        OvertoneNote d2 = new OvertoneNote(OvertoneNote.NoteType.Double, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[1], 3.0f + (float)0 * 2.0f);
-        d1.SetOtherNote(d2);
-        d2.SetOtherNote(d1);
-        d1.SetOtherNoteTime(3.0f + (float)0 * 2.0f);
-        d2.SetOtherNoteTime(3.0f + (float)0 * 2.0f);
-        tempNote.add(d1);
-        tempNote.add(d2);
-
-        // Create a hold note
-        OvertoneNote d3 = new OvertoneNote(OvertoneNote.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[0], 3.0f + (float)1 * 2.0f);
-        OvertoneNote d4 = new OvertoneNote(OvertoneNote.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[0], 3.0f + (float)2 * 2.0f);
-        d3.SetOtherNote(d4);
-        d4.SetOtherNote(d3);
-        d3.SetOtherNoteTime(3.0f + (float)2 * 2.0f);
-        d4.SetOtherNoteTime(3.0f + (float)1 * 2.0f);
-        tempNote.add(d3);
-        tempNote.add(d4);
-
-        // Create a hold note
-        OvertoneNote d5 = new OvertoneNote(OvertoneNote.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[1], 3.0f + (float)3 * 2.0f);
-        OvertoneNote d6 = new OvertoneNote(OvertoneNote.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[1], 3.0f + (float)5 * 2.0f);
-        d5.SetOtherNote(d6);
-        d6.SetOtherNote(d5);
-        d5.SetOtherNoteTime(3.0f + (float)5 * 2.0f);
-        d6.SetOtherNoteTime(3.0f + (float)3 * 2.0f);
-        tempNote.add(d5);
-        tempNote.add(d6);
-
-        // Create a hold note
-        OvertoneNote d7 = new OvertoneNote(OvertoneNote.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[2], 3.0f + (float)4 * 2.0f);
-        OvertoneNote d8 = new OvertoneNote(OvertoneNote.NoteType.Hold, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[2], 3.0f + (float)6 * 2.0f);
-        d7.SetOtherNote(d8);
-        d8.SetOtherNote(d7);
-        d7.SetOtherNoteTime(3.0f + (float)6 * 2.0f);
-        d8.SetOtherNoteTime(3.0f + (float)4 * 2.0f);
-        tempNote.add(d7);
-        tempNote.add(d8);
-
-        // Load notes
-        for(int i = 7; i < 32; i++)
+        for(int i = 0; i <  parts.length; i++)
         {
-            OvertoneNote n = new OvertoneNote(OvertoneNote.NoteType.Single, new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f), new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f),  Overtone.TargetZones[i % Overtone.TargetZones.length], 3.0f + (float)i * 2.0f);
-            tempNote.add(n);
+            Phrase[] phrases = parts[i].getPhraseArray();
+            for(int j = 0; j < phrases.length; j++)
+            {
+                Note[] notes = phrases[j].getNoteArray();
+                for(int k = 0; k < notes.length; k++)
+                {
+                    prevTarget = target;
+                    target = r.nextInt(Overtone.TargetZones.length);
+
+                    if(notes[k].isRest())
+                    {
+                        continue;
+                    }
+                    else if(notes[k].getRhythmValue() > QUARTER_NOTE)
+                    {
+                        while (target == prevTarget)
+                            target = r.nextInt(Overtone.TargetZones.length);
+
+                        OvertoneNote n1 = new OvertoneNote(
+                            OvertoneNote.NoteType.Hold, // Note type
+                            Overtone.TargetZones[target], // target
+                            elapsedTime);
+                        float n1Time = elapsedTime;
+
+                        elapsedTime += notes[k].getDuration();
+
+                        OvertoneNote n2 = new OvertoneNote(
+                            OvertoneNote.NoteType.Hold, // Note type
+                            Overtone.TargetZones[target], // target
+                            elapsedTime - 0.05f);
+                        float n2Time = elapsedTime - 0.05f;
+
+                        n1.SetOtherNote(n2);
+                        n1.SetOtherNoteTime(n2Time);
+                        n2.SetOtherNote(n1);
+                        n2.SetOtherNoteTime(n1Time);
+
+                        tempNote.add(n1);
+                        tempNote.add(n2);
+                    }
+                    // Handle double notes
+                    else
+                    {
+                        tempNote.add(new OvertoneNote(
+                            OvertoneNote.NoteType.Single, // Note type
+                            Overtone.TargetZones[target], // target
+                            elapsedTime)); // time
+                        elapsedTime += notes[k].getDuration();
+                    }
+                }
+            }
         }
+
+        Overtone.TotalTime = elapsedTime;
         return tempNote;
     }
 }

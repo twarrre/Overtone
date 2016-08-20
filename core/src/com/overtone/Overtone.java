@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.overtone.Notes.OvertoneNote;
 import com.overtone.Notes.Target;
 import com.overtone.Screens.*;
@@ -21,7 +22,6 @@ public class Overtone extends ApplicationAdapter implements JMC
 {
 	/**Maximum number of scores that are saved for each difficulty*/
 	public static final int NUM_SCORES = 10;
-
 	public static final int NUM_RATERS  = 5;
 
 	/**Enum for the different types of screens*/
@@ -147,6 +147,8 @@ public class Overtone extends ApplicationAdapter implements JMC
 	// Variables
 	public static float                   ScreenWidth;        // The width of the screen;
 	public static float                   ScreenHeight;       // The height of the screen;
+	public static Vector2                 NoteScale;          // Scale of a note object
+	public static Vector2                 NoteCenter;         // Initial position of a note object
 	public static int[][]                 HighScores;         // Stores the high scores for each difficulty
     public static CrowdRating[][]         CrowdRatings;       // Stores the associated crowd ratings for each high score
 	public static Difficulty              Difficulty;         // Stores the chosen difficulty of the game
@@ -168,12 +170,13 @@ public class Overtone extends ApplicationAdapter implements JMC
 	private Sprite                        _farBackground;     // The star background for the whole app
 	private Sprite                        _closeBackground;   // The cloud background over-top of the star background (for depth)
 
-
 	@Override
 	public void create ()
 	{
 		ScreenWidth        = Gdx.graphics.getWidth();
 		ScreenHeight       = Gdx.graphics.getHeight();
+		NoteScale          = new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f);
+		NoteCenter         = new Vector2(Overtone.ScreenWidth / 2.0f, Overtone.ScreenHeight / 2.0f);
 		Difficulty         = Difficulty.Easy;
 		HighScores         = new int[Difficulty.values().length][NUM_SCORES];
         CrowdRatings       = new CrowdRating[Difficulty.values().length][NUM_SCORES];

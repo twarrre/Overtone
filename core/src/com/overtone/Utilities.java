@@ -299,7 +299,7 @@ public class Utilities implements JMC
         {
             if((Overtone.NoteQueue.get(i).GetType() == OvertoneNote.NoteType.Hold || Overtone.NoteQueue.get(i).GetType() == OvertoneNote.NoteType.Double) && Overtone.NoteQueue.get(i).GetOtherNote() == null )
             {
-                int index = BinarySearch(Overtone.NoteQueue, Overtone.NoteQueue.get(i).GetOtherNoteTime(), 0, Overtone.NoteQueue.size() - 1);
+                int index = BinarySearch(Overtone.NoteQueue, Overtone.NoteQueue.get(i).GetOtherNoteTime(), 0, Overtone.NoteQueue.size());
                 Overtone.NoteQueue.get(i).SetOtherNote(Overtone.NoteQueue.get(index));
                 Overtone.NoteQueue.get(index).SetOtherNote(Overtone.NoteQueue.get(i));
 

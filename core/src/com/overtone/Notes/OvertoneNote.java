@@ -32,22 +32,20 @@ public class OvertoneNote implements Comparable<OvertoneNote>
     /**
      * Constructor
      * @param type The type of note
-     * @param scale The scale of the note
-     * @param center The center point
      * @param target The target of where to the note is going
      * @param timer The time signature of the note
      */
-    public OvertoneNote(NoteType type, Vector2 scale, Vector2 center, Target target, float timer)
+    public OvertoneNote(NoteType type, Target target, float timer)
     {
-        float distance     = target.Position.dst(center);                                                   // Find the distance from the target to the center of the note
+        float distance     = target.Position.dst(Overtone.NoteCenter);                                                   // Find the distance from the target to the center of the note
 
-        _direction         = new Vector2(target.Position.x - center.x, target.Position.y - center.y).nor(); // Creates a vector point in the direction of the target zone
-        _center            = new Vector2(center.x + _direction.x, center.y + _direction.y);                 // Shift the center into the proper quad based on the direction it is going
+        _direction         = new Vector2(target.Position.x - Overtone.NoteCenter.x, target.Position.y - Overtone.NoteCenter.y).nor(); // Creates a vector point in the direction of the target zone
+        _center            = new Vector2(Overtone.NoteCenter.x + _direction.x, Overtone.NoteCenter.y + _direction.y);                 // Shift the center into the proper quad based on the direction it is going
         _speed             = distance / Overtone.Difficulty.Multiplier;                                     // Calculate the speed of note (dist / time)
         _target            = target;
         _time              = timer;
         _type              = type;
-        _scale             = scale;
+        _scale             = Overtone.NoteScale;
         _partnerNote       = null;
         _otherNoteTime     = 0;
         _connectorRendered = false;

@@ -38,6 +38,9 @@ public class GameplayScreen extends OvertoneScreen
     /** The delay for the completion or failure of the song */
     public static final float COMPLETION_DELAY = 3.0f;
 
+    /** Delay for the start of the song*/
+    public static final float START_DELAY = 5.0f;
+
     /** Timers that determine if you fail for each difficulty */
     public static final float[] FAILURE_TIMER  = { 12.0f, 10.0f, 8.0f };
 
@@ -106,6 +109,7 @@ public class GameplayScreen extends OvertoneScreen
     private int                                             _missCounter;        // The number of missed notes
     private int                                             _combo;              // The current combo
     private int                                             _score;              // The current score
+    private boolean                                         _musicPlaying;       // True if the music is playing, false otherwise
 
     /**
      * Constructor
@@ -178,6 +182,7 @@ public class GameplayScreen extends OvertoneScreen
         _holdNotesOnScreen     = new HashMap<>();
         _onScreenNotes         = new Quadtree(new Rectangle(0, 0, Overtone.ScreenWidth, Overtone.ScreenHeight));
         _onScreenRatings       = new ArrayList<>();
+        _musicPlaying          = false;
 
         // Create the resume button on the paused menu
         _resumeButton = CreateButton("RESUME", "small", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.725f), _stage);
@@ -256,8 +261,6 @@ public class GameplayScreen extends OvertoneScreen
             public void clicked (InputEvent i, float x, float y) {
               PausedButtonPressed();
             }});
-
-        Utilities.LoadMidiMusic(false);
     }
 
     /**
@@ -389,6 +392,12 @@ public class GameplayScreen extends OvertoneScreen
 
         if(_elapsedTime <  Overtone.TotalTime && !_songComplete)
             _elapsedTime += deltaTime;
+
+        if(_elapsedTime >= START_DELAY && !_musicPlaying)
+        {
+            Utilities.LoadMidiMusic(false);
+            _musicPlaying = true;
+        }
 
         if(_elapsedTime >=  Overtone.TotalTime && !_songComplete)
         {
