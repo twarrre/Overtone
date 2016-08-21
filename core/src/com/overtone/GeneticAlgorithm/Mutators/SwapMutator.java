@@ -1,5 +1,5 @@
 package com.overtone.GeneticAlgorithm.Mutators;
-import jm.music.data.Phrase;
+import jm.music.data.Part;
 import java.util.Random;
 
 /**
@@ -8,7 +8,7 @@ import java.util.Random;
  */
 public class SwapMutator extends Mutator
 {
-    public Phrase Mutate(Phrase p, float probability)
+    public Part Mutate(Part p, float probability)
     {
         Random rand = new Random(System.nanoTime());
         int numSwaps = rand.nextInt(10) + 5;
@@ -25,19 +25,32 @@ public class SwapMutator extends Mutator
             int index1 = rand.nextInt(p.length() - (swapLength * 2));
             int index2 = rand.nextInt(((p.length() - swapLength) - (index1 + swapLength)) + 1) + (index1 + swapLength);
 
-            Phrase swap1 = new Phrase();
+            Part swap1 = new Part();
             for(int i = index1; i < index1 + swapLength; i++)
-                swap1.addNote(p.getNote(i));
+                swap1.addPhrase(p.getPhrase(i));
 
-            Phrase swap2 = new Phrase();
+            Part swap2 = new Part();
             for(int i = index2; i < index2 + swapLength; i++)
-                swap2.addNote(p.getNote(i));
+                swap2.addPhrase(p.getPhrase(i));
 
-            for(int i = 0, j = index1; i < swap2.length(); i++, j++)
-                p.setNote(swap2.getNote(i), j);
 
-            for(int i = 0, j = index2; i < swap1.length(); i++, j++)
-                p.setNote(swap1.getNote(i), j);
+            Part swapped = new Part();
+            for(int i = 0; i < p.length(); i++)
+            {
+                if(i >= index1 && i < index1 + swap2.length())
+                {
+                    swapped.addPhrase(swap2.getPhrase(i - index1));
+                }
+                else if(i >= index2 && i < index2 + swap1.length())
+                {
+                    swapped.addPhrase(swap1.getPhrase(i - index2));
+                }
+                else
+                {
+                    swapped.addPhrase(p.getPhrase(i));
+                }
+            }
+            p = swapped;
         }
 
         return p;

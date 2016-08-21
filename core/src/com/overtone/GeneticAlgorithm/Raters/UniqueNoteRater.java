@@ -1,5 +1,7 @@
 package com.overtone.GeneticAlgorithm.Raters;
 import com.overtone.GeneticAlgorithm.Organism;
+import jm.music.data.Part;
+import jm.music.data.Phrase;
 
 import java.util.HashMap;
 
@@ -12,12 +14,16 @@ public class UniqueNoteRater extends Rater
     public float Rate(Organism o)
     {
         HashMap<Integer, Integer> noteCounter = new HashMap();
-        int length = o.GetTrack().length();
+        Part part = o.GetTrack();
 
-        for(int i = 0; i < length; i++)
+        for(int i = 0; i < part.length(); i++)
         {
-            int pitch = o.GetTrack().getNote(i).getPitch();
-            noteCounter.put(pitch, noteCounter.get(pitch) + 1);
+            Phrase phrase = part.getPhrase(i);
+            for(int j = 0; j < phrase.length(); j++)
+            {
+                int pitch = phrase.getNote(i).getPitch();
+                noteCounter.put(pitch, noteCounter.get(pitch) + 1);
+            }
         }
 
         return 0;

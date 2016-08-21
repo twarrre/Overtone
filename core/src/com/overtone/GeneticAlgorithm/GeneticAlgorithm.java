@@ -1,6 +1,5 @@
 package com.overtone.GeneticAlgorithm;
 
-import com.badlogic.gdx.math.Vector2;
 import com.overtone.GeneticAlgorithm.Mutators.Mutator;
 import com.overtone.GeneticAlgorithm.Mutators.NotePitchMutator;
 import com.overtone.GeneticAlgorithm.Mutators.SimplifyMutator;
@@ -12,16 +11,15 @@ import com.overtone.Screens.GameplayScreen;
 import com.overtone.Utilities;
 import jm.JMC;
 import jm.audio.Instrument;
+import jm.constants.Durations;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
 import jm.music.data.Score;
 import jm.util.Write;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
-import java.util.stream.Stream;
 
 /**
  * Object to generate the music for the game
@@ -37,6 +35,7 @@ public class GeneticAlgorithm implements Runnable, JMC
     private int                _currentIteration; // The current iteration of the algorithm
     private ArrayList<Mutator> _mutators;         // Array of all of the mutators that may mutate a track.
     private Rater[]            _raters;           // Array of raters to rate the tracks
+    private  int[][] chords = {{C3, E3, G3}, {F3,A3, C3}, {G3, B3, D3}};
 
     /**
      * Constructor
@@ -90,7 +89,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         Organism[] bestThreeTracks = GenerateTracks();
 
         // Create phases that create the song. Structure of the song is verse, chorus, verse, chorus, bridge, chorus. Mutate each one so that there is a bit of variation between them
-        Phrase[] song = new Phrase[6];
+        Part[] song = new Part[6];
         song[0] = Mutation(bestThreeTracks[1]).GetTrack(); // Verse 1
         song[1] = Mutation(bestThreeTracks[0]).GetTrack(); // Chorus 1
         song[2] = Mutation(bestThreeTracks[1]).GetTrack(); // Verse 2
@@ -98,10 +97,12 @@ public class GeneticAlgorithm implements Runnable, JMC
         song[4] = Mutation(bestThreeTracks[2]).GetTrack(); // bridge 1
         song[5] = Mutation(bestThreeTracks[1]).GetTrack(); // Chorus 3
 
-        // Adds the song to the game track
-        Part p = new Part();
-        p.addPhraseList(song);
-        Overtone.GameMusic.addPart(p);
+        // Merges the song and adds it to the game music
+        Part mergedPart = new Part();
+        for(int i = 0; i < song.length; i++)
+           for(int j = 0; j < song[i].length(); j++)
+               mergedPart.appendPhrase(song[i].getPhrase(j));
+        Overtone.GameMusic.addPart(mergedPart);
 
         // Generate the notes and store them in the game and backup arrays
         ArrayList<OvertoneNote> tempNote = GenerateGameNotes();
@@ -109,9 +110,7 @@ public class GeneticAlgorithm implements Runnable, JMC
 
         // Set the current rater values
         for(int i = 0; i < Overtone.CurrentRaterValues.length; i++)
-        {
             Overtone.CurrentRaterValues[i] = Utilities.Clamp(Overtone.BestRaterValues[i] + 0.01f, 0.0f, 1.0f);
-        }
 
         // Write the music to a file for playback
         Write.midi(Overtone.GameMusic, "Music\\GeneratedMusic.mid");
@@ -152,23 +151,19 @@ public class GeneticAlgorithm implements Runnable, JMC
         //Mess with rest can check if rest
         //mess with pan
 
-        Phrase[] tracks = new Phrase[3];
-        tracks[0] = new Phrase();
-        tracks[1] = new Phrase();
-        tracks[2] = new Phrase();
+        Part[] tracks = new Part[3];
+        tracks[0] = new Part();
+        tracks[1] = new Part();
+        tracks[2] = new Part();
         for(int i = 0; i < 10; i++)
         {
-            Note[] n = new Note[1];
-            n[0] = new Note(C4, QUARTER_NOTE);
-            tracks[0].addNoteList(n);
-
-            Note[] n2 = new Note[1];
-            n2[0] = new Note(C3, WHOLE_NOTE);
-            tracks[1].addNoteList(n2);
-
-            Note[] n3 = new Note[1];
-            n3[0] = new Note(C2, QUARTER_NOTE);
-            tracks[2].addNoteList(n3);
+            Random r = new Random();
+            int c = r.nextInt(chords.length);
+            Phrase chord = new Phrase();
+            chord.addChord(chords[c], QUARTER_NOTE);
+            tracks[0].addPhrase(chord);
+            tracks[1].addPhrase(new Phrase(new Note(C3, WHOLE_NOTE)));
+            tracks[2].addPhrase(new Phrase(new Note(C2, QUARTER_NOTE)));
         }
 
         return new Organism[] {new Organism(tracks[0], Organism.STARTING_PROBABILITY), new Organism(tracks[1], Organism.STARTING_PROBABILITY), new Organism(tracks[2], Organism.STARTING_PROBABILITY)};
@@ -219,7 +214,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         Collections.shuffle(_mutators, new Random(seed));
 
         // Mutate the phrase
-        Phrase mutation = o.GetTrack();
+        Part mutation = o.GetTrack();
         for(int i = 0; i < _mutators.size(); i++)
             mutation = _mutators.get(i).Mutate(mutation, o.GetProbability());
         o.SetTrack(mutation);
@@ -236,12 +231,12 @@ public class GeneticAlgorithm implements Runnable, JMC
     private Organism[] Crossover(Organism parent1, Organism parent2)
     {
         // Create two children
-        Phrase[] children = new Phrase[2];
-        children[0] = new Phrase();
-        children[1] = new Phrase();
+        Part[] children = new Part[2];
+        children[0] = new Part();
+        children[1] = new Part();
 
-        Phrase p1 = parent1.GetTrack();
-        Phrase p2 = parent2.GetTrack();
+        Part p1 = parent1.GetTrack();
+        Part p2 = parent2.GetTrack();
 
         // Find the shorter of the two lengths (used as base length)
         int length = p1.length() < p2.length() ? p1.length() : p2.length();
@@ -249,19 +244,19 @@ public class GeneticAlgorithm implements Runnable, JMC
         // Crossover
         for(int i = 0; i < length; i++)
         {
-            Note n1 = p1.getNote(i);
-            Note n2 = p2.getNote(i);
+            Phrase ph1 = p1.getPhrase(i);
+            Phrase ph2 = p2.getPhrase(i);
 
             int index = Utilities.GetRandom(0, 1, 0.6f);
             if(index == 0)
             {
-                children[0].addNote(n1);
-                children[1].addNote(n2);
+                children[0].addPhrase(ph1);
+                children[1].addPhrase(ph2);
             }
             else
             {
-                children[0].addNote(n2);
-                children[1].addNote(n1);
+                children[0].addPhrase(ph2);
+                children[1].addPhrase(ph1);
             }
         }
 
@@ -270,13 +265,13 @@ public class GeneticAlgorithm implements Runnable, JMC
         {
             int remainingLength = Math.abs(length - p2.length());
             for(int i = 0; i < remainingLength; i++)
-                children[1].addNote(p2.getNote(length + i));
+                children[1].addPhrase(p2.getPhrase(length + i));
         }
         else
         {
             int remainingLength = Math.abs(length - p1.length());
             for(int i = 0; i < remainingLength; i++)
-                children[0].addNote(p1.getNote(length + i));
+                children[0].addPhrase(p1.getPhrase(length + i));
         }
 
         return new Organism[] { new Organism(children[0], GetProbability(parent1)), new Organism(children[1], GetProbability(parent2))};
@@ -300,9 +295,11 @@ public class GeneticAlgorithm implements Runnable, JMC
     {
         long seed = System.nanoTime();
         Random r = new Random(seed);
+
         ArrayList<OvertoneNote> tempNote = new ArrayList<OvertoneNote>();
         Part[] parts = Overtone.GameMusic.getPartArray();
-        float elapsedTime = GameplayScreen.START_DELAY + 0.001f;
+
+        float elapsedTime = GameplayScreen.START_DELAY;
         int prevTarget = 0;
         int target     = 0;
 
@@ -311,52 +308,110 @@ public class GeneticAlgorithm implements Runnable, JMC
             Phrase[] phrases = parts[i].getPhraseArray();
             for(int j = 0; j < phrases.length; j++)
             {
-                Note[] notes = phrases[j].getNoteArray();
-                for(int k = 0; k < notes.length; k++)
+                prevTarget = target;
+                target = r.nextInt(Overtone.TargetZones.length);
+
+                if(phrases[j].length() > 1)
                 {
-                    prevTarget = target;
-                    target = r.nextInt(Overtone.TargetZones.length);
-
-                    if(notes[k].isRest())
+                    int target2 = 0;
+                    int num = r.nextInt(1);
+                    switch(target)
                     {
-                        continue;
+                        case 0:
+                        {
+                            if(num == 0)
+                                target2 = target + 1;
+                            else
+                                target2 = target + 2;
+                            break;
+                        }
+                        case 1:
+                        {
+                            if(num == 0)
+                                target2 = target - 1;
+                            else
+                                target2 = target + 2;
+                            break;
+                        }
+                        case 2:
+                        {
+                            if(num == 0)
+                                target2 = target + 1;
+                            else
+                                target2 = target - 2;
+                            break;
+                        }
+                        case 3:
+                        {
+                            if(num == 0)
+                                target2 = target - 1;
+                            else
+                                target2 = target - 2;
+                            break;
+                        }
+                        default:
+                            target2 = 0;
                     }
-                    else if(notes[k].getRhythmValue() > QUARTER_NOTE)
-                    {
-                        while (target == prevTarget)
-                            target = r.nextInt(Overtone.TargetZones.length);
 
-                        OvertoneNote n1 = new OvertoneNote(
+                    OvertoneNote n1 = new OvertoneNote(
+                            OvertoneNote.NoteType.Double, // Note type
+                            Overtone.TargetZones[target], // target
+                            elapsedTime);
+
+                    OvertoneNote n2 = new OvertoneNote(
+                            OvertoneNote.NoteType.Double, // Note type
+                            Overtone.TargetZones[target2], // target
+                            elapsedTime);
+
+                    n1.SetOtherNote(n2);
+                    n1.SetOtherNoteTime(elapsedTime);
+                    n2.SetOtherNote(n1);
+                    n2.SetOtherNoteTime(elapsedTime);
+
+                    tempNote.add(n1);
+                    tempNote.add(n2);
+
+                    elapsedTime += phrases[j].getNote(phrases[j].length() - 1).getDuration();
+                }
+                else if(phrases[j].getNote(0).isRest())
+                {
+                    elapsedTime += phrases[j].getNote(0).getDuration();
+                    continue;
+                }
+                else if(phrases[j].getNote(0).getRhythmValue() > QUARTER_NOTE)
+                {
+                    while (target == prevTarget)
+                        target = r.nextInt(Overtone.TargetZones.length);
+
+                    OvertoneNote n1 = new OvertoneNote(
                             OvertoneNote.NoteType.Hold, // Note type
                             Overtone.TargetZones[target], // target
                             elapsedTime);
-                        float n1Time = elapsedTime;
+                    float n1Time = elapsedTime;
 
-                        elapsedTime += notes[k].getDuration();
+                    elapsedTime += phrases[j].getNote(0).getDuration();
 
-                        OvertoneNote n2 = new OvertoneNote(
+                    OvertoneNote n2 = new OvertoneNote(
                             OvertoneNote.NoteType.Hold, // Note type
                             Overtone.TargetZones[target], // target
                             elapsedTime - 0.05f);
-                        float n2Time = elapsedTime - 0.05f;
+                    float n2Time = elapsedTime - 0.05f;
 
-                        n1.SetOtherNote(n2);
-                        n1.SetOtherNoteTime(n2Time);
-                        n2.SetOtherNote(n1);
-                        n2.SetOtherNoteTime(n1Time);
+                    n1.SetOtherNote(n2);
+                    n1.SetOtherNoteTime(n2Time);
+                    n2.SetOtherNote(n1);
+                    n2.SetOtherNoteTime(n1Time);
 
-                        tempNote.add(n1);
-                        tempNote.add(n2);
-                    }
-                    // Handle double notes
-                    else
-                    {
-                        tempNote.add(new OvertoneNote(
+                    tempNote.add(n1);
+                    tempNote.add(n2);
+                }
+                else
+                {
+                    tempNote.add(new OvertoneNote(
                             OvertoneNote.NoteType.Single, // Note type
                             Overtone.TargetZones[target], // target
                             elapsedTime)); // time
-                        elapsedTime += notes[k].getDuration();
-                    }
+                    elapsedTime += phrases[j].getNote(0).getDuration();
                 }
             }
         }

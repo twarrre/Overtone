@@ -1,6 +1,6 @@
 package com.overtone.GeneticAlgorithm.Mutators;
 
-import jm.music.data.Phrase;
+import jm.music.data.Part;
 
 /**
  * Base class for all mutators
@@ -8,5 +8,5 @@ import jm.music.data.Phrase;
  */
 public abstract class Mutator
 {
-    public abstract Phrase Mutate(Phrase p, float probability);
+    public abstract Part Mutate(Part p, float probability);
 }

@@ -2,7 +2,7 @@ package com.overtone.GeneticAlgorithm;
 
 import com.overtone.Overtone;
 import com.overtone.Utilities;
-import jm.music.data.Phrase;
+import jm.music.data.Part;
 
 /**
  * Represents and organism in the genetic algorithm
@@ -16,7 +16,7 @@ public class Organism
     /** The starting probability for how a note can mutate */
     public static final float STARTING_PROBABILITY = 0.6f;
 
-    private  Phrase _track;               // The track for this organism
+    private Part    _track;               // The track for this organism
     private float[] _rating;              // The fitness rating for this organism
     private float   _mutationProbability; // The probability that this track will contain some mutation
 
@@ -24,7 +24,7 @@ public class Organism
      * Constructor
      * @param p The track for this organism
      */
-    public Organism(Phrase p, float mutation)
+    public Organism(Part p, float mutation)
     {
         _track               = p;
         _rating              = new float[Overtone.NUM_RATERS];
@@ -36,9 +36,9 @@ public class Organism
     /** Gets the rating of this organism. */
     public float GetRating(int i) {return _rating[i];}
     /** Gets the track of this organism. */
-    public Phrase GetTrack() {return _track;}
+    public Part GetTrack() {return _track;}
     /** Sets the track of this organism. */
-    public void SetTrack(Phrase p) {_track = p;}
+    public void SetTrack(Part p) {_track = p;}
     /** Gets the mutation probability */
     public float GetProbability() {return _mutationProbability;}
 

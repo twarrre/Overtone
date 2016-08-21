@@ -203,25 +203,6 @@ public class Overtone extends ApplicationAdapter implements JMC
 		Utilities.LoadVolume();
 		Utilities.LoadRaterValues();
 		Utilities.LoadMidiMusic(true);
-
-		// Debug track
-		/*Phrase t = new Phrase();
-		t.addNote(new Note(C4, QUARTER_NOTE));
-		t.addNote(new Note(C4, QUARTER_NOTE));
-		t.addNote(new Note(C4, QUARTER_NOTE));
-		t.addNote(new Note(C6, QUARTER_NOTE));
-		t.addNote(new Note(C6, QUARTER_NOTE));
-		t.addNote(new Note(C6, QUARTER_NOTE));
-		t.addNote(new Note(C5, QUARTER_NOTE));
-		t.addNote(new Note(C5, QUARTER_NOTE));
-		t.addNote(new Note(C5, QUARTER_NOTE));
-		t.addNote(new Note(C7, QUARTER_NOTE));
-		t.addNote(new Note(C7, QUARTER_NOTE));
-		t.addNote(new Note(C7, QUARTER_NOTE));
-
-		Mutator m = new SwapMutator();
-		t = m.Mutate(t, 0.95f);*/
-		return;
 	}
 
 	@Override
