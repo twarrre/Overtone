@@ -35,7 +35,8 @@ public class GeneticAlgorithm implements Runnable, JMC
     private int                _currentIteration; // The current iteration of the algorithm
     private ArrayList<Mutator> _mutators;         // Array of all of the mutators that may mutate a track.
     private Rater[]            _raters;           // Array of raters to rate the tracks
-    private  int[][] chords = {{C3, E3, G3}, {F3,A3, C3}, {G3, B3, D3}};
+
+    private int[][] chords = {{C3, E3, G3}, {F3,A3, C3}, {G3, B3, D3}}; // Available chords to choose from
 
     /**
      * Constructor
@@ -94,7 +95,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         song[1] = Mutation(bestThreeTracks[0]).GetTrack(); // Chorus 1
         song[2] = Mutation(bestThreeTracks[1]).GetTrack(); // Verse 2
         song[3] = Mutation(bestThreeTracks[0]).GetTrack(); // Chorus 2
-        song[4] = Mutation(bestThreeTracks[2]).GetTrack(); // bridge 1
+        song[4] = bestThreeTracks[2].GetTrack(); // bridge 1
         song[5] = Mutation(bestThreeTracks[1]).GetTrack(); // Chorus 3
 
         // Merges the song and adds it to the game music
@@ -210,8 +211,7 @@ public class GeneticAlgorithm implements Runnable, JMC
     private Organism Mutation(Organism o)
     {
         // Randomize the order of the mutators
-        long seed = System.nanoTime();
-        Collections.shuffle(_mutators, new Random(seed));
+        Collections.shuffle(_mutators, new Random(System.nanoTime()));
 
         // Mutate the phrase
         Part mutation = o.GetTrack();
@@ -293,15 +293,14 @@ public class GeneticAlgorithm implements Runnable, JMC
      */
     private ArrayList<OvertoneNote> GenerateGameNotes()
     {
-        long seed = System.nanoTime();
-        Random r = new Random(seed);
+        Random r = new Random(System.nanoTime());
 
         ArrayList<OvertoneNote> tempNote = new ArrayList<OvertoneNote>();
         Part[] parts = Overtone.GameMusic.getPartArray();
 
         float elapsedTime = GameplayScreen.START_DELAY;
-        int prevTarget = 0;
-        int target     = 0;
+        int prevTarget    = 0;
+        int target        = 0;
 
         for(int i = 0; i <  parts.length; i++)
         {
@@ -311,57 +310,17 @@ public class GeneticAlgorithm implements Runnable, JMC
                 prevTarget = target;
                 target = r.nextInt(Overtone.TargetZones.length);
 
-                if(phrases[j].length() > 1)
+                // If it is a reset then continue
+                if(phrases[j].getNote(0).isRest())
                 {
-                    int target2 = 0;
-                    int num = r.nextInt(1);
-                    switch(target)
-                    {
-                        case 0:
-                        {
-                            if(num == 0)
-                                target2 = target + 1;
-                            else
-                                target2 = target + 2;
-                            break;
-                        }
-                        case 1:
-                        {
-                            if(num == 0)
-                                target2 = target - 1;
-                            else
-                                target2 = target + 2;
-                            break;
-                        }
-                        case 2:
-                        {
-                            if(num == 0)
-                                target2 = target + 1;
-                            else
-                                target2 = target - 2;
-                            break;
-                        }
-                        case 3:
-                        {
-                            if(num == 0)
-                                target2 = target - 1;
-                            else
-                                target2 = target - 2;
-                            break;
-                        }
-                        default:
-                            target2 = 0;
-                    }
-
-                    OvertoneNote n1 = new OvertoneNote(
-                            OvertoneNote.NoteType.Double, // Note type
-                            Overtone.TargetZones[target], // target
-                            elapsedTime);
-
-                    OvertoneNote n2 = new OvertoneNote(
-                            OvertoneNote.NoteType.Double, // Note type
-                            Overtone.TargetZones[target2], // target
-                            elapsedTime);
+                    elapsedTime += phrases[j].getNote(0).getDuration();
+                    continue;
+                }
+                else if(phrases[j].length() > 1) // else if it is a chord == double note
+                {
+                    int target2 = DetermineTarget(target);
+                    OvertoneNote n1 = new OvertoneNote(OvertoneNote.NoteType.Double, Overtone.TargetZones[target], elapsedTime);
+                    OvertoneNote n2 = new OvertoneNote(OvertoneNote.NoteType.Double, Overtone.TargetZones[target2], elapsedTime);
 
                     n1.SetOtherNote(n2);
                     n1.SetOtherNoteTime(elapsedTime);
@@ -373,28 +332,17 @@ public class GeneticAlgorithm implements Runnable, JMC
 
                     elapsedTime += phrases[j].getNote(phrases[j].length() - 1).getDuration();
                 }
-                else if(phrases[j].getNote(0).isRest())
+                else if(phrases[j].getNote(0).getRhythmValue() > QUARTER_NOTE) // if it is longer than a quarter note == hold note
                 {
-                    elapsedTime += phrases[j].getNote(0).getDuration();
-                    continue;
-                }
-                else if(phrases[j].getNote(0).getRhythmValue() > QUARTER_NOTE)
-                {
+                    // Make sure that hold notes do not go to the same target in a row
                     while (target == prevTarget)
                         target = r.nextInt(Overtone.TargetZones.length);
 
-                    OvertoneNote n1 = new OvertoneNote(
-                            OvertoneNote.NoteType.Hold, // Note type
-                            Overtone.TargetZones[target], // target
-                            elapsedTime);
+                    OvertoneNote n1 = new OvertoneNote(OvertoneNote.NoteType.Hold, Overtone.TargetZones[target], elapsedTime);
                     float n1Time = elapsedTime;
-
                     elapsedTime += phrases[j].getNote(0).getDuration();
 
-                    OvertoneNote n2 = new OvertoneNote(
-                            OvertoneNote.NoteType.Hold, // Note type
-                            Overtone.TargetZones[target], // target
-                            elapsedTime - 0.05f);
+                    OvertoneNote n2 = new OvertoneNote(OvertoneNote.NoteType.Hold, Overtone.TargetZones[target], elapsedTime - 0.05f);
                     float n2Time = elapsedTime - 0.05f;
 
                     n1.SetOtherNote(n2);
@@ -405,12 +353,9 @@ public class GeneticAlgorithm implements Runnable, JMC
                     tempNote.add(n1);
                     tempNote.add(n2);
                 }
-                else
+                else // It is a normal note
                 {
-                    tempNote.add(new OvertoneNote(
-                            OvertoneNote.NoteType.Single, // Note type
-                            Overtone.TargetZones[target], // target
-                            elapsedTime)); // time
+                    tempNote.add(new OvertoneNote(OvertoneNote.NoteType.Single, Overtone.TargetZones[target], elapsedTime));
                     elapsedTime += phrases[j].getNote(0).getDuration();
                 }
             }
@@ -418,5 +363,50 @@ public class GeneticAlgorithm implements Runnable, JMC
 
         Overtone.TotalTime = elapsedTime;
         return tempNote;
+    }
+
+    /**
+     * Randomly chooses a perpendicular target as a partner target for the double note
+     * @param target The target to find a partner target for
+     * @return The index of the other target
+     */
+    private int DetermineTarget(int target)
+    {
+        Random r = new Random(System.nanoTime());
+        int num = r.nextInt(1);
+
+        switch(target)
+        {
+            case 0:
+            {
+                if(num == 0)
+                    return target + 1;
+                else
+                    return target + 2;
+            }
+            case 1:
+            {
+                if(num == 0)
+                    return target - 1;
+                else
+                    return target + 2;
+            }
+            case 2:
+            {
+                if(num == 0)
+                    return target + 1;
+                else
+                    return target - 2;
+            }
+            case 3:
+            {
+                if(num == 0)
+                    return target - 1;
+                else
+                    return target - 2;
+            }
+            default:
+                return 0;
+        }
     }
 }

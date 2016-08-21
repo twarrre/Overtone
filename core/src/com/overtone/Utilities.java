@@ -372,8 +372,7 @@ public class Utilities implements JMC
                 probability.add(idx2);
         }
 
-        long seed = System.nanoTime();
-        Collections.shuffle(probability, new Random(seed));
+        Collections.shuffle(probability, new Random(System.nanoTime()));
 
         Random r = new Random( System.nanoTime());
         int value = r.nextInt(999);
@@ -389,7 +388,7 @@ public class Utilities implements JMC
     public static int GetRandomRangeNormalDistribution(float mean, float deviation)
     {
         Random rand = new Random(System.nanoTime());
-        int val =  (int)Clamp(Math.round(rand.nextGaussian() * deviation + mean), CN1, G9);
+        int val =  (int)Math.round(rand.nextGaussian() * deviation + mean);
 
         // Don't want it to be the mean value
         if(val == mean)
@@ -412,8 +411,7 @@ public class Utilities implements JMC
     private static int GetRandomRangeNormalDistributionShifted(float mean, float deviation, float original, int counter)
     {
         counter++;
-        long seed = System.nanoTime();
-        Random rand = new Random(seed);
+        Random rand = new Random(System.nanoTime());
         int val =  (int)Clamp(Math.round(rand.nextGaussian() * deviation + mean), CN1, G9);
 
         if(val == original && counter < 20)

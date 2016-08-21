@@ -203,6 +203,48 @@ public class Overtone extends ApplicationAdapter implements JMC
 		Utilities.LoadVolume();
 		Utilities.LoadRaterValues();
 		Utilities.LoadMidiMusic(true);
+
+		/*Part one = new Part();
+		for(int i = 0; i < 5; i++)
+		{
+			one.addPhrase(new Phrase(new Note(C4, QUARTER_NOTE)));
+		}
+		for(int i = 0; i < 5; i++)
+		{
+			Phrase ph = new Phrase();
+			ph.addChord(new int[] {C3, E3, G3}, QUARTER_NOTE);
+			one.addPhrase(ph);
+		}*/
+
+		/*Part two = new Part();
+		for(int i = 0; i < 11; i++)
+		{
+			two.addPhrase(new Phrase(new Note(C3, WHOLE_NOTE)));
+		}
+
+		Part three = new Part();
+		for(int i = 0; i < 11; i++)
+		{
+			Phrase ph = new Phrase();
+			ph.addChord(new int[] {C3, E3, G3}, QUARTER_NOTE);
+			three.addPhrase(ph);
+		}*/
+
+		//NotePitchMutator np = new NotePitchMutator();
+		//SimplifyMutator s = new SimplifyMutator();
+		//SwapMutator sw = new SwapMutator();
+
+		//Organism o1 = new Organism(one, 0.8f);
+		//Organism o2 = new Organism(two, 0.8f);
+		//Organism o3 = new Organism(three, 0.8f);
+
+		//Organism[] child = GeneticAlgorithm.Crossover(o1, o2);
+		//Organism[] child2 = GeneticAlgorithm.Crossover(o3, o2);
+
+
+		//one = s.Mutate(one, 0.95f);
+		//two = s.Mutate(two, 0.95f);
+		//three = s.Mutate(three, 0.95f);
 	}
 
 	@Override
