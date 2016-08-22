@@ -1,4 +1,5 @@
 package com.overtone.GeneticAlgorithm.Raters;
+
 import com.overtone.GeneticAlgorithm.Organism;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
@@ -6,14 +7,13 @@ import jm.music.data.Phrase;
 import java.util.HashMap;
 
 /**
- * Measures the number of unique notes in the phrase
- * Created by trevor on 2016-08-14.
+ * Created by trevor on 2016-08-21.
  */
-public class UniqueNoteRater extends Rater
+public class UniqueRhythmValues extends Rater
 {
     public float Rate(Organism o)
     {
-        HashMap<Integer, Integer> noteCounter = new HashMap();
+        HashMap<Double, Integer> rhythmCounter = new HashMap();
         Part part = o.GetTrack();
 
         for(int i = 0; i < part.length(); i++)
@@ -21,11 +21,11 @@ public class UniqueNoteRater extends Rater
             Phrase phrase = part.getPhrase(i);
             for(int j = 0; j < phrase.length(); j++)
             {
-                int pitch = phrase.getNote(j).getPitch();
-                noteCounter.put(pitch, noteCounter.get(pitch) + 1);
+                double rhythm = phrase.getNote(j).getRhythmValue();
+                rhythmCounter.put(rhythm, rhythmCounter.get(rhythm) + 1);
             }
         }
 
-        return (float)noteCounter.size() / (float)part.length();
+        return (float)rhythmCounter.size() / (float)part.length();
     }
 }

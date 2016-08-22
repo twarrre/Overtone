@@ -11,7 +11,6 @@ import com.overtone.Screens.GameplayScreen;
 import com.overtone.Utilities;
 import jm.JMC;
 import jm.audio.Instrument;
-import jm.constants.Durations;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
@@ -44,13 +43,20 @@ public class GeneticAlgorithm implements Runnable, JMC
     public GeneticAlgorithm()
     {
         _currentIteration = 0;
-        _raters           = new Rater[5];
-        _raters[0]        = new NeighboringPitchRater();
-        _raters[1]        = new PitchDirectionRater();
-        _raters[2]        = new PitchRangerRater();
-        _raters[3]        = new UniqueNoteRater();
-        _raters[4]        = new RepetitionRater();
-        _mutators         = new ArrayList<>();
+        _raters            = new Rater[Overtone.NUM_RATERS];
+        _raters[0]         = new NeighboringPitchRater();
+        _raters[1]         = new PitchDirectionRater();
+        _raters[2]         = new PitchRangeRater();
+        _raters[3]         = new UniqueNoteRater();
+        _raters[4]         = new RepetitionRater();
+        _raters[5]         = new UniqueRhythmValues();
+        _raters[6]         = new ContinousSilenceRater();
+        _raters[7]         = new DirectionOfMelodyRater();
+        _raters[8]         = new DirectionStabilityRater();
+        _raters[9]         = new SyncopationNoteRater();
+        _raters[10]        = new UniqueRhythmValues();
+        _raters[11]        = new VarietyOfRestNoteDensityRater();
+        _mutators          = new ArrayList<>();
         _mutators.add(new NotePitchMutator());
         _mutators.add(new SimplifyMutator());
         _mutators.add(new SwapMutator());
