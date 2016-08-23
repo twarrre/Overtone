@@ -15,6 +15,7 @@ public class UniqueNoteRater extends Rater
     {
         HashMap<Integer, Integer> noteCounter = new HashMap();
         Part part = o.GetTrack();
+        int numNotes = 0;
 
         for(int i = 0; i < part.length(); i++)
         {
@@ -23,9 +24,10 @@ public class UniqueNoteRater extends Rater
             {
                 int pitch = phrase.getNote(j).getPitch();
                 noteCounter.put(pitch, noteCounter.get(pitch) + 1);
+                numNotes++;
             }
         }
 
-        return (float)noteCounter.size() / (float)part.length();
+        return (float)noteCounter.size() / (float)numNotes;
     }
 }

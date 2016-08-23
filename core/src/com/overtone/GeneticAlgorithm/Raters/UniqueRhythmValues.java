@@ -15,6 +15,7 @@ public class UniqueRhythmValues extends Rater
     {
         HashMap<Double, Integer> rhythmCounter = new HashMap();
         Part part = o.GetTrack();
+        int numNotes = 0;
 
         for(int i = 0; i < part.length(); i++)
         {
@@ -23,9 +24,10 @@ public class UniqueRhythmValues extends Rater
             {
                 double rhythm = phrase.getNote(j).getRhythmValue();
                 rhythmCounter.put(rhythm, rhythmCounter.get(rhythm) + 1);
+                numNotes++;
             }
         }
 
-        return (float)rhythmCounter.size() / (float)part.length();
+        return (float)rhythmCounter.size() / (float)numNotes;
     }
 }

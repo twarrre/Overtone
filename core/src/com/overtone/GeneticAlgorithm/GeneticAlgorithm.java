@@ -50,12 +50,10 @@ public class GeneticAlgorithm implements Runnable, JMC
         _raters[3]         = new UniqueNoteRater();
         _raters[4]         = new RepetitionRater();
         _raters[5]         = new UniqueRhythmValues();
-        _raters[6]         = new ContinousSilenceRater();
-        _raters[7]         = new DirectionOfMelodyRater();
-        _raters[8]         = new DirectionStabilityRater();
-        _raters[9]         = new SyncopationNoteRater();
-        _raters[10]        = new UniqueRhythmValues();
-        _raters[11]        = new VarietyOfRestNoteDensityRater();
+        _raters[6]         = new ContinuousSilenceRater();
+        _raters[7]         = new DirectionStabilityRater();
+        _raters[8]         = new SyncopationNoteRater();
+        _raters[9]        = new EqualConsecutiveNoteRater();
         _mutators          = new ArrayList<>();
         _mutators.add(new NotePitchMutator());
         _mutators.add(new SimplifyMutator());

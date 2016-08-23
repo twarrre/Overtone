@@ -21,6 +21,9 @@ public class PitchRangeRater extends Rater
             Phrase ph = track.getPhrase(i);
             for(int j = 0; j < ph.length(); j++)
             {
+                if(ph.getNote(j).isRest())
+                    continue;
+
                 int pitch = ph.getNote(j).getPitch();
                 if(pitch > highPitch)
                     highPitch = pitch;

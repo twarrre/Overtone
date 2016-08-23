@@ -10,6 +10,6 @@ public class RepetitionRater extends Rater
 {
     public float Rate(Organism p)
     {
-        return 0;
+        return 0.5f;
     }
 }
