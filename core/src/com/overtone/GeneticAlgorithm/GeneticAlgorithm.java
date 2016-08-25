@@ -16,9 +16,8 @@ import jm.music.data.Part;
 import jm.music.data.Phrase;
 import jm.music.data.Score;
 import jm.util.Write;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
+
+import java.util.*;
 
 /**
  * Object to generate the music for the game
@@ -131,17 +130,40 @@ public class GeneticAlgorithm implements Runnable, JMC
     private Organism[] GenerateTracks()
     {
         // Initialization Phrase
-        Organism[] initialPopulation = Initialization();
+        Organism[] population = new Organism[3];
+        Organism[] parentPopulation = Initialization();
+        float parentAverageRating = 0;
+
+        for(int i = 0; i < parentPopulation.length; i++)
+        {
+            parentPopulation[i] = FitnessRating(parentPopulation[i]);
+            parentAverageRating += parentPopulation[i].GetOverallRating();
+        }
+        parentAverageRating /= parentPopulation.length;
 
         //Genetic algorithm phase
         for(int i = 0; i < NUM_ITERATIONS; i++)
         {
-            // TODO: Do iteration stuff in here
-            // TODO: Selection / Fitness Rating
-            // TODO: Crossover
+            population = Selection(parentPopulation);
+            float populationRating = 0;
+
+            for(int j = 0; j < population.length; j++)
+            {
+                population[j] = FitnessRating(population[j]);
+                populationRating += population[j].GetOverallRating();
+            }
+
+            populationRating /= population.length;
+
+            if(populationRating > parentAverageRating)
+            {
+                parentPopulation    = population;
+                parentAverageRating = populationRating;
+            }
         }
 
-        return new Organism[] {initialPopulation[0], initialPopulation[1], initialPopulation[0]};
+        Arrays.sort(population, new RatingComparator());
+        return new Organism[] {population[population.length - 1], population[population.length - 2], population[population.length - 3]};
     }
 
     /**
@@ -175,22 +197,14 @@ public class GeneticAlgorithm implements Runnable, JMC
     }
 
     /**
-     * Gets the top rated tracks out of the array passed in
-     * @param o All the tracks for the generation
-     * @return An array of the the best tracks
-     */
-    private Organism[] Eliteism(Organism[] o)
-    {
-        return o;
-    }
-
-    /**
-     * Selects orgganisms to crossover
+     * Selects organisms to crossover
      * @param parents The parents to crossover
      * @return
      */
     private Organism[] Selection(Organism[] parents)
     {
+        //mutation
+        //crossover
         return parents;
     }
 
@@ -201,8 +215,16 @@ public class GeneticAlgorithm implements Runnable, JMC
      */
     private Organism FitnessRating(Organism p)
     {
+        float overallRating = 0;
         for(int i = 0; i < Overtone.NUM_RATERS; i++)
+        {
             p.SetRating(_raters[i].Rate(p), i);
+            p.SetQuality(Math.abs(Overtone.BestRaterValues[i] - p.GetRating(i)), i);
+            overallRating += p.GetQuality(i);
+        }
+
+        overallRating /= Overtone.NUM_RATERS;
+        p.SetOverallRating(1.0f - overallRating);
 
         return p;
     }
@@ -413,4 +435,19 @@ public class GeneticAlgorithm implements Runnable, JMC
                 return 0;
         }
     }
+
+    static class RatingComparator implements Comparator<Organism>
+    {
+        public int compare(Organism o1, Organism o2)
+        {
+            if(o1.GetOverallRating() < o2.GetOverallRating())
+                return -1;
+            else if (o1.GetOverallRating() == o2.GetOverallRating())
+                return 0;
+            else
+                return -1;
+        }
+    }
 }
+
+
