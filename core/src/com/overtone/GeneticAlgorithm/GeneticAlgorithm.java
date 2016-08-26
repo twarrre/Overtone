@@ -1,5 +1,7 @@
 package com.overtone.GeneticAlgorithm;
 
+import com.badlogic.gdx.math.RandomXS128;
+import com.badlogic.gdx.utils.Array;
 import com.overtone.GeneticAlgorithm.Mutators.Mutator;
 import com.overtone.GeneticAlgorithm.Mutators.NotePitchMutator;
 import com.overtone.GeneticAlgorithm.Mutators.SimplifyMutator;
@@ -29,6 +31,10 @@ public class GeneticAlgorithm implements Runnable, JMC
     public static final int NUM_ITERATIONS = Integer.MAX_VALUE;
     /** The size of the population of tracks. */
     public static final int POPULATION_SIZE = 100;
+    /** The percentage of the population that takes place in the tournament */
+    public static final float TOURNAMENT_PERCENTAGE = 0.10f;
+    /** Number of elites to save*/
+    public static final int NUM_ELITES = 5;
 
     private int                _currentIteration; // The current iteration of the algorithm
     private ArrayList<Mutator> _mutators;         // Array of all of the mutators that may mutate a track.
@@ -144,9 +150,11 @@ public class GeneticAlgorithm implements Runnable, JMC
         //Genetic algorithm phase
         for(int i = 0; i < NUM_ITERATIONS; i++)
         {
+            // Get the children
             population = Selection(parentPopulation);
             float populationRating = 0;
 
+            // Rate the children
             for(int j = 0; j < population.length; j++)
             {
                 population[j] = FitnessRating(population[j]);
@@ -155,6 +163,7 @@ public class GeneticAlgorithm implements Runnable, JMC
 
             populationRating /= population.length;
 
+            // If the children are better then choose them instead
             if(populationRating > parentAverageRating)
             {
                 parentPopulation    = population;
@@ -163,7 +172,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         }
 
         Arrays.sort(population, new RatingComparator());
-        return new Organism[] {population[population.length - 1], population[population.length - 2], population[population.length - 3]};
+        return new Organism[] {population[0], population[1], population[2]};
     }
 
     /**
@@ -199,13 +208,34 @@ public class GeneticAlgorithm implements Runnable, JMC
     /**
      * Selects organisms to crossover
      * @param parents The parents to crossover
-     * @return
+     * @return A generation of children organisms
      */
     private Organism[] Selection(Organism[] parents)
     {
-        //mutation
-        //crossover
-        return parents;
+        Arrays.sort(parents, new RatingComparator());
+        Organism[] children = new Organism[POPULATION_SIZE];
+
+        // Elitism, save the best ones
+        int counter;
+        for(counter = 0; counter < NUM_ELITES; counter++)
+            children[counter] = parents[counter];
+
+        while(counter < POPULATION_SIZE)
+        {
+            int p1 = RouletteSelection(parents);
+            int p2 = p1;
+            while(p2 == p1)
+                p2 = RouletteSelection(parents);
+
+            Organism[] siblings = Crossover(parents[p1], parents[p2]);
+
+            for(int i = 0; i < siblings.length; i++)
+                children[counter + i] = Mutation(siblings[i]);
+
+            counter += siblings.length;
+        }
+
+        return children;
     }
 
     /**
@@ -311,6 +341,37 @@ public class GeneticAlgorithm implements Runnable, JMC
     private float GetProbability(Organism o)
     {
         return o.GetProbability() - (Organism.MUTATION_STEP / (float)(_currentIteration / NUM_ITERATIONS));
+    }
+
+    /**
+     * Selects a parent based on thief probability, higher ones are chose more often
+     * @param parents The parent organisms
+     * @return The index to the parent chosen for crossover
+     */
+    private int RouletteSelection(Organism[] parents)
+    {
+        int index = 0;
+
+        float sum = 0;
+        for(int i = 0; i < parents.length; i++)
+            sum += parents[i].GetOverallRating();
+
+        Random r = new Random(System.nanoTime());
+        float rand = r.nextFloat() * sum;
+
+        sum = 0;
+        for(int i = 0; i < parents.length; i++)
+        {
+            sum += parents[i].GetOverallRating();
+
+            if(sum > rand)
+            {
+                index = i;
+                break;
+            }
+        }
+
+        return index;
     }
 
     /**
@@ -436,12 +497,17 @@ public class GeneticAlgorithm implements Runnable, JMC
         }
     }
 
+
+    /**
+     * Comparator for sorting organisms based on their ratings
+     * Sorts them in reverse.
+     */
     static class RatingComparator implements Comparator<Organism>
     {
         public int compare(Organism o1, Organism o2)
         {
             if(o1.GetOverallRating() < o2.GetOverallRating())
-                return -1;
+                return 1;
             else if (o1.GetOverallRating() == o2.GetOverallRating())
                 return 0;
             else
