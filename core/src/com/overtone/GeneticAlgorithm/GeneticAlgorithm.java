@@ -31,8 +31,6 @@ public class GeneticAlgorithm implements Runnable, JMC
     public static final int NUM_ITERATIONS = Integer.MAX_VALUE;
     /** The size of the population of tracks. */
     public static final int POPULATION_SIZE = 100;
-    /** The percentage of the population that takes place in the tournament */
-    public static final float TOURNAMENT_PERCENTAGE = 0.10f;
     /** Number of elites to save*/
     public static final int NUM_ELITES = 5;
 
@@ -120,7 +118,13 @@ public class GeneticAlgorithm implements Runnable, JMC
 
         // Set the current rater values
         for(int i = 0; i < Overtone.CurrentRaterValues.length; i++)
-            Overtone.CurrentRaterValues[i] = Utilities.Clamp(Overtone.BestRaterValues[i] + 0.01f, 0.0f, 1.0f);
+        {
+            float sum = 0;
+            for(int j = 0; j < bestThreeTracks.length; j++)
+                sum += bestThreeTracks[j].GetOverallRating();
+            sum /= bestThreeTracks.length;
+            Overtone.CurrentRaterValues[i] = sum;
+        }
 
         // Write the music to a file for playback
         Write.midi(Overtone.GameMusic, "Music\\GeneratedMusic.mid");
@@ -187,22 +191,34 @@ public class GeneticAlgorithm implements Runnable, JMC
         //Mess with rest can check if rest
         //mess with pan
 
-        Part[] tracks = new Part[3];
-        tracks[0] = new Part();
-        tracks[1] = new Part();
-        tracks[2] = new Part();
-        for(int i = 0; i < 10; i++)
+        for(int i = 0; i < POPULATION_SIZE; i++)
         {
-            Random r = new Random();
-            int c = r.nextInt(chords.length);
-            Phrase chord = new Phrase();
-            chord.addChord(chords[c], QUARTER_NOTE);
-            tracks[0].addPhrase(chord);
-            tracks[1].addPhrase(new Phrase(new Note(C3, WHOLE_NOTE)));
-            tracks[2].addPhrase(new Phrase(new Note(C2, QUARTER_NOTE)));
+            Part p = new Part();
+            for(int j = 0; j < 12; j++)
+            {
+                Random r = new Random(System.nanoTime());
+                r.nextInt(3);
+
+                if(i == 0)
+                {
+                    int c = r.nextInt(chords.length);
+                    Phrase chord = new Phrase();
+                    chord.addChord(chords[c], QUARTER_NOTE);
+                }
+                else if (i == 1)
+                {
+                    p.addPhrase(new Phrase(new Note(C3, WHOLE_NOTE)));
+                }
+                else
+                {
+                    p.addPhrase(new Phrase(new Note(C2, QUARTER_NOTE)));
+                }
+            }
+
+            population[i] = new Organism(p, Organism.STARTING_PROBABILITY);
         }
 
-        return new Organism[] {new Organism(tracks[0], Organism.STARTING_PROBABILITY), new Organism(tracks[1], Organism.STARTING_PROBABILITY), new Organism(tracks[2], Organism.STARTING_PROBABILITY)};
+        return population;
     }
 
     /**

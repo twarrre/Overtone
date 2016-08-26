@@ -19,7 +19,7 @@ public class NeighboringPitchRater extends Rater
         Part track = p.GetTrack();
         int i = 0;
 
-        while(track.getPhrase(i).length() > 1)
+        while(track.getPhrase(i).length() > 1 && i < track.length())
             i++;
         Note prev = track.getPhrase(i).getNote(0);
 
