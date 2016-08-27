@@ -21,16 +21,19 @@ public class SyncopationNoteRater extends Rater implements JMC
         {
             double noteDur;
             if(track.getPhrase(i).length() > 1)
-                noteDur = track.getPhrase(i).getNote(track.getPhrase(i).length() - 1).getDuration();
+                noteDur = track.getPhrase(i).getNote(track.getPhrase(i).length() - 1).getRhythmValue();
             else
-                noteDur = track.getPhrase(i).getNote(0).getDuration();
+                noteDur = track.getPhrase(i).getNote(0).getRhythmValue();
 
             duration += noteDur;
+            if(duration == WHOLE_NOTE)
+                duration = 0;
             if(duration > WHOLE_NOTE)
             {
                 syncopationCounter++;
                 duration = duration - WHOLE_NOTE;
             }
+
             numNotes++;
         }
 

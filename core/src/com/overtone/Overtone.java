@@ -206,9 +206,6 @@ public class Overtone extends ApplicationAdapter implements JMC
 		Utilities.LoadVolume();
 		Utilities.LoadRaterValues();
 		Utilities.LoadMidiMusic(true);
-
-		//NeighboringPitchRaterTest.Test();
-		//return;
 	}
 
 	@Override
