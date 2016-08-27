@@ -22,12 +22,23 @@ public class UniqueNoteRater extends Rater
             Phrase phrase = part.getPhrase(i);
             for(int j = 0; j < phrase.length(); j++)
             {
+                if(phrase.getNote(j).isRest())
+                    continue;
+
                 int pitch = phrase.getNote(j).getPitch();
-                noteCounter.put(pitch, noteCounter.get(pitch) + 1);
+
+                if(noteCounter.containsKey(pitch))
+                    noteCounter.put(pitch, noteCounter.get(pitch) + 1);
+                else
+                    noteCounter.put(pitch, 1);
+
                 numNotes++;
             }
         }
 
-        return (float)noteCounter.size() / (float)numNotes;
+        if(numNotes == 0)
+            return 0;
+        else
+            return (float)noteCounter.size() / (float)numNotes;
     }
 }

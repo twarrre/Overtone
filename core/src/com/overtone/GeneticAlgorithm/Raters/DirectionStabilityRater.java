@@ -23,26 +23,28 @@ public class DirectionStabilityRater extends Rater
             if(ph.length() > 1)
                 continue;
 
-            if(prevPitch == -1)
-            {
-                prevPitch = ph.getNote(0).getPitch();
-            }
-            else if(ph.getNote(0).getPitch() > prevPitch && direction != 1)
+            if(ph.getNote(0).isRest())
+                continue;
+
+            if(ph.getNote(0).getPitch() > prevPitch && direction != 1 && prevPitch != -1)
             {
                 pitchDirectionChanges++;
                 direction = 1;
-                prevPitch = ph.getNote(0).getPitch();
+
             }
-            else if(ph.getNote(0).getPitch() < prevPitch && direction != -1)
+            else if(ph.getNote(0).getPitch() < prevPitch && direction != -1 && prevPitch != -1)
             {
                 pitchDirectionChanges++;
                 direction = -1;
-                prevPitch = ph.getNote(0).getPitch();
             }
 
+            prevPitch = ph.getNote(0).getPitch();
             numNotes++;
         }
 
-        return (float)pitchDirectionChanges / (float)numNotes;
+        if(numNotes == 0)
+            return 0;
+        else
+            return (float)pitchDirectionChanges / (float)numNotes;
     }
 }

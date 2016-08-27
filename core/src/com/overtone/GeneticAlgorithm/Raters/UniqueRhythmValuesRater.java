@@ -9,7 +9,7 @@ import java.util.HashMap;
 /**
  * Created by trevor on 2016-08-21.
  */
-public class UniqueRhythmValues extends Rater
+public class UniqueRhythmValuesRater extends Rater
 {
     public float Rate(Organism o)
     {
@@ -20,12 +20,14 @@ public class UniqueRhythmValues extends Rater
         for(int i = 0; i < part.length(); i++)
         {
             Phrase phrase = part.getPhrase(i);
-            for(int j = 0; j < phrase.length(); j++)
-            {
-                double rhythm = phrase.getNote(j).getRhythmValue();
+            double rhythm = phrase.getNote(phrase.length() - 1).getRhythmValue();
+
+            if(rhythmCounter.containsKey(rhythm))
                 rhythmCounter.put(rhythm, rhythmCounter.get(rhythm) + 1);
-                numNotes++;
-            }
+            else
+                rhythmCounter.put(rhythm, 1);
+
+            numNotes++;
         }
 
         return (float)rhythmCounter.size() / (float)numNotes;

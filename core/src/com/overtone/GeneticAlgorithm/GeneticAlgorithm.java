@@ -1,7 +1,5 @@
 package com.overtone.GeneticAlgorithm;
 
-import com.badlogic.gdx.math.RandomXS128;
-import com.badlogic.gdx.utils.Array;
 import com.overtone.GeneticAlgorithm.Mutators.Mutator;
 import com.overtone.GeneticAlgorithm.Mutators.NotePitchMutator;
 import com.overtone.GeneticAlgorithm.Mutators.SimplifyMutator;
@@ -38,7 +36,7 @@ public class GeneticAlgorithm implements Runnable, JMC
     private ArrayList<Mutator> _mutators;         // Array of all of the mutators that may mutate a track.
     private Rater[]            _raters;           // Array of raters to rate the tracks
 
-    private int[][] chords = {{C3, E3, G3}, {F3,A3, C3}, {G3, B3, D3}}; // Available chords to choose from
+    public static int[][] chords = {{C3, E3, G3}, {F3,A3, C3}, {G3, B3, D3}}; // Available chords to choose from
 
     /**
      * Constructor
@@ -52,7 +50,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         _raters[2]         = new PitchRangeRater();
         _raters[3]         = new UniqueNoteRater();
         _raters[4]         = new RepetitionRater();
-        _raters[5]         = new UniqueRhythmValues();
+        _raters[5]         = new UniqueRhythmValuesRater();
         _raters[6]         = new ContinuousSilenceRater();
         _raters[7]         = new DirectionStabilityRater();
         _raters[8]         = new SyncopationNoteRater();

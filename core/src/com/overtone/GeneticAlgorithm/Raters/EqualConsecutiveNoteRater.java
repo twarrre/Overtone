@@ -22,6 +22,8 @@ public class EqualConsecutiveNoteRater extends Rater
 
             if(ph.length() > 1)
                 continue;
+            else if(ph.getNote(0).isRest())
+                continue;
             else if(i == 0)
                 continue;
             else if(track.getPhrase(i - 1).length() > 1)
@@ -35,6 +37,9 @@ public class EqualConsecutiveNoteRater extends Rater
             numNotes++;
         }
 
-        return (float)consecutiveNote / (float)numNotes;
+        if(numNotes == 0)
+            return 0;
+        else
+            return (float)consecutiveNote / (float)numNotes;
     }
 }

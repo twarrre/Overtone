@@ -23,6 +23,9 @@ public class PitchDirectionRater extends Rater
             if(ph.length() > 1)
                 continue;
 
+            if(ph.getNote(0).isRest())
+                continue;
+
             if(ph.getNote(0).getPitch() > prevPitch && prevPitch != -1)
                 pitchesHigherThanBefore++;
 
@@ -30,6 +33,9 @@ public class PitchDirectionRater extends Rater
             numNotes++;
         }
 
-        return (float)pitchesHigherThanBefore / (float)numNotes;
+        if(numNotes == 0)
+            return 0;
+        else
+            return (float)pitchesHigherThanBefore / (float)numNotes;
     }
 }

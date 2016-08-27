@@ -13,7 +13,7 @@ public class PitchRangeRater extends Rater
     public float Rate(Organism p)
     {
         int lowPitch = Integer.MAX_VALUE;
-        int highPitch = 0;
+        int highPitch = Integer.MIN_VALUE;
         Part track = p.GetTrack();
 
         for(int i = 0; i < track.length(); i++)
@@ -25,13 +25,18 @@ public class PitchRangeRater extends Rater
                     continue;
 
                 int pitch = ph.getNote(j).getPitch();
+
                 if(pitch > highPitch)
                     highPitch = pitch;
-                else if(pitch < lowPitch)
+
+                if(pitch < lowPitch)
                     lowPitch = pitch;
             }
         }
 
-        return (float)lowPitch / (float)highPitch;
+        if(lowPitch == Integer.MAX_VALUE || highPitch == Integer.MIN_VALUE)
+            return 0;
+        else
+            return (float)lowPitch / (float)highPitch;
     }
 }

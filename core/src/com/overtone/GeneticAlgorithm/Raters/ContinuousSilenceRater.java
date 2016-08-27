@@ -5,6 +5,7 @@ import jm.music.data.Part;
 import jm.music.data.Phrase;
 
 /**
+ * Check how much rests there are in the music.
  * Created by trevor on 2016-08-21.
  */
 public class ContinuousSilenceRater extends Rater
