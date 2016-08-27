@@ -318,7 +318,7 @@ public class Utilities implements JMC
     }
 
     /**
-     * Binary search to search for the coresponding note
+     * Binary search to search for the corresponding note
      * @param n The array to search
      * @param search The value to seach for
      * @param low low index of the array
