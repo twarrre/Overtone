@@ -15,6 +15,9 @@ public class NotePitchMutator extends Mutator implements JMC
     {
         for(int i = 0; i < p.length(); i++)
         {
+            if(p.getPhrase(i).getNote(0).isRest())
+                continue;
+
             // Random to decide if the note will be mutated or not
             int random = Utilities.GetRandom(0, 1, probability);
             if(random == 0)

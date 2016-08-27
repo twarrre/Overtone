@@ -156,5 +156,41 @@ public class SimplifyMutatorTest implements JMC
             System.out.println();
         }
         System.out.println();
+
+        Part p3 = new Part();
+        for(int i = 0; i < 10; i++)
+        {
+            if(i % 2 == 0)
+                p3.addPhrase(new Phrase(new Note(C4, QUARTER_NOTE)));
+            else
+                p3.addPhrase(new Phrase(new Note(REST, QUARTER_NOTE)));
+        }
+
+        Part mr1 = sm.Mutate(p3.copy(), 1);
+
+        System.out.println("Mutation Rest 1, 100% note mutation probability");
+        System.out.println("--------------------------------------------");
+        System.out.println("Original         Mutated");
+        for(int i = 0; i < p.length(); i++)
+            System.out.println(p3.getPhrase(i).getNote(0).getPitch() + "             " + mr1.getPhrase(i).getNote(0).getPitch());
+        System.out.println();
+
+        Part p4 = new Part();
+        for(int i = 0; i < 10; i++)
+        {
+            if(i == 5)
+                p4.addPhrase(new Phrase(new Note(REST, QUARTER_NOTE)));
+            else
+                p4.addPhrase(new Phrase(new Note(C4 + i, QUARTER_NOTE)));
+        }
+
+        Part mr2 = sm.Mutate(p4.copy(), 1);
+
+        System.out.println("Mutation Rest 2, 100% note mutation probability");
+        System.out.println("--------------------------------------------");
+        System.out.println("Original         Mutated");
+        for(int i = 0; i < p.length(); i++)
+            System.out.println(p4.getPhrase(i).getNote(0).getPitch() + "             " + mr2.getPhrase(i).getNote(0).getPitch());
+        System.out.println();
     }
 }

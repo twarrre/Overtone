@@ -6,16 +6,10 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.overtone.GeneticAlgorithm.Mutators.RhythmMutator;
-import com.overtone.GeneticAlgorithm.Raters.*;
 import com.overtone.Notes.OvertoneNote;
 import com.overtone.Notes.Target;
 import com.overtone.Screens.*;
 import java.util.ArrayList;
-import java.util.Collections;
-
-import com.overtone.Testing.MutatorTests.RhythmMutatorTest;
-import com.overtone.Testing.RaterTests.*;
 import jm.audio.Instrument;
 import jm.music.data.*;
 import javax.sound.midi.Sequencer;
@@ -209,9 +203,6 @@ public class Overtone extends ApplicationAdapter implements JMC
 		Utilities.LoadVolume();
 		Utilities.LoadRaterValues();
 		Utilities.LoadMidiMusic(true);
-
-		//RhythmMutatorTest.Test();
-		//return;
 	}
 
 	@Override

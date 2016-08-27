@@ -16,6 +16,9 @@ public class SimplifyMutator extends Mutator
         Random r = new Random(System.nanoTime());
         for(int i = 0; i < p.length(); i++)
         {
+            if(p.getPhrase(i).getNote(0).isRest())
+                continue;
+
             // Random to decide if the note will be mutated or not
             int random = Utilities.GetRandom(0, 1, probability);
             if(random == 0)
@@ -28,6 +31,20 @@ public class SimplifyMutator extends Mutator
                     phraseToCopy = p.length() - 1;
                 else if(i == p.length() - 1 && leftOrRight == 1)
                     phraseToCopy = 0;
+
+                // Check if both sides are rests
+                if(p.getPhrase(phraseToCopy).getNote(0).isRest())
+                {
+                    phraseToCopy = i + (leftOrRight * -1);
+
+                    if(i == 0 && (leftOrRight * -1) == -1)
+                        phraseToCopy = p.length() - 1;
+                    else if(i == p.length() - 1 && (leftOrRight * -1) == 1)
+                        phraseToCopy = 0;
+
+                    if(p.getPhrase(phraseToCopy).getNote(0).isRest())
+                        continue;
+                }
 
                 // Get the pitch of a random note in the randomly selected phrase
                 Phrase copyPhrase = p.getPhrase(phraseToCopy);
