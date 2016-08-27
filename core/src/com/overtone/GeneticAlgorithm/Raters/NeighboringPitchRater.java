@@ -17,24 +17,32 @@ public class NeighboringPitchRater extends Rater
         int numCrazyNotes = 0;
         int numNotes = 0;
         Part track = p.GetTrack();
-        int i = 0;
 
-        while(track.getPhrase(i).length() > 1 && i < track.length())
-            i++;
-        Note prev = track.getPhrase(i).getNote(0);
-
-        for(int j = i; j < track.length(); j++)
+        for(int i = 0; i < track.length(); i++)
         {
-            if(track.getPhrase(i).length() > 1)
+            if(track.getPhrase(i).length() > 1 || track.getPhrase(i).getNote(0).isRest())
                 continue;
 
-            if(track.getPhrase(j).getNote(0).getPitch() > prev.getPitch() + OCTAVE || track.getPhrase(j).getNote(0).getPitch() > prev.getPitch() - OCTAVE)
-                numCrazyNotes++;
+            if(i == track.length() - 1)
+            {
+                numNotes++;
+                continue;
+            }
 
-            prev = track.getPhrase(j).getNote(0);
+            //skip chords and rests
+            if(track.getPhrase(i + 1).length() < 2 && !track.getPhrase(i + 1).getNote(0).isRest())
+            {
+                if((track.getPhrase(i + 1).getNote(0).getPitch() > (track.getPhrase(i).getNote(0).getPitch() + OCTAVE)
+                        || track.getPhrase(i + 1).getNote(0).getPitch() < (track.getPhrase(i).getNote(0).getPitch() - OCTAVE)))
+                    numCrazyNotes++;
+            }
+
             numNotes++;
         }
 
-        return (float)numCrazyNotes / (float)numNotes;
+        if(numNotes == 0)
+            return 0;
+        else
+            return (float)numCrazyNotes / (float)numNotes;
     }
 }

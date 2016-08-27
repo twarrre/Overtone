@@ -54,7 +54,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         _raters[6]         = new ContinuousSilenceRater();
         _raters[7]         = new DirectionStabilityRater();
         _raters[8]         = new SyncopationNoteRater();
-        _raters[9]        = new EqualConsecutiveNoteRater();
+        _raters[9]         = new EqualConsecutiveNoteRater();
         _mutators          = new ArrayList<>();
         _mutators.add(new NotePitchMutator());
         _mutators.add(new SimplifyMutator());
