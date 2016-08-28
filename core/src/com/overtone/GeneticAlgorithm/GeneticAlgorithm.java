@@ -1,9 +1,6 @@
 package com.overtone.GeneticAlgorithm;
 
-import com.overtone.GeneticAlgorithm.Mutators.Mutator;
-import com.overtone.GeneticAlgorithm.Mutators.NotePitchMutator;
-import com.overtone.GeneticAlgorithm.Mutators.SimplifyMutator;
-import com.overtone.GeneticAlgorithm.Mutators.SwapMutator;
+import com.overtone.GeneticAlgorithm.Mutators.*;
 import com.overtone.GeneticAlgorithm.Raters.*;
 import com.overtone.Notes.OvertoneNote;
 import com.overtone.Overtone;
@@ -26,11 +23,11 @@ import java.util.*;
 public class GeneticAlgorithm implements Runnable, JMC
 {
     /** Represents the number of iterations the algorithm is going to go through*/
-    public static final int NUM_ITERATIONS = Integer.MAX_VALUE;
+    public static final int NUM_ITERATIONS = 10;
     /** The size of the population of tracks. */
-    public static final int POPULATION_SIZE = 100;
+    public static final int POPULATION_SIZE = 10;
     /** Number of elites to save*/
-    public static final int NUM_ELITES = 5;
+    public static final int NUM_ELITES = 4;
 
     private int                _currentIteration; // The current iteration of the algorithm
     private ArrayList<Mutator> _mutators;         // Array of all of the mutators that may mutate a track.
@@ -59,6 +56,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         _mutators.add(new NotePitchMutator());
         _mutators.add(new SimplifyMutator());
         _mutators.add(new SwapMutator());
+        _mutators.add(new RhythmMutator());
     }
 
     public void run()
@@ -85,7 +83,7 @@ public class GeneticAlgorithm implements Runnable, JMC
     /**
      * Generates the notes.
      */
-    public void Generate()
+    private void Generate()
     {
         // Initialize score for game music
         Overtone.GameMusic       = new Score();
@@ -126,9 +124,6 @@ public class GeneticAlgorithm implements Runnable, JMC
 
         // Write the music to a file for playback
         Write.midi(Overtone.GameMusic, "Music\\GeneratedMusic.mid");
-
-        // Some extra work just cause
-        for(int i = 0; i < NUM_ITERATIONS; i++){_currentIteration++;}
     }
 
     /**
@@ -137,6 +132,11 @@ public class GeneticAlgorithm implements Runnable, JMC
      */
     private Organism[] GenerateTracks()
     {
+        float bestRaterScoreAverage = 0;
+        for(int i = 0; i < Overtone.BestRaterValues.length; i++)
+            bestRaterScoreAverage += Overtone.BestRaterValues[i];
+        bestRaterScoreAverage /= Overtone.BestRaterValues.length;
+
         // Initialization Phrase
         Organism[] population = new Organism[3];
         Organism[] parentPopulation = Initialization();
@@ -166,7 +166,7 @@ public class GeneticAlgorithm implements Runnable, JMC
             populationRating /= population.length;
 
             // If the children are better then choose them instead
-            if(populationRating > parentAverageRating)
+            if(Math.abs(bestRaterScoreAverage - populationRating) > Math.abs(bestRaterScoreAverage - parentAverageRating))
             {
                 parentPopulation    = population;
                 parentAverageRating = populationRating;
@@ -181,7 +181,7 @@ public class GeneticAlgorithm implements Runnable, JMC
      * The initialization phase of the genetic algorithm. Generates the initial population
      * @return an array of phrases that is the initial population of the algorithm
      */
-    private Organism[] Initialization()
+    public Organism[] Initialization()
     {
         Organism[] population = new Organism[POPULATION_SIZE];
         // TODO: Generate the initial population here
@@ -202,18 +202,19 @@ public class GeneticAlgorithm implements Runnable, JMC
                     int c = r.nextInt(chords.length);
                     Phrase chord = new Phrase();
                     chord.addChord(chords[c], QUARTER_NOTE);
+                    p.addPhrase(chord);
                 }
-                else if (i == 1)
+                else if (i % 2 == 0)
                 {
-                    p.addPhrase(new Phrase(new Note(C3, WHOLE_NOTE)));
+                    p.addPhrase(new Phrase(new Note(C3 + i, WHOLE_NOTE)));
                 }
                 else
                 {
-                    p.addPhrase(new Phrase(new Note(C2, QUARTER_NOTE)));
+                    p.addPhrase(new Phrase(new Note(C2 + i, QUARTER_NOTE)));
                 }
             }
 
-            population[i] = new Organism(p, Organism.STARTING_PROBABILITY);
+            population[i] = new Organism(p.copy(), Organism.STARTING_PROBABILITY);
         }
 
         return population;
@@ -243,10 +244,22 @@ public class GeneticAlgorithm implements Runnable, JMC
 
             Organism[] siblings = Crossover(parents[p1], parents[p2]);
 
+            boolean overflow = false;
             for(int i = 0; i < siblings.length; i++)
-                children[counter + i] = Mutation(siblings[i]);
+            {
+                if(counter + i >= POPULATION_SIZE)
+                {
+                    overflow = true;
+                    continue;
+                }
 
-            counter += siblings.length;
+                children[counter + i] = Mutation(siblings[i]);
+            }
+
+            if(overflow)
+                counter++;
+            else
+                counter += siblings.length;
         }
 
         return children;
@@ -263,7 +276,10 @@ public class GeneticAlgorithm implements Runnable, JMC
         for(int i = 0; i < Overtone.NUM_RATERS; i++)
         {
             p.SetRating(_raters[i].Rate(p), i);
-            p.SetQuality(Math.abs(Overtone.BestRaterValues[i] - p.GetRating(i)), i);
+            if(Overtone.BestRaterValues[i] == -1)
+                p.SetQuality(Math.abs(p.GetRating(i)), i);
+            else
+                p.SetQuality(Math.abs(Overtone.BestRaterValues[i] - p.GetRating(i)), i);
             overallRating += p.GetQuality(i);
         }
 
@@ -278,13 +294,13 @@ public class GeneticAlgorithm implements Runnable, JMC
      * @param o The phrase to be mutated
      * @return A new Phrase that has been mutated
      */
-    private Organism Mutation(Organism o)
+    public Organism Mutation(Organism o)
     {
         // Randomize the order of the mutators
         Collections.shuffle(_mutators, new Random(System.nanoTime()));
 
         // Mutate the phrase
-        Part mutation = o.GetTrack();
+        Part mutation = o.GetTrack().copy();
         for(int i = 0; i < _mutators.size(); i++)
             mutation = _mutators.get(i).Mutate(mutation, o.GetProbability());
         o.SetTrack(mutation);
@@ -344,7 +360,7 @@ public class GeneticAlgorithm implements Runnable, JMC
                 children[0].addPhrase(p1.getPhrase(length + i));
         }
 
-        return new Organism[] { new Organism(children[0], GetProbability(parent1)), new Organism(children[1], GetProbability(parent2))};
+        return new Organism[] { new Organism(children[0].copy(), GetProbability(parent1)), new Organism(children[1].copy(), GetProbability(parent2))};
     }
 
     /**

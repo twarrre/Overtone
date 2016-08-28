@@ -264,16 +264,8 @@ public class Utilities implements JMC
      */
     public static void AverageRaterValues()
     {
-        if(Overtone.BestRaterValues[0] < 0)
-        {
-            for(int i = 0; i < Overtone.NUM_RATERS; i++)
-                Overtone.BestRaterValues[i] =  Overtone.CurrentRaterValues[i];
-        }
-        else
-        {
-            for(int i = 0; i < Overtone.NUM_RATERS; i++)
-                Overtone.BestRaterValues[i] = (Overtone.BestRaterValues[i] + Overtone.CurrentRaterValues[i]) / 2.0f;
-        }
+        for(int i = 0; i < Overtone.NUM_RATERS; i++)
+            Overtone.BestRaterValues[i] = Utilities.Clamp((Overtone.BestRaterValues[i] + Overtone.CurrentRaterValues[i]) / 2.0f, 0.0f, 1.0f);
     }
 
     /**
@@ -282,7 +274,7 @@ public class Utilities implements JMC
     public static void ClearRaterValues()
     {
         for(int i = 0; i < Overtone.NUM_RATERS; i++)
-            Overtone.CurrentRaterValues[i] = -1.0f;
+            Overtone.CurrentRaterValues[i] = 0.5f;
     }
 
     /**

@@ -14,7 +14,7 @@ public class Organism
     public static final float MUTATION_STEP = 0.0005f;
 
     /** The starting probability for how a note can mutate */
-    public static final float STARTING_PROBABILITY = 0.6f;
+    public static final float STARTING_PROBABILITY = 0.8f;
 
     private Part    _track;               // The track for this organism
     private float[] _rating;              // The fitness rating for this organism
