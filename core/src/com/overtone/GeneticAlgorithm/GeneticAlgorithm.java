@@ -28,14 +28,12 @@ public class GeneticAlgorithm implements Runnable, JMC
     public static final int POPULATION_SIZE = 10;
     /** Number of elites to save*/
     public static final int NUM_ELITES = 4;
-
-    private int                _currentIteration; // The current iteration of the algorithm
-    private ArrayList<Mutator> _mutators;         // Array of all of the mutators that may mutate a track.
-    private Rater[]            _raters;           // Array of raters to rate the tracks
-
     /** Array of valid chords that can be used in generation */
-    public static int[][] CHORDS = {{C3, E3, G3}, {F3,A3, C3}, {G3, B3, D3}}; // Available chords to choose from
-
+    public static int[][] CHORDS = {
+            {C3, E3, G3},
+            {F3,A3, C3},
+            {G3, B3, D3}
+    };
     /** Array of valid rhythms used in generation. */
     public static final ArrayList<Double> RHYTHMS = new ArrayList<Double>()
     {{
@@ -54,6 +52,11 @@ public class GeneticAlgorithm implements Runnable, JMC
         add(WHOLE_NOTE);
     }};
 
+    private int                _currentIteration; // The current iteration of the algorithm
+    private ArrayList<Mutator> _mutators;         // Array of all of the mutators that may mutate a track.
+    private Rater[]            _raters;           // Array of raters to rate the tracks
+    private boolean            _isCompleted;      // True if the generation has completed;
+
     /**
      * Constructor
      */
@@ -71,6 +74,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         _raters[7]         = new SyncopationNoteRater();
         _raters[8]         = new EqualConsecutiveNoteRater();
         _mutators          = new ArrayList<>();
+        _isCompleted       = false;
         _mutators.add(new NotePitchMutator());
         _mutators.add(new SimplifyMutator());
         _mutators.add(new SwapMutator());
@@ -83,19 +87,11 @@ public class GeneticAlgorithm implements Runnable, JMC
     }
 
     /**
-     * @return The percentage of completion for the algorithm
-     */
-    public float GetPercentComplete()
-    {
-        return (float)_currentIteration / (float)NUM_ITERATIONS;
-    }
-
-    /**
      * @return True if the algorithm has completed, false otherwise
      */
     public boolean IsCompleted()
     {
-        return (float)_currentIteration / (float)NUM_ITERATIONS >= 1.0f;
+        return _isCompleted;
     }
 
     /**
@@ -103,6 +99,7 @@ public class GeneticAlgorithm implements Runnable, JMC
      */
     private void Generate()
     {
+        _isCompleted = false;
         // Initialize score for game music
         Overtone.GameMusic       = new Score();
         Overtone.GameInstruments = new Instrument[10];
@@ -142,6 +139,7 @@ public class GeneticAlgorithm implements Runnable, JMC
 
         // Write the music to a file for playback
         Write.midi(Overtone.GameMusic, "Music\\GeneratedMusic.mid");
+        _isCompleted = true;
     }
 
     /**
@@ -203,9 +201,8 @@ public class GeneticAlgorithm implements Runnable, JMC
     {
         Organism[] population = new Organism[POPULATION_SIZE];
         // TODO: Generate the initial population here
-        //Mess with dynamics (loudness, softness)
         //Mess with rest can check if rest
-        //mess with pan
+        // Do chords
 
         for(int i = 0; i < POPULATION_SIZE; i++)
         {

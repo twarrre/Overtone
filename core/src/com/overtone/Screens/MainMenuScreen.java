@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.overtone.Overtone;
+import com.overtone.Utilities;
 
 /**
  * Screen used for the main menu
@@ -15,8 +16,11 @@ import com.overtone.Overtone;
  */
 public class MainMenuScreen extends OvertoneScreen
 {
-    private final Stage   _stage; // The stage that holds buttons and stuff
-    private final Texture _logo;  // Texture of the logo on screen
+    private final Stage   _stage;         // The stage that holds buttons and stuff
+    private final Texture _logoNoGlow;    // Texture of the logo on screen
+    private final Texture _glow;          // Texture for the glow of the logo
+    private float         _glowAlpha;     // The alpha of the glow for the logo
+    private float         _glowDirection; // The direction of the glow alpha
 
     /**
      * Constructor
@@ -25,7 +29,10 @@ public class MainMenuScreen extends OvertoneScreen
     {
         super();
         _stage              = new Stage();
-        _logo               = new Texture(Gdx.files.internal("Textures\\logo.png"));
+        _logoNoGlow         = new Texture(Gdx.files.internal("Textures\\logo_noglow.png"));
+        _glow               = new Texture(Gdx.files.internal("Textures\\glow.png"));
+        _glowAlpha          = 0.0f;
+        _glowDirection      = 0.01f;
         Overtone.Regenerate = true;
 
         // Create the play button
@@ -81,15 +88,25 @@ public class MainMenuScreen extends OvertoneScreen
         _glyphLayout.setText(_font12, "Version 1.0");
         _font12.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.045f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.035f - (_glyphLayout.height / 2.0f));
 
-        _batch.draw(_logo, Overtone.ScreenWidth * 0.5f - (_logo.getWidth() / 2.0f), Overtone.ScreenHeight * 0.7f - (_logo.getHeight() / 2.0f), _logo.getWidth(), _logo.getHeight());
+        _batch.setColor(1.0f, 1.0f, 1.0f, _glowAlpha);
+        _batch.draw(_glow, Overtone.ScreenWidth * 0.5f - (_glow.getWidth() / 2.0f), Overtone.ScreenHeight * 0.7f - (_glow.getHeight() / 2.0f), _glow.getWidth(), _glow.getHeight());
+        _batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+        _batch.draw(_logoNoGlow, Overtone.ScreenWidth * 0.5f - (_logoNoGlow.getWidth() / 2.0f), Overtone.ScreenHeight * 0.7f - (_logoNoGlow.getHeight() / 2.0f), _logoNoGlow.getWidth(), _logoNoGlow.getHeight());
 
         _batch.end();
         _stage.draw();
     }
 
-    public void update(float deltaTime) {
+    public void update(float deltaTime)
+    {
         super.update(deltaTime);
         _stage.act(deltaTime);
+
+        _glowAlpha = Utilities.Clamp(_glowAlpha + _glowDirection, 0, 1);
+        if(_glowAlpha >= 1.0f || _glowAlpha <= 0.0f)
+            _glowDirection *= -1.0f;
+
     }
     public void resize(int width, int height) {
         super.resize(width, height);
@@ -108,6 +125,7 @@ public class MainMenuScreen extends OvertoneScreen
     {
         super.dispose();
         _stage.dispose();
-        _logo.dispose();
+        _logoNoGlow.dispose();
+        _glow.dispose();
     }
 }

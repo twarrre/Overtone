@@ -16,8 +16,6 @@ public class LoadingScreen extends OvertoneScreen
     /** If there is no generation, delay for shitz.*/
     public static float LOADING_TIMER = 3.0f;
 
-    private final Texture    _progressBar;      // Texture for the progress bar
-    private final Texture    _progress;         // Texture for the progress of the progress bar
     private Thread           _generatingThread; // Thread used to generate the notes
     private GeneticAlgorithm _genetic;          // Genetic algorithm object used to generate the notes
     private boolean          _completed;        // True if the thread has completed, false otherwise
@@ -25,6 +23,10 @@ public class LoadingScreen extends OvertoneScreen
     private Random           _random;           // Random number generator for string array
     private int              _stringIndex;      // Index for the loading strings
     private int              _timeInterval;     // Interval between switch loading sting
+    private final Texture    _logoNoGlow;       // Texture of the logo on screen
+    private final Texture    _glow;             // Texture of the logo on screen
+    private float            _glowAlpha;        // The alpha of the glow for the logo
+    private float            _glowDirection;    // The direction of the glow alpha
 
     private String[]         _loadingStrings = new String[] {
             "Tuning Instruments",
@@ -46,12 +48,14 @@ public class LoadingScreen extends OvertoneScreen
     {
         super();
         _completed       = false;
-        _progressBar     = new Texture(Gdx.files.internal("Textures\\progressbar.png"));
-        _progress        = new Texture(Gdx.files.internal("Textures\\red.png"));
+        _logoNoGlow      = new Texture(Gdx.files.internal("Textures\\logo_noglow.png"));
+        _glow            = new Texture(Gdx.files.internal("Textures\\glow.png"));
         _elapsedTime     = 0.0f;
         _random          = new Random();
         _stringIndex     = 0;
         _timeInterval    = 1;
+        _glowAlpha       = 0.0f;
+        _glowDirection   = 0.01f;
 
         if(Overtone.Regenerate)
         {
@@ -70,20 +74,26 @@ public class LoadingScreen extends OvertoneScreen
         super.render(deltaTime);
 
         _batch.begin();
-        _glyphLayout.setText(_font36,  "Loading");
-        _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.85f);
 
-        _glyphLayout.setText(_font30,  _loadingStrings[_stringIndex] + "...");
-        _font30.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.25f);
+        _batch.setColor(1.0f, 1.0f, 1.0f, _glowAlpha);
+        _batch.draw(_glow, Overtone.ScreenWidth * 0.6f, 0.0f, Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.4f);
+        _batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-        _batch.draw(_progressBar, Overtone.ScreenWidth * 0.125f, Overtone.ScreenHeight * 0.07f, Overtone.ScreenWidth * 0.75f, Overtone.ScreenHeight * 0.1f);
-        _batch.draw(_progress, Overtone.ScreenWidth * 0.1325f, Overtone.ScreenHeight * 0.08f, Overtone.ScreenWidth * 0.735f * (Overtone.Regenerate ? _genetic.GetPercentComplete() : _elapsedTime / LOADING_TIMER), Overtone.ScreenHeight * 0.08f);
+        _batch.draw(_logoNoGlow, Overtone.ScreenWidth * 0.6f, 0.0f, Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.4f);
+
+        _glyphLayout.setText(_font18,  _loadingStrings[_stringIndex] + "...");
+        _font18.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.8f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.07f);
+
         _batch.end();
     }
 
     public void update(float deltaTime)
     {
         super.update(deltaTime);
+
+        _glowAlpha = Utilities.Clamp(_glowAlpha + _glowDirection, 0, 1);
+        if(_glowAlpha >= 1.0f || _glowAlpha <= 0.0f)
+            _glowDirection *= -1.0f;
 
         if(_completed)
             Overtone.SetScreen(Overtone.Screens.Gameplay);
@@ -98,6 +108,7 @@ public class LoadingScreen extends OvertoneScreen
             {
                 System.out.println("Thread Interrupted.");
             }
+
             _completed = true;
         }
         else
@@ -128,7 +139,7 @@ public class LoadingScreen extends OvertoneScreen
     public void dispose ()
     {
         super.dispose();
-        _progressBar.dispose();
-        _progress.dispose();
+        _logoNoGlow.dispose();
+        _glow.dispose();
     }
 }
