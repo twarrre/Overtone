@@ -10,6 +10,7 @@ import com.overtone.Notes.OvertoneNote;
 import com.overtone.Notes.Target;
 import com.overtone.Screens.*;
 import java.util.ArrayList;
+
 import jm.audio.Instrument;
 import jm.music.data.*;
 import javax.sound.midi.Sequencer;
@@ -22,7 +23,7 @@ public class Overtone extends ApplicationAdapter implements JMC
 {
 	/**Maximum number of scores that are saved for each difficulty*/
 	public static final int NUM_SCORES = 10;
-	public static final int NUM_RATERS  = 10;
+	public static final int NUM_RATERS  = 9;
 
 	/**Enum for the different types of screens*/
 	public enum Screens

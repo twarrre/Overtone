@@ -49,7 +49,7 @@ public class UniqueRhythmValuesRaterTest implements JMC
         for(int i = 0; i < 10; i++)
         {
             Phrase chord = new Phrase();
-            chord.addChord(GeneticAlgorithm.chords[0],  rhythms[0]);
+            chord.addChord(GeneticAlgorithm.CHORDS[0],  rhythms[0]);
             p4.addPhrase(chord);
         }
         value = urr.Rate(new Organism(p4, 0));
@@ -62,7 +62,7 @@ public class UniqueRhythmValuesRaterTest implements JMC
             if(i % 2 == 0)
             {
                 Phrase chord = new Phrase();
-                chord.addChord(GeneticAlgorithm.chords[0],  rhythms[0]);
+                chord.addChord(GeneticAlgorithm.CHORDS[0],  rhythms[0]);
                 p5.addPhrase(chord);
             }
             else

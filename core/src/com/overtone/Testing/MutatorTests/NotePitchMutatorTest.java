@@ -75,7 +75,7 @@ public class NotePitchMutatorTest implements JMC
             if(i % 2 ==  0)
             {
                 Phrase chord = new Phrase();
-                chord.addChord(GeneticAlgorithm.chords[0], QUARTER_NOTE);
+                chord.addChord(GeneticAlgorithm.CHORDS[0], QUARTER_NOTE);
                 pChord.addPhrase(chord);
             }
             else

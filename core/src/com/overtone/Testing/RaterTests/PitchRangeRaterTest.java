@@ -47,7 +47,7 @@ public class PitchRangeRaterTest implements JMC
         for(int i = 0; i < 10; i++)
         {
             Phrase chord = new Phrase();
-            chord.addChord(GeneticAlgorithm.chords[0], QUARTER_NOTE);
+            chord.addChord(GeneticAlgorithm.CHORDS[0], QUARTER_NOTE);
             p4.addPhrase(chord);
         }
         value = pr.Rate(new Organism(p4, 0));
@@ -60,7 +60,7 @@ public class PitchRangeRaterTest implements JMC
             if(i % 2 == 0)
             {
                 Phrase chord = new Phrase();
-                chord.addChord(GeneticAlgorithm.chords[0], QUARTER_NOTE);
+                chord.addChord(GeneticAlgorithm.CHORDS[0], QUARTER_NOTE);
                 p5.addPhrase(chord);
             }
             else

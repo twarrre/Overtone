@@ -61,7 +61,7 @@ public class PitchDirectionRaterTest implements JMC
             if(i % 3 == 0)
             {
                 Phrase chord = new Phrase();
-                chord.addChord(GeneticAlgorithm.chords[0], QUARTER_NOTE);
+                chord.addChord(GeneticAlgorithm.CHORDS[0], QUARTER_NOTE);
                 p5.addPhrase(chord);
             }
             else if (i % 2 == 0)
@@ -77,7 +77,7 @@ public class PitchDirectionRaterTest implements JMC
         for(int i = 0; i < 10; i++)
         {
             Phrase chord = new Phrase();
-            chord.addChord(GeneticAlgorithm.chords[0], QUARTER_NOTE);
+            chord.addChord(GeneticAlgorithm.CHORDS[0], QUARTER_NOTE);
             p6.addPhrase(chord);
         }
         value = pdr.Rate(new Organism(p6, 0));

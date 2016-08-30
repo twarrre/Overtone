@@ -55,11 +55,11 @@ public class SyncopationNoteRaterTest implements JMC
         Part p5 = new Part();
 
         Phrase chord = new Phrase();
-        chord.addChord(GeneticAlgorithm.chords[0], QUARTER_NOTE);
+        chord.addChord(GeneticAlgorithm.CHORDS[0], QUARTER_NOTE);
         Phrase chord2 = new Phrase();
-        chord2.addChord(GeneticAlgorithm.chords[0], HALF_NOTE);
+        chord2.addChord(GeneticAlgorithm.CHORDS[0], HALF_NOTE);
         Phrase chord3 = new Phrase();
-        chord3.addChord(GeneticAlgorithm.chords[0], WHOLE_NOTE);
+        chord3.addChord(GeneticAlgorithm.CHORDS[0], WHOLE_NOTE);
 
         p5.addPhrase(chord);
         p5.addPhrase(chord);

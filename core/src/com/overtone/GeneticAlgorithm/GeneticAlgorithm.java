@@ -33,7 +33,26 @@ public class GeneticAlgorithm implements Runnable, JMC
     private ArrayList<Mutator> _mutators;         // Array of all of the mutators that may mutate a track.
     private Rater[]            _raters;           // Array of raters to rate the tracks
 
-    public static int[][] chords = {{C3, E3, G3}, {F3,A3, C3}, {G3, B3, D3}}; // Available chords to choose from
+    /** Array of valid chords that can be used in generation */
+    public static int[][] CHORDS = {{C3, E3, G3}, {F3,A3, C3}, {G3, B3, D3}}; // Available chords to choose from
+
+    /** Array of valid rhythms used in generation. */
+    public static final ArrayList<Double> RHYTHMS = new ArrayList<Double>()
+    {{
+        add(THIRTYSECOND_NOTE);
+        add(DOTTED_SIXTEENTH_NOTE);
+        add(SIXTEENTH_NOTE);
+        add(DOUBLE_DOTTED_EIGHTH_NOTE);
+        add(DOTTED_EIGHTH_NOTE);
+        add(EIGHTH_NOTE);
+        add(DOUBLE_DOTTED_QUARTER_NOTE);
+        add(DOTTED_QUARTER_NOTE);
+        add(QUARTER_NOTE);
+        add(HALF_NOTE);
+        add(DOUBLE_DOTTED_HALF_NOTE);
+        add(DOTTED_HALF_NOTE);
+        add(WHOLE_NOTE);
+    }};
 
     /**
      * Constructor
@@ -46,12 +65,11 @@ public class GeneticAlgorithm implements Runnable, JMC
         _raters[1]         = new PitchDirectionRater();
         _raters[2]         = new PitchRangeRater();
         _raters[3]         = new UniqueNoteRater();
-        _raters[4]         = new RepetitionRater();
-        _raters[5]         = new UniqueRhythmValuesRater();
-        _raters[6]         = new ContinuousSilenceRater();
-        _raters[7]         = new DirectionStabilityRater();
-        _raters[8]         = new SyncopationNoteRater();
-        _raters[9]         = new EqualConsecutiveNoteRater();
+        _raters[4]         = new UniqueRhythmValuesRater();
+        _raters[5]         = new ContinuousSilenceRater();
+        _raters[6]         = new DirectionStabilityRater();
+        _raters[7]         = new SyncopationNoteRater();
+        _raters[8]         = new EqualConsecutiveNoteRater();
         _mutators          = new ArrayList<>();
         _mutators.add(new NotePitchMutator());
         _mutators.add(new SimplifyMutator());
@@ -199,18 +217,18 @@ public class GeneticAlgorithm implements Runnable, JMC
 
                 if(i == 0)
                 {
-                    int c = r.nextInt(chords.length);
+                    int c = r.nextInt(CHORDS.length);
                     Phrase chord = new Phrase();
-                    chord.addChord(chords[c], QUARTER_NOTE);
+                    chord.addChord(CHORDS[c], QUARTER_NOTE);
                     p.addPhrase(chord);
                 }
                 else if (i % 2 == 0)
                 {
-                    p.addPhrase(new Phrase(new Note(C3 + i, WHOLE_NOTE)));
+                    p.addPhrase(new Phrase(new Note(C3 + j, WHOLE_NOTE)));
                 }
                 else
                 {
-                    p.addPhrase(new Phrase(new Note(C2 + i, QUARTER_NOTE)));
+                    p.addPhrase(new Phrase(new Note(C2 + j, QUARTER_NOTE)));
                 }
             }
 

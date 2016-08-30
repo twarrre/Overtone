@@ -34,7 +34,7 @@ public class ContinuousSilenceRaterTest implements JMC
             else if(i % 3 == 0)
             {
                 Phrase chord = new Phrase();
-                chord.addChord(GeneticAlgorithm.chords[0], WHOLE_NOTE);
+                chord.addChord(GeneticAlgorithm.CHORDS[0], WHOLE_NOTE);
                 p2.addPhrase(chord);
             }
             else

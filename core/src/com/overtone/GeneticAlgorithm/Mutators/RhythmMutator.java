@@ -1,5 +1,6 @@
 package com.overtone.GeneticAlgorithm.Mutators;
 
+import com.overtone.GeneticAlgorithm.GeneticAlgorithm;
 import com.overtone.Utilities;
 import jm.JMC;
 import jm.music.data.Part;
@@ -13,26 +14,11 @@ import java.util.Collections;
  */
 public class RhythmMutator extends Mutator implements JMC
 {
-    private static final ArrayList<Double> rhythms = new ArrayList<Double>()
-    {{
-        add(THIRTYSECOND_NOTE);
-        add(DOTTED_SIXTEENTH_NOTE);
-        add(SIXTEENTH_NOTE);
-        add(DOUBLE_DOTTED_EIGHTH_NOTE);
-        add(DOTTED_EIGHTH_NOTE);
-        add(EIGHTH_NOTE);
-        add(DOUBLE_DOTTED_QUARTER_NOTE);
-        add(DOTTED_QUARTER_NOTE);
-        add(QUARTER_NOTE);
-        add(HALF_NOTE);
-        add(DOUBLE_DOTTED_HALF_NOTE);
-        add(DOTTED_HALF_NOTE);
-        add(WHOLE_NOTE);
-    }};
+
 
     public Part Mutate(Part p, float probability)
     {
-        Collections.sort(rhythms);
+        Collections.sort(GeneticAlgorithm.RHYTHMS);
 
         for(int i = 0; i < p.length(); i++)
         {
@@ -43,10 +29,10 @@ public class RhythmMutator extends Mutator implements JMC
                 double currRhythm = p.getPhrase(i).getNote(p.getPhrase(i).length() - 1).getRhythmValue();
 
                 // Get a new rhythm value
-                int index = BinarySearch(rhythms, 0, rhythms.size(), currRhythm);
-                int indexToNewRhythm = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistribution(index, 1.0f), 0 , rhythms.size() - 1));
+                int index = BinarySearch(GeneticAlgorithm.RHYTHMS, 0, GeneticAlgorithm.RHYTHMS.size(), currRhythm);
+                int indexToNewRhythm = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistribution(index, 1.0f), 0 , GeneticAlgorithm.RHYTHMS.size() - 1));
 
-                p.getPhrase(i).getNote(p.getPhrase(i).length() - 1).setRhythmValue(rhythms.get(indexToNewRhythm));
+                p.getPhrase(i).getNote(p.getPhrase(i).length() - 1).setRhythmValue(GeneticAlgorithm.RHYTHMS.get(indexToNewRhythm));
             }
         }
         return p;

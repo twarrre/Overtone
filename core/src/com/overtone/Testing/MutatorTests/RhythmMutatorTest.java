@@ -75,7 +75,7 @@ public class RhythmMutatorTest implements JMC
             if(i % 2 ==  0)
             {
                 Phrase chord = new Phrase();
-                chord.addChord(GeneticAlgorithm.chords[0], WHOLE_NOTE);
+                chord.addChord(GeneticAlgorithm.CHORDS[0], WHOLE_NOTE);
                 pChord.addPhrase(chord);
             }
             else
