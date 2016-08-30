@@ -36,7 +36,7 @@ public class GameplayScreen extends OvertoneScreen
     public static final float RESUME_DELAY     = 3.0f;
 
     /** The delay for the completion or failure of the song */
-    public static final float COMPLETION_DELAY = 3.0f;
+    public static final float COMPLETION_DELAY = 5.0f;
 
     /** Delay for the start of the song*/
     public static final float START_DELAY = 5.0f;
@@ -390,7 +390,7 @@ public class GameplayScreen extends OvertoneScreen
             return;
         }
 
-        if(_elapsedTime <  Overtone.TotalTime && !_songComplete)
+        if(_elapsedTime < Overtone.TotalTime && !_songComplete)
             _elapsedTime += deltaTime;
 
         if(_elapsedTime >= START_DELAY && !_musicPlaying)

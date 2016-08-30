@@ -1,8 +1,8 @@
 e
+1423500 Great
 98300 Great
 49600 Failure
 3300 Failure
-0 ---
 0 ---
 0 ---
 0 ---

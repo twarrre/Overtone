@@ -39,6 +39,7 @@ public class LoadingScreen extends OvertoneScreen
             "Practicing Scales",
             "Improvising Solos",
             "Replacing Reeds",
+            "Emptying Spit Valve"
     };
 
     /**
@@ -91,10 +92,12 @@ public class LoadingScreen extends OvertoneScreen
     {
         super.update(deltaTime);
 
+        // Update the glow for the loading screen
         _glowAlpha = Utilities.Clamp(_glowAlpha + _glowDirection, 0, 1);
         if(_glowAlpha >= 1.0f || _glowAlpha <= 0.0f)
             _glowDirection *= -1.0f;
 
+        // If it is complete then go to the gameplay screen
         if(_completed)
             Overtone.SetScreen(Overtone.Screens.Gameplay);
 
@@ -121,7 +124,7 @@ public class LoadingScreen extends OvertoneScreen
                 _timeInterval++;
             }
 
-            if(_elapsedTime >= LOADING_TIMER)
+            if(!Overtone.Regenerate && _elapsedTime >= LOADING_TIMER)
             {
                 _completed = true;
                 _elapsedTime = LOADING_TIMER;

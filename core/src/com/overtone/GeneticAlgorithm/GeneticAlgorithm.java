@@ -23,15 +23,15 @@ import java.util.*;
 public class GeneticAlgorithm implements Runnable, JMC
 {
     /** Represents the number of iterations the algorithm is going to go through*/
-    public static final int NUM_ITERATIONS = 10;
+    public static final int NUM_ITERATIONS = 500;
     /** The size of the population of tracks. */
-    public static final int POPULATION_SIZE = 10;
+    public static final int POPULATION_SIZE = 25;
     /** Number of elites to save*/
-    public static final int NUM_ELITES = 4;
+    public static final int NUM_ELITES = 5;
     /** Array of valid chords that can be used in generation */
     public static int[][] CHORDS = {
             {C3, E3, G3},
-            {F3,A3, C3},
+            {F3, A3, C3},
             {G3, B3, D3}
     };
     /** Array of valid rhythms used in generation. */
@@ -229,7 +229,7 @@ public class GeneticAlgorithm implements Runnable, JMC
                 }
             }
 
-            population[i] = new Organism(p.copy(), Organism.STARTING_PROBABILITY);
+            population[i] = new Organism(p, Organism.STARTING_PROBABILITY);
         }
 
         return population;
@@ -315,7 +315,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         Collections.shuffle(_mutators, new Random(System.nanoTime()));
 
         // Mutate the phrase
-        Part mutation = o.GetTrack().copy();
+        Part mutation = o.GetTrack();
         for(int i = 0; i < _mutators.size(); i++)
             mutation = _mutators.get(i).Mutate(mutation, o.GetProbability());
         o.SetTrack(mutation);
@@ -375,7 +375,7 @@ public class GeneticAlgorithm implements Runnable, JMC
                 children[0].addPhrase(p1.getPhrase(length + i));
         }
 
-        return new Organism[] { new Organism(children[0].copy(), GetProbability(parent1)), new Organism(children[1].copy(), GetProbability(parent2))};
+        return new Organism[] { new Organism(children[0], GetProbability(parent1)), new Organism(children[1], GetProbability(parent2))};
     }
 
     /**
@@ -433,6 +433,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         float elapsedTime = GameplayScreen.START_DELAY;
         int prevTarget    = 0;
         int target        = 0;
+        boolean prevHold  = false;
 
         for(int i = 0; i <  parts.length; i++)
         {
@@ -446,6 +447,7 @@ public class GeneticAlgorithm implements Runnable, JMC
                 if(phrases[j].getNote(0).isRest())
                 {
                     elapsedTime += phrases[j].getNote(0).getDuration();
+                    prevHold = false;
                     continue;
                 }
                 else if(phrases[j].length() > 1) // else if it is a chord == double note
@@ -463,8 +465,9 @@ public class GeneticAlgorithm implements Runnable, JMC
                     tempNote.add(n2);
 
                     elapsedTime += phrases[j].getNote(phrases[j].length() - 1).getDuration();
+                    prevHold = false;
                 }
-                else if(phrases[j].getNote(0).getRhythmValue() > QUARTER_NOTE) // if it is longer than a quarter note == hold note
+                else if(phrases[j].getNote(0).getRhythmValue() > DOUBLE_DOTTED_QUARTER_NOTE) // if it is longer than a quarter note == hold note
                 {
                     // Make sure that hold notes do not go to the same target in a row
                     while (target == prevTarget)
@@ -484,11 +487,17 @@ public class GeneticAlgorithm implements Runnable, JMC
 
                     tempNote.add(n1);
                     tempNote.add(n2);
+                    prevHold = true;
                 }
                 else // It is a normal note
                 {
+                    if(prevHold)
+                        while (target == prevTarget)
+                            target = r.nextInt(Overtone.TargetZones.length);
+
                     tempNote.add(new OvertoneNote(OvertoneNote.NoteType.Single, Overtone.TargetZones[target], elapsedTime));
                     elapsedTime += phrases[j].getNote(0).getDuration();
+                    prevHold = false;
                 }
             }
         }
@@ -541,7 +550,6 @@ public class GeneticAlgorithm implements Runnable, JMC
                 return 0;
         }
     }
-
 
     /**
      * Comparator for sorting organisms based on their ratings
