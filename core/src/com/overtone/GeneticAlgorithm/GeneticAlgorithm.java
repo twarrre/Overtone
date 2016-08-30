@@ -22,12 +22,6 @@ import java.util.*;
  */
 public class GeneticAlgorithm implements Runnable, JMC
 {
-    /** Represents the number of iterations the algorithm is going to go through*/
-    public static final int NUM_ITERATIONS = 500;
-    /** The size of the population of tracks. */
-    public static final int POPULATION_SIZE = 25;
-    /** Number of elites to save*/
-    public static final int NUM_ELITES = 5;
     /** Array of valid chords that can be used in generation */
     public static int[][] CHORDS = {
             {C3, E3, G3},
@@ -166,7 +160,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         parentAverageRating /= parentPopulation.length;
 
         //Genetic algorithm phase
-        for(int i = 0; i < NUM_ITERATIONS; i++)
+        for(int i = 0; i < Overtone.NumberOfIterations; i++)
         {
             // Get the children
             population = Selection(parentPopulation);
@@ -199,12 +193,12 @@ public class GeneticAlgorithm implements Runnable, JMC
      */
     public Organism[] Initialization()
     {
-        Organism[] population = new Organism[POPULATION_SIZE];
+        Organism[] population = new Organism[Overtone.PopulationSize];
         // TODO: Generate the initial population here
         //Mess with rest can check if rest
         // Do chords
 
-        for(int i = 0; i < POPULATION_SIZE; i++)
+        for(int i = 0; i < Overtone.PopulationSize; i++)
         {
             Part p = new Part();
             for(int j = 0; j < 12; j++)
@@ -243,14 +237,14 @@ public class GeneticAlgorithm implements Runnable, JMC
     private Organism[] Selection(Organism[] parents)
     {
         Arrays.sort(parents, new RatingComparator());
-        Organism[] children = new Organism[POPULATION_SIZE];
+        Organism[] children = new Organism[Overtone.PopulationSize];
 
         // Elitism, save the best ones
         int counter;
-        for(counter = 0; counter < NUM_ELITES; counter++)
+        for(counter = 0; counter < Overtone.NumberOfElites; counter++)
             children[counter] = parents[counter];
 
-        while(counter < POPULATION_SIZE)
+        while(counter < Overtone.PopulationSize)
         {
             int p1 = RouletteSelection(parents);
             int p2 = p1;
@@ -262,7 +256,7 @@ public class GeneticAlgorithm implements Runnable, JMC
             boolean overflow = false;
             for(int i = 0; i < siblings.length; i++)
             {
-                if(counter + i >= POPULATION_SIZE)
+                if(counter + i >= Overtone.PopulationSize)
                 {
                     overflow = true;
                     continue;
@@ -385,7 +379,7 @@ public class GeneticAlgorithm implements Runnable, JMC
      */
     private float GetProbability(Organism o)
     {
-        return o.GetProbability() - (Organism.MUTATION_STEP / (float)(_currentIteration / NUM_ITERATIONS));
+        return o.GetProbability() - (Organism.MUTATION_STEP / (float)(_currentIteration / Overtone.NumberOfIterations));
     }
 
     /**

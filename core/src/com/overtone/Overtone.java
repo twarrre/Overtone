@@ -166,6 +166,9 @@ public class Overtone extends ApplicationAdapter implements JMC
 	public static Instrument[]            GameInstruments;    // Instruments for the game music
 	public static Sequencer               GameplaySequencer;  // Plays the midi sound
 	public static Sequencer               MenuSequencer;      // Plays the midi sound
+	public static int                     NumberOfIterations; //Represents the number of iterations the algorithm is going to go through
+	public static int                     PopulationSize;     //The size of the population of tracks.
+	public static int                     NumberOfElites;     //Number of elites to save
 	private static OvertoneScreen         _currentScreen;     // The current screen displayed on screen
 	private SpriteBatch                   _batch;             // Sprite batch to draw to
 	private Sprite                        _farBackground;     // The star background for the whole app
@@ -196,6 +199,9 @@ public class Overtone extends ApplicationAdapter implements JMC
 		TargetZones[2]     = new Target(Overtone.TargetZone.BottomLeft);
 		TargetZones[3]     = new Target(Overtone.TargetZone.BottomRight);
 		Regenerate         = true;
+		NumberOfIterations = 500;
+		PopulationSize     = 25;
+		NumberOfElites     = 5;
 
 		_farBackground.setCenter(ScreenWidth / 2.0f, ScreenHeight / 2.0f);
 		_closeBackground.setCenter(ScreenWidth / 2.0f, ScreenHeight / 2.0f);
@@ -203,6 +209,7 @@ public class Overtone extends ApplicationAdapter implements JMC
 		Utilities.LoadHighScores();
 		Utilities.LoadVolume();
 		Utilities.LoadRaterValues();
+		Utilities.LoadGenerationValues();
 		Utilities.LoadMidiMusic(true);
 	}
 

@@ -204,6 +204,70 @@ public class Utilities implements JMC
     }
 
     /**
+     * Loads the generation values from file
+     */
+    public static void LoadGenerationValues()
+    {
+        try
+        {
+            // Open the file
+            BufferedReader reader = new BufferedReader(new FileReader("Storage\\GenerationValues.txt"));
+
+            String line      = null;
+            int counter      = 0;
+
+            // Read two lines from the file and store in the appropriate variables
+            while ((line = reader.readLine())!= null)
+            {
+                if(counter == 0)
+                    Overtone.NumberOfIterations = Integer.parseInt(line);
+                else if(counter == 1)
+                    Overtone.PopulationSize = Integer.parseInt(line);
+                else if(counter == 2)
+                    Overtone.NumberOfElites = Integer.parseInt(line);
+                else
+                    break;
+                counter++;
+            }
+
+            reader.close();
+        }
+        catch (IOException e)
+        {
+            System.out.print("Volume data cannot be loaded at this time.");
+        }
+    }
+
+    /**
+     * Writes the new volume values to a file
+     */
+    public static void WriteGenerationValues()
+    {
+        try
+        {
+            File file = new File("Storage\\GenerationValues.txt");
+
+            if (!file.exists())
+                file.createNewFile();
+
+            FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
+            BufferedWriter writer = new BufferedWriter(fileWriter);
+
+            writer.write(Overtone.NumberOfIterations + "");
+            writer.newLine();
+            writer.write(Overtone.PopulationSize + "");
+            writer.newLine();
+            writer.write(Overtone.NumberOfElites + "");
+
+            writer.close();
+        }
+        catch(IOException x)
+        {
+            System.out.print("Volume data cannot be saved at this time.");
+        }
+    }
+
+    /**
      * Load the rater values from a file
      */
     public static void LoadRaterValues()

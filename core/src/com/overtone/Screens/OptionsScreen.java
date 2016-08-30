@@ -48,7 +48,7 @@ public class OptionsScreen extends OvertoneScreen
         });
 
         // Create next button for music volume
-        final Button musicNext = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.7725f, Overtone.ScreenHeight * 0.65f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button musicNext = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.7725f, Overtone.ScreenHeight * 0.8f - Overtone.ScreenWidth * 0.025f), _stage);
         musicNext.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.MusicVolume += 0.01f;
@@ -57,7 +57,7 @@ public class OptionsScreen extends OvertoneScreen
         }});
 
         // Create back button for music volume
-        final Button musicBack = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.6f, Overtone.ScreenHeight * 0.65f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button musicBack = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.6f, Overtone.ScreenHeight * 0.8f - Overtone.ScreenWidth * 0.025f), _stage);
         musicBack.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.MusicVolume -= 0.01f;
@@ -66,7 +66,7 @@ public class OptionsScreen extends OvertoneScreen
         }});
 
         // Create the next button for sfx
-        final Button sfxNext = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.7725f, Overtone.ScreenHeight * 0.5f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button sfxNext = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.7725f, Overtone.ScreenHeight * 0.7f - Overtone.ScreenWidth * 0.025f), _stage);
         sfxNext.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.SFXVolume += 0.01f;
@@ -75,7 +75,7 @@ public class OptionsScreen extends OvertoneScreen
         }});
 
         // Create the back button for sfx
-        final Button sfxBack = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.6f, Overtone.ScreenHeight * 0.5f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button sfxBack = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.6f, Overtone.ScreenHeight * 0.7f - Overtone.ScreenWidth * 0.025f), _stage);
         sfxBack.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.SFXVolume -= 0.01f;
@@ -83,8 +83,59 @@ public class OptionsScreen extends OvertoneScreen
                 Overtone.SFXVolume = 0.0f;
         }});
 
+        // Create the next button for num iterations
+        final Button iterNex = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.7725f, Overtone.ScreenHeight * 0.6f - Overtone.ScreenWidth * 0.025f), _stage);
+        iterNex.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+            _buttonPress.play(Overtone.SFXVolume);
+            Overtone.NumberOfIterations = (int)Utilities.Clamp(Overtone.NumberOfIterations + 1, 1, 1000);
+            Utilities.WriteGenerationValues();
+        }});
+
+        // Create the back button for num iterations
+        final Button iterBack = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.6f, Overtone.ScreenHeight * 0.6f - Overtone.ScreenWidth * 0.025f), _stage);
+        iterBack.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+            _buttonPress.play(Overtone.SFXVolume);
+            Overtone.NumberOfIterations = (int)Utilities.Clamp(Overtone.NumberOfIterations - 1, 1, 1000);
+            Utilities.WriteGenerationValues();
+        }});
+
+        // Create the next button for the population size
+        final Button popSizeNext = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.7725f, Overtone.ScreenHeight * 0.5f - Overtone.ScreenWidth * 0.025f), _stage);
+        popSizeNext.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+            _buttonPress.play(Overtone.SFXVolume);
+            Overtone.PopulationSize = (int)Utilities.Clamp(Overtone.PopulationSize + 1, 1, 100);
+            Utilities.WriteGenerationValues();
+        }});
+
+        // Create the back button for the population size
+        final Button popSizeBack = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.6f, Overtone.ScreenHeight * 0.5f - Overtone.ScreenWidth * 0.025f), _stage);
+        popSizeBack.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+            Overtone.PopulationSize = (int)Utilities.Clamp(Overtone.PopulationSize - 1, 1, 100);
+
+            if(Overtone.NumberOfElites > (Overtone.PopulationSize / 5))
+                Overtone.NumberOfElites = (Overtone.PopulationSize / 5);
+
+            Utilities.WriteGenerationValues();
+        }});
+
+        // Create the next button for the number of elites
+        final Button numElitesNext = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.7725f, Overtone.ScreenHeight * 0.4f - Overtone.ScreenWidth * 0.025f), _stage);
+        numElitesNext.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+            _buttonPress.play(Overtone.SFXVolume);
+            Overtone.NumberOfElites = (int)Utilities.Clamp(Overtone.NumberOfElites + 1, 0, Overtone.PopulationSize / 5);
+            Utilities.WriteGenerationValues();
+        }});
+
+        // Create the back button for the number of elites
+        final Button numElitesBack = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.6f, Overtone.ScreenHeight * 0.4f - Overtone.ScreenWidth * 0.025f), _stage);
+        numElitesBack.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+            _buttonPress.play(Overtone.SFXVolume);
+            Overtone.NumberOfElites = (int)Utilities.Clamp(Overtone.NumberOfElites - 1, 0, Overtone.PopulationSize / 5);
+            Utilities.WriteGenerationValues();
+        }});
+
         // Create the clear data button
-        final Button clearDataButton = CreateButton("Clear Data", "default", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.08f, new Vector2(Overtone.ScreenWidth * 0.6f, Overtone.ScreenHeight * 0.31f), _stage);
+        final Button clearDataButton = CreateButton("Clear Data", "default", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.06f, new Vector2(Overtone.ScreenWidth * 0.6f, Overtone.ScreenHeight * 0.255f), _stage);
         clearDataButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 ButtonPress(true);
@@ -92,7 +143,7 @@ public class OptionsScreen extends OvertoneScreen
         });
 
         // Create the clear scores button
-        final Button clearScoresButton = CreateButton("Clear Scores", "default", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.08f, new Vector2(Overtone.ScreenWidth * 0.6f, Overtone.ScreenHeight * 0.16f), _stage);
+        final Button clearScoresButton = CreateButton("Clear Scores", "default", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.06f, new Vector2(Overtone.ScreenWidth * 0.6f, Overtone.ScreenHeight * 0.155f), _stage);
         clearScoresButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 ButtonPress(false);
@@ -146,19 +197,37 @@ public class OptionsScreen extends OvertoneScreen
         _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - _glyphLayout.width / 2.0f, Overtone.ScreenHeight * 0.92f);
 
         _glyphLayout.setText(_font24, "Music Volume:");
-        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.2175f, Overtone.ScreenHeight * 0.65f);
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.2175f, Overtone.ScreenHeight * 0.8f);
 
         _glyphLayout.setText(_font24, (int)(Overtone.MusicVolume * 100.0f) + "%");
-        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.7f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.65f);
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.7f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.8f);
 
         _glyphLayout.setText(_font24, "SFX Volume:");
-        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.2175f, Overtone.ScreenHeight * 0.5f);
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.2175f, Overtone.ScreenHeight * 0.7f);
 
         _glyphLayout.setText(_font24, (int)(Overtone.SFXVolume * 100.0f) + "%");
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.7f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.7f);
+
+        _glyphLayout.setText(_font24, "Number of Iterations:");
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.2175f, Overtone.ScreenHeight * 0.6f);
+
+        _glyphLayout.setText(_font24, Overtone.NumberOfIterations + "");
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.7f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.6f);
+
+        _glyphLayout.setText(_font24, "Population Size:");
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.2175f, Overtone.ScreenHeight * 0.5f);
+
+        _glyphLayout.setText(_font24, Overtone.PopulationSize + "");
         _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.7f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.5f);
 
+        _glyphLayout.setText(_font24, "Number of Elites:");
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.2175f, Overtone.ScreenHeight * 0.4f);
+
+        _glyphLayout.setText(_font24, Overtone.NumberOfElites + "");
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.7f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.4f);
+
         _glyphLayout.setText(_font24, "Saved Data:");
-        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.2175f, Overtone.ScreenHeight * 0.35f);
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.2175f, Overtone.ScreenHeight * 0.3f);
 
         _glyphLayout.setText(_font24, "High Scores:");
         _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.2175f, Overtone.ScreenHeight * 0.2f);
