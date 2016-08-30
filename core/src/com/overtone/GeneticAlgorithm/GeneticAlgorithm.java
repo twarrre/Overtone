@@ -102,13 +102,11 @@ public class GeneticAlgorithm implements Runnable, JMC
         Organism[] bestThreeTracks = GenerateTracks();
 
         // Create phases that create the song. Structure of the song is verse, chorus, verse, chorus, bridge, chorus. Mutate each one so that there is a bit of variation between them
-        Part[] song = new Part[6];
-        song[0] = Mutation(bestThreeTracks[1]).GetTrack(); // Verse 1
+        Part[] song = new Part[4];
+        song[0] = bestThreeTracks[1].GetTrack(); // Verse 1
         song[1] = Mutation(bestThreeTracks[0]).GetTrack(); // Chorus 1
-        song[2] = Mutation(bestThreeTracks[1]).GetTrack(); // Verse 2
+        song[2] = bestThreeTracks[2].GetTrack(); // bridge 1
         song[3] = Mutation(bestThreeTracks[0]).GetTrack(); // Chorus 2
-        song[4] = bestThreeTracks[2].GetTrack(); // bridge 1
-        song[5] = Mutation(bestThreeTracks[1]).GetTrack(); // Chorus 3
 
         // Merges the song and adds it to the game music
         Part mergedPart = new Part();
