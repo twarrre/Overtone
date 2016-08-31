@@ -261,6 +261,8 @@ public class GameplayScreen extends OvertoneScreen
             public void clicked (InputEvent i, float x, float y) {
               PausedButtonPressed();
             }});
+
+        Utilities.LoadMidiMusic(false);
     }
 
     /**
@@ -395,7 +397,7 @@ public class GameplayScreen extends OvertoneScreen
 
         if(_elapsedTime >= START_DELAY && !_musicPlaying)
         {
-            Utilities.LoadMidiMusic(false);
+            Overtone.GameplaySequencer.start();
             _musicPlaying = true;
         }
 

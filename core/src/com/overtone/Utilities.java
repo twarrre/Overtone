@@ -507,7 +507,6 @@ public class Utilities implements JMC
                 Overtone.GameplaySequencer.open();
                 InputStream is = new BufferedInputStream(new FileInputStream(new File("Music\\GeneratedMusic.mid")));
                 Overtone.GameplaySequencer.setSequence(is);
-                Overtone.GameplaySequencer.start();
             }
         }
         catch(MidiUnavailableException x)
