@@ -102,12 +102,15 @@ public class NoteRenderer
      */
     private void DrawHoldNoteConnector(OvertoneNote n, SpriteBatch batch)
     {
+        if(n.IsCompleted())
+            return;
+
         Vector2 noteCenter      = n.GetCenter();
         Vector2 otherCenter     = n.GetOtherNote().GetCenter();
         Vector2 dir             = new Vector2(otherCenter.x - noteCenter.x, otherCenter.y - noteCenter.y).nor(); // Direction from the first note to the other note
         Vector2 pos             = new Vector2(noteCenter.x, noteCenter.y);                                       // The starting position for the connector
         Vector2 dirFromPos      = new Vector2(otherCenter.x - pos.x , otherCenter.y - pos.y);                    // Direction from the drawing position to the other note
-        Vector2 connectorScale = new Vector2( n.GetScale().x * 0.5f,  n.GetScale().y * 0.5f);                    // Set the connector to be half the size of a note.
+        Vector2 connectorScale  = new Vector2( n.GetScale().x * 0.5f,  n.GetScale().y * 0.5f);                    // Set the connector to be half the size of a note.
 
         while(dirFromPos.dot(dir) >= 0) // While the direction from pos to other note is pointed in the same direction as dir (as in, while pos has not passed the other note)
         {

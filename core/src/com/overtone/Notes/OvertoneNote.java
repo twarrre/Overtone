@@ -28,6 +28,7 @@ public class OvertoneNote implements Comparable<OvertoneNote>
     private boolean        _connectorRendered; // True if the note is double or hold and it's connector has been rendered on screen
     private OvertoneNote   _partnerNote;       // Stores a reference to the partner note if it is a hold or double note, null otherwise
     private float          _otherNoteTime;     // Time that the note must be at the target zone at
+    private boolean        _completed;
 
     /**
      * Constructor
@@ -50,6 +51,7 @@ public class OvertoneNote implements Comparable<OvertoneNote>
         _otherNoteTime     = 0;
         _connectorRendered = false;
         _isVisible         = false;
+        _completed         = false;
     }
 
     /**
@@ -71,6 +73,7 @@ public class OvertoneNote implements Comparable<OvertoneNote>
         _otherNoteTime     = (n.GetType() == NoteType.Hold || n.GetType() == NoteType.Double) ? n.GetOtherNote().GetTime() : 0.0f;
         _connectorRendered = false;
         _isVisible         = false;
+        _completed         = false;
     }
 
     /**
@@ -213,4 +216,8 @@ public class OvertoneNote implements Comparable<OvertoneNote>
         else
             return 1;
     }
+
+    public void NoteCompleted(boolean val) {_completed = val; }
+
+    public boolean IsCompleted(){return _completed;}
 }

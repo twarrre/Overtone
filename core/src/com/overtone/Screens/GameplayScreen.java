@@ -442,6 +442,7 @@ public class GameplayScreen extends OvertoneScreen
                 {
                     _missCounter++;
                     RemoveHoldNote(n, null);
+                    n.NoteCompleted(true);
                 }
             }
             _combo = 0;
