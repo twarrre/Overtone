@@ -42,7 +42,7 @@ public class GameplayScreen extends OvertoneScreen
     public static final float START_DELAY = 5.0f;
 
     /** Timers that determine if you fail for each difficulty */
-    public static final float[] FAILURE_TIMER  = { 12.0f, 10.0f, 8.0f };
+    public static final float[] FAILURE_TIMER  = { 12.0f, 11.0f, 10.0f };
 
     // Objects
     private final NoteRenderer                             _noteRenderer;       // Renders the notes on to the screen

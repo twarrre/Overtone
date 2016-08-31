@@ -21,6 +21,9 @@ n
 7500 Failure
 4800 Failure
 h
+1766200 Great
+1580900 ---
+1118300 ---
 944900 Great
 633000 Great
 525800 Great
@@ -28,6 +31,3 @@ h
 350700 Great
 348800 Great
 344500 Great
-333100 Great
-321300 Great
-287500 Brilliant
