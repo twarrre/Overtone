@@ -26,8 +26,8 @@ h
 1118300 ---
 944900 Great
 633000 Great
+571900 Great
 525800 Great
 391800 Great
 350700 Great
 348800 Great
-344500 Great

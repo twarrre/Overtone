@@ -46,10 +46,14 @@ public class GeneticAlgorithm implements Runnable, JMC
         add(WHOLE_NOTE);
     }};
 
+    /** The number of sections(Verse, chorus, bridges) in the song. */
+    public static int NUM_SECTIONS = 4;
+
     private int                _currentIteration; // The current iteration of the algorithm
     private ArrayList<Mutator> _mutators;         // Array of all of the mutators that may mutate a track.
     private Rater[]            _raters;           // Array of raters to rate the tracks
     private boolean            _isCompleted;      // True if the generation has completed;
+    private Random             _random;
 
     /**
      * Constructor
@@ -69,6 +73,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         _raters[8]         = new EqualConsecutiveNoteRater();
         _mutators          = new ArrayList<>();
         _isCompleted       = false;
+        _random            = new Random();
         _mutators.add(new NotePitchMutator());
         _mutators.add(new SimplifyMutator());
         _mutators.add(new SwapMutator());
@@ -102,9 +107,9 @@ public class GeneticAlgorithm implements Runnable, JMC
         Organism[] bestThreeTracks = GenerateTracks();
 
         // Create phases that create the song. Structure of the song is verse, chorus, verse, chorus, bridge, chorus. Mutate each one so that there is a bit of variation between them
-        Part[] song = new Part[4];
+        Part[] song = new Part[NUM_SECTIONS];
         song[0] = bestThreeTracks[1].GetTrack(); // Verse 1
-        song[1] = Mutation(bestThreeTracks[0]).GetTrack(); // Chorus 1
+        song[1] = bestThreeTracks[0].GetTrack(); // Chorus 1
         song[2] = bestThreeTracks[2].GetTrack(); // bridge 1
         song[3] = Mutation(bestThreeTracks[0]).GetTrack(); // Chorus 2
 
@@ -201,23 +206,22 @@ public class GeneticAlgorithm implements Runnable, JMC
             Part p = new Part();
             for(int j = 0; j < 12; j++)
             {
-                Random r = new Random(System.nanoTime());
-                r.nextInt(3);
+                _random.nextInt(3);
 
-                if(i == 0)
+                if(i % 3 == 0)
                 {
-                    int c = r.nextInt(CHORDS.length);
+                    int c = _random.nextInt(CHORDS.length);
                     Phrase chord = new Phrase();
                     chord.addChord(CHORDS[c], QUARTER_NOTE);
                     p.addPhrase(chord);
                 }
                 else if (i % 2 == 0)
                 {
-                    p.addPhrase(new Phrase(new Note(C3 + j, WHOLE_NOTE)));
+                    p.addPhrase(new Phrase(new Note(C3 + j, QUARTER_NOTE)));
                 }
                 else
                 {
-                    p.addPhrase(new Phrase(new Note(C2 + j, QUARTER_NOTE)));
+                    p.addPhrase(new Phrase(new Note(C2 + j, WHOLE_NOTE)));
                 }
             }
 
@@ -304,7 +308,7 @@ public class GeneticAlgorithm implements Runnable, JMC
     public Organism Mutation(Organism o)
     {
         // Randomize the order of the mutators
-        Collections.shuffle(_mutators, new Random(System.nanoTime()));
+        Collections.shuffle(_mutators, _random);
 
         // Mutate the phrase
         Part mutation = o.GetTrack();
@@ -393,8 +397,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         for(int i = 0; i < parents.length; i++)
             sum += parents[i].GetOverallRating();
 
-        Random r = new Random(System.nanoTime());
-        float rand = r.nextFloat() * sum;
+        float rand = _random.nextFloat() * sum;
 
         sum = 0;
         for(int i = 0; i < parents.length; i++)
@@ -417,15 +420,15 @@ public class GeneticAlgorithm implements Runnable, JMC
      */
     private ArrayList<OvertoneNote> GenerateGameNotes()
     {
-        Random r = new Random(System.nanoTime());
-
-        ArrayList<OvertoneNote> tempNote = new ArrayList<OvertoneNote>();
+        ArrayList<OvertoneNote> tempNotes = new ArrayList<OvertoneNote>();
         Part[] parts = Overtone.GameMusic.getPartArray();
 
         float elapsedTime = GameplayScreen.START_DELAY;
         int prevTarget    = 0;
         int target        = 0;
         boolean prevHold  = false;
+        int holdNoteCounter = 0;
+        int doubleNoteCounter = 0;
 
         for(int i = 0; i <  parts.length; i++)
         {
@@ -433,17 +436,14 @@ public class GeneticAlgorithm implements Runnable, JMC
             for(int j = 0; j < phrases.length; j++)
             {
                 prevTarget = target;
-                target = r.nextInt(Overtone.TargetZones.length);
+                target = _random.nextInt(Overtone.TargetZones.length);
 
-                // If it is a reset then continue
-                if(phrases[j].getNote(0).isRest())
+                if(phrases[j].length() > 1) // else if it is a chord == double note
                 {
-                    elapsedTime += phrases[j].getNote(0).getDuration();
-                    prevHold = false;
-                    continue;
-                }
-                else if(phrases[j].length() > 1) // else if it is a chord == double note
-                {
+                    if(prevHold)
+                        while (target == prevTarget)
+                            target = _random.nextInt(Overtone.TargetZones.length);
+                    
                     int target2 = DetermineTarget(target);
                     OvertoneNote n1 = new OvertoneNote(OvertoneNote.NoteType.Double, Overtone.TargetZones[target], elapsedTime);
                     OvertoneNote n2 = new OvertoneNote(OvertoneNote.NoteType.Double, Overtone.TargetZones[target2], elapsedTime);
@@ -453,17 +453,24 @@ public class GeneticAlgorithm implements Runnable, JMC
                     n2.SetOtherNote(n1);
                     n2.SetOtherNoteTime(elapsedTime);
 
-                    tempNote.add(n1);
-                    tempNote.add(n2);
+                    tempNotes.add(n1);
+                    tempNotes.add(n2);
 
                     elapsedTime += phrases[j].getNote(phrases[j].length() - 1).getDuration();
                     prevHold = false;
+                    doubleNoteCounter++;
+                }
+                else if(phrases[j].getNote(0).isRest()) // if it is a rest, continue
+                {
+                    elapsedTime += phrases[j].getNote(0).getDuration();
+                    prevHold = false;
+                    continue;
                 }
                 else if(phrases[j].getNote(0).getRhythmValue() > DOUBLE_DOTTED_QUARTER_NOTE) // if it is longer than a quarter note == hold note
                 {
                     // Make sure that hold notes do not go to the same target in a row
                     while (target == prevTarget)
-                        target = r.nextInt(Overtone.TargetZones.length);
+                        target = _random.nextInt(Overtone.TargetZones.length);
 
                     OvertoneNote n1 = new OvertoneNote(OvertoneNote.NoteType.Hold, Overtone.TargetZones[target], elapsedTime);
                     float n1Time = elapsedTime;
@@ -477,25 +484,77 @@ public class GeneticAlgorithm implements Runnable, JMC
                     n2.SetOtherNote(n1);
                     n2.SetOtherNoteTime(n1Time);
 
-                    tempNote.add(n1);
-                    tempNote.add(n2);
+                    tempNotes.add(n1);
+                    tempNotes.add(n2);
                     prevHold = true;
+                    holdNoteCounter++;
                 }
                 else // It is a normal note
                 {
                     if(prevHold)
                         while (target == prevTarget)
-                            target = r.nextInt(Overtone.TargetZones.length);
+                            target = _random.nextInt(Overtone.TargetZones.length);
 
-                    tempNote.add(new OvertoneNote(OvertoneNote.NoteType.Single, Overtone.TargetZones[target], elapsedTime));
+                    tempNotes.add(new OvertoneNote(OvertoneNote.NoteType.Single, Overtone.TargetZones[target], elapsedTime));
                     elapsedTime += phrases[j].getNote(0).getDuration();
                     prevHold = false;
                 }
             }
         }
 
+        if(Overtone.Difficulty == Overtone.Difficulty.Easy)
+            SimplifyForDifficultlyEasy(tempNotes, holdNoteCounter, doubleNoteCounter);
+        else if(Overtone.Difficulty == Overtone.Difficulty.Normal)
+            SimplifyForDifficultyNormal(tempNotes, holdNoteCounter, doubleNoteCounter);
+
         Overtone.TotalTime = elapsedTime;
-        return tempNote;
+        return tempNotes;
+    }
+
+    private ArrayList<OvertoneNote> SimplifyForDifficultlyEasy(ArrayList<OvertoneNote> notes, int holdNotes, int doubleNotes)
+    {
+        int totalHoldNotes = (int)Math.floor(holdNotes * 0.25f);
+        int numHoldNotes = 0;
+        int totalDoubleNotes = (int)Math.floor(doubleNotes * 0.25f);
+        int numDoubleNotes = 0;
+
+        if(totalDoubleNotes < 2)
+            totalDoubleNotes = 0;
+
+        if(totalHoldNotes < 2)
+            totalHoldNotes = 2;
+
+        ArrayList<OvertoneNote> forRemoval = new ArrayList<>();
+        for(int i = 0; i < notes.size(); i++)
+        {
+
+        }
+        notes.removeAll(forRemoval);
+
+        return notes;
+    }
+
+    private ArrayList<OvertoneNote> SimplifyForDifficultyNormal(ArrayList<OvertoneNote> notes, int holdNotes, int doubleNotes)
+    {
+        int totalHoldNotes = (int)Math.ceil(holdNotes * 0.5f);
+        int numHoldNotes = 0;
+        int totalDoubleNotes = (int)Math.ceil(doubleNotes * 0.5f);
+        int numDoubleNotes = 0;
+
+        if(totalDoubleNotes < 2)
+            totalDoubleNotes = 0;
+
+        if(totalHoldNotes < 2)
+            totalHoldNotes = 2;
+
+        ArrayList<OvertoneNote> forRemoval = new ArrayList<>();
+        for(int i = 0; i < notes.size(); i++)
+        {
+
+        }
+        notes.removeAll(forRemoval);
+
+        return notes;
     }
 
     /**
@@ -505,8 +564,7 @@ public class GeneticAlgorithm implements Runnable, JMC
      */
     private int DetermineTarget(int target)
     {
-        Random r = new Random(System.nanoTime());
-        int num = r.nextInt(1);
+        int num = _random.nextInt(1);
 
         switch(target)
         {

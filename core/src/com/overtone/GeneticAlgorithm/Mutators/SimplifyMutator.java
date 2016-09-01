@@ -11,9 +11,14 @@ import java.util.Random;
  */
 public class SimplifyMutator extends Mutator
 {
+    private Random _random;
+    public SimplifyMutator()
+    {
+        _random = new Random();
+    }
+
     public Part Mutate(Part p, float probability)
     {
-        Random r = new Random(System.nanoTime());
         for(int i = 0; i < p.length(); i++)
         {
             if(p.getPhrase(i).getNote(0).isRest())
@@ -48,10 +53,10 @@ public class SimplifyMutator extends Mutator
 
                 // Get the pitch of a random note in the randomly selected phrase
                 Phrase copyPhrase = p.getPhrase(phraseToCopy);
-                int newPitch = copyPhrase.getNote(r.nextInt(copyPhrase.length())).getPitch();
+                int newPitch = copyPhrase.getNote(_random.nextInt(copyPhrase.length())).getPitch();
 
                 // Get a random note in the phrase to be mutated
-                int noteToChangePitch = r.nextInt(p.getPhrase(i).length());
+                int noteToChangePitch = _random.nextInt(p.getPhrase(i).length());
 
                 // Store the pitch that the not was previously
                 int changedPitch = p.getPhrase(i).getNote(noteToChangePitch).getPitch();

@@ -42,9 +42,9 @@ public class Overtone extends ApplicationAdapter implements JMC
 	/**The available difficulties for the game.*/
 	public enum Difficulty
 	{
-		Easy(6),
-		Normal(4),
-		Hard(2);
+		Easy(2.5f),
+		Normal(2.25f),
+		Hard(2.0f);
 
 		public float Multiplier; // The amount of time the note must be on screen
 		Difficulty(float multiplier) { this.Multiplier = multiplier; }

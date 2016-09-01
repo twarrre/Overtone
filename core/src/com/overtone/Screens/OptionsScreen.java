@@ -110,7 +110,7 @@ public class OptionsScreen extends OvertoneScreen
         // Create the back button for the population size
         final Button popSizeBack = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.6f, Overtone.ScreenHeight * 0.5f - Overtone.ScreenWidth * 0.025f), _stage);
         popSizeBack.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
-            Overtone.PopulationSize = (int)Utilities.Clamp(Overtone.PopulationSize - 1, 1, 100);
+            Overtone.PopulationSize = (int)Utilities.Clamp(Overtone.PopulationSize - 1, 2, 100);
 
             if(Overtone.NumberOfElites > (Overtone.PopulationSize / 5))
                 Overtone.NumberOfElites = (Overtone.PopulationSize / 5);
@@ -122,7 +122,7 @@ public class OptionsScreen extends OvertoneScreen
         final Button numElitesNext = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.7725f, Overtone.ScreenHeight * 0.4f - Overtone.ScreenWidth * 0.025f), _stage);
         numElitesNext.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
-            Overtone.NumberOfElites = (int)Utilities.Clamp(Overtone.NumberOfElites + 1, 0, Overtone.PopulationSize / 5);
+            Overtone.NumberOfElites = (int)Utilities.Clamp(Overtone.NumberOfElites + 1, 0, Overtone.PopulationSize / 5.0f);
             Utilities.WriteGenerationValues();
         }});
 

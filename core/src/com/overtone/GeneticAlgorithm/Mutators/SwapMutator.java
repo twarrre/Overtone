@@ -9,25 +9,30 @@ import java.util.Random;
  */
 public class SwapMutator extends Mutator
 {
+    private Random _random;
+    public SwapMutator()
+    {
+        _random = new Random();
+    }
+
     public Part Mutate(Part p, float probability)
     {
-        Random rand = new Random(System.nanoTime());
-        int numSwaps = rand.nextInt(10) + 5;
+        int numSwaps = _random.nextInt(10) + 5;
 
         for(int k = 0; k < numSwaps; k++)
         {
             int ind = Utilities.GetRandom(0, 1, probability);
             if(ind == 0)
             {
-                int swapLength = rand.nextInt((int) Math.floor((p.length() - 1.0f) / 2.0f));
+                int swapLength = _random.nextInt((int) Math.floor((p.length() - 1.0f) / 2.0f));
 
                 if (swapLength <= 0)
                     swapLength++;
                 if (swapLength >= p.length() / 2)
                     swapLength--;
 
-                int index1 = rand.nextInt(p.length() - (swapLength * 2));
-                int index2 = rand.nextInt(((p.length() - swapLength) - (index1 + swapLength)) + 1) + (index1 + swapLength);
+                int index1 = _random.nextInt(p.length() - (swapLength * 2));
+                int index2 = _random.nextInt(((p.length() - swapLength) - (index1 + swapLength)) + 1) + (index1 + swapLength);
 
                 Part swap1 = new Part();
                 for (int i = index1; i < index1 + swapLength; i++)

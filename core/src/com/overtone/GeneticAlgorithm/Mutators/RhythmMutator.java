@@ -14,11 +14,16 @@ import java.util.Collections;
  */
 public class RhythmMutator extends Mutator implements JMC
 {
-
+    private int _indexForLargestRhythmChord;
+    public RhythmMutator()
+    {
+        Collections.sort(GeneticAlgorithm.RHYTHMS);
+        _indexForLargestRhythmChord = BinarySearch(GeneticAlgorithm.RHYTHMS, 0, GeneticAlgorithm.RHYTHMS.size(), DOUBLE_DOTTED_QUARTER_NOTE);
+    }
 
     public Part Mutate(Part p, float probability)
     {
-        Collections.sort(GeneticAlgorithm.RHYTHMS);
+
 
         for(int i = 0; i < p.length(); i++)
         {
@@ -30,7 +35,9 @@ public class RhythmMutator extends Mutator implements JMC
 
                 // Get a new rhythm value
                 int index = BinarySearch(GeneticAlgorithm.RHYTHMS, 0, GeneticAlgorithm.RHYTHMS.size(), currRhythm);
-                int indexToNewRhythm = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistribution(index, 1.0f), 0 , GeneticAlgorithm.RHYTHMS.size() - 1));
+
+                int range = p.getPhrase(i).length() > 1 ? _indexForLargestRhythmChord : GeneticAlgorithm.RHYTHMS.size() - 1;
+                int indexToNewRhythm = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistribution(index, 1.0f), 0 , range));
 
                 p.getPhrase(i).getNote(p.getPhrase(i).length() - 1).setRhythmValue(GeneticAlgorithm.RHYTHMS.get(indexToNewRhythm));
             }
