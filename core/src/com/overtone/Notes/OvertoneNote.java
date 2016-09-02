@@ -17,7 +17,7 @@ public class OvertoneNote implements Comparable<OvertoneNote>
         Hold    // Note must be held for a certain amount of time
     }
 
-    private final NoteType _type;              // Stores the type of note that this one is
+    private NoteType _type;                    // Stores the type of note that this one is
     private final Target   _target;            // The target point of where this note is heading
     private final Vector2  _direction;         // The direction that the note is heading in
     private final float    _time;              // Time that the note must be at the target zone at
@@ -156,6 +156,9 @@ public class OvertoneNote implements Comparable<OvertoneNote>
      * @param b true if visible, false otherwise
      */
     public void SetVisibility(boolean b) {_isVisible = b;}
+
+    /** Sets the type of the note. */
+    public void SetType(NoteType type) {_type = type;}
 
     /**
      * Sets the partner note if the note is a double, or hold

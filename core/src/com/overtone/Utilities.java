@@ -351,12 +351,10 @@ public class Utilities implements JMC
         Collections.sort(notes);
 
         Overtone.NoteQueue   = new ArrayList<>();
-        Overtone.BackupQueue = new ArrayList<>();
 
         for(int i = 0; i < notes.size(); i++)
         {
             Overtone.NoteQueue.add(new OvertoneNote(notes.get(i)));
-            Overtone.BackupQueue.add(new OvertoneNote(notes.get(i)));
         }
 
         for(int i = 0; i < Overtone.NoteQueue.size(); i++)
@@ -367,8 +365,8 @@ public class Utilities implements JMC
                 Overtone.NoteQueue.get(i).SetOtherNote(Overtone.NoteQueue.get(index));
                 Overtone.NoteQueue.get(index).SetOtherNote(Overtone.NoteQueue.get(i));
 
-                Overtone.BackupQueue.get(i).SetOtherNote(Overtone.BackupQueue.get(index));
-                Overtone.BackupQueue.get(index).SetOtherNote(Overtone.BackupQueue.get(i));
+                Overtone.NoteQueue.get(i).SetOtherNoteTime(Overtone.NoteQueue.get(index).GetTime());
+                Overtone.NoteQueue.get(index).SetOtherNoteTime(Overtone.NoteQueue.get(i).GetTime());
             }
         }
     }

@@ -121,8 +121,8 @@ public class GeneticAlgorithm implements Runnable, JMC
         Overtone.GameMusic.addPart(mergedPart);
 
         // Generate the notes and store them in the game and backup arrays
-        ArrayList<OvertoneNote> tempNote = GenerateGameNotes();
-        Utilities.SortNotes(tempNote);
+        ArrayList<OvertoneNote> tempNotes = GenerateGameNotes();
+        Utilities.SortNotes(tempNotes);
 
         // Set the current rater values
         for(int i = 0; i < Overtone.CurrentRaterValues.length; i++)
@@ -418,143 +418,124 @@ public class GeneticAlgorithm implements Runnable, JMC
      * Goes through the generated tones to create note objects for gameplay
      * @return an array of notes for gameplay
      */
-    private ArrayList<OvertoneNote> GenerateGameNotes()
+    public ArrayList<OvertoneNote> GenerateGameNotes()
     {
         ArrayList<OvertoneNote> tempNotes = new ArrayList<OvertoneNote>();
         Part[] parts = Overtone.GameMusic.getPartArray();
 
-        float elapsedTime = GameplayScreen.START_DELAY;
-        int prevTarget    = 0;
-        int target        = 0;
-        boolean prevHold  = false;
-        int holdNoteCounter = 0;
-        int doubleNoteCounter = 0;
+        float elapsedTime                  = GameplayScreen.START_DELAY;
+        int prevTarget                     = 0;
+        int target                         = 0;
+        OvertoneNote.NoteType previousType = OvertoneNote.NoteType.Single;
 
         for(int i = 0; i <  parts.length; i++)
         {
             Phrase[] phrases = parts[i].getPhraseArray();
             for(int j = 0; j < phrases.length; j++)
             {
+                boolean includeHoldNote = true;
+                boolean includeDoubleNote = true;
+                if(Overtone.Difficulty == Overtone.Difficulty.Easy)
+                {
+                    includeHoldNote = Utilities.GetRandom(0, 1, 0.2f) == 0 ? true : false;
+                    includeDoubleNote = Utilities.GetRandom(0, 1, 0.2f) == 0 ? true : false;
+                }
+                else if(Overtone.Difficulty == Overtone.Difficulty.Normal)
+                {
+                    includeHoldNote = Utilities.GetRandom(0, 1, 0.45f) == 0 ? true : false;
+                    includeDoubleNote = Utilities.GetRandom(0, 1, 0.45f) == 0 ? true : false;
+                }
+
                 prevTarget = target;
                 target = _random.nextInt(Overtone.TargetZones.length);
 
-                if(phrases[j].length() > 1) // else if it is a chord == double note
-                {
-                    if(prevHold)
-                        while (target == prevTarget)
-                            target = _random.nextInt(Overtone.TargetZones.length);
-                    
-                    int target2 = DetermineTarget(target);
-                    OvertoneNote n1 = new OvertoneNote(OvertoneNote.NoteType.Double, Overtone.TargetZones[target], elapsedTime);
-                    OvertoneNote n2 = new OvertoneNote(OvertoneNote.NoteType.Double, Overtone.TargetZones[target2], elapsedTime);
-
-                    n1.SetOtherNote(n2);
-                    n1.SetOtherNoteTime(elapsedTime);
-                    n2.SetOtherNote(n1);
-                    n2.SetOtherNoteTime(elapsedTime);
-
-                    tempNotes.add(n1);
-                    tempNotes.add(n2);
-
-                    elapsedTime += phrases[j].getNote(phrases[j].length() - 1).getDuration();
-                    prevHold = false;
-                    doubleNoteCounter++;
-                }
-                else if(phrases[j].getNote(0).isRest()) // if it is a rest, continue
-                {
-                    elapsedTime += phrases[j].getNote(0).getDuration();
-                    prevHold = false;
-                    continue;
-                }
-                else if(phrases[j].getNote(0).getRhythmValue() > DOUBLE_DOTTED_QUARTER_NOTE) // if it is longer than a quarter note == hold note
-                {
-                    // Make sure that hold notes do not go to the same target in a row
+                if(previousType == OvertoneNote.NoteType.Hold)
                     while (target == prevTarget)
                         target = _random.nextInt(Overtone.TargetZones.length);
 
-                    OvertoneNote n1 = new OvertoneNote(OvertoneNote.NoteType.Hold, Overtone.TargetZones[target], elapsedTime);
-                    float n1Time = elapsedTime;
-                    elapsedTime += phrases[j].getNote(0).getDuration();
-
-                    OvertoneNote n2 = new OvertoneNote(OvertoneNote.NoteType.Hold, Overtone.TargetZones[target], elapsedTime - 0.05f);
-                    float n2Time = elapsedTime - 0.05f;
-
-                    n1.SetOtherNote(n2);
-                    n1.SetOtherNoteTime(n2Time);
-                    n2.SetOtherNote(n1);
-                    n2.SetOtherNoteTime(n1Time);
-
-                    tempNotes.add(n1);
-                    tempNotes.add(n2);
-                    prevHold = true;
-                    holdNoteCounter++;
+                elapsedTime += phrases[j].getNote(phrases[j].length() - 1).getDuration();
+                if(phrases[j].length() > 1 && includeDoubleNote) // else if it is a chord == double note
+                {
+                    OvertoneNote[] notes = CreateDoubleNote(target, elapsedTime);
+                    tempNotes.add(notes[0]);
+                    tempNotes.add(notes[1]);
+                    previousType = OvertoneNote.NoteType.Double;
+                }
+                else if(phrases[j].getNote(0).isRest()) // if it is a rest, continue
+                {
+                    previousType = OvertoneNote.NoteType.Single;
+                    continue;
+                }
+                else if(phrases[j].getNote(0).getRhythmValue() > DOUBLE_DOTTED_QUARTER_NOTE && includeHoldNote) // if it is longer than a quarter note == hold note
+                {
+                    OvertoneNote[] notes = CreateHoldNote(target, elapsedTime, phrases[j].getNote(0).getDuration());
+                    tempNotes.add(notes[0]);
+                    tempNotes.add(notes[1]);
+                    previousType = OvertoneNote.NoteType.Hold;
                 }
                 else // It is a normal note
                 {
-                    if(prevHold)
-                        while (target == prevTarget)
-                            target = _random.nextInt(Overtone.TargetZones.length);
-
-                    tempNotes.add(new OvertoneNote(OvertoneNote.NoteType.Single, Overtone.TargetZones[target], elapsedTime));
-                    elapsedTime += phrases[j].getNote(0).getDuration();
-                    prevHold = false;
+                    tempNotes.add(CreateSingleNote(target, elapsedTime));
+                    previousType = OvertoneNote.NoteType.Single;
                 }
             }
         }
-
-        if(Overtone.Difficulty == Overtone.Difficulty.Easy)
-            SimplifyForDifficultlyEasy(tempNotes, holdNoteCounter, doubleNoteCounter);
-        else if(Overtone.Difficulty == Overtone.Difficulty.Normal)
-            SimplifyForDifficultyNormal(tempNotes, holdNoteCounter, doubleNoteCounter);
 
         Overtone.TotalTime = elapsedTime;
         return tempNotes;
     }
 
-    private ArrayList<OvertoneNote> SimplifyForDifficultlyEasy(ArrayList<OvertoneNote> notes, int holdNotes, int doubleNotes)
+    /**
+     * Creates a double note
+     * @param target the target of the first note
+     * @param elapsedTime the elapsed time of the song
+     * @return and array of notes representing a double note
+     */
+    private OvertoneNote[] CreateDoubleNote(int target, float elapsedTime)
     {
-        int totalHoldNotes = (int)Math.floor(holdNotes * 0.25f);
-        int numHoldNotes = 0;
-        int totalDoubleNotes = (int)Math.floor(doubleNotes * 0.25f);
-        int numDoubleNotes = 0;
+        int target2 = DetermineTarget(target);
+        OvertoneNote[] note = new OvertoneNote[2];
+        note[0] = new OvertoneNote(OvertoneNote.NoteType.Double, Overtone.TargetZones[target], elapsedTime);
+        note[1] = new OvertoneNote(OvertoneNote.NoteType.Double, Overtone.TargetZones[target2], elapsedTime);
 
-        if(totalDoubleNotes < 2)
-            totalDoubleNotes = 0;
+        note[0].SetOtherNote(note[1]);
+        note[0].SetOtherNoteTime(note[1].GetTime());
+        note[1].SetOtherNote(note[0]);
+        note[1].SetOtherNoteTime(note[0].GetTime());
 
-        if(totalHoldNotes < 2)
-            totalHoldNotes = 2;
-
-        ArrayList<OvertoneNote> forRemoval = new ArrayList<>();
-        for(int i = 0; i < notes.size(); i++)
-        {
-
-        }
-        notes.removeAll(forRemoval);
-
-        return notes;
+        return note;
     }
 
-    private ArrayList<OvertoneNote> SimplifyForDifficultyNormal(ArrayList<OvertoneNote> notes, int holdNotes, int doubleNotes)
+    /**
+     * Creates a hold note
+     * @param target the target of the notes
+     * @param elapsedTime the elapsed time of the song
+     * @param noteDuration The duration of the first note
+     * @return and array of notes that represents a hold note
+     */
+    private OvertoneNote[] CreateHoldNote(int target, float elapsedTime, double noteDuration)
     {
-        int totalHoldNotes = (int)Math.ceil(holdNotes * 0.5f);
-        int numHoldNotes = 0;
-        int totalDoubleNotes = (int)Math.ceil(doubleNotes * 0.5f);
-        int numDoubleNotes = 0;
+        OvertoneNote[] note = new OvertoneNote[2];
+        note[0] = new OvertoneNote(OvertoneNote.NoteType.Hold, Overtone.TargetZones[target], elapsedTime);
+        note[1] = new OvertoneNote(OvertoneNote.NoteType.Hold, Overtone.TargetZones[target], elapsedTime + (float)noteDuration - 0.05f);
 
-        if(totalDoubleNotes < 2)
-            totalDoubleNotes = 0;
+        note[0].SetOtherNote(note[1]);
+        note[0].SetOtherNoteTime(note[1].GetTime());
+        note[1].SetOtherNote(note[0]);
+        note[1].SetOtherNoteTime(note[0].GetTime());
 
-        if(totalHoldNotes < 2)
-            totalHoldNotes = 2;
+        return note;
+    }
 
-        ArrayList<OvertoneNote> forRemoval = new ArrayList<>();
-        for(int i = 0; i < notes.size(); i++)
-        {
-
-        }
-        notes.removeAll(forRemoval);
-
-        return notes;
+    /**
+     * Creates a single note
+     * @param target the target of the note
+     * @param elapsedTime the elapsed time of the song
+     * @return a single note.
+     */
+    private OvertoneNote CreateSingleNote(int target, float elapsedTime)
+    {
+        return new OvertoneNote(OvertoneNote.NoteType.Single, Overtone.TargetZones[target], elapsedTime);
     }
 
     /**

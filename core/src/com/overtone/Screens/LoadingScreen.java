@@ -3,8 +3,11 @@ package com.overtone.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.overtone.GeneticAlgorithm.GeneticAlgorithm;
+import com.overtone.Notes.OvertoneNote;
 import com.overtone.Overtone;
 import com.overtone.Utilities;
+
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -57,16 +60,17 @@ public class LoadingScreen extends OvertoneScreen
         _timeInterval    = 1;
         _glowAlpha       = 0.0f;
         _glowDirection   = 0.01f;
+        _genetic         = new GeneticAlgorithm();
 
         if(Overtone.Regenerate)
         {
-            _genetic          = new GeneticAlgorithm();
             _generatingThread = new Thread(_genetic);
             _generatingThread.start();
         }
         else
         {
-            Utilities.SortNotes(Overtone.BackupQueue);
+            ArrayList<OvertoneNote> tempNotes = _genetic.GenerateGameNotes();
+            Utilities.SortNotes(tempNotes);
         }
     }
 

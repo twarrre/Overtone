@@ -42,8 +42,8 @@ public class Overtone extends ApplicationAdapter implements JMC
 	/**The available difficulties for the game.*/
 	public enum Difficulty
 	{
-		Easy(2.5f),
-		Normal(2.25f),
+		Easy(3f),
+		Normal(2.5f),
 		Hard(2.0f);
 
 		public float Multiplier; // The amount of time the note must be on screen
@@ -159,7 +159,6 @@ public class Overtone extends ApplicationAdapter implements JMC
 	public static float                   MusicVolume;        // Stores the music volume for all music in the game
 	public static float                   SFXVolume;          // Stores the sound effects volume for all sound effects in the game
 	public static ArrayList<OvertoneNote> NoteQueue;          // Storage for notes that are not on screen
-	public static ArrayList<OvertoneNote> BackupQueue;        // Backup for the whole notes in the song
 	public static float                   TotalTime;          // The amount of time the song takes
 	public static float[]                 BestRaterValues;    // The stored rater values
 	public static float[]                 CurrentRaterValues; // The currently generated rating values
