@@ -223,16 +223,15 @@ public class Quadtree
                 toBeRemoved.add(n);
         }
 
-        // If there are elements to be removed, remove them now
-        for(OvertoneNote n : toBeRemoved)
-            Remove(n, node);
-
         // Update all nodes in the children nodes
         toBeRemoved.addAll(Update(deltaTime, node.topLeft));
         toBeRemoved.addAll(Update(deltaTime, node.topRight));
         toBeRemoved.addAll(Update(deltaTime, node.bottomLeft));
         toBeRemoved.addAll(Update(deltaTime, node.bottomRight));
 
+        // If there are elements to be removed, remove them now
+        for(OvertoneNote n : toBeRemoved)
+            Remove(n, node);
 
         return toBeRemoved;
     }
