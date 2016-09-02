@@ -32,7 +32,6 @@ public class Rating
     private Vector2          _center;      // The center point of the rating
     private boolean          _isVisible;   // True if it is visible on screen, false otherwise
     private Vector2          _scale;       // The scale of the rating
-    private int              _drawCounter; // Says how many times to draw the rating
 
     /**
      * Constructor
@@ -46,7 +45,6 @@ public class Rating
         _screenTime  = 0;
         _isVisible   = true;
         _scale       = scale;
-        _drawCounter = 1;
     }
 
     /**
@@ -56,12 +54,7 @@ public class Rating
     public void Update(float deltaTime)
     {
         if(_isVisible)
-        {
             _screenTime += deltaTime;
-
-            if(_screenTime % 0.05f < 0.0045f)
-                _drawCounter++;
-        }
 
         if(_screenTime >= ONSCREEN_TIME)
             _isVisible = false;
@@ -96,9 +89,4 @@ public class Rating
      * @param v Trus if visible on screen, false otherwise
      */
     public void SetVisibility(boolean v) {_isVisible = v;}
-
-    /**
-     * @return the number of times to draw the rating (makes it look more like an explosion)
-     */
-    public int GetDrawCounter() {return _drawCounter;}
 }

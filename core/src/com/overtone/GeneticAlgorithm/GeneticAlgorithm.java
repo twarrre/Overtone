@@ -481,7 +481,7 @@ public class GeneticAlgorithm implements Runnable, JMC
             }
         }
 
-        Overtone.TotalTime = elapsedTime;
+        Overtone.TotalTime = elapsedTime + GameplayScreen.COMPLETION_DELAY;
         return tempNotes;
     }
 
