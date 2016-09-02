@@ -16,10 +16,10 @@ n
 171200 Great
 140800 Great
 94500 Cleared
+61600 Failure
 48400 Cleared
 8400 Failure
 7500 Failure
-4800 Failure
 h
 1766200 Great
 1580900 ---

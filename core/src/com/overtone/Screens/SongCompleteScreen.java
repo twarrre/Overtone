@@ -53,8 +53,8 @@ public class SongCompleteScreen extends OvertoneScreen
         _retryButton = CreateButton("RETRY", "default", Overtone.ScreenWidth * 0.25f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.075f, Overtone.ScreenHeight * 0.075f), _stage);
         _retryButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
-                ButtonPress(Overtone.Screens.Loading);
                 Overtone.Regenerate = false;
+                ButtonPressRetry(Overtone.Screens.Loading);
             }
         });
 
@@ -70,8 +70,8 @@ public class SongCompleteScreen extends OvertoneScreen
         _difficultyButton = CreateButton("DIFFICULTY", "default", Overtone.ScreenWidth * 0.25f, Overtone.ScreenHeight * 0.15f, new Vector2(Overtone.ScreenWidth * 0.675f, Overtone.ScreenHeight * 0.075f), _stage);
         _difficultyButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
-                ButtonPress(Overtone.Screens.DifficultySelect);
                 Overtone.Regenerate = false;
+                ButtonPressRetry(Overtone.Screens.DifficultySelect);
             }
         });
 
@@ -210,5 +210,19 @@ public class SongCompleteScreen extends OvertoneScreen
         _yesButton.setVisible(true);
         _noButton.setDisabled(false);
         _noButton.setVisible(true);
+    }
+
+    /**
+     * Clicked when you want to replay the song.
+     * Avoids averaging the rater values.
+     * @param screen The next screen.
+     */
+    private void ButtonPressRetry(Overtone.Screens screen)
+    {
+        // Play sound effects for warning and button presses
+        _buttonPress.play(Overtone.SFXVolume);
+        _warning.play(Overtone.SFXVolume);
+        _nextScreen = screen;
+        Overtone.SetScreen(_nextScreen);
     }
 }
