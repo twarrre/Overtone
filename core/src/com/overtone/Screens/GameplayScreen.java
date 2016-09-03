@@ -367,7 +367,6 @@ public class GameplayScreen extends OvertoneScreen
     {
         super.update(deltaTime);
         _stage.act(deltaTime);
-        _input.Update();
 
         // Do nothing if paused
         if(_paused)
@@ -436,15 +435,20 @@ public class GameplayScreen extends OvertoneScreen
         ArrayList<OvertoneNote> removedNotes = _onScreenNotes.Update(deltaTime);
         if(!removedNotes.isEmpty())
         {
+            // All of the notes that have passed their targets
             for(OvertoneNote n : removedNotes)
             {
                 _missCounter++;
                 _onScreenRatings.add(new Rating(Rating.RatingType.Miss, n.GetPosition(), _ratingScale));
-                if(n.GetType() == OvertoneNote.NoteType.Hold)
+                n.SetVisibility(false);
+                if(n.GetType() == OvertoneNote.NoteType.Hold) // if a miss was a hold note then remove the other one
                 {
-                    _missCounter++;
-                    RemoveHoldNote(n, null);
-                    n.NoteCompleted(true);
+                    _missCounter++; // add a miss for the other note
+                    n.GetOtherNote().SetVisibility(false);
+                    if(!_onScreenNotes.Remove(n.GetOtherNote()))// if it is note in the quadtree the remove it from the note que
+                        Overtone.NoteQueue.remove(n.GetOtherNote());
+
+                    _holdNotesOnScreen.remove(n);
                 }
             }
             _combo = 0;
@@ -460,6 +464,7 @@ public class GameplayScreen extends OvertoneScreen
         }
         _onScreenRatings.removeAll(done);
 
+        _input.Update();
         CheckInput();
         UpdateCrowdRating(deltaTime);
     }
@@ -477,12 +482,17 @@ public class GameplayScreen extends OvertoneScreen
             InputManager.KeyBinding currentKey = _holdNotesOnScreen.get(currentNote);
 
             // If they are no longer holding the note
-            if(!_input.ActionOccurred(currentKey, InputManager.ActionType.Held) && currentNote.GetOtherNote().IsVisible())
+            if(!_input.ActionOccurred(currentKey, InputManager.ActionType.Held))
             {
                 // Get its rating
                 Rating rating = GetNoteRating(currentNote.GetTarget().Position, currentNote.GetOtherNote());
                 HandleRating(rating);
-                RemoveHoldNote(currentNote, it);
+
+                currentNote.GetOtherNote().SetVisibility(false);
+                if(!_onScreenNotes.Remove(currentNote.GetOtherNote()))// if it is note in the quadtree the remove it from the note que
+                    Overtone.NoteQueue.remove(currentNote.GetOtherNote());
+
+                _holdNotesOnScreen.remove(currentNote);
             }
         }
 
@@ -498,10 +508,13 @@ public class GameplayScreen extends OvertoneScreen
                 // If the player missed the first hold note, then remove the other one.
                 if(rating.GetRating() == Rating.RatingType.Miss && close.GetType() == OvertoneNote.NoteType.Hold)
                 {
-                    _missCounter++;
-                    RemoveHoldNote(close, null);
-                }
+                    _missCounter++; // add a miss for the other note
+                    close.GetOtherNote().SetVisibility(false);
+                    if(!_onScreenNotes.Remove(close.GetOtherNote()))// if it is note in the quadtree the remove it from the note que
+                        Overtone.NoteQueue.remove(close.GetOtherNote());
 
+                    _holdNotesOnScreen.remove(close);
+                }
 
                 _targetZonesPressed[i] = true;
                HandleRating(rating);
@@ -864,24 +877,5 @@ public class GameplayScreen extends OvertoneScreen
             // Calculate the direction
             _shipDirection = new Vector2(notes.get(0).GetCenter().x - (Overtone.ScreenWidth * 0.5f), notes.get(0).GetCenter().y - (Overtone.ScreenHeight * 0.5f));
         }
-    }
-
-    /**
-     * Removes a hold note from the game
-     * @param n The note to remove
-     * @param it The iterator it came from is necessary
-     */
-    private void RemoveHoldNote(OvertoneNote n, Iterator it)
-    {
-        if(!_onScreenNotes.Remove(n.GetOtherNote()))
-        {
-            n.GetOtherNote().SetVisibility(false);
-            Overtone.NoteQueue.remove(n.GetOtherNote());
-        }
-
-        if(it != null)
-            it.remove();
-        else
-            _holdNotesOnScreen.remove(n);
     }
 }
