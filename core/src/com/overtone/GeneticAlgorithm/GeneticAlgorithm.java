@@ -32,17 +32,17 @@ public class GeneticAlgorithm implements Runnable, JMC
     public static final ArrayList<Double> RHYTHMS = new ArrayList<Double>()
     {{
         add(THIRTYSECOND_NOTE);
-        add(DOTTED_SIXTEENTH_NOTE);
         add(SIXTEENTH_NOTE);
-        add(DOUBLE_DOTTED_EIGHTH_NOTE);
-        add(DOTTED_EIGHTH_NOTE);
+        add(DOTTED_SIXTEENTH_NOTE);
         add(EIGHTH_NOTE);
-        add(DOUBLE_DOTTED_QUARTER_NOTE);
-        add(DOTTED_QUARTER_NOTE);
+        add(DOTTED_EIGHTH_NOTE);
+        add(DOUBLE_DOTTED_EIGHTH_NOTE);
         add(QUARTER_NOTE);
+        add(DOTTED_QUARTER_NOTE);
+        add(DOUBLE_DOTTED_QUARTER_NOTE);
         add(HALF_NOTE);
-        add(DOUBLE_DOTTED_HALF_NOTE);
         add(DOTTED_HALF_NOTE);
+        add(DOUBLE_DOTTED_HALF_NOTE);
         add(WHOLE_NOTE);
     }};
 

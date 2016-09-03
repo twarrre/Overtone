@@ -23,8 +23,6 @@ public class RhythmMutator extends Mutator implements JMC
 
     public Part Mutate(Part p, float probability)
     {
-
-
         for(int i = 0; i < p.length(); i++)
         {
             // Random to decide if the note will be mutated or not
@@ -33,11 +31,14 @@ public class RhythmMutator extends Mutator implements JMC
             {
                 double currRhythm = p.getPhrase(i).getNote(p.getPhrase(i).length() - 1).getRhythmValue();
 
-                // Get a new rhythm value
+                //Find the index of the current rhythm
                 int index = BinarySearch(GeneticAlgorithm.RHYTHMS, 0, GeneticAlgorithm.RHYTHMS.size(), currRhythm);
 
                 int range = p.getPhrase(i).length() > 1 ? _indexForLargestRhythmChord : GeneticAlgorithm.RHYTHMS.size() - 1;
-                int indexToNewRhythm = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistribution(index, 1.0f), 0 , range));
+
+                int indexToNewRhythm = Math.round(Utilities.GetRandomRangeNormalDistribution(index, 2.0f));
+                while(indexToNewRhythm > range || indexToNewRhythm < 0)
+                    indexToNewRhythm = Math.round(Utilities.GetRandomRangeNormalDistribution(index, 2.0f));
 
                 p.getPhrase(i).getNote(p.getPhrase(i).length() - 1).setRhythmValue(GeneticAlgorithm.RHYTHMS.get(indexToNewRhythm));
             }

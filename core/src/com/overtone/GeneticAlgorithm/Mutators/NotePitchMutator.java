@@ -28,7 +28,7 @@ public class NotePitchMutator extends Mutator implements JMC
                 {
                     // Change all of the notes in the phrase by that pitch delta
                     int pitch = p.getPhrase(i).getNote(j).getPitch();
-                    p.getPhrase(i).getNote(j).setPitch(pitch + pitchDelta);
+                    p.getPhrase(i).getNote(j).setPitch((int)Utilities.Clamp(pitch + pitchDelta, CN1, G9));
                 }
             }
         }

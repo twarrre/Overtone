@@ -3,6 +3,7 @@ package com.overtone.Testing.MutatorTests;
 import com.overtone.GeneticAlgorithm.GeneticAlgorithm;
 import com.overtone.GeneticAlgorithm.Mutators.RhythmMutator;
 import jm.JMC;
+import jm.constants.Durations;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
@@ -18,7 +19,7 @@ public class RhythmMutatorTest implements JMC
 
         Part p = new Part();
         for(int i = 0; i < 10; i++)
-            p.addPhrase(new Phrase(new Note(C4, QUARTER_NOTE)));
+            p.addPhrase(new Phrase(new Note(C4, THIRTYSECOND_NOTE)));
 
         Part m1 = rm.Mutate(p.copy(), 1);
         Part m2 = rm.Mutate(p.copy(), 0.8f);
@@ -75,7 +76,7 @@ public class RhythmMutatorTest implements JMC
             if(i % 2 ==  0)
             {
                 Phrase chord = new Phrase();
-                chord.addChord(GeneticAlgorithm.CHORDS[0], WHOLE_NOTE);
+                chord.addChord(GeneticAlgorithm.CHORDS[0], DOTTED_QUARTER_NOTE);
                 pChord.addPhrase(chord);
             }
             else
