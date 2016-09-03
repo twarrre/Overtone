@@ -27,10 +27,10 @@ public class InputManager
     /**Stores all of the different key codes that are being tracked in the game*/
     public enum KeyBinding
     {
-        TopLeft     (Input.Keys.E),
+        TopLeft     (Input.Keys.W),
         TopRight    (Input.Keys.I),
-        BottomLeft  (Input.Keys.D),
-        BottomRight (Input.Keys.K);
+        BottomLeft  (Input.Keys.C),
+        BottomRight (Input.Keys.N);
 
         KeyBinding(int key) { this.keyCode = key; }
         public int keyCode; // The code for the enum value

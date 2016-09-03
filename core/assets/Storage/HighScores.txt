@@ -3,8 +3,8 @@ e
 389800 Great
 98300 Great
 49600 Failure
+11900 Failure
 3300 Failure
-0 ---
 0 ---
 0 ---
 0 ---
@@ -25,9 +25,9 @@ h
 1580900 ---
 1118300 ---
 944900 Great
+779500 Great
 638700 Failure
 633000 Great
 571900 Great
 525800 Great
 391800 Great
-350700 Great

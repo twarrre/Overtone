@@ -1,7 +1,6 @@
 package com.overtone.Screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -57,10 +56,10 @@ public class GameplayScreen extends OvertoneScreen
     private final Texture                                  _progressBar;        // Texture for the progress bar
     private final Texture                                  _progress;           // Texture for the progress of the progress bar
     private final Texture                                  _progressArrow;      // Texture for arrow in the progress bar
-    private final Texture                                  _d;                  // Texture for the bottom left target zone
-    private final Texture                                  _e;                  // Texture for the top left target zone
-    private final Texture                                  _i;                  // Texture for the top right target zone
-    private final Texture                                  _k;                  // Texture for the bottom right target zone
+    private final Texture                                  _bottomLeft;         // Texture for the bottom left target zone
+    private final Texture                                  _topLeft;            // Texture for the top left target zone
+    private final Texture                                  _topRight;           // Texture for the top right target zone
+    private final Texture                                  _bottomRight;        // Texture for the bottom right target zone
     private final Texture                                  _background;         // Texture for background of the pause menu
     private final Texture                                  _perfection;         // Texture for Perfection crowd rating
     private final Texture                                  _brilliant;          // Texture for brilliant crowd rating
@@ -131,10 +130,10 @@ public class GameplayScreen extends OvertoneScreen
         _progressBar        = new Texture(Gdx.files.internal("Textures\\progressbar.png"));
         _progress           = new Texture(Gdx.files.internal("Textures\\red.png"));
         _progressArrow      = new Texture(Gdx.files.internal("Textures\\arrow.png"));
-        _e                  = new Texture(Gdx.files.internal("Textures\\e.png"));
-        _d                  = new Texture(Gdx.files.internal("Textures\\d.png"));
-        _i                  = new Texture(Gdx.files.internal("Textures\\i.png"));
-        _k                  = new Texture(Gdx.files.internal("Textures\\k.png"));
+        _topLeft            = new Texture(Gdx.files.internal("Textures\\TopLeft.png"));
+        _bottomLeft         = new Texture(Gdx.files.internal("Textures\\BottomLeft.png"));
+        _topRight           = new Texture(Gdx.files.internal("Textures\\TopRight.png"));
+        _bottomRight        = new Texture(Gdx.files.internal("Textures\\BottomRight.png"));
         _background         = new Texture(Gdx.files.internal("Textures\\background.png"));
         _perfection         = new Texture(Gdx.files.internal("Textures\\perfection.png"));
         _brilliant          = new Texture(Gdx.files.internal("Textures\\brilliant.png"));
@@ -283,10 +282,10 @@ public class GameplayScreen extends OvertoneScreen
 
         // Draw the letter borders
         float letterWidth = Overtone.ScreenWidth * 0.2f;
-        _batch.draw(_d, 0, 0,letterWidth, letterWidth);
-        _batch.draw(_k, Overtone.ScreenWidth * 0.8f, 0, letterWidth, letterWidth);
-        _batch.draw(_i, Overtone.ScreenWidth * 0.8f, Overtone.ScreenHeight - letterWidth, letterWidth, letterWidth);
-        _batch.draw(_e, 0, Overtone.ScreenHeight - letterWidth, letterWidth, letterWidth);
+        _batch.draw(_bottomLeft, 0, 0,letterWidth, letterWidth);
+        _batch.draw(_bottomRight, Overtone.ScreenWidth * 0.8f, 0, letterWidth, letterWidth);
+        _batch.draw(_topRight, Overtone.ScreenWidth * 0.8f, Overtone.ScreenHeight - letterWidth, letterWidth, letterWidth);
+        _batch.draw(_topLeft, 0, Overtone.ScreenHeight - letterWidth, letterWidth, letterWidth);
 
         // Draw the target zones
         for(int i = 0; i < Overtone.TargetZones.length; i++)
@@ -372,10 +371,6 @@ public class GameplayScreen extends OvertoneScreen
         // Do nothing if paused
         if(_paused)
             return;
-
-        // Check the input twice so that we can get finer precession
-        _input.Update();
-        CheckInput();
 
         // If resuming update timers
         if(_resuming)
@@ -471,7 +466,6 @@ public class GameplayScreen extends OvertoneScreen
         }
         _onScreenRatings.removeAll(done);
 
-        // Check the input twice so that we can get finer precession
         _input.Update();
         CheckInput();
         UpdateCrowdRating(deltaTime);
@@ -722,10 +716,10 @@ public class GameplayScreen extends OvertoneScreen
         _progressBar.dispose();
         _progress.dispose();
         _progressArrow.dispose();
-        _d.dispose();
-        _e.dispose();
-        _i.dispose();
-        _k.dispose();
+        _bottomLeft.dispose();
+        _topLeft.dispose();
+        _topRight.dispose();
+        _bottomRight.dispose();
         _background.dispose();
         _perfection.dispose();
         _brilliant.dispose();

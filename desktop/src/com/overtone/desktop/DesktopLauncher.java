@@ -15,7 +15,7 @@ public class DesktopLauncher {
 		config.vSyncEnabled = true;
 		config.foregroundFPS = 60;
 		config.resizable = false;
-		config.forceExit = false;
+		config.forceExit = true;
 		config.addIcon("Textures\\icon32x32.png",  Files.FileType.Internal);
 		config.addIcon("Textures\\icon16x16.png",  Files.FileType.Internal);
 
