@@ -48,7 +48,7 @@ public class SplashScreen extends OvertoneScreen
         _elapsedTime += deltaTime;
 
         if (_elapsedTime >= SPLASH_TIME
-                || _inputManager.ActionOccurred(InputManager.KeyBinding.Enter, InputManager.ActionType.Pressed)
+                || Gdx.input.isButtonPressed(Input.Keys.ENTER)
                 || Gdx.input.isButtonPressed(Input.Buttons.LEFT)
                 || Gdx.input.isButtonPressed(Input.Buttons.RIGHT))
             Overtone.SetScreen(Overtone.Screens.MainMenu);

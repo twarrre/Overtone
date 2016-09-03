@@ -2,6 +2,8 @@ package com.overtone;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,9 +30,7 @@ public class InputManager
         TopLeft     (Input.Keys.E),
         TopRight    (Input.Keys.I),
         BottomLeft  (Input.Keys.D),
-        BottomRight (Input.Keys.K),
-        Pause       (Input.Keys.ESCAPE),
-        Enter       (Input.Keys.ENTER);
+        BottomRight (Input.Keys.K);
 
         KeyBinding(int key) { this.keyCode = key; }
         public int keyCode; // The code for the enum value
@@ -61,10 +61,14 @@ public class InputManager
      */
     public void Update()
     {
-        for(Integer key : _currentKeyBoardState.keySet())
+        _prevKeyboardState = new HashMap<>(_currentKeyBoardState);
+        _currentKeyBoardState.clear();
+
+        KeyBinding[] bindings = KeyBinding.values();
+        for(int i = 0; i < bindings.length; i++)
         {
-            _prevKeyboardState.put(key, _currentKeyBoardState.get(key));
-            _currentKeyBoardState.put(key, Gdx.input.isKeyPressed(key));
+            boolean b =  Gdx.input.isKeyPressed(bindings[i].keyCode);
+            _currentKeyBoardState.put(bindings[i].keyCode, b);
         }
     }
 

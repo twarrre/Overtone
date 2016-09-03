@@ -1,6 +1,7 @@
 package com.overtone.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -200,8 +201,8 @@ public class GameplayScreen extends OvertoneScreen
         _retryButton.setVisible(false);
         _retryButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
-                PausedMenuButtonPressed(Overtone.Screens.Loading);
                 Overtone.Regenerate = false;
+                PausedMenuButtonPressed(Overtone.Screens.Loading);
             }});
 
         // Create the change difficulty button on the paused menu
@@ -210,8 +211,8 @@ public class GameplayScreen extends OvertoneScreen
         _difficultyButton.setVisible(false);
         _difficultyButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
-                PausedMenuButtonPressed(Overtone.Screens.DifficultySelect);
                 Overtone.Regenerate = false;
+                PausedMenuButtonPressed(Overtone.Screens.DifficultySelect);
             }});
 
         // Create the main menu button on the paused menu
@@ -481,7 +482,6 @@ public class GameplayScreen extends OvertoneScreen
      */
     private void CheckInput()
     {
-
         for(int i = 0; i < Overtone.TargetZones.length; i++)
         {
             if(_input.ActionOccurred(InputManager.KeyBinding.values()[i], InputManager.ActionType.Down))
