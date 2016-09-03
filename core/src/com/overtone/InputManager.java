@@ -67,8 +67,7 @@ public class InputManager
         KeyBinding[] bindings = KeyBinding.values();
         for(int i = 0; i < bindings.length; i++)
         {
-            boolean b =  Gdx.input.isKeyPressed(bindings[i].keyCode);
-            _currentKeyBoardState.put(bindings[i].keyCode, b);
+            _currentKeyBoardState.put(bindings[i].keyCode, Gdx.input.isKeyPressed(bindings[i].keyCode));
         }
     }
 
