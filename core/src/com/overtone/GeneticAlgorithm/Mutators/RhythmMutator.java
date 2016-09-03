@@ -36,9 +36,9 @@ public class RhythmMutator extends Mutator implements JMC
 
                 int range = p.getPhrase(i).length() > 1 ? _indexForLargestRhythmChord : GeneticAlgorithm.RHYTHMS.size() - 1;
 
-                int indexToNewRhythm = Math.round(Utilities.GetRandomRangeNormalDistribution(index, 2.0f));
+                int indexToNewRhythm = Math.round(Utilities.GetRandomRangeNormalDistribution(index, 2.5f));
                 while(indexToNewRhythm > range || indexToNewRhythm < 0)
-                    indexToNewRhythm = Math.round(Utilities.GetRandomRangeNormalDistribution(index, 2.0f));
+                    indexToNewRhythm = Math.round(Utilities.GetRandomRangeNormalDistribution(index, 2.5f));
 
                 p.getPhrase(i).getNote(p.getPhrase(i).length() - 1).setRhythmValue(GeneticAlgorithm.RHYTHMS.get(indexToNewRhythm));
             }

@@ -76,7 +76,7 @@ public class Overtone extends ApplicationAdapter implements JMC
 
 			score += 4 * counters[0];
 			score += 3 * counters[1];
-			score += 1 * counters[2];
+			score += 2 * counters[2];
 			score += 0 * counters[3];
 			score -= 1 * counters[4];
 
