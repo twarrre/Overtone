@@ -426,7 +426,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         float elapsedTime                  = GameplayScreen.START_DELAY;
         int prevTarget                     = 0;
         int target                         = 0;
-        OvertoneNote.NoteType previousType = OvertoneNote.NoteType.Single;
+        int lastHoldTarget                 = -1;
 
         for(int i = 0; i <  parts.length; i++)
         {
@@ -448,22 +448,23 @@ public class GeneticAlgorithm implements Runnable, JMC
 
                 prevTarget = target;
                 target = _random.nextInt(Overtone.TargetZones.length);
+                int target2 = DetermineTarget(target);
 
-                if(previousType == OvertoneNote.NoteType.Hold)
-                    while (target == prevTarget)
-                        target = _random.nextInt(Overtone.TargetZones.length);
+                while (target == lastHoldTarget || target2 == lastHoldTarget)
+                {
+                    target = _random.nextInt(Overtone.TargetZones.length);
+                    target2 = DetermineTarget(target);
+                }
 
                 elapsedTime += phrases[j].getNote(phrases[j].length() - 1).getDuration();
                 if(phrases[j].length() > 1 && includeDoubleNote) // else if it is a chord == double note
                 {
-                    OvertoneNote[] notes = CreateDoubleNote(target, elapsedTime);
+                    OvertoneNote[] notes = CreateDoubleNote(target, target2, elapsedTime);
                     tempNotes.add(notes[0]);
                     tempNotes.add(notes[1]);
-                    previousType = OvertoneNote.NoteType.Double;
                 }
                 else if(phrases[j].getNote(0).isRest()) // if it is a rest, continue
                 {
-                    previousType = OvertoneNote.NoteType.Single;
                     continue;
                 }
                 else if(phrases[j].getNote(0).getRhythmValue() > DOUBLE_DOTTED_QUARTER_NOTE && includeHoldNote) // if it is longer than a quarter note == hold note
@@ -471,12 +472,11 @@ public class GeneticAlgorithm implements Runnable, JMC
                     OvertoneNote[] notes = CreateHoldNote(target, elapsedTime, phrases[j].getNote(0).getDuration());
                     tempNotes.add(notes[0]);
                     tempNotes.add(notes[1]);
-                    previousType = OvertoneNote.NoteType.Hold;
+                    lastHoldTarget = target;
                 }
                 else // It is a normal note
                 {
                     tempNotes.add(CreateSingleNote(target, elapsedTime));
-                    previousType = OvertoneNote.NoteType.Single;
                 }
             }
         }
@@ -491,9 +491,8 @@ public class GeneticAlgorithm implements Runnable, JMC
      * @param elapsedTime the elapsed time of the song
      * @return and array of notes representing a double note
      */
-    private OvertoneNote[] CreateDoubleNote(int target, float elapsedTime)
+    private OvertoneNote[] CreateDoubleNote(int target, int target2,  float elapsedTime)
     {
-        int target2 = DetermineTarget(target);
         OvertoneNote[] note = new OvertoneNote[2];
         note[0] = new OvertoneNote(OvertoneNote.NoteType.Double, Overtone.TargetZones[target], elapsedTime);
         note[1] = new OvertoneNote(OvertoneNote.NoteType.Double, Overtone.TargetZones[target2], elapsedTime);
@@ -545,37 +544,37 @@ public class GeneticAlgorithm implements Runnable, JMC
      */
     private int DetermineTarget(int target)
     {
-        int num = _random.nextInt(1);
+        int num = _random.nextInt(2);
 
         switch(target)
         {
             case 0:
             {
                 if(num == 0)
-                    return target + 1;
+                    return (int)Utilities.Clamp(target + 1, 0, 3);
                 else
-                    return target + 2;
+                    return (int)Utilities.Clamp(target + 2, 0, 3);
             }
             case 1:
             {
                 if(num == 0)
-                    return target - 1;
+                    return (int)Utilities.Clamp(target - 1, 0, 3);
                 else
-                    return target + 2;
+                    return (int)Utilities.Clamp(target + 2, 0, 3);
             }
             case 2:
             {
                 if(num == 0)
-                    return target + 1;
+                    return (int)Utilities.Clamp(target + 1, 0, 3);
                 else
-                    return target - 2;
+                    return (int)Utilities.Clamp(target - 2, 0, 3);
             }
             case 3:
             {
                 if(num == 0)
-                    return target - 1;
+                    return (int)Utilities.Clamp(target - 1, 0, 3);
                 else
-                    return target - 2;
+                    return (int)Utilities.Clamp(target - 2, 0, 3);
             }
             default:
                 return 0;
