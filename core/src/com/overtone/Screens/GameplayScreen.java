@@ -372,6 +372,10 @@ public class GameplayScreen extends OvertoneScreen
         if(_paused)
             return;
 
+        // Check the input twice so that we can get finer precession
+        _input.Update();
+        CheckInput();
+
         // If resuming update timers
         if(_resuming)
         {
@@ -443,7 +447,9 @@ public class GameplayScreen extends OvertoneScreen
                 n.SetVisibility(false);
                 if(n.GetType() == OvertoneNote.NoteType.Hold) // if a miss was a hold note then remove the other one
                 {
-                    _missCounter++; // add a miss for the other note
+                    Rating rating = GetNoteRating(n.GetTarget().Position, n.GetOtherNote());
+                    HandleRating(rating);
+
                     n.GetOtherNote().SetVisibility(false);
                     if(!_onScreenNotes.Remove(n.GetOtherNote()))// if it is note in the quadtree the remove it from the note que
                         Overtone.NoteQueue.remove(n.GetOtherNote());
@@ -464,6 +470,7 @@ public class GameplayScreen extends OvertoneScreen
         }
         _onScreenRatings.removeAll(done);
 
+        // Check the input twice so that we can get finer precession
         _input.Update();
         CheckInput();
         UpdateCrowdRating(deltaTime);
@@ -474,6 +481,22 @@ public class GameplayScreen extends OvertoneScreen
      */
     private void CheckInput()
     {
+
+        for(int i = 0; i < Overtone.TargetZones.length; i++)
+        {
+            if(_input.ActionOccurred(InputManager.KeyBinding.values()[i], InputManager.ActionType.Down))
+            {
+                _targetZonesPressed[i] = true;
+            }
+            else
+            {
+                _targetZonesPressed[i] = false;
+            }
+        }
+
+        // Stores keys being held currently
+        HashMap<Integer, Boolean> keysBeingHeld = new HashMap<>();
+
         // Handle all hold notes
         Iterator<OvertoneNote> it = _holdNotesOnScreen.keySet().iterator();
         while(it.hasNext())
@@ -492,32 +515,41 @@ public class GameplayScreen extends OvertoneScreen
                 if(!_onScreenNotes.Remove(currentNote.GetOtherNote()))// if it is note in the quadtree the remove it from the note que
                     Overtone.NoteQueue.remove(currentNote.GetOtherNote());
 
-                _holdNotesOnScreen.remove(currentNote);
+               it.remove();
+            }
+            else
+            {
+                keysBeingHeld.put(currentNote.GetTarget().Type.ordinal(), true);
             }
         }
 
         // Check each input related to each target zone
         for(int i = 0; i < Overtone.TargetZones.length; i++)
         {
-            _targetZonesPressed[i] = false;
+            if(keysBeingHeld.containsKey(i))
+                continue;
+
             if(_input.ActionOccurred(InputManager.KeyBinding.values()[i], InputManager.ActionType.Pressed))
             {
                 OvertoneNote close = GetClosestNote( Overtone.TargetZones[i].Position, InputManager.KeyBinding.values()[i]);
-                Rating rating = GetNoteRating( Overtone.TargetZones[i].Position, close);
-
-                // If the player missed the first hold note, then remove the other one.
-                if(rating.GetRating() == Rating.RatingType.Miss && close.GetType() == OvertoneNote.NoteType.Hold)
+                if(close != null)
                 {
-                    _missCounter++; // add a miss for the other note
-                    close.GetOtherNote().SetVisibility(false);
-                    if(!_onScreenNotes.Remove(close.GetOtherNote()))// if it is note in the quadtree the remove it from the note que
-                        Overtone.NoteQueue.remove(close.GetOtherNote());
+                    Rating rating = GetNoteRating( Overtone.TargetZones[i].Position, close);
+                    HandleRating(rating);
 
-                    _holdNotesOnScreen.remove(close);
+                    // If the player missed the first hold note, then remove the other one.
+                    if(rating.GetRating() == Rating.RatingType.Miss && close.GetType() == OvertoneNote.NoteType.Hold)
+                    {
+                        Rating rating2 = GetNoteRating(close.GetTarget().Position, close.GetOtherNote());
+                        HandleRating(rating2);
+
+                        close.GetOtherNote().SetVisibility(false);
+                        if (!_onScreenNotes.Remove(close.GetOtherNote()))// if it is note in the quadtree the remove it from the note que
+                            Overtone.NoteQueue.remove(close.GetOtherNote());
+
+                        _holdNotesOnScreen.remove(close);
+                    }
                 }
-
-                _targetZonesPressed[i] = true;
-               HandleRating(rating);
             }
         }
     }

@@ -18,7 +18,8 @@ public class InputManager
         Pressed,
         Held,
         Released,
-        Up
+        Up,
+        Down
     }
 
     /**Stores all of the different key codes that are being tracked in the game*/
@@ -85,6 +86,8 @@ public class InputManager
                 return KeyReleased(key.keyCode);
             case Up:
                 return KeyUp(key.keyCode);
+            case Down:
+                return KeyDown(key.keyCode);
             default:
                 return false;
         }
@@ -138,6 +141,19 @@ public class InputManager
     {
         if(_prevKeyboardState.containsKey(key) && _currentKeyBoardState.containsKey(key))
             return !_currentKeyBoardState.get(key);
+        else
+            return false;
+    }
+
+    /**
+     * Checks to see if a key is down.
+     * @param key the key that we want to see if it is up
+     * @return true if the key is up, false otherwise
+     */
+    private boolean KeyDown(int key)
+    {
+        if(_prevKeyboardState.containsKey(key) && _currentKeyBoardState.containsKey(key))
+            return _currentKeyBoardState.get(key);
         else
             return false;
     }
