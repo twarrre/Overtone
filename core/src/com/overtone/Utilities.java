@@ -297,7 +297,7 @@ public class Utilities implements JMC
     /**
      * Write the rater values to a file
      */
-    public static void WriteRaterValues()
+    public static void WriteRaterValues(boolean clear)
     {
         try
         {
@@ -311,7 +311,10 @@ public class Utilities implements JMC
 
             for(int i = 0; i < Overtone.BestRaterValues.length; i++)
             {
-                writer.write(Overtone.BestRaterValues[i] + "");
+                if(clear)
+                    writer.write(0.5 + "");
+                else
+                    writer.write(Overtone.BestRaterValues[i] + "");
                 writer.newLine();
             }
 

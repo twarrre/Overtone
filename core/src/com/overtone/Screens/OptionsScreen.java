@@ -169,7 +169,7 @@ public class OptionsScreen extends OvertoneScreen
             ButtonPressConfirmationScreen(true);
 
             if(_dataCleared)
-                System.out.println("Data has been Cleared.");
+                Utilities.WriteRaterValues(true);
             else
                 Utilities.WriteScores(true);
             }

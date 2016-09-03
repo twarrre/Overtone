@@ -129,7 +129,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         {
             float sum = 0;
             for(int j = 0; j < bestThreeTracks.length; j++)
-                sum += bestThreeTracks[j].GetOverallRating();
+                sum += bestThreeTracks[j].GetRating(i);
             sum /= bestThreeTracks.length;
             Overtone.CurrentRaterValues[i] = sum;
         }
@@ -424,7 +424,6 @@ public class GeneticAlgorithm implements Runnable, JMC
         Part[] parts = Overtone.GameMusic.getPartArray();
 
         float elapsedTime                  = GameplayScreen.START_DELAY;
-        int prevTarget                     = 0;
         int target                         = 0;
         int lastHoldTarget                 = -1;
 
@@ -446,9 +445,10 @@ public class GeneticAlgorithm implements Runnable, JMC
                     includeDoubleNote = Utilities.GetRandom(0, 1, 0.45f) == 0 ? true : false;
                 }
 
-                prevTarget = target;
                 target = _random.nextInt(Overtone.TargetZones.length);
                 int target2 = DetermineTarget(target);
+
+                elapsedTime += phrases[j].getNote(phrases[j].length() - 1).getDuration();
 
                 while (target == lastHoldTarget || target2 == lastHoldTarget)
                 {
@@ -456,7 +456,6 @@ public class GeneticAlgorithm implements Runnable, JMC
                     target2 = DetermineTarget(target);
                 }
 
-                elapsedTime += phrases[j].getNote(phrases[j].length() - 1).getDuration();
                 if(phrases[j].length() > 1 && includeDoubleNote) // else if it is a chord == double note
                 {
                     OvertoneNote[] notes = CreateDoubleNote(target, target2, elapsedTime);

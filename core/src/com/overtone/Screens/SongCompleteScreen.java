@@ -90,7 +90,7 @@ public class SongCompleteScreen extends OvertoneScreen
         _yesButton.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _accept.play(Overtone.SFXVolume);
             Utilities.AverageRaterValues();
-            Utilities.WriteRaterValues();
+            Utilities.WriteRaterValues(false);
             Overtone.SetScreen(_nextScreen);
         }});
 
