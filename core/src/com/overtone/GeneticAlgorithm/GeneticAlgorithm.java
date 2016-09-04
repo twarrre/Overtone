@@ -459,11 +459,11 @@ public class GeneticAlgorithm implements Runnable, JMC
                             || (prevDuraction > DOTTED_HALF_NOTE && phrases[j].getNote(phrases[j].length() - 1).getDuration() < DOUBLE_DOTTED_EIGHTH_NOTE))
                     {
                         if(Overtone.Difficulty == Overtone.Difficulty.Easy)
-                            includeNote = Utilities.GetRandom(0, 1, 0.45f) == 0 ? true : false;
+                            includeNote = Utilities.GetRandom(0, 1, 0.35f) == 0 ? true : false;
                         else if(Overtone.Difficulty == Overtone.Difficulty.Normal)
-                            includeNote = Utilities.GetRandom(0, 1, 0.65f) == 0 ? true : false;
+                            includeNote = Utilities.GetRandom(0, 1, 0.55f) == 0 ? true : false;
                         else
-                            includeNote = Utilities.GetRandom(0, 1, 0.85f) == 0 ? true : false;
+                            includeNote = Utilities.GetRandom(0, 1, 0.80f) == 0 ? true : false;
                     }
                 }
 
