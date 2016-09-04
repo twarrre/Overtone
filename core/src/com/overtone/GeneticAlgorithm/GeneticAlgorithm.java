@@ -31,7 +31,7 @@ public class GeneticAlgorithm implements Runnable, JMC
     /** Array of valid rhythms used in generation. */
     public static final ArrayList<Double> RHYTHMS = new ArrayList<Double>()
     {{
-        add(THIRTYSECOND_NOTE);
+       // add(THIRTYSECOND_NOTE);
         add(SIXTEENTH_NOTE);
         add(DOTTED_SIXTEENTH_NOTE);
         add(EIGHTH_NOTE);

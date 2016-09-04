@@ -1,5 +1,5 @@
 e
-0 ---
+110500 Cleared
 0 ---
 0 ---
 0 ---
@@ -10,8 +10,8 @@ e
 0 ---
 0 ---
 n
-0 ---
-0 ---
+251000 Great
+22800 Failure
 0 ---
 0 ---
 0 ---
@@ -22,12 +22,12 @@ n
 0 ---
 h
 204200 Cleared
+196600 Great
 169200 Cleared
 21500 Failure
 16900 Failure
 12300 Failure
 7900 Failure
+7400 Failure
+5500 Failure
 2900 Failure
-2100 Failure
-0 ---
-0 ---
