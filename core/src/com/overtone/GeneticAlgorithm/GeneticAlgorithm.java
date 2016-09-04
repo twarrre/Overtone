@@ -444,12 +444,29 @@ public class GeneticAlgorithm implements Runnable, JMC
         float elapsedTime                  = GameplayScreen.START_DELAY;
         int target                         = 0;
         int lastHoldTarget                 = -1;
+        double prevDuraction               = -1;
 
         for(int i = 0; i <  parts.length; i++)
         {
             Phrase[] phrases = parts[i].getPhraseArray();
             for(int j = 0; j < phrases.length; j++)
             {
+                boolean includeNote = true;
+                if(prevDuraction != -1)
+                {
+                    // Simplify very close together notes or notes that follow right after a hold note
+                    if((phrases[j].getNote(phrases[j].length() - 1).getDuration() < DOUBLE_DOTTED_EIGHTH_NOTE && prevDuraction < DOUBLE_DOTTED_EIGHTH_NOTE)
+                            || (prevDuraction > DOTTED_HALF_NOTE && phrases[j].getNote(phrases[j].length() - 1).getDuration() < DOUBLE_DOTTED_EIGHTH_NOTE))
+                    {
+                        if(Overtone.Difficulty == Overtone.Difficulty.Easy)
+                            includeNote = Utilities.GetRandom(0, 1, 0.45f) == 0 ? true : false;
+                        else if(Overtone.Difficulty == Overtone.Difficulty.Normal)
+                            includeNote = Utilities.GetRandom(0, 1, 0.65f) == 0 ? true : false;
+                        else
+                            includeNote = Utilities.GetRandom(0, 1, 0.85f) == 0 ? true : false;
+                    }
+                }
+
                 boolean includeHoldNote = true;
                 boolean includeDoubleNote = true;
                 if(Overtone.Difficulty == Overtone.Difficulty.Easy)
@@ -467,6 +484,7 @@ public class GeneticAlgorithm implements Runnable, JMC
                 int target2 = DetermineTarget(target);
 
                 elapsedTime += phrases[j].getNote(phrases[j].length() - 1).getDuration();
+                prevDuraction = phrases[j].getNote(phrases[j].length() - 1).getDuration();
 
                 while (target == lastHoldTarget || target2 == lastHoldTarget)
                 {
@@ -474,6 +492,10 @@ public class GeneticAlgorithm implements Runnable, JMC
                     target2 = DetermineTarget(target);
                 }
 
+                if(!includeNote)
+                {
+                    continue;
+                }
                 if(phrases[j].length() > 1 && includeDoubleNote) // else if it is a chord == double note
                 {
                     OvertoneNote[] notes = CreateDoubleNote(target, target2, elapsedTime);
