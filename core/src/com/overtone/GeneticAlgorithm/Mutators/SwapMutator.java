@@ -1,4 +1,5 @@
 package com.overtone.GeneticAlgorithm.Mutators;
+import com.overtone.GeneticAlgorithm.GeneticAlgorithm;
 import com.overtone.Utilities;
 import jm.music.data.Part;
 import java.util.Random;
@@ -57,6 +58,6 @@ public class SwapMutator extends Mutator
             }
         }
 
-        return p;
+        return GeneticAlgorithm.CorrectStartTime(GeneticAlgorithm.CorrectDuration(p));
     }
 }

@@ -1,4 +1,5 @@
 package com.overtone.GeneticAlgorithm.Mutators;
+import com.overtone.GeneticAlgorithm.GeneticAlgorithm;
 import com.overtone.Utilities;
 import jm.music.data.Part;
 import jm.JMC;
@@ -32,6 +33,6 @@ public class NotePitchMutator extends Mutator implements JMC
                 }
             }
         }
-        return p;
+        return GeneticAlgorithm.CorrectStartTime(GeneticAlgorithm.CorrectDuration(p));
     }
 }

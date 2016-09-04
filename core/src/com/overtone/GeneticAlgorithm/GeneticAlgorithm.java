@@ -107,6 +107,9 @@ public class GeneticAlgorithm implements Runnable, JMC
         Organism[] bestThreeTracks = GenerateTracks();
 
         // Create phases that create the song. Structure of the song is verse, chorus, verse, chorus, bridge, chorus. Mutate each one so that there is a bit of variation between them
+
+        //TODO: CHECK IF IT GETS SET UP PROPERLY HERE OR NOT AFTER START TIME IS DONE
+
         Part[] song = new Part[NUM_SECTIONS];
         song[0] = bestThreeTracks[1].GetTrack(); // Verse 1
         song[1] = bestThreeTracks[0].GetTrack(); // Chorus 1
@@ -118,6 +121,8 @@ public class GeneticAlgorithm implements Runnable, JMC
         for(int i = 0; i < song.length; i++)
            for(int j = 0; j < song[i].length(); j++)
                mergedPart.appendPhrase(song[i].getPhrase(j));
+
+        mergedPart = CorrectStartTime(CorrectDuration(mergedPart));
         Overtone.GameMusic.addPart(mergedPart);
 
         // Generate the notes and store them in the game and backup arrays
@@ -145,7 +150,7 @@ public class GeneticAlgorithm implements Runnable, JMC
      */
     private Organism[] GenerateTracks()
     {
-        float bestRaterScoreAverage = 0;
+        double bestRaterScoreAverage = 0;
         for(int i = 0; i < Overtone.BestRaterValues.length; i++)
             bestRaterScoreAverage += Overtone.BestRaterValues[i];
         bestRaterScoreAverage /= Overtone.BestRaterValues.length;
@@ -153,7 +158,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         // Initialization Phrase
         Organism[] population = new Organism[3];
         Organism[] parentPopulation = Initialization();
-        float parentAverageRating = 0;
+        double parentAverageRating = 0;
 
         for(int i = 0; i < parentPopulation.length; i++)
         {
@@ -165,9 +170,11 @@ public class GeneticAlgorithm implements Runnable, JMC
         //Genetic algorithm phase
         for(int i = 0; i < Overtone.NumberOfIterations; i++)
         {
+            _currentIteration = i + 1;
+
             // Get the children
             population = Selection(parentPopulation);
-            float populationRating = 0;
+            double populationRating = 0;
 
             // Rate the children
             for(int j = 0; j < population.length; j++)
@@ -178,11 +185,21 @@ public class GeneticAlgorithm implements Runnable, JMC
 
             populationRating /= population.length;
 
+
+            // TODO: CHECK HOW OFTEN IT FAILS AFTER MUTATION PROBABILITY IS FIXED
+            //System.out.println("Best: " + bestRaterScoreAverage);
+            //System.out.println("parent : " + parentAverageRating);
+            //System.out.println("child : " + populationRating);
             // If the children are better then choose them instead
-            if(Math.abs(bestRaterScoreAverage - populationRating) > Math.abs(bestRaterScoreAverage - parentAverageRating))
+            if(Math.abs(populationRating - bestRaterScoreAverage) < Math.abs(parentAverageRating - bestRaterScoreAverage))
             {
+                //System.out.println("success");
                 parentPopulation    = population;
                 parentAverageRating = populationRating;
+            }
+            else
+            {
+                //System.out.println("failed");
             }
         }
 
@@ -210,18 +227,18 @@ public class GeneticAlgorithm implements Runnable, JMC
 
                 if(i % 3 == 0)
                 {
-                    int c = _random.nextInt(CHORDS.length);
+                    //int c = _random.nextInt(CHORDS.length);
                     Phrase chord = new Phrase();
-                    chord.addChord(CHORDS[c], QUARTER_NOTE);
+                    chord.addChord(CHORDS[0], QUARTER_NOTE);
                     p.addPhrase(chord);
                 }
                 else if (i % 2 == 0)
                 {
-                    p.addPhrase(new Phrase(new Note(C3 + j, QUARTER_NOTE)));
+                    p.addPhrase(new Phrase(new Note(C3, QUARTER_NOTE)));
                 }
                 else
                 {
-                    p.addPhrase(new Phrase(new Note(C2 + j, WHOLE_NOTE)));
+                    p.addPhrase(new Phrase(new Note(C2, WHOLE_NOTE)));
                 }
             }
 
@@ -287,10 +304,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         for(int i = 0; i < Overtone.NUM_RATERS; i++)
         {
             p.SetRating(_raters[i].Rate(p), i);
-            if(Overtone.BestRaterValues[i] == -1)
-                p.SetQuality(Math.abs(p.GetRating(i)), i);
-            else
-                p.SetQuality(Math.abs(Overtone.BestRaterValues[i] - p.GetRating(i)), i);
+            p.SetQuality(Math.abs(Overtone.BestRaterValues[i] - p.GetRating(i)), i);
             overallRating += p.GetQuality(i);
         }
 
@@ -312,8 +326,10 @@ public class GeneticAlgorithm implements Runnable, JMC
 
         // Mutate the phrase
         Part mutation = o.GetTrack();
+
         for(int i = 0; i < _mutators.size(); i++)
             mutation = _mutators.get(i).Mutate(mutation, o.GetProbability());
+
         o.SetTrack(mutation);
         return o;
     }
@@ -371,6 +387,8 @@ public class GeneticAlgorithm implements Runnable, JMC
                 children[0].addPhrase(p1.getPhrase(length + i));
         }
 
+        children[0] = CorrectStartTime(CorrectDuration(children[0]));
+        children[1] = CorrectStartTime(CorrectDuration(children[1]));
         return new Organism[] { new Organism(children[0], GetProbability(parent1)), new Organism(children[1], GetProbability(parent2))};
     }
 
@@ -381,7 +399,7 @@ public class GeneticAlgorithm implements Runnable, JMC
      */
     private float GetProbability(Organism o)
     {
-        return o.GetProbability() - (Organism.MUTATION_STEP / (float)(_currentIteration / Overtone.NumberOfIterations));
+        return o.GetProbability() - (Organism.MUTATION_STEP / ((float)_currentIteration / (float)Overtone.NumberOfIterations));
     }
 
     /**
@@ -595,6 +613,30 @@ public class GeneticAlgorithm implements Runnable, JMC
             else
                 return -1;
         }
+    }
+
+    public static Part CorrectDuration(Part p)
+    {
+        for(int i = 0; i < p.length(); i++)
+        {
+            double rhythmValue = p.getPhrase(i).getNote(p.getPhrase(i).length() - 1).getRhythmValue();
+            for(int j = 0; j < p.getPhrase(i).length(); j++)
+            {
+                p.getPhrase(i).getNote(j).setDuration(rhythmValue * Note.DEFAULT_DURATION_MULTIPLIER);
+            }
+        }
+        return p;
+    }
+
+    public static Part CorrectStartTime(Part p)
+    {
+        double startTime = 0;
+        for(int i = 0; i < p.length(); i++)
+        {
+            p.getPhrase(i).setStartTime(startTime);
+            startTime += p.getPhrase(i).getNote(p.getPhrase(i).length() -1).getRhythmValue();
+        }
+        return p;
     }
 }
 

@@ -3,6 +3,7 @@ package com.overtone.GeneticAlgorithm.Mutators;
 import com.overtone.GeneticAlgorithm.GeneticAlgorithm;
 import com.overtone.Utilities;
 import jm.JMC;
+import jm.music.data.Note;
 import jm.music.data.Part;
 
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class RhythmMutator extends Mutator implements JMC
                 p.getPhrase(i).getNote(p.getPhrase(i).length() - 1).setRhythmValue(GeneticAlgorithm.RHYTHMS.get(indexToNewRhythm));
             }
         }
-        return p;
+        return GeneticAlgorithm.CorrectStartTime(GeneticAlgorithm.CorrectDuration(p));
     }
 
     private static int BinarySearch(ArrayList<Double> list, int low, int high, double search)

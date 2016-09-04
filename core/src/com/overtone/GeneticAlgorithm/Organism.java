@@ -11,7 +11,7 @@ import jm.music.data.Part;
 public class Organism
 {
     /** Amount do drop probability of mutation after each generation */
-    public static final float MUTATION_STEP = 0.0005f;
+    public static final float MUTATION_STEP = 0.05f;
 
     /** The starting probability for how a note can mutate */
     public static final float STARTING_PROBABILITY = 0.8f;
@@ -31,7 +31,7 @@ public class Organism
         _track               = p;
         _rating              = new float[Overtone.NUM_RATERS];
         _quality             = new float[Overtone.NUM_RATERS];
-        _mutationProbability = Utilities.Clamp(mutation, 0.001f, 1.0f);
+        _mutationProbability = Utilities.Clamp(mutation, 0.01f, 1.0f);
         _overallRating       = 0;
     }
 
