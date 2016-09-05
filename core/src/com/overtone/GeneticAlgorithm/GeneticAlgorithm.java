@@ -114,7 +114,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         song[0] = bestThreeTracks[1].GetTrack(); // Verse 1
         song[1] = bestThreeTracks[0].GetTrack(); // Chorus 1
         song[2] = bestThreeTracks[2].GetTrack(); // bridge 1
-        song[3] = Mutation(bestThreeTracks[0]).GetTrack(); // Chorus 2
+        song[3] = bestThreeTracks[0].GetTrack(); // Chorus 2
 
         // Merges the song and adds it to the game music
         Part mergedPart = new Part();
@@ -242,7 +242,7 @@ public class GeneticAlgorithm implements Runnable, JMC
                 }
             }
 
-            population[i] = new Organism(p, _currentIteration);
+            population[i] = new Organism(CorrectStartTime(CorrectDuration(p)), _currentIteration);
         }
         return population;
     }
@@ -340,7 +340,6 @@ public class GeneticAlgorithm implements Runnable, JMC
             mutation = _mutators.get(i).Mutate(mutation, probability);
         }
 
-
         o.SetTrack(mutation);
         return o;
     }
@@ -400,6 +399,7 @@ public class GeneticAlgorithm implements Runnable, JMC
 
         children[0] = CorrectStartTime(CorrectDuration(children[0]));
         children[1] = CorrectStartTime(CorrectDuration(children[1]));
+
         return new Organism[] { new Organism(children[0], _currentIteration), new Organism(children[1], _currentIteration)};
     }
 
@@ -445,7 +445,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         float elapsedTime                  = GameplayScreen.START_DELAY;
         int target                         = 0;
         int lastHoldTarget                 = -1;
-        double prevDuraction               = -1;
+        double prevDuration                = -1;
 
         for(int i = 0; i <  parts.length; i++)
         {
@@ -453,11 +453,11 @@ public class GeneticAlgorithm implements Runnable, JMC
             for(int j = 0; j < phrases.length; j++)
             {
                 boolean includeNote = true;
-                if(prevDuraction != -1)
+                if(prevDuration != -1)
                 {
                     // Simplify very close together notes or notes that follow right after a hold note
-                    if((phrases[j].getNote(phrases[j].length() - 1).getDuration() < DOUBLE_DOTTED_EIGHTH_NOTE && prevDuraction < DOUBLE_DOTTED_EIGHTH_NOTE)
-                            || (prevDuraction > DOTTED_HALF_NOTE && phrases[j].getNote(phrases[j].length() - 1).getDuration() < DOUBLE_DOTTED_EIGHTH_NOTE))
+                    if((phrases[j].getNote(phrases[j].length() - 1).getDuration() < DOUBLE_DOTTED_EIGHTH_NOTE && prevDuration < DOUBLE_DOTTED_EIGHTH_NOTE)
+                            || (prevDuration > DOTTED_HALF_NOTE && phrases[j].getNote(phrases[j].length() - 1).getDuration() < DOUBLE_DOTTED_EIGHTH_NOTE))
                     {
                         if(Overtone.Difficulty == Overtone.Difficulty.Easy)
                             includeNote = Utilities.GetRandom(0, 1, 0.35f) == 0 ? true : false;
@@ -485,7 +485,7 @@ public class GeneticAlgorithm implements Runnable, JMC
                 int target2 = DetermineTarget(target);
 
                 elapsedTime += phrases[j].getNote(phrases[j].length() - 1).getDuration();
-                prevDuraction = phrases[j].getNote(phrases[j].length() - 1).getDuration();
+                prevDuration = phrases[j].getNote(phrases[j].length() - 1).getDuration();
 
                 while (target == lastHoldTarget || target2 == lastHoldTarget)
                 {
@@ -648,7 +648,10 @@ public class GeneticAlgorithm implements Runnable, JMC
                 p.getPhrase(i).getNote(j).setDuration(rhythmValue * Note.DEFAULT_DURATION_MULTIPLIER);
             }
         }
-        return p;
+
+        Part newP = p.copy();
+        RenameTracks(newP);
+        return newP;
     }
 
     public static Part CorrectStartTime(Part p)
@@ -659,7 +662,20 @@ public class GeneticAlgorithm implements Runnable, JMC
             p.getPhrase(i).setStartTime(startTime);
             startTime += p.getPhrase(i).getNote(p.getPhrase(i).length() -1).getRhythmValue();
         }
-        return p;
+
+        Part newP = p.copy();
+        RenameTracks(newP);
+        return newP;
+    }
+
+    public static void RenameTracks(Part p)
+    {
+        for(int i = 0; i < p.length(); i++)
+        {
+            p.setTitle(i + " ");
+            for(int j = 0; j < p.getPhrase(i).length(); j++)
+                p.getPhrase(i).setTitle(j + " ");
+        }
     }
 }
 

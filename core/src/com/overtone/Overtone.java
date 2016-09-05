@@ -6,15 +6,19 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.overtone.GeneticAlgorithm.GeneticAlgorithm;
+import com.overtone.GeneticAlgorithm.Organism;
 import com.overtone.Notes.OvertoneNote;
 import com.overtone.Notes.Target;
 import com.overtone.Screens.*;
 import java.util.ArrayList;
 
 import jm.audio.Instrument;
+import jm.constants.Durations;
 import jm.music.data.*;
 import javax.sound.midi.Sequencer;
 import jm.JMC;
+import jm.util.Play;
 
 /**
  * Manager for everything in the game, handles updating everything
