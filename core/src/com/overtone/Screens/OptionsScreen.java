@@ -150,6 +150,15 @@ public class OptionsScreen extends OvertoneScreen
             }
         });
 
+        // Create the clear scores button
+        final Button changeMutationValues = CreateButton("Change Mutation Values", "default", Overtone.ScreenWidth * 0.5825f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.2175f, Overtone.ScreenHeight * 0.0555f), _stage);
+        changeMutationValues.addListener(new ClickListener() {
+            public void clicked (InputEvent i, float x, float y) {
+                _buttonPress.play(Overtone.SFXVolume);
+                Overtone.SetScreen(Overtone.Screens.Mutation);
+            }
+        });
+
         // Create the background for the confirmation screen
         _background = new Image(new Texture(Gdx.files.internal("Textures\\background.png")));
         _background.setWidth(Overtone.ScreenWidth * 0.85f);

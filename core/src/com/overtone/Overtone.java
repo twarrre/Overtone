@@ -6,14 +6,11 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.overtone.GeneticAlgorithm.GeneticAlgorithm;
-import com.overtone.GeneticAlgorithm.Organism;
 import com.overtone.Notes.OvertoneNote;
 import com.overtone.Notes.Target;
 import com.overtone.Screens.*;
 import java.util.ArrayList;
 
-import com.overtone.Testing.MutatorTests.RhythmMutatorTest;
 import jm.audio.Instrument;
 import jm.music.data.*;
 import javax.sound.midi.Sequencer;
@@ -39,7 +36,8 @@ public class Overtone extends ApplicationAdapter implements JMC
 		Help,
 		HighScore,
 		Splash,
-		Loading
+		Loading,
+		Mutation
 	}
 
 	/**The available difficulties for the game.*/
@@ -174,6 +172,10 @@ public class Overtone extends ApplicationAdapter implements JMC
 	public static int                     NumberOfIterations; //Represents the number of iterations the algorithm is going to go through
 	public static int                     PopulationSize;     //The size of the population of tracks.
 	public static int                     NumberOfElites;     //Number of elites to save
+	public static float[]                 PitchMutatorValues;
+	public static float[]                 RhythmMutatorValues;
+	public static float[]                 SimplifyMutatorValues;
+	public static float[]                 SwapMutatorValues;
 	private static OvertoneScreen         _currentScreen;     // The current screen displayed on screen
 	private SpriteBatch                   _batch;             // Sprite batch to draw to
 	private Sprite                        _farBackground;     // The star background for the whole app
@@ -208,6 +210,23 @@ public class Overtone extends ApplicationAdapter implements JMC
 		PopulationSize     = 25;
 		NumberOfElites     = 5;
 
+		PitchMutatorValues    = new float[3];
+		RhythmMutatorValues   = new float[3];
+		SimplifyMutatorValues = new float[3];
+		SwapMutatorValues     = new float[3];
+		PitchMutatorValues[0]    = 1.0f;
+		PitchMutatorValues[1]    = 0.01f;
+		PitchMutatorValues[2]    = 0.05f;
+		RhythmMutatorValues[0]   = 1.0f;
+		RhythmMutatorValues[1]   = 0.01f;
+		RhythmMutatorValues[2]   = 0.05f;
+		SimplifyMutatorValues[0] = 1.0f;
+		SimplifyMutatorValues[1] = 0.01f;
+		SimplifyMutatorValues[2] = 0.05f;
+		SwapMutatorValues[0]     = 1.0f;
+		SwapMutatorValues[1]     = 0.01f;
+		SwapMutatorValues[2]     = 0.05f;
+
 		_farBackground.setCenter(ScreenWidth / 2.0f, ScreenHeight / 2.0f);
 		_closeBackground.setCenter(ScreenWidth / 2.0f, ScreenHeight / 2.0f);
 		_currentScreen.show();
@@ -215,6 +234,7 @@ public class Overtone extends ApplicationAdapter implements JMC
 		Utilities.LoadVolume();
 		Utilities.LoadRaterValues();
 		Utilities.LoadGenerationValues();
+		Utilities.LoadMutationValues();
 		Utilities.LoadMidiMusic(true);
 	}
 
@@ -300,6 +320,8 @@ public class Overtone extends ApplicationAdapter implements JMC
 			_currentScreen = new SplashScreen();
 		else if (s == Screens.Loading)
 			_currentScreen = new LoadingScreen();
+		else if(s == Screens.Mutation)
+			_currentScreen = new MutationScreen();
 
 		_currentScreen.show();
 	}

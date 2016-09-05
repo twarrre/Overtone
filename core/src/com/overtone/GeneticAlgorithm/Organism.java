@@ -10,28 +10,28 @@ import jm.music.data.Part;
  */
 public class Organism
 {
-    /** Amount do drop probability of mutation after each generation */
-    public static final float MUTATION_STEP = 0.05f;
-
-    /** The starting probability for how a note can mutate */
-    public static final float STARTING_PROBABILITY = 0.8f;
-
     private Part    _track;               // The track for this organism
     private float[] _rating;              // The fitness rating for this organism
     private float[] _quality;             // The quality of the rating
-    private float   _mutationProbability; // The probability that this track will contain some mutation
+    private float   _rhythmProbability;
+    private float   _pitchProbability;
+    private float   _swapProbability;
+    private float   _simplifyProbability;
     private float   _overallRating;
 
     /**
      * Constructor
      * @param p The track for this organism
      */
-    public Organism(Part p, float mutation)
+    public Organism(Part p, int currentIteration)
     {
         _track               = p;
         _rating              = new float[Overtone.NUM_RATERS];
         _quality             = new float[Overtone.NUM_RATERS];
-        _mutationProbability = Utilities.Clamp(mutation, 0.01f, 1.0f);
+        _rhythmProbability   = Utilities.Clamp(Overtone.RhythmMutatorValues[0] - (Overtone.RhythmMutatorValues[2] * currentIteration), Overtone.RhythmMutatorValues[1], Overtone.RhythmMutatorValues[0]);
+        _pitchProbability    = Utilities.Clamp(Overtone.PitchMutatorValues[0] - (Overtone.PitchMutatorValues[2] * currentIteration), Overtone.PitchMutatorValues[1], Overtone.PitchMutatorValues[0]);
+        _swapProbability     = Utilities.Clamp(Overtone.SwapMutatorValues[0] - (Overtone.SwapMutatorValues[2] * currentIteration), Overtone.SwapMutatorValues[1], Overtone.SwapMutatorValues[0]);
+        _simplifyProbability = Utilities.Clamp(Overtone.SimplifyMutatorValues[0] - (Overtone.SimplifyMutatorValues[2] * currentIteration), Overtone.SimplifyMutatorValues[1], Overtone.SimplifyMutatorValues[0]);
         _overallRating       = 0;
     }
 
@@ -48,7 +48,10 @@ public class Organism
     /** Sets the track of this organism. */
     public void SetTrack(Part p) {_track = p;}
     /** Gets the mutation probability */
-    public float GetProbability() {return _mutationProbability;}
+    public float GetPitchProbability() {return _pitchProbability;}
+    public float GetRhythmProbability() {return _rhythmProbability;}
+    public float GetSimplifyProbability() {return _simplifyProbability;}
+    public float GetSwapProbability() {return _swapProbability;}
     /** Sets overall rating */
     public void SetOverallRating(float r) {_overallRating = r;}
     /** Gets the average rating */

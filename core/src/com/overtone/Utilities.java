@@ -531,4 +531,87 @@ public class Utilities implements JMC
             Gdx.app.exit();
         }
     }
+
+    public static void LoadMutationValues()
+    {
+        try
+        {
+            // Open the file
+            BufferedReader reader = new BufferedReader(new FileReader("Storage\\MutationValues.txt"));
+
+            String line      = null;
+            int counter      = 0;
+
+            // Read two lines from the file and store in the appropriate variables
+            while ((line = reader.readLine())!= null)
+            {
+                String[] result = line.split("\\s");
+                if(counter == 0)
+                {
+                    for(int i = 0; i < Overtone.PitchMutatorValues.length; i++)
+                    {
+                        Overtone.PitchMutatorValues[i] = Float.parseFloat(result[i]);
+                    }
+                }
+                else if(counter == 1)
+                {
+                    for(int i = 0; i < Overtone.RhythmMutatorValues.length; i++)
+                    {
+                        Overtone.RhythmMutatorValues[i] = Float.parseFloat(result[i]);
+                    }
+                }
+                else if(counter == 2)
+                {
+                    for(int i = 0; i < Overtone.SimplifyMutatorValues.length; i++)
+                    {
+                        Overtone.SimplifyMutatorValues[i] = Float.parseFloat(result[i]);
+                    }
+                }
+                else if(counter == 3)
+                {
+                    for(int i = 0; i < Overtone.SwapMutatorValues.length; i++)
+                    {
+                        Overtone.SwapMutatorValues[i] = Float.parseFloat(result[i]);
+                    }
+                }
+                else
+                    break;
+                counter++;
+            }
+
+            reader.close();
+        }
+        catch (IOException e)
+        {
+            System.out.print("Volume data cannot be loaded at this time.");
+        }
+    }
+
+    public static void WriteMutationValues()
+    {
+        try
+        {
+            File file = new File("Storage\\MutationValues.txt");
+
+            if (!file.exists())
+                file.createNewFile();
+
+            FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
+            BufferedWriter writer = new BufferedWriter(fileWriter);
+
+            writer.write(Overtone.PitchMutatorValues[0] + " " + Overtone.PitchMutatorValues[1] + " " + Overtone.PitchMutatorValues[2]);
+            writer.newLine();
+            writer.write(Overtone.RhythmMutatorValues[0] + " " + Overtone.RhythmMutatorValues[1] + " " + Overtone.RhythmMutatorValues[2]);
+            writer.newLine();
+            writer.write(Overtone.SimplifyMutatorValues[0] + " " + Overtone.SimplifyMutatorValues[1] + " " + Overtone.SimplifyMutatorValues[2]);
+            writer.newLine();
+            writer.write(Overtone.SwapMutatorValues[0] + " " + Overtone.SwapMutatorValues[1] + " " + Overtone.SwapMutatorValues[2]);
+
+            writer.close();
+        }
+        catch(IOException x)
+        {
+            System.out.print("Volume data cannot be saved at this time.");
+        }
+    }
 }

@@ -242,9 +242,8 @@ public class GeneticAlgorithm implements Runnable, JMC
                 }
             }
 
-            population[i] = new Organism(p, Organism.STARTING_PROBABILITY);
+            population[i] = new Organism(p, _currentIteration);
         }
-
         return population;
     }
 
@@ -289,7 +288,6 @@ public class GeneticAlgorithm implements Runnable, JMC
             else
                 counter += siblings.length;
         }
-
         return children;
     }
 
@@ -328,7 +326,20 @@ public class GeneticAlgorithm implements Runnable, JMC
         Part mutation = o.GetTrack();
 
         for(int i = 0; i < _mutators.size(); i++)
-            mutation = _mutators.get(i).Mutate(mutation, o.GetProbability());
+        {
+            float probability = 0.0f;
+            if(_mutators.get(i) instanceof NotePitchMutator)
+                probability = o.GetPitchProbability();
+            else if(_mutators.get(i) instanceof RhythmMutator)
+                probability = o.GetRhythmProbability();
+            else if(_mutators.get(i) instanceof SimplifyMutator)
+                probability = o.GetSimplifyProbability();
+            else if(_mutators.get(i) instanceof SwapMutator)
+                probability = o.GetSwapProbability();
+
+            mutation = _mutators.get(i).Mutate(mutation, probability);
+        }
+
 
         o.SetTrack(mutation);
         return o;
@@ -389,17 +400,7 @@ public class GeneticAlgorithm implements Runnable, JMC
 
         children[0] = CorrectStartTime(CorrectDuration(children[0]));
         children[1] = CorrectStartTime(CorrectDuration(children[1]));
-        return new Organism[] { new Organism(children[0], GetProbability(parent1)), new Organism(children[1], GetProbability(parent2))};
-    }
-
-    /**
-     * Calculates the probability for mutation of the child organism
-     * @param o the parent organism
-     * @return The probability for mutation for the child organism.
-     */
-    private float GetProbability(Organism o)
-    {
-        return o.GetProbability() - (Organism.MUTATION_STEP / ((float)_currentIteration / (float)Overtone.NumberOfIterations));
+        return new Organism[] { new Organism(children[0], _currentIteration), new Organism(children[1], _currentIteration)};
     }
 
     /**
