@@ -78,6 +78,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         _mutators.add(new SimplifyMutator());
         _mutators.add(new SwapMutator());
         _mutators.add(new RhythmMutator());
+        _mutators.add(new DynamicMutator());
     }
 
     public void run()
@@ -217,6 +218,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         // TODO: Generate the initial population here
         //Mess with rest can check if rest
         // Do chords
+        // randomize dynamic
 
         for(int i = 0; i < Overtone.PopulationSize; i++)
         {
@@ -336,6 +338,8 @@ public class GeneticAlgorithm implements Runnable, JMC
                 probability = o.GetSimplifyProbability();
             else if(_mutators.get(i) instanceof SwapMutator)
                 probability = o.GetSwapProbability();
+            else if(_mutators.get(i) instanceof DynamicMutator)
+                probability = o.GetDynamicProbability();
 
             mutation = _mutators.get(i).Mutate(mutation, probability);
         }

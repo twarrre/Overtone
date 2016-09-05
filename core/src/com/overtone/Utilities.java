@@ -574,6 +574,13 @@ public class Utilities implements JMC
                         Overtone.SwapMutatorValues[i] = Float.parseFloat(result[i]);
                     }
                 }
+                else if(counter == 4)
+                {
+                    for(int i = 0; i < Overtone.DynamicMutatorValues.length; i++)
+                    {
+                        Overtone.DynamicMutatorValues[i] = Float.parseFloat(result[i]);
+                    }
+                }
                 else
                     break;
                 counter++;
@@ -606,6 +613,8 @@ public class Utilities implements JMC
             writer.write(Overtone.SimplifyMutatorValues[0] + " " + Overtone.SimplifyMutatorValues[1] + " " + Overtone.SimplifyMutatorValues[2]);
             writer.newLine();
             writer.write(Overtone.SwapMutatorValues[0] + " " + Overtone.SwapMutatorValues[1] + " " + Overtone.SwapMutatorValues[2]);
+            writer.newLine();
+            writer.write(Overtone.DynamicMutatorValues[0] + " " + Overtone.DynamicMutatorValues[1] + " " + Overtone.DynamicMutatorValues[2]);
 
             writer.close();
         }

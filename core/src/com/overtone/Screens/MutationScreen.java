@@ -36,7 +36,7 @@ public class MutationScreen extends OvertoneScreen
         });
 
         // Pitch Mutators
-        final Button pitchNextStart = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.45f, Overtone.ScreenHeight * 0.68f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button pitchNextStart = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.45f, Overtone.ScreenHeight * 0.72f - Overtone.ScreenWidth * 0.025f), _stage);
         pitchNextStart.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.PitchMutatorValues[0] = Utilities.Clamp(Overtone.PitchMutatorValues[0] + 0.01f, 0.0f, 1.0f);
@@ -45,7 +45,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
-        final Button pitchBackStart = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.35f, Overtone.ScreenHeight * 0.68f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button pitchBackStart = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.35f, Overtone.ScreenHeight * 0.72f - Overtone.ScreenWidth * 0.025f), _stage);
         pitchBackStart.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.PitchMutatorValues[0] = Utilities.Clamp(Overtone.PitchMutatorValues[0] - 0.01f, 0.0f, 1.0f);
@@ -54,7 +54,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
-        final Button pitchNextMin = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.65f, Overtone.ScreenHeight * 0.68f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button pitchNextMin = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.65f, Overtone.ScreenHeight * 0.72f - Overtone.ScreenWidth * 0.025f), _stage);
         pitchNextMin.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.PitchMutatorValues[1] = Utilities.Clamp(Overtone.PitchMutatorValues[1] + 0.01f, 0.0f, Overtone.PitchMutatorValues[0]);
@@ -62,7 +62,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
-        final Button pitchBackMin = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.55f, Overtone.ScreenHeight * 0.68f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button pitchBackMin = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.55f, Overtone.ScreenHeight * 0.72f - Overtone.ScreenWidth * 0.025f), _stage);
         pitchBackMin.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.PitchMutatorValues[1] = Utilities.Clamp(Overtone.PitchMutatorValues[1] - 0.01f, 0.0f, Overtone.PitchMutatorValues[0]);
@@ -70,14 +70,14 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
-        final Button pitchNextStep = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.85f, Overtone.ScreenHeight * 0.68f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button pitchNextStep = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.85f, Overtone.ScreenHeight * 0.72f - Overtone.ScreenWidth * 0.025f), _stage);
         pitchNextStep.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.PitchMutatorValues[2] = Utilities.Clamp(Overtone.PitchMutatorValues[2] + 0.01f, 0.0f, Overtone.PitchMutatorValues[0]);
             Utilities.WriteMutationValues();
         }});
 
-        final Button pitchBackStep = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.75f, Overtone.ScreenHeight * 0.68f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button pitchBackStep = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.75f, Overtone.ScreenHeight * 0.72f - Overtone.ScreenWidth * 0.025f), _stage);
         pitchBackStep.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.PitchMutatorValues[2] = Utilities.Clamp(Overtone.PitchMutatorValues[2] - 0.01f, 0.0f, Overtone.PitchMutatorValues[0]);
@@ -87,7 +87,7 @@ public class MutationScreen extends OvertoneScreen
 
 
         // Rhythm Mutators
-        final Button rhythmNextStart = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.45f, Overtone.ScreenHeight * 0.51f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button rhythmNextStart = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.45f, Overtone.ScreenHeight * 0.57f - Overtone.ScreenWidth * 0.025f), _stage);
         rhythmNextStart.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.RhythmMutatorValues[0] = Utilities.Clamp(Overtone.RhythmMutatorValues[0] + 0.01f, 0.0f, 1.0f);
@@ -97,7 +97,7 @@ public class MutationScreen extends OvertoneScreen
         }});
 
         // Create the back button for num iterations
-        final Button rhythBackStart = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.35f, Overtone.ScreenHeight * 0.51f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button rhythBackStart = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.35f, Overtone.ScreenHeight * 0.57f - Overtone.ScreenWidth * 0.025f), _stage);
         rhythBackStart.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.RhythmMutatorValues[0] = Utilities.Clamp(Overtone.RhythmMutatorValues[0] - 0.01f, 0.0f, 1.0f);
@@ -106,7 +106,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
-        final Button rhythmNextMin = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.65f, Overtone.ScreenHeight * 0.51f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button rhythmNextMin = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.65f, Overtone.ScreenHeight * 0.57f - Overtone.ScreenWidth * 0.025f), _stage);
         rhythmNextMin.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.RhythmMutatorValues[1] = Utilities.Clamp(Overtone.RhythmMutatorValues[1] + 0.01f, 0.0f, Overtone.RhythmMutatorValues[0]);
@@ -115,7 +115,7 @@ public class MutationScreen extends OvertoneScreen
         }});
 
         // Create the back button for num iterations
-        final Button rhythBackMin = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.55f, Overtone.ScreenHeight * 0.51f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button rhythBackMin = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.55f, Overtone.ScreenHeight * 0.57f - Overtone.ScreenWidth * 0.025f), _stage);
         rhythBackMin.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.RhythmMutatorValues[1] = Utilities.Clamp(Overtone.RhythmMutatorValues[1] - 0.01f, 0.0f, Overtone.RhythmMutatorValues[0]);
@@ -123,7 +123,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
-        final Button rhythmNextStep = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.85f, Overtone.ScreenHeight * 0.51f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button rhythmNextStep = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.85f, Overtone.ScreenHeight * 0.57f - Overtone.ScreenWidth * 0.025f), _stage);
         rhythmNextStep.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.RhythmMutatorValues[2] = Utilities.Clamp(Overtone.RhythmMutatorValues[2] + 0.01f, 0.0f, Overtone.RhythmMutatorValues[0]);
@@ -131,7 +131,7 @@ public class MutationScreen extends OvertoneScreen
         }});
 
         // Create the back button for num iterations
-        final Button rhythBackStep = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.75f, Overtone.ScreenHeight * 0.51f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button rhythBackStep = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.75f, Overtone.ScreenHeight * 0.57f - Overtone.ScreenWidth * 0.025f), _stage);
         rhythBackStep.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.RhythmMutatorValues[2] = Utilities.Clamp(Overtone.RhythmMutatorValues[2] - 0.01f, 0.0f, Overtone.RhythmMutatorValues[0]);
@@ -142,7 +142,7 @@ public class MutationScreen extends OvertoneScreen
 
 
         // Simplify Mutators
-        final Button simpNextStart = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.45f, Overtone.ScreenHeight * 0.34f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button simpNextStart = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.45f, Overtone.ScreenHeight * 0.42f - Overtone.ScreenWidth * 0.025f), _stage);
         simpNextStart.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.SimplifyMutatorValues[0] = Utilities.Clamp(Overtone.SimplifyMutatorValues[0] + 0.01f, 0.0f, 1.0f);
@@ -152,7 +152,7 @@ public class MutationScreen extends OvertoneScreen
         }});
 
         // Create the back button for num iterations
-        final Button simpBackStart = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.35f, Overtone.ScreenHeight * 0.34f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button simpBackStart = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.35f, Overtone.ScreenHeight * 0.42f - Overtone.ScreenWidth * 0.025f), _stage);
         simpBackStart.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.SimplifyMutatorValues[0] = Utilities.Clamp(Overtone.SimplifyMutatorValues[0] - 0.01f, 0.0f, 1.0f);
@@ -161,7 +161,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
-        final Button simpNextMin = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.65f, Overtone.ScreenHeight * 0.34f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button simpNextMin = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.65f, Overtone.ScreenHeight * 0.42f - Overtone.ScreenWidth * 0.025f), _stage);
         simpNextMin.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.SimplifyMutatorValues[1] = Utilities.Clamp(Overtone.SimplifyMutatorValues[1] + 0.01f, 0.0f, Overtone.SimplifyMutatorValues[0]);
@@ -170,7 +170,7 @@ public class MutationScreen extends OvertoneScreen
         }});
 
         // Create the back button for num iterations
-        final Button simpBackMin = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.55f, Overtone.ScreenHeight * 0.34f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button simpBackMin = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.55f, Overtone.ScreenHeight * 0.42f - Overtone.ScreenWidth * 0.025f), _stage);
         simpBackMin.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.SimplifyMutatorValues[1] = Utilities.Clamp(Overtone.SimplifyMutatorValues[1] - 0.01f, 0.0f, Overtone.SimplifyMutatorValues[0]);
@@ -178,7 +178,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
-        final Button simpNextStep = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.85f, Overtone.ScreenHeight * 0.34f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button simpNextStep = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.85f, Overtone.ScreenHeight * 0.42f - Overtone.ScreenWidth * 0.025f), _stage);
         simpNextStep.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.SimplifyMutatorValues[2] = Utilities.Clamp(Overtone.SimplifyMutatorValues[2] + 0.01f, 0.0f, Overtone.SimplifyMutatorValues[0]);
@@ -186,7 +186,7 @@ public class MutationScreen extends OvertoneScreen
         }});
 
         // Create the back button for num iterations
-        final Button simpBackStep = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.75f, Overtone.ScreenHeight * 0.34f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button simpBackStep = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.75f, Overtone.ScreenHeight * 0.42f - Overtone.ScreenWidth * 0.025f), _stage);
         simpBackStep.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.SimplifyMutatorValues[2] = Utilities.Clamp(Overtone.SimplifyMutatorValues[2] - 0.01f, 0.0f, Overtone.SimplifyMutatorValues[0]);
@@ -197,7 +197,7 @@ public class MutationScreen extends OvertoneScreen
 
 
         // Swap Mutators
-        final Button swapNextStart = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.45f, Overtone.ScreenHeight * 0.17f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button swapNextStart = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.45f, Overtone.ScreenHeight * 0.27f - Overtone.ScreenWidth * 0.025f), _stage);
         swapNextStart.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.SwapMutatorValues[0] = Utilities.Clamp(Overtone.SwapMutatorValues[0] + 0.01f, 0.0f, 1.0f);
@@ -207,7 +207,7 @@ public class MutationScreen extends OvertoneScreen
         }});
 
         // Create the back button for num iterations
-        final Button swapBackStart = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.35f, Overtone.ScreenHeight * 0.17f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button swapBackStart = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.35f, Overtone.ScreenHeight * 0.27f - Overtone.ScreenWidth * 0.025f), _stage);
         swapBackStart.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.SwapMutatorValues[0] = Utilities.Clamp(Overtone.SwapMutatorValues[0] - 0.01f, 0.0f, 1.0f);
@@ -216,7 +216,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
-        final Button swapNextMin = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.65f, Overtone.ScreenHeight * 0.17f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button swapNextMin = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.65f, Overtone.ScreenHeight * 0.27f - Overtone.ScreenWidth * 0.025f), _stage);
         swapNextMin.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.SwapMutatorValues[1] = Utilities.Clamp(Overtone.SwapMutatorValues[1] + 0.01f, 0.0f, Overtone.SwapMutatorValues[0]);
@@ -225,7 +225,7 @@ public class MutationScreen extends OvertoneScreen
         }});
 
         // Create the back button for num iterations
-        final Button swapBackMin = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.55f, Overtone.ScreenHeight * 0.17f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button swapBackMin = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.55f, Overtone.ScreenHeight * 0.27f - Overtone.ScreenWidth * 0.025f), _stage);
         swapBackMin.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.SwapMutatorValues[1] = Utilities.Clamp(Overtone.SwapMutatorValues[1] - 0.01f, 0.0f, Overtone.SwapMutatorValues[0]);
@@ -233,7 +233,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
-        final Button swapNextStep = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.85f, Overtone.ScreenHeight * 0.17f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button swapNextStep = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.85f, Overtone.ScreenHeight * 0.27f - Overtone.ScreenWidth * 0.025f), _stage);
         swapNextStep.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.SwapMutatorValues[2] = Utilities.Clamp(Overtone.SwapMutatorValues[2] + 0.01f, 0.0f, Overtone.SwapMutatorValues[0]);
@@ -241,10 +241,64 @@ public class MutationScreen extends OvertoneScreen
         }});
 
         // Create the back button for num iterations
-        final Button swapBackStep = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.75f, Overtone.ScreenHeight * 0.17f - Overtone.ScreenWidth * 0.025f), _stage);
+        final Button swapBackStep = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.75f, Overtone.ScreenHeight * 0.27f - Overtone.ScreenWidth * 0.025f), _stage);
         swapBackStep.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.SwapMutatorValues[2] = Utilities.Clamp(Overtone.SwapMutatorValues[2] - 0.01f, 0.0f, Overtone.SwapMutatorValues[0]);
+            Utilities.WriteMutationValues();
+        }});
+
+
+
+        // Dynamic Mutators
+        final Button dyNextStart = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.45f, Overtone.ScreenHeight * 0.12f - Overtone.ScreenWidth * 0.025f), _stage);
+        dyNextStart.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+            _buttonPress.play(Overtone.SFXVolume);
+            Overtone.DynamicMutatorValues[0] = Utilities.Clamp(Overtone.DynamicMutatorValues[0] + 0.01f, 0.0f, 1.0f);
+            Overtone.DynamicMutatorValues[1] = Utilities.Clamp(Overtone.DynamicMutatorValues[1], 0.0f, Overtone.DynamicMutatorValues[0]);
+            Overtone.DynamicMutatorValues[2] = Utilities.Clamp(Overtone.DynamicMutatorValues[2], 0.0f, Overtone.DynamicMutatorValues[0]);
+            Utilities.WriteMutationValues();
+        }});
+
+        // Create the back button for num iterations
+        final Button dyBackStart = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.35f, Overtone.ScreenHeight * 0.12f - Overtone.ScreenWidth * 0.025f), _stage);
+        dyBackStart.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+            _buttonPress.play(Overtone.SFXVolume);
+            Overtone.DynamicMutatorValues[0] = Utilities.Clamp(Overtone.DynamicMutatorValues[0] - 0.01f, 0.0f, 1.0f);
+            Overtone.DynamicMutatorValues[1] = Utilities.Clamp(Overtone.DynamicMutatorValues[1], 0.0f, Overtone.DynamicMutatorValues[0]);
+            Overtone.DynamicMutatorValues[2] = Utilities.Clamp(Overtone.DynamicMutatorValues[2], 0.0f, Overtone.DynamicMutatorValues[0]);
+            Utilities.WriteMutationValues();
+        }});
+
+        final Button dyNextMin = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.65f, Overtone.ScreenHeight * 0.12f - Overtone.ScreenWidth * 0.025f), _stage);
+        dyNextMin.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+            _buttonPress.play(Overtone.SFXVolume);
+            Overtone.DynamicMutatorValues[1] = Utilities.Clamp(Overtone.DynamicMutatorValues[1] + 0.01f, 0.0f, Overtone.DynamicMutatorValues[0]);
+            Overtone.DynamicMutatorValues[2] = Utilities.Clamp(Overtone.DynamicMutatorValues[2], 0.0f, Overtone.DynamicMutatorValues[0]);
+            Utilities.WriteMutationValues();
+        }});
+
+        // Create the back button for num iterations
+        final Button dyBackMin = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.55f, Overtone.ScreenHeight * 0.12f - Overtone.ScreenWidth * 0.025f), _stage);
+        dyBackMin.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+            _buttonPress.play(Overtone.SFXVolume);
+            Overtone.DynamicMutatorValues[1] = Utilities.Clamp(Overtone.DynamicMutatorValues[1] - 0.01f, 0.0f, Overtone.DynamicMutatorValues[0]);
+            Overtone.DynamicMutatorValues[2] = Utilities.Clamp(Overtone.DynamicMutatorValues[2], 0.0f, Overtone.DynamicMutatorValues[0]);
+            Utilities.WriteMutationValues();
+        }});
+
+        final Button dyNextStep = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.85f, Overtone.ScreenHeight * 0.12f - Overtone.ScreenWidth * 0.025f), _stage);
+        dyNextStep.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+            _buttonPress.play(Overtone.SFXVolume);
+            Overtone.DynamicMutatorValues[2] = Utilities.Clamp(Overtone.DynamicMutatorValues[2] + 0.01f, 0.0f, Overtone.DynamicMutatorValues[0]);
+            Utilities.WriteMutationValues();
+        }});
+
+        // Create the back button for num iterations
+        final Button dyBackStep = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.75f, Overtone.ScreenHeight * 0.12f - Overtone.ScreenWidth * 0.025f), _stage);
+        dyBackStep.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+            _buttonPress.play(Overtone.SFXVolume);
+            Overtone.DynamicMutatorValues[2] = Utilities.Clamp(Overtone.DynamicMutatorValues[2] - 0.01f, 0.0f, Overtone.DynamicMutatorValues[0]);
             Utilities.WriteMutationValues();
         }});
     }
@@ -271,63 +325,78 @@ public class MutationScreen extends OvertoneScreen
         _font30.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.77f, Overtone.ScreenHeight * 0.8f);
 
         _glyphLayout.setText(_font24, "Note Pitch:");
-        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.15f, Overtone.ScreenHeight * 0.66f);
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.15f, Overtone.ScreenHeight * 0.7f);
 
         _glyphLayout.setText(_font24, "Rhythm:");
-        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.15f, Overtone.ScreenHeight * 0.49f);
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.15f, Overtone.ScreenHeight * 0.55f);
 
         _glyphLayout.setText(_font24, "Simplify:");
-        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.15f, Overtone.ScreenHeight * 0.32f);
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.15f, Overtone.ScreenHeight * 0.4f);
 
         _glyphLayout.setText(_font24, "Swap:");
-        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.15f, Overtone.ScreenHeight * 0.15f);
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.15f, Overtone.ScreenHeight * 0.25f);
+
+        _glyphLayout.setText(_font24, "Dynamic:");
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.15f, Overtone.ScreenHeight * 0.1f);
+
 
         _glyphLayout.setText(_font24, (int)(Overtone.PitchMutatorValues[0] * 100.0f) + "%");
-        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.4125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.675f);
+        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.4125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.715f);
 
         _glyphLayout.setText(_font24, (int)(Overtone.PitchMutatorValues[1] * 100.0f) + "%");
-        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.6125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.675f);
+        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.6125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.715f);
 
         _glyphLayout.setText(_font24, (int)(Overtone.PitchMutatorValues[2] * 100.0f) + "%");
-        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.8125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.675f);
+        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.8125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.715f);
 
 
 
 
         _glyphLayout.setText(_font24, (int)(Overtone.RhythmMutatorValues[0] * 100.0f) + "%");
-        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.4125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.505f);
+        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.4125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.565f);
 
         _glyphLayout.setText(_font24, (int)(Overtone.RhythmMutatorValues[1] * 100.0f) + "%");
-        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.6125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.505f);
+        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.6125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.565f);
 
         _glyphLayout.setText(_font24, (int)(Overtone.RhythmMutatorValues[2] * 100.0f) + "%");
-        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.8125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.505f);
+        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.8125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.565f);
 
 
 
 
 
         _glyphLayout.setText(_font24, (int)(Overtone.SimplifyMutatorValues[0] * 100.0f) + "%");
-        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.4125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.335f);
+        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.4125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.415f);
 
         _glyphLayout.setText(_font24, (int)(Overtone.SimplifyMutatorValues[1] * 100.0f) + "%");
-        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.6125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.335f);
+        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.6125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.415f);
 
         _glyphLayout.setText(_font24, (int)(Overtone.SimplifyMutatorValues[2] * 100.0f) + "%");
-        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.8125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.335f);
+        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.8125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.415f);
 
 
 
 
 
         _glyphLayout.setText(_font24, (int)(Overtone.SwapMutatorValues[0] * 100.0f) + "%");
-        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.4125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.165f);
+        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.4125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.265f);
 
         _glyphLayout.setText(_font24, (int)(Overtone.SwapMutatorValues[1] * 100.0f) + "%");
-        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.6125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.165f);
+        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.6125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.265f);
 
         _glyphLayout.setText(_font24, (int)(Overtone.SwapMutatorValues[2] * 100.0f) + "%");
-        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.8125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.165f);
+        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.8125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.265f);
+
+
+
+        _glyphLayout.setText(_font24, (int)(Overtone.DynamicMutatorValues[0] * 100.0f) + "%");
+        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.4125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.115f);
+
+        _glyphLayout.setText(_font24, (int)(Overtone.DynamicMutatorValues[1] * 100.0f) + "%");
+        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.6125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.115f);
+
+        _glyphLayout.setText(_font24, (int)(Overtone.DynamicMutatorValues[2] * 100.0f) + "%");
+        _font24.draw(_batch, _glyphLayout, (Overtone.ScreenWidth * 0.8125f - (_glyphLayout.width / 2.0f)), Overtone.ScreenHeight * 0.115f);
 
         _batch.end();
         _stage.draw();

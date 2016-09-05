@@ -17,6 +17,7 @@ public class Organism
     private float   _pitchProbability;
     private float   _swapProbability;
     private float   _simplifyProbability;
+    private float   _dynamicProbability;
     private float   _overallRating;
 
     /**
@@ -32,6 +33,7 @@ public class Organism
         _pitchProbability    = Utilities.Clamp(Overtone.PitchMutatorValues[0] - (Overtone.PitchMutatorValues[2] * currentIteration), Overtone.PitchMutatorValues[1], Overtone.PitchMutatorValues[0]);
         _swapProbability     = Utilities.Clamp(Overtone.SwapMutatorValues[0] - (Overtone.SwapMutatorValues[2] * currentIteration), Overtone.SwapMutatorValues[1], Overtone.SwapMutatorValues[0]);
         _simplifyProbability = Utilities.Clamp(Overtone.SimplifyMutatorValues[0] - (Overtone.SimplifyMutatorValues[2] * currentIteration), Overtone.SimplifyMutatorValues[1], Overtone.SimplifyMutatorValues[0]);
+        _dynamicProbability  = Utilities.Clamp(Overtone.DynamicMutatorValues[0] - (Overtone.DynamicMutatorValues[2] * currentIteration), Overtone.DynamicMutatorValues[1], Overtone.DynamicMutatorValues[0]);
         _overallRating       = 0;
     }
 
@@ -52,6 +54,7 @@ public class Organism
     public float GetRhythmProbability() {return _rhythmProbability;}
     public float GetSimplifyProbability() {return _simplifyProbability;}
     public float GetSwapProbability() {return _swapProbability;}
+    public float GetDynamicProbability() {return _dynamicProbability;}
     /** Sets overall rating */
     public void SetOverallRating(float r) {_overallRating = r;}
     /** Gets the average rating */

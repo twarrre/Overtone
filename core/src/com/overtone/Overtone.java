@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.overtone.GeneticAlgorithm.GeneticAlgorithm;
+import com.overtone.GeneticAlgorithm.Mutators.DynamicMutator;
 import com.overtone.GeneticAlgorithm.Organism;
 import com.overtone.Notes.OvertoneNote;
 import com.overtone.Notes.Target;
@@ -180,6 +181,7 @@ public class Overtone extends ApplicationAdapter implements JMC
 	public static float[]                 RhythmMutatorValues;
 	public static float[]                 SimplifyMutatorValues;
 	public static float[]                 SwapMutatorValues;
+	public static float[]                 DynamicMutatorValues;
 	private static OvertoneScreen         _currentScreen;     // The current screen displayed on screen
 	private SpriteBatch                   _batch;             // Sprite batch to draw to
 	private Sprite                        _farBackground;     // The star background for the whole app
@@ -218,6 +220,7 @@ public class Overtone extends ApplicationAdapter implements JMC
 		RhythmMutatorValues   = new float[3];
 		SimplifyMutatorValues = new float[3];
 		SwapMutatorValues     = new float[3];
+		DynamicMutatorValues  = new float[3];
 		PitchMutatorValues[0]    = 1.0f;
 		PitchMutatorValues[1]    = 0.01f;
 		PitchMutatorValues[2]    = 0.05f;
@@ -230,6 +233,9 @@ public class Overtone extends ApplicationAdapter implements JMC
 		SwapMutatorValues[0]     = 1.0f;
 		SwapMutatorValues[1]     = 0.01f;
 		SwapMutatorValues[2]     = 0.05f;
+		DynamicMutatorValues[0]  = 1.0f;
+		DynamicMutatorValues[1]  = 0.01f;
+		DynamicMutatorValues[2]  = 0.05f;
 
 		_farBackground.setCenter(ScreenWidth / 2.0f, ScreenHeight / 2.0f);
 		_closeBackground.setCenter(ScreenWidth / 2.0f, ScreenHeight / 2.0f);
