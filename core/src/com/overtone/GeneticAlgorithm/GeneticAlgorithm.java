@@ -666,7 +666,7 @@ public class GeneticAlgorithm implements Runnable, JMC
 
     public static Part CorrectStartTime(Part p)
     {
-        double startTime = 0;
+        double startTime = GameplayScreen.START_DELAY;
         for(int i = 0; i < p.length(); i++)
         {
             p.getPhrase(i).setStartTime(startTime);

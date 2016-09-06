@@ -394,11 +394,6 @@ public class GameplayScreen extends OvertoneScreen
         if(_elapsedTime < Overtone.TotalTime && !_songComplete)
             _elapsedTime += deltaTime;
 
-        if(_elapsedTime >= START_DELAY && !_musicPlaying)
-        {
-            Overtone.GameplaySequencer.start();
-            _musicPlaying = true;
-        }
 
         if(_elapsedTime >=  Overtone.TotalTime && !_songComplete)
         {
@@ -491,9 +486,6 @@ public class GameplayScreen extends OvertoneScreen
             }
         }
 
-        // Stores keys being held currently
-        HashMap<Integer, Boolean> keysBeingHeld = new HashMap<>();
-
         // Handle all hold notes
         Iterator<OvertoneNote> it = _holdNotesOnScreen.keySet().iterator();
         while(it.hasNext())
@@ -516,18 +508,11 @@ public class GameplayScreen extends OvertoneScreen
 
                it.remove();
             }
-            else
-            {
-                keysBeingHeld.put(currentNote.GetTarget().Type.ordinal(), true);
-            }
         }
 
         // Check each input related to each target zone
         for(int i = 0; i < Overtone.TargetZones.length; i++)
         {
-            if(keysBeingHeld.containsKey(i))
-                continue;
-
             if(_input.ActionOccurred(InputManager.KeyBinding.values()[i], InputManager.ActionType.Pressed))
             {
                 OvertoneNote close = GetClosestNote( Overtone.TargetZones[i].Position, InputManager.KeyBinding.values()[i]);
