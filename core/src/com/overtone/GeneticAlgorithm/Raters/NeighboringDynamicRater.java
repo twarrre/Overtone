@@ -18,22 +18,15 @@ public class NeighboringDynamicRater extends Rater
 
         for(int i = 0; i < track.length(); i++)
         {
-            if(track.getPhrase(i).getNote(0).isRest())
-                continue;
-
             if(i == track.length() - 1)
             {
                 numNotes++;
                 continue;
             }
 
-            //skip rests
-            if(!track.getPhrase(i + 1).getNote(0).isRest())
-            {
-                if((track.getPhrase(i + 1).getNote(0).getDynamic() > (track.getPhrase(i).getNote(0).getDynamic() + ACCEPTABLE_RANGE)
-                        || track.getPhrase(i + 1).getNote(0).getDynamic() < (track.getPhrase(i).getNote(0).getDynamic() - ACCEPTABLE_RANGE)))
-                    numDynamicsNotes++;
-            }
+            if((track.getPhrase(i + 1).getNote(0).getDynamic() > (track.getPhrase(i).getNote(0).getDynamic() + ACCEPTABLE_RANGE)
+                    || track.getPhrase(i + 1).getNote(0).getDynamic() < (track.getPhrase(i).getNote(0).getDynamic() - ACCEPTABLE_RANGE)))
+                numDynamicsNotes++;
 
             numNotes++;
         }

@@ -14,6 +14,7 @@ import com.overtone.Notes.Target;
 import com.overtone.Screens.*;
 import java.util.ArrayList;
 
+import com.overtone.Testing.RaterTests.*;
 import jm.audio.Instrument;
 import jm.constants.Durations;
 import jm.music.data.*;
