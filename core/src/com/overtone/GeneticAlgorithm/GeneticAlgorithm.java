@@ -494,8 +494,8 @@ public class GeneticAlgorithm implements Runnable, JMC
                 target = _random.nextInt(Overtone.TargetZones.length);
                 int target2 = DetermineTarget(target);
 
-                elapsedTime += phrases[j].getNote(phrases[j].length() - 1).getDuration();
-                prevDuration = phrases[j].getNote(phrases[j].length() - 1).getDuration();
+                elapsedTime += phrases[j].getNote(phrases[j].length() - 1).getRhythmValue();
+                prevDuration = phrases[j].getNote(phrases[j].length() - 1).getRhythmValue();
 
                 while (target == lastHoldTarget || target2 == lastHoldTarget)
                 {
@@ -519,7 +519,7 @@ public class GeneticAlgorithm implements Runnable, JMC
                 }
                 else if(phrases[j].getNote(0).getRhythmValue() > DOUBLE_DOTTED_QUARTER_NOTE && includeHoldNote) // if it is longer than a quarter note == hold note
                 {
-                    OvertoneNote[] notes = CreateHoldNote(target, elapsedTime, phrases[j].getNote(0).getDuration());
+                    OvertoneNote[] notes = CreateHoldNote(target, elapsedTime, phrases[j].getNote(0).getRhythmValue());
                     tempNotes.add(notes[0]);
                     tempNotes.add(notes[1]);
                     lastHoldTarget = target;

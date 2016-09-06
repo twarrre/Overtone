@@ -21,6 +21,7 @@ n
 0 ---
 0 ---
 h
+627500 Great
 579400 Great
 309100 Great
 204200 Cleared
@@ -30,4 +31,3 @@ h
 169200 Cleared
 21500 Failure
 16900 Failure
-12300 Failure
