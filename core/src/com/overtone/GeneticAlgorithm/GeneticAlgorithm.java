@@ -6,6 +6,7 @@ import com.overtone.Notes.OvertoneNote;
 import com.overtone.Overtone;
 import com.overtone.Screens.GameplayScreen;
 import com.overtone.Utilities;
+import com.sun.corba.se.impl.javax.rmi.CORBA.Util;
 import jm.JMC;
 import jm.audio.Instrument;
 import jm.music.data.Note;
@@ -31,7 +32,7 @@ public class GeneticAlgorithm implements Runnable, JMC
     /** Array of valid rhythms used in generation. */
     public static final ArrayList<Double> RHYTHMS = new ArrayList<Double>()
     {{
-       // add(THIRTYSECOND_NOTE);
+        add(THIRTYSECOND_NOTE);
         add(SIXTEENTH_NOTE);
         add(DOTTED_SIXTEENTH_NOTE);
         add(EIGHTH_NOTE);
@@ -48,12 +49,17 @@ public class GeneticAlgorithm implements Runnable, JMC
 
     /** The number of sections(Verse, chorus, bridges) in the song. */
     public static int NUM_SECTIONS = 4;
+    /** The number of notes for each track in the initialization phase. */
+    public static int NUM_NOTES = 16;
+    /** Size of an octave */
+    public static final int OCTAVE = 13;
 
     private int                _currentIteration; // The current iteration of the algorithm
     private ArrayList<Mutator> _mutators;         // Array of all of the mutators that may mutate a track.
     private Rater[]            _raters;           // Array of raters to rate the tracks
     private boolean            _isCompleted;      // True if the generation has completed;
     private Random             _random;
+    private int                _indexForLargestRhythmChord;
 
     /**
      * Constructor
@@ -85,6 +91,9 @@ public class GeneticAlgorithm implements Runnable, JMC
         _mutators.add(new SwapMutator());
         _mutators.add(new RhythmMutator());
         _mutators.add(new DynamicMutator());
+
+        Collections.sort(GeneticAlgorithm.RHYTHMS);
+        _indexForLargestRhythmChord = RHYTHMS.indexOf(DOUBLE_DOTTED_QUARTER_NOTE);
     }
 
     public void run()
@@ -194,19 +203,19 @@ public class GeneticAlgorithm implements Runnable, JMC
 
 
             // TODO: CHECK HOW OFTEN IT FAILS AFTER MUTATION PROBABILITY IS FIXED
-            //System.out.println("Best: " + bestRaterScoreAverage);
-            //System.out.println("parent : " + parentAverageRating);
-            //System.out.println("child : " + populationRating);
-            // If the children are better then choose them instead
+            System.out.print("Best: " + bestRaterScoreAverage);
+            System.out.print("        parent : " + parentAverageRating);
+            System.out.println("        child : " + populationRating);
+            //If the children are better then choose them instead
             if(Math.abs(populationRating - bestRaterScoreAverage) < Math.abs(parentAverageRating - bestRaterScoreAverage))
             {
-                //System.out.println("success");
+                System.out.println("success");
                 parentPopulation    = population;
                 parentAverageRating = populationRating;
             }
             else
             {
-                //System.out.println("failed");
+                System.out.println("failed");
             }
         }
 
@@ -221,33 +230,58 @@ public class GeneticAlgorithm implements Runnable, JMC
     public Organism[] Initialization()
     {
         Organism[] population = new Organism[Overtone.PopulationSize];
+        int prevChord = -1;
         // TODO: Generate the initial population here
-        //Mess with rest can check if rest
-        // Do chords
-        // randomize dynamic
+        // TODO: Mess with rest can check if rest
+        // TODO: Do chords
+        // TODO: randomize dynamic
 
         for(int i = 0; i < Overtone.PopulationSize; i++)
         {
             Part p = new Part();
-            for(int j = 0; j < 12; j++)
-            {
-                _random.nextInt(3);
+            int pitchSeed = Math.round(Utilities.Clamp(_random.nextInt(G9 + 1), 0.0f, G9));
+            int dynamicSeed = Math.round(Utilities.Clamp(_random.nextInt(G9 + 1), 1.0f, G9));
+            int rhythmSeed = Math.round(Utilities.Clamp(_random.nextInt(RHYTHMS.size() + 1), 0, RHYTHMS.size() - 1));
 
-                if(i % 3 == 0)
+            for(int j = 0; j < NUM_NOTES; j++)
+            {
+                if(j % 4 == 0)
                 {
-                    //int c = _random.nextInt(CHORDS.length);
-                    Phrase chord = new Phrase();
-                    chord.addChord(CHORDS[0], QUARTER_NOTE);
-                    p.addPhrase(chord);
+                    pitchSeed = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistribution(pitchSeed, OCTAVE), 0.0f, G9));
+                    dynamicSeed = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistribution(dynamicSeed, OCTAVE), 1.0f, G9));
+                    rhythmSeed = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistribution(rhythmSeed, 4), 0, RHYTHMS.size() - 1));
                 }
-                else if (i % 2 == 0)
+
+                //TODO: Mess with the probabilities
+                boolean chord = Utilities.GetRandom(0, 1, 0.2f) == 0;
+                boolean rest = Utilities.GetRandom(0, 1, 0.1f) == 0;
+
+                Phrase phrase = new Phrase();
+                int pitch = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(pitchSeed, OCTAVE), 0.0f, G9));
+                int dynamic = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(dynamicSeed, OCTAVE), 1.0f, G9));
+                int rhythm = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(rhythmSeed, 4), 0.0f, RHYTHMS.size() - 1));
+
+                if(chord)
                 {
-                    p.addPhrase(new Phrase(new Note(C3, QUARTER_NOTE)));
+                    while(rhythm > _indexForLargestRhythmChord)
+                        rhythm = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition((_indexForLargestRhythmChord / 2.0f), 4), 0.0f, _indexForLargestRhythmChord));
+
+                    int chordIndex = prevChord != -1 ? Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(prevChord, (CHORDS.length / 2.0f)), 0.0f, CHORDS.length - 1))
+                            : Math.round(Utilities.Clamp(_random.nextInt(CHORDS.length + 1), 0.0f, CHORDS.length - 1));
+
+                    phrase.addChord(CHORDS[chordIndex], rhythm);
+                    for(int k = 0; k < phrase.length(); k++)
+                        phrase.getNote(k).setDynamic(dynamic);
+                }
+                else if(rest)
+                {
+                    phrase.addNote(new Note(REST, RHYTHMS.get(rhythm), dynamic));
                 }
                 else
                 {
-                    p.addPhrase(new Phrase(new Note(C2, WHOLE_NOTE)));
+                    phrase.addNote(new Note(pitch, RHYTHMS.get(rhythm), dynamic));
                 }
+                p.appendPhrase(phrase);
             }
 
             population[i] = new Organism(CorrectStartTime(CorrectDuration(p)), _currentIteration);

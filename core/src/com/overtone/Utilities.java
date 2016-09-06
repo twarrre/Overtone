@@ -19,6 +19,7 @@ import java.util.Random;
  */
 public class Utilities implements JMC
 {
+    private static Random _rand = new Random();
     /**
      * Loads high scores & crowd ratings from a file.
      */
@@ -437,10 +438,9 @@ public class Utilities implements JMC
                 probability.add(idx2);
         }
 
-        Random rand = new Random();
-        Collections.shuffle(probability,rand);
+        Collections.shuffle(probability, _rand);
 
-        int value = rand.nextInt(999);
+        int value = _rand.nextInt(999);
         return probability.get(value);
     }
 
@@ -452,8 +452,7 @@ public class Utilities implements JMC
      */
     public static int GetRandomRangeNormalDistribution(float mean, float deviation)
     {
-        Random rand = new Random();
-        int val =  (int)Math.round(rand.nextGaussian() * deviation + mean);
+        int val =  (int)Math.round(_rand.nextGaussian() * deviation + mean);
 
         // Don't want it to be the mean value
         if(val == mean)
@@ -462,6 +461,18 @@ public class Utilities implements JMC
             val = GetRandomRangeNormalDistributionShifted(mean + shift, deviation, mean, 0);
         }
 
+        return val;
+    }
+
+    /**
+     * Gets random number based on normal distribution
+     * @param mean The mean of the normal distribution
+     * @param deviation The deviation of the normal distribution
+     * @return A random number
+     */
+    public static int GetRandomRangeNormalDistributionRepitition(float mean, float deviation)
+    {
+        int val =  (int)Math.round(_rand.nextGaussian() * deviation + mean);
         return val;
     }
 
@@ -476,8 +487,7 @@ public class Utilities implements JMC
     private static int GetRandomRangeNormalDistributionShifted(float mean, float deviation, float original, int counter)
     {
         counter++;
-        Random rand = new Random();
-        int val =  (int)Clamp(Math.round(rand.nextGaussian() * deviation + mean), CN1, G9);
+        int val =  (int)Clamp(Math.round(_rand.nextGaussian() * deviation + mean), CN1, G9);
 
         if(val == original && counter < 20)
             val = GetRandomRangeNormalDistributionShifted(mean, deviation, mean, counter);
