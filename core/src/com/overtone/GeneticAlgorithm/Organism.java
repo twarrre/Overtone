@@ -37,6 +37,25 @@ public class Organism
         _overallRating       = 0;
     }
 
+    public Organism(Organism o)
+    {
+        _track               = o.GetTrack().copy();
+        _quality             = new float[Overtone.NUM_RATERS];
+        _rating              = new float[Overtone.NUM_RATERS];
+        for(int i = 0; i < Overtone.NUM_RATERS; i++)
+        {
+            _rating[i] = o.GetRating(i);
+            _quality[i] = o.GetQuality(i);
+        }
+
+        _rhythmProbability   = o.GetRhythmProbability();
+        _pitchProbability    = o.GetPitchProbability();
+        _swapProbability     = o.GetSwapProbability();
+        _simplifyProbability = o.GetSimplifyProbability();
+        _dynamicProbability  = o.GetDynamicProbability();
+        _overallRating       = o.GetOverallRating();
+    }
+
     /** Sets the rating of this organism. */
     public void SetRating(float r, int i) {_rating[i] = r;}
     /** Gets the rating of this organism. */

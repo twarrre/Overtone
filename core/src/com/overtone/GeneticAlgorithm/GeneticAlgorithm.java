@@ -123,9 +123,6 @@ public class GeneticAlgorithm implements Runnable, JMC
         Organism[] bestThreeTracks = GenerateTracks();
 
         // Create phases that create the song. Structure of the song is verse, chorus, verse, chorus, bridge, chorus. Mutate each one so that there is a bit of variation between them
-
-        //TODO: CHECK IF IT GETS SET UP PROPERLY HERE OR NOT AFTER START TIME IS DONE
-
         Part[] song = new Part[NUM_SECTIONS];
         song[0] = bestThreeTracks[1].GetTrack(); // Verse 1
         song[1] = bestThreeTracks[0].GetTrack(); // Chorus 1
@@ -145,6 +142,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         ArrayList<OvertoneNote> tempNotes = GenerateGameNotes();
         Utilities.SortNotes(tempNotes);
 
+        //TODO: CHECK IF THIS IS RIGHT
         // Set the current rater values
         for(int i = 0; i < Overtone.CurrentRaterValues.length; i++)
         {
@@ -166,11 +164,7 @@ public class GeneticAlgorithm implements Runnable, JMC
      */
     private Organism[] GenerateTracks()
     {
-        double bestRaterScoreAverage = 0;
-        for(int i = 0; i < Overtone.BestRaterValues.length; i++)
-            bestRaterScoreAverage += Overtone.BestRaterValues[i];
-        bestRaterScoreAverage /= Overtone.BestRaterValues.length;
-
+        int succesfail = 0;
         // Initialization Phrase
         Organism[] population = new Organism[3];
         Organism[] parentPopulation = Initialization();
@@ -203,22 +197,20 @@ public class GeneticAlgorithm implements Runnable, JMC
 
 
             // TODO: CHECK HOW OFTEN IT FAILS AFTER MUTATION PROBABILITY IS FIXED
-            System.out.print("Best: " + bestRaterScoreAverage);
-            System.out.print("        parent : " + parentAverageRating);
-            System.out.println("        child : " + populationRating);
             //If the children are better then choose them instead
-            if(Math.abs(populationRating - bestRaterScoreAverage) < Math.abs(parentAverageRating - bestRaterScoreAverage))
+            if(populationRating > parentAverageRating)
             {
-                System.out.println("success");
+                succesfail++;
                 parentPopulation    = population;
                 parentAverageRating = populationRating;
             }
             else
             {
-                System.out.println("failed");
+                succesfail--;
             }
         }
 
+        System.out.println(succesfail);
         Arrays.sort(population, new RatingComparator());
         return new Organism[] {population[0], population[1], population[2]};
     }
@@ -231,7 +223,7 @@ public class GeneticAlgorithm implements Runnable, JMC
     {
         Organism[] population = new Organism[Overtone.PopulationSize];
         int prevChord = -1;
-        
+
         for(int i = 0; i < Overtone.PopulationSize; i++)
         {
             Part p = new Part();
@@ -282,7 +274,7 @@ public class GeneticAlgorithm implements Runnable, JMC
                     int chordIndex = prevChord != -1 ? Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(prevChord, (CHORDS.length / 2.0f)), 0.0f, CHORDS.length - 1))
                             : Math.round(Utilities.Clamp(_random.nextInt(CHORDS.length + 1), 0.0f, CHORDS.length - 1));
 
-                    phrase.addChord(CHORDS[chordIndex], rhythm);
+                    phrase.addChord(CHORDS[chordIndex], RHYTHMS.get(rhythm));
                     for(int k = 0; k < phrase.length(); k++)
                         phrase.getNote(k).setDynamic(dynamic);
                 }
@@ -315,7 +307,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         // Elitism, save the best ones
         int counter;
         for(counter = 0; counter < Overtone.NumberOfElites; counter++)
-            children[counter] = parents[counter];
+            children[counter] = new Organism(parents[counter]);
 
         while(counter < Overtone.PopulationSize)
         {
@@ -424,8 +416,8 @@ public class GeneticAlgorithm implements Runnable, JMC
         // Crossover
         for(int i = 0; i < length; i++)
         {
-            Phrase ph1 = p1.getPhrase(i);
-            Phrase ph2 = p2.getPhrase(i);
+            Phrase ph1 = p1.getPhrase(i).copy();
+            Phrase ph2 = p2.getPhrase(i).copy();
 
             int index = Utilities.GetRandom(0, 1, 0.6f);
             if(index == 0)
