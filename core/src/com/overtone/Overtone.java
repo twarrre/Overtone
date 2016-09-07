@@ -12,7 +12,8 @@ import com.overtone.GeneticAlgorithm.Organism;
 import com.overtone.Notes.OvertoneNote;
 import com.overtone.Notes.Target;
 import com.overtone.Screens.*;
-import java.util.ArrayList;
+
+import java.util.*;
 
 import com.overtone.Testing.RaterTests.*;
 import jm.audio.Instrument;
@@ -248,6 +249,34 @@ public class Overtone extends ApplicationAdapter implements JMC
 		Utilities.LoadGenerationValues();
 		Utilities.LoadMutationValues();
 		Utilities.LoadMidiMusic(true);
+	}
+
+	private int RouletteSelection(float[] parents)
+	{
+		Utilities.ShuffleArray(parents);
+
+		Random _random = new Random();
+		int index = 0;
+
+		float sum = 0;
+		for(int i = 0; i < parents.length; i++)
+			sum += parents[i];
+
+		float rand = _random.nextFloat() * sum;
+
+		sum = 0;
+		for(int i = 0; i < parents.length; i++)
+		{
+			sum += parents[i];
+
+			if(sum > rand)
+			{
+				index = i;
+				break;
+			}
+		}
+
+		return index;
 	}
 
 	@Override

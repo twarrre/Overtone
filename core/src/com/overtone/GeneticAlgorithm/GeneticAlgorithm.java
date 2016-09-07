@@ -318,10 +318,14 @@ public class GeneticAlgorithm implements Runnable, JMC
 
         while(counter < Overtone.PopulationSize)
         {
-            int p1 = RouletteSelection(parents);
+            float[] probabilities = new float[parents.length];
+            for(int i = 0; i < parents.length; i++)
+                probabilities[i] = parents[i].GetOverallRating();
+
+            int p1 = RouletteSelection(probabilities);
             int p2 = p1;
             while(p2 == p1)
-                p2 = RouletteSelection(parents);
+                p2 = RouletteSelection(probabilities);
 
             Organism[] siblings = Crossover(parents[p1], parents[p2]);
 
@@ -462,23 +466,24 @@ public class GeneticAlgorithm implements Runnable, JMC
 
     /**
      * Selects a parent based on thief probability, higher ones are chose more often
-     * @param parents The parent organisms
+     * @param parents The parent organism probabilities
      * @return The index to the parent chosen for crossover
      */
-    private int RouletteSelection(Organism[] parents)
+    private int RouletteSelection(float[] parents)
     {
-        int index = 0;
+        Utilities.ShuffleArray(parents);
 
+        int index = 0;
         float sum = 0;
         for(int i = 0; i < parents.length; i++)
-            sum += parents[i].GetOverallRating();
+            sum += parents[i];
 
         float rand = _random.nextFloat() * sum;
 
         sum = 0;
         for(int i = 0; i < parents.length; i++)
         {
-            sum += parents[i].GetOverallRating();
+            sum += parents[i];
 
             if(sum > rand)
             {

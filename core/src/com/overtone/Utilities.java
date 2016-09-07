@@ -1,6 +1,7 @@
 package com.overtone;
 
 import com.badlogic.gdx.Gdx;
+import com.overtone.GeneticAlgorithm.Organism;
 import com.overtone.Notes.OvertoneNote;
 import jm.JMC;
 
@@ -632,6 +633,19 @@ public class Utilities implements JMC
         catch(IOException x)
         {
             System.out.print("Volume data cannot be saved at this time.");
+        }
+    }
+
+    // Implementing Fisher–Yates shuffle
+    public static void ShuffleArray(float[] ar)
+    {
+        for (int i = ar.length - 1; i > 0; i--)
+        {
+            int index = _rand.nextInt(i + 1);
+            // Simple swap
+            float a = ar[index];
+            ar[index] = ar[i];
+            ar[i] = a;
         }
     }
 }
