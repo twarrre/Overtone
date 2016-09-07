@@ -23,11 +23,11 @@ n
 h
 627500 Great
 579400 Great
+510100 Cleared
 309100 Great
+284200 Cleared
 204200 Cleared
 196600 Great
 184500 Great
 178900 Cleared
 178900 Cleared
-169200 Cleared
-21500 Failure

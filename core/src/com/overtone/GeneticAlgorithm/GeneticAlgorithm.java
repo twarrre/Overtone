@@ -54,6 +54,11 @@ public class GeneticAlgorithm implements Runnable, JMC
     /** Size of an octave */
     public static final int OCTAVE = 13;
 
+    public static int HIGH_PITCH = 95;
+    public static int LOW_PITCH = 30;
+    public static int HIGH_DYNAMIC = 95;
+    public static int LOW_DYNAMIC = 30;
+
     private int                _currentIteration; // The current iteration of the algorithm
     private ArrayList<Mutator> _mutators;         // Array of all of the mutators that may mutate a track.
     private Rater[]            _raters;           // Array of raters to rate the tracks
@@ -226,24 +231,27 @@ public class GeneticAlgorithm implements Runnable, JMC
         for(int i = 0; i < Overtone.PopulationSize; i++)
         {
             Part p = new Part();
-            int pitchSeed   = Math.round(Utilities.Clamp(_random.nextInt(G9 + 1), 0.0f, G9));
-            int dynamicSeed = Math.round(Utilities.Clamp(_random.nextInt(G9 + 1), 1.0f, G9));
+            int pitchSeed   = Math.round(Utilities.Clamp((_random.nextInt((HIGH_PITCH - LOW_PITCH) + 1) + LOW_PITCH), LOW_PITCH, HIGH_PITCH));           // Random pitch between 30 and 95
+            int dynamicSeed = Math.round(Utilities.Clamp((_random.nextInt((HIGH_DYNAMIC - LOW_DYNAMIC) + 1) + LOW_DYNAMIC), LOW_DYNAMIC, HIGH_DYNAMIC)); // Random dynamic between 30 and 95
             int rhythmSeed  = Math.round(Utilities.Clamp(_random.nextInt(RHYTHMS.size() + 1), 0, RHYTHMS.size() - 1));
+
+            float chordProbability = _random.nextFloat() * (0.3f - 0.01f) + 0.01f;
+            float restProbability = _random.nextFloat()  * (0.15f - 0.01f) + 0.01f;
 
             for(int j = 0; j < NUM_NOTES; j++)
             {
                 if(j % 4 == 0)
                 {
-                    int pitchPlusOrMinus = Utilities.GetRandom(1, -1, 0.5f);
+                    int pitchPlusOrMinus   = Utilities.GetRandom(1, -1, 0.5f);
                     int dynamicPlusOrMinus = Utilities.GetRandom(1, -1, 0.5f);
-                    int rhythmPlusOrMinus = Utilities.GetRandom(1, -1, 0.5f);
-                    pitchSeed   = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(pitchSeed + (pitchPlusOrMinus * OCTAVE / 2.0f), OCTAVE), 0.0f, G9));
-                    dynamicSeed = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(dynamicSeed + (dynamicPlusOrMinus * OCTAVE / 2.0f), OCTAVE), 1.0f, G9));
-                    rhythmSeed  = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(rhythmSeed + (rhythmPlusOrMinus * 2), 4), 0, RHYTHMS.size() - 1));
+                    int rhythmPlusOrMinus  = Utilities.GetRandom(1, -1, 0.5f);
+                    pitchSeed              = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(pitchSeed + (pitchPlusOrMinus * (OCTAVE / 2.0f)), OCTAVE), LOW_PITCH, HIGH_PITCH));
+                    dynamicSeed            = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(dynamicSeed + (dynamicPlusOrMinus * (OCTAVE / 2.0f)), OCTAVE), LOW_DYNAMIC, HIGH_DYNAMIC));
+                    rhythmSeed             = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(rhythmSeed + (rhythmPlusOrMinus * 2), 4), 0, RHYTHMS.size() - 1));
                 }
 
-                boolean chord = Utilities.GetRandom(0, 1, 0.15f) == 0;
-                boolean rest  = Utilities.GetRandom(0, 1, 0.05f) == 0;
+                boolean chord = Utilities.GetRandom(0, 1, chordProbability) == 0;
+                boolean rest  = Utilities.GetRandom(0, 1, restProbability) == 0;
 
                 if(chord && rest)
                 {
@@ -261,8 +269,8 @@ public class GeneticAlgorithm implements Runnable, JMC
                 }
 
                 Phrase phrase = new Phrase();
-                int pitch     = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(pitchSeed, OCTAVE), 0.0f, G9));
-                int dynamic   = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(dynamicSeed, OCTAVE), 1.0f, G9));
+                int pitch     = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(pitchSeed, OCTAVE), LOW_PITCH, HIGH_PITCH));
+                int dynamic   = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(dynamicSeed, OCTAVE), LOW_DYNAMIC, HIGH_DYNAMIC));
                 int rhythm    = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(rhythmSeed, 4), 0.0f, RHYTHMS.size() - 1));
 
                 if(chord)

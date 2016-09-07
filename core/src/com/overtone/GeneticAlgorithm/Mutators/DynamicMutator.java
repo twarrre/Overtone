@@ -24,8 +24,8 @@ public class DynamicMutator extends Mutator implements JMC
                 for(int j = 0; j < p.getPhrase(i).length(); j++)
                 {
                     int oldDynamic = p.getPhrase(i).getNote(j).getDynamic();
-                    int newDynamic = Utilities.GetRandomRangeNormalDistribution(oldDynamic, 10.0f);
-                    p.getPhrase(i).getNote(j).setDynamic((int)Utilities.Clamp(newDynamic, 1, 127));
+                    int newDynamic = Utilities.GetRandomRangeNormalDistribution(oldDynamic, 5.0f);
+                    p.getPhrase(i).getNote(j).setDynamic((int)Utilities.Clamp(newDynamic, GeneticAlgorithm.LOW_DYNAMIC, GeneticAlgorithm.HIGH_DYNAMIC));
                 }
             }
         }
