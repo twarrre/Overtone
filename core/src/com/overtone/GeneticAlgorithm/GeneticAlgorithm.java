@@ -231,35 +231,48 @@ public class GeneticAlgorithm implements Runnable, JMC
     {
         Organism[] population = new Organism[Overtone.PopulationSize];
         int prevChord = -1;
-        // TODO: Generate the initial population here
-        // TODO: Mess with rest can check if rest
-        // TODO: Do chords
-        // TODO: randomize dynamic
-
+        
         for(int i = 0; i < Overtone.PopulationSize; i++)
         {
             Part p = new Part();
-            int pitchSeed = Math.round(Utilities.Clamp(_random.nextInt(G9 + 1), 0.0f, G9));
+            int pitchSeed   = Math.round(Utilities.Clamp(_random.nextInt(G9 + 1), 0.0f, G9));
             int dynamicSeed = Math.round(Utilities.Clamp(_random.nextInt(G9 + 1), 1.0f, G9));
-            int rhythmSeed = Math.round(Utilities.Clamp(_random.nextInt(RHYTHMS.size() + 1), 0, RHYTHMS.size() - 1));
+            int rhythmSeed  = Math.round(Utilities.Clamp(_random.nextInt(RHYTHMS.size() + 1), 0, RHYTHMS.size() - 1));
 
             for(int j = 0; j < NUM_NOTES; j++)
             {
                 if(j % 4 == 0)
                 {
-                    pitchSeed = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistribution(pitchSeed, OCTAVE), 0.0f, G9));
-                    dynamicSeed = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistribution(dynamicSeed, OCTAVE), 1.0f, G9));
-                    rhythmSeed = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistribution(rhythmSeed, 4), 0, RHYTHMS.size() - 1));
+                    int pitchPlusOrMinus = Utilities.GetRandom(1, -1, 0.5f);
+                    int dynamicPlusOrMinus = Utilities.GetRandom(1, -1, 0.5f);
+                    int rhythmPlusOrMinus = Utilities.GetRandom(1, -1, 0.5f);
+                    pitchSeed   = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(pitchSeed + (pitchPlusOrMinus * OCTAVE / 2.0f), OCTAVE), 0.0f, G9));
+                    dynamicSeed = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(dynamicSeed + (dynamicPlusOrMinus * OCTAVE / 2.0f), OCTAVE), 1.0f, G9));
+                    rhythmSeed  = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(rhythmSeed + (rhythmPlusOrMinus * 2), 4), 0, RHYTHMS.size() - 1));
                 }
 
-                //TODO: Mess with the probabilities
-                boolean chord = Utilities.GetRandom(0, 1, 0.2f) == 0;
-                boolean rest = Utilities.GetRandom(0, 1, 0.1f) == 0;
+                boolean chord = Utilities.GetRandom(0, 1, 0.15f) == 0;
+                boolean rest  = Utilities.GetRandom(0, 1, 0.05f) == 0;
+
+                if(chord && rest)
+                {
+                    int change = Utilities.GetRandom(0, 1, 0.5f);
+                    if(change == 0)
+                    {
+                        chord = true;
+                        rest = false;
+                    }
+                    else
+                    {
+                        rest = true;
+                        chord = false;
+                    }
+                }
 
                 Phrase phrase = new Phrase();
-                int pitch = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(pitchSeed, OCTAVE), 0.0f, G9));
-                int dynamic = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(dynamicSeed, OCTAVE), 1.0f, G9));
-                int rhythm = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(rhythmSeed, 4), 0.0f, RHYTHMS.size() - 1));
+                int pitch     = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(pitchSeed, OCTAVE), 0.0f, G9));
+                int dynamic   = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(dynamicSeed, OCTAVE), 1.0f, G9));
+                int rhythm    = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(rhythmSeed, 4), 0.0f, RHYTHMS.size() - 1));
 
                 if(chord)
                 {
