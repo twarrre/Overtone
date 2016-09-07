@@ -235,8 +235,8 @@ public class GeneticAlgorithm implements Runnable, JMC
             int dynamicSeed = Math.round(Utilities.Clamp((_random.nextInt((HIGH_DYNAMIC - LOW_DYNAMIC) + 1) + LOW_DYNAMIC), LOW_DYNAMIC, HIGH_DYNAMIC)); // Random dynamic between 30 and 95
             int rhythmSeed  = Math.round(Utilities.Clamp(_random.nextInt(RHYTHMS.size() + 1), 0, RHYTHMS.size() - 1));
 
-            float chordProbability = _random.nextFloat() * (0.3f - 0.01f) + 0.01f;
-            float restProbability = _random.nextFloat()  * (0.15f - 0.01f) + 0.01f;
+            float chordProbability = _random.nextFloat() * (0.30f - 0.01f) + 0.01f;
+            float restProbability  = _random.nextFloat() * (0.15f - 0.01f) + 0.01f;
 
             for(int j = 0; j < NUM_NOTES; j++)
             {
@@ -251,7 +251,7 @@ public class GeneticAlgorithm implements Runnable, JMC
                 }
 
                 boolean chord = Utilities.GetRandom(0, 1, chordProbability) == 0;
-                boolean rest  = Utilities.GetRandom(0, 1, restProbability) == 0;
+                boolean rest  = Utilities.GetRandom(0, 1, restProbability)  == 0;
 
                 if(chord && rest)
                 {
