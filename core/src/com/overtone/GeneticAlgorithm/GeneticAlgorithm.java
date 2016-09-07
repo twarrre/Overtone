@@ -164,9 +164,9 @@ public class GeneticAlgorithm implements Runnable, JMC
      */
     private Organism[] GenerateTracks()
     {
-        int succesfail = 0;
+        int successFail = 0;
         // Initialization Phrase
-        Organism[] population = new Organism[3];
+        Organism[] population = new Organism[1];
         Organism[] parentPopulation = Initialization();
         double parentAverageRating = 0;
 
@@ -192,7 +192,6 @@ public class GeneticAlgorithm implements Runnable, JMC
                 population[j] = FitnessRating(population[j]);
                 populationRating += population[j].GetOverallRating();
             }
-
             populationRating /= population.length;
 
 
@@ -200,17 +199,17 @@ public class GeneticAlgorithm implements Runnable, JMC
             //If the children are better then choose them instead
             if(populationRating > parentAverageRating)
             {
-                succesfail++;
+                successFail++;
                 parentPopulation    = population;
                 parentAverageRating = populationRating;
             }
             else
             {
-                succesfail--;
+                successFail--;
             }
         }
 
-        System.out.println(succesfail);
+        System.out.println(successFail);
         Arrays.sort(population, new RatingComparator());
         return new Organism[] {population[0], population[1], population[2]};
     }
@@ -289,7 +288,7 @@ public class GeneticAlgorithm implements Runnable, JMC
                 p.appendPhrase(phrase);
             }
 
-            population[i] = new Organism(CorrectStartTime(CorrectDuration(p)), _currentIteration);
+            population[i] = new Organism(CorrectStartTime(CorrectDuration(p.copy())), _currentIteration);
         }
         return population;
     }
@@ -370,7 +369,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         Collections.shuffle(_mutators, _random);
 
         // Mutate the phrase
-        Part mutation = o.GetTrack();
+        Part mutation = o.GetTrack().copy();
 
         for(int i = 0; i < _mutators.size(); i++)
         {
@@ -389,8 +388,9 @@ public class GeneticAlgorithm implements Runnable, JMC
             mutation = _mutators.get(i).Mutate(mutation, probability);
         }
 
-        o.SetTrack(mutation);
-        return o;
+        Organism mutated = new Organism(o);
+        mutated.SetTrack(mutation);
+        return mutated;
     }
 
     /**
@@ -407,8 +407,8 @@ public class GeneticAlgorithm implements Runnable, JMC
         children[0] = new Part();
         children[1] = new Part();
 
-        Part p1 = parent1.GetTrack();
-        Part p2 = parent2.GetTrack();
+        Part p1 = parent1.GetTrack().copy();
+        Part p2 = parent2.GetTrack().copy();
 
         // Find the shorter of the two lengths (used as base length)
         int length = p1.length() < p2.length() ? p1.length() : p2.length();
