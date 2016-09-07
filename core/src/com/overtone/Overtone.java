@@ -21,6 +21,7 @@ import jm.music.data.*;
 import javax.sound.midi.Sequencer;
 import jm.JMC;
 import jm.util.Play;
+import jm.util.Write;
 
 /**
  * Manager for everything in the game, handles updating everything
