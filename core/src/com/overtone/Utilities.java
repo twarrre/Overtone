@@ -453,15 +453,10 @@ public class Utilities implements JMC
      */
     public static int GetRandomRangeNormalDistribution(float mean, float deviation, float high, float low, boolean allowRepeatingValues)
     {
-        int counter = 0;
         int val =  (int)Math.round(_rand.nextGaussian() * deviation + mean);
 
-        while((!allowRepeatingValues && val == mean) || val > high || val < low || counter < 20)
-        {
+        while((!allowRepeatingValues && val == mean) || val > high || val < low)
             val = (int)Math.round(_rand.nextGaussian() * deviation + mean);
-            counter++;
-        }
-
 
         return Math.round(Utilities.Clamp(val, low, high));
     }

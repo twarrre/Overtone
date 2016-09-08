@@ -243,7 +243,7 @@ public class GeneticAlgorithm implements Runnable, JMC
                 {
                     pitchSeed   = Utilities.GetRandomRangeNormalDistribution(pitchSeed, OCTAVE, HIGH_PITCH, LOW_PITCH, false);
                     dynamicSeed = Utilities.GetRandomRangeNormalDistribution(dynamicSeed, OCTAVE, HIGH_DYNAMIC, LOW_DYNAMIC, false);
-                    rhythmSeed  = Utilities.GetRandomRangeNormalDistribution(rhythmSeed, 4.0f, RHYTHMS.size() - 1, 0.0f, false);
+                    rhythmSeed  = Utilities.GetRandomRangeNormalDistribution(rhythmSeed, 3, RHYTHMS.size() - 1, 0.0f, false);
                 }
 
                 boolean chord = Utilities.GetRandom(0, 1, chordProbability) == 0;
@@ -267,12 +267,12 @@ public class GeneticAlgorithm implements Runnable, JMC
                 Phrase phrase = new Phrase();
                 int pitch   = Utilities.GetRandomRangeNormalDistribution(pitchSeed, OCTAVE, HIGH_PITCH, LOW_PITCH, true);
                 int dynamic = Utilities.GetRandomRangeNormalDistribution(dynamicSeed, OCTAVE, HIGH_DYNAMIC, LOW_DYNAMIC, true);
-                int rhythm  = Utilities.GetRandomRangeNormalDistribution(rhythmSeed, 4, RHYTHMS.size() - 1, 0.0f, true);
+                int rhythm  = Utilities.GetRandomRangeNormalDistribution(rhythmSeed, 3, RHYTHMS.size() - 1, 0.0f, true);
 
                 if(chord)
                 {
                     while(rhythm > _indexForLargestRhythmChord)
-                        rhythm = Utilities.GetRandomRangeNormalDistribution((_indexForLargestRhythmChord / 2.0f), 4.0f, _indexForLargestRhythmChord, 0.0f, true);
+                        rhythm = Utilities.GetRandomRangeNormalDistribution((_indexForLargestRhythmChord / 2.0f), 3, _indexForLargestRhythmChord, 0.0f, true);
 
                     int chordIndex = Utilities.GetRandomRangeNormalDistribution(prevChord, 1, CHORDS.length - 1, 0.0f, true);
 
