@@ -3,7 +3,6 @@ package com.overtone.GeneticAlgorithm.Mutators;
 import com.overtone.GeneticAlgorithm.GeneticAlgorithm;
 import com.overtone.Utilities;
 import jm.JMC;
-import jm.music.data.Note;
 import jm.music.data.Part;
 
 import java.util.ArrayList;
@@ -37,9 +36,7 @@ public class RhythmMutator extends Mutator implements JMC
 
                 int range = p.getPhrase(i).length() > 1 ? _indexForLargestRhythmChord : GeneticAlgorithm.RHYTHMS.size() - 1;
 
-                int indexToNewRhythm = Math.round(Utilities.GetRandomRangeNormalDistribution(index, 2.5f));
-                while(indexToNewRhythm > range || indexToNewRhythm < 0)
-                    indexToNewRhythm = Math.round(Utilities.GetRandomRangeNormalDistribution(index, 2.5f));
+                int indexToNewRhythm = Utilities.GetRandomRangeNormalDistribution(index, 2.5f, range, 0.0f, true);
 
                 p.getPhrase(i).getNote(p.getPhrase(i).length() - 1).setRhythmValue(GeneticAlgorithm.RHYTHMS.get(indexToNewRhythm));
             }

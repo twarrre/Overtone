@@ -6,7 +6,6 @@ import com.overtone.Notes.OvertoneNote;
 import com.overtone.Overtone;
 import com.overtone.Screens.GameplayScreen;
 import com.overtone.Utilities;
-import com.sun.corba.se.impl.javax.rmi.CORBA.Util;
 import jm.JMC;
 import jm.audio.Instrument;
 import jm.music.data.Note;
@@ -226,7 +225,7 @@ public class GeneticAlgorithm implements Runnable, JMC
     public Organism[] Initialization()
     {
         Organism[] population = new Organism[Overtone.PopulationSize];
-        int prevChord = -1;
+        int prevChord = Math.round(Utilities.Clamp(_random.nextInt(CHORDS.length + 1), 0.0f, CHORDS.length - 1));
 
         for(int i = 0; i < Overtone.PopulationSize; i++)
         {
@@ -240,14 +239,11 @@ public class GeneticAlgorithm implements Runnable, JMC
 
             for(int j = 0; j < NUM_NOTES; j++)
             {
-                if(j % 4 == 0)
+                if(j % 8 == 0)
                 {
-                    int pitchPlusOrMinus   = Utilities.GetRandom(1, -1, 0.5f);
-                    int dynamicPlusOrMinus = Utilities.GetRandom(1, -1, 0.5f);
-                    int rhythmPlusOrMinus  = Utilities.GetRandom(1, -1, 0.5f);
-                    pitchSeed              = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(pitchSeed + (pitchPlusOrMinus * (OCTAVE / 2.0f)), OCTAVE), LOW_PITCH, HIGH_PITCH));
-                    dynamicSeed            = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(dynamicSeed + (dynamicPlusOrMinus * (OCTAVE / 2.0f)), OCTAVE), LOW_DYNAMIC, HIGH_DYNAMIC));
-                    rhythmSeed             = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(rhythmSeed + (rhythmPlusOrMinus * 2), 4), 0, RHYTHMS.size() - 1));
+                    pitchSeed   = Utilities.GetRandomRangeNormalDistribution(pitchSeed, OCTAVE, HIGH_PITCH, LOW_PITCH, false);
+                    dynamicSeed = Utilities.GetRandomRangeNormalDistribution(dynamicSeed, OCTAVE, HIGH_DYNAMIC, LOW_DYNAMIC, false);
+                    rhythmSeed  = Utilities.GetRandomRangeNormalDistribution(rhythmSeed, 4.0f, RHYTHMS.size() - 1, 0.0f, false);
                 }
 
                 boolean chord = Utilities.GetRandom(0, 1, chordProbability) == 0;
@@ -269,17 +265,16 @@ public class GeneticAlgorithm implements Runnable, JMC
                 }
 
                 Phrase phrase = new Phrase();
-                int pitch     = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(pitchSeed, OCTAVE), LOW_PITCH, HIGH_PITCH));
-                int dynamic   = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(dynamicSeed, OCTAVE), LOW_DYNAMIC, HIGH_DYNAMIC));
-                int rhythm    = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(rhythmSeed, 4), 0.0f, RHYTHMS.size() - 1));
+                int pitch   = Utilities.GetRandomRangeNormalDistribution(pitchSeed, OCTAVE, HIGH_PITCH, LOW_PITCH, true);
+                int dynamic = Utilities.GetRandomRangeNormalDistribution(dynamicSeed, OCTAVE, HIGH_DYNAMIC, LOW_DYNAMIC, true);
+                int rhythm  = Utilities.GetRandomRangeNormalDistribution(rhythmSeed, 4, RHYTHMS.size() - 1, 0.0f, true);
 
                 if(chord)
                 {
                     while(rhythm > _indexForLargestRhythmChord)
-                        rhythm = Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition((_indexForLargestRhythmChord / 2.0f), 4), 0.0f, _indexForLargestRhythmChord));
+                        rhythm = Utilities.GetRandomRangeNormalDistribution((_indexForLargestRhythmChord / 2.0f), 4.0f, _indexForLargestRhythmChord, 0.0f, true);
 
-                    int chordIndex = prevChord != -1 ? Math.round(Utilities.Clamp(Utilities.GetRandomRangeNormalDistributionRepitition(prevChord, (CHORDS.length / 2.0f)), 0.0f, CHORDS.length - 1))
-                            : Math.round(Utilities.Clamp(_random.nextInt(CHORDS.length + 1), 0.0f, CHORDS.length - 1));
+                    int chordIndex = Utilities.GetRandomRangeNormalDistribution(prevChord, 1, CHORDS.length - 1, 0.0f, true);
 
                     phrase.addChord(CHORDS[chordIndex], RHYTHMS.get(rhythm));
                     for(int k = 0; k < phrase.length(); k++)
@@ -431,7 +426,7 @@ public class GeneticAlgorithm implements Runnable, JMC
             Phrase ph1 = p1.getPhrase(i).copy();
             Phrase ph2 = p2.getPhrase(i).copy();
 
-            int index = Utilities.GetRandom(0, 1, 0.6f);
+            int index = Utilities.GetRandom(0, 1, 0.5f);
             if(index == 0)
             {
                 children[0].addPhrase(ph1);

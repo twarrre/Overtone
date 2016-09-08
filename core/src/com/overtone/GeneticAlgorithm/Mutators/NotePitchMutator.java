@@ -24,7 +24,7 @@ public class NotePitchMutator extends Mutator implements JMC
             if(random == 0)
             {
                 // Get how much to change the pitch by
-                int pitchDelta = Utilities.GetRandomRangeNormalDistribution(0, OCTAVE / 2.0f);
+                int pitchDelta = Utilities.GetRandomRangeNormalDistribution(0, OCTAVE / 2.0f, OCTAVE, -OCTAVE, false);
                 for(int j = 0; j < p.getPhrase(i).length(); j++)
                 {
                     // Change all of the notes in the phrase by that pitch delta

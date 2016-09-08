@@ -451,49 +451,19 @@ public class Utilities implements JMC
      * @param deviation The deviation of the normal distribution
      * @return A random number
      */
-    public static int GetRandomRangeNormalDistribution(float mean, float deviation)
+    public static int GetRandomRangeNormalDistribution(float mean, float deviation, float high, float low, boolean allowRepeatingValues)
     {
+        int counter = 0;
         int val =  (int)Math.round(_rand.nextGaussian() * deviation + mean);
 
-        // Don't want it to be the mean value
-        if(val == mean)
+        while((!allowRepeatingValues && val == mean) || val > high || val < low || counter < 20)
         {
-            int shift = GetRandom(1, -1, 0.5f);
-            val = GetRandomRangeNormalDistributionShifted(mean + shift, deviation, mean, 0);
+            val = (int)Math.round(_rand.nextGaussian() * deviation + mean);
+            counter++;
         }
 
-        return val;
-    }
 
-    /**
-     * Gets random number based on normal distribution
-     * @param mean The mean of the normal distribution
-     * @param deviation The deviation of the normal distribution
-     * @return A random number
-     */
-    public static int GetRandomRangeNormalDistributionRepitition(float mean, float deviation)
-    {
-        int val =  (int)Math.round(_rand.nextGaussian() * deviation + mean);
-        return val;
-    }
-
-    /**
-     * Called if the value gotten from the normal distribution is the mean
-     * @param mean The new mean to try
-     * @param deviation The deviation
-     * @param original The original mean to try and avoid
-     * @param counter A counter to break out of loop is necessary
-     * @return Another random number
-     */
-    private static int GetRandomRangeNormalDistributionShifted(float mean, float deviation, float original, int counter)
-    {
-        counter++;
-        int val =  (int)Clamp(Math.round(_rand.nextGaussian() * deviation + mean), CN1, G9);
-
-        if(val == original && counter < 20)
-            val = GetRandomRangeNormalDistributionShifted(mean, deviation, mean, counter);
-
-        return val;
+        return Math.round(Utilities.Clamp(val, low, high));
     }
 
     /**

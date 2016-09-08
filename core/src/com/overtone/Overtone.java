@@ -251,34 +251,6 @@ public class Overtone extends ApplicationAdapter implements JMC
 		Utilities.LoadMidiMusic(true);
 	}
 
-	private int RouletteSelection(float[] parents)
-	{
-		Utilities.ShuffleArray(parents);
-
-		Random _random = new Random();
-		int index = 0;
-
-		float sum = 0;
-		for(int i = 0; i < parents.length; i++)
-			sum += parents[i];
-
-		float rand = _random.nextFloat() * sum;
-
-		sum = 0;
-		for(int i = 0; i < parents.length; i++)
-		{
-			sum += parents[i];
-
-			if(sum > rand)
-			{
-				index = i;
-				break;
-			}
-		}
-
-		return index;
-	}
-
 	@Override
 	public void render ()
 	{
