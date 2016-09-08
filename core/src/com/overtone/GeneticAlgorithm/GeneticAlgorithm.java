@@ -126,7 +126,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         //Get Back the best two phrase from the genetic algorithm
         Organism[] bestThreeTracks = GenerateTracks();
 
-        // Create phases that create the song. Structure of the song is verse, chorus, verse, chorus, bridge, chorus. Mutate each one so that there is a bit of variation between them
+        // Create phases that create the song. Structure of the song is verse, chorus, verse, chorus, bridge, chorus.
         Part[] song = new Part[NUM_SECTIONS];
         song[0] = bestThreeTracks[1].GetTrack(); // Verse 1
         song[1] = bestThreeTracks[0].GetTrack(); // Chorus 1
