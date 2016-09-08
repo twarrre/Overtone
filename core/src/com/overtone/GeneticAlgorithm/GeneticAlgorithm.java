@@ -169,53 +169,59 @@ public class GeneticAlgorithm implements Runnable, JMC
     private Organism[] GenerateTracks()
     {
         int successFail = 0;
-        // Initialization Phrase
-        Organism[] population = new Organism[1];
-        Organism[] parentPopulation = Initialization();
-        double parentAverageRating = 0;
 
+        // Initialization Phrase
+        Organism[] parentPopulation = Initialization();
+
+        // Rate all of the parents
         for(int i = 0; i < parentPopulation.length; i++)
-        {
             parentPopulation[i] = FitnessRating(parentPopulation[i]);
-            parentAverageRating += parentPopulation[i].GetOverallRating();
-        }
-        parentAverageRating /= parentPopulation.length;
+
+        // Get the elites from the parent population
+        Organism[] elites = Elitism(parentPopulation);
 
         //Genetic algorithm phase
         for(int i = 0; i < Overtone.NumberOfIterations; i++)
         {
             _currentIteration = i + 1;
 
-            // Get the children
-            population = Selection(parentPopulation);
-            double populationRating = 0;
+            // Get the children, by selecting from the elites
+            Organism[] children = Selection(elites);
 
             // Rate the children
-            for(int j = 0; j < population.length; j++)
+            for(int j = 0; j < children.length; j++)
+                children[j] = FitnessRating(children[j]);
+
+            Organism[] childrenElites = Elitism(children);
+
+            double childrenValue = 0;
+            double parentValue   = 0;
+            for(int j = 0; j < childrenElites.length; j++)
             {
-                population[j] = FitnessRating(population[j]);
-                populationRating += population[j].GetOverallRating();
+                childrenValue += childrenElites[j].GetOverallRating();
+                parentValue   += elites[j].GetOverallRating();
             }
-            populationRating /= population.length;
+            childrenValue /= childrenElites.length;
+            parentValue   /= elites.length;
 
-
-            // TODO: CHECK HOW OFTEN IT FAILS AFTER MUTATION PROBABILITY IS FIXED
-            //If the children are better then choose them instead
-            if(populationRating > parentAverageRating)
+            // if the child value is better than the parent value, then keep the children elites as new elites
+            if(childrenValue >= parentValue)
             {
                 successFail++;
-                parentPopulation    = population;
-                parentAverageRating = populationRating;
+                System.out.println("Success");
+                for(int j = 0; j < elites.length; j++)
+                    elites[j] = new Organism(childrenElites[j]);
             }
             else
             {
+                System.out.println("Fail");
                 successFail--;
             }
         }
 
         System.out.println(successFail);
-        Arrays.sort(population, new RatingComparator());
-        return new Organism[] {population[0], population[1], population[2]};
+        Arrays.sort(elites, new RatingComparator());
+        return new Organism[] {elites[0], elites[1], elites[2]};
     }
 
     /**
@@ -296,6 +302,17 @@ public class GeneticAlgorithm implements Runnable, JMC
         return population;
     }
 
+    public Organism[] Elitism(Organism[] population)
+    {
+        Organism[] elites = new Organism[Overtone.NumberOfElites];
+        Arrays.sort(population, new RatingComparator());
+
+        for(int i = 0; i < Overtone.NumberOfElites; i++)
+            elites[i] = new Organism(population[i]);
+
+        return elites;
+    }
+
     /**
      * Selects organisms to crossover
      * @param parents The parents to crossover
@@ -307,10 +324,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         Organism[] children = new Organism[Overtone.PopulationSize];
 
         // Elitism, save the best ones
-        int counter;
-        for(counter = 0; counter < Overtone.NumberOfElites; counter++)
-            children[counter] = new Organism(parents[counter]);
-
+        int counter = 0;
         while(counter < Overtone.PopulationSize)
         {
             float[] probabilities = new float[parents.length];
@@ -333,7 +347,7 @@ public class GeneticAlgorithm implements Runnable, JMC
                     continue;
                 }
 
-                children[counter + i] = Mutation(siblings[i]);
+                children[counter + i] = new Organism(Mutation(siblings[i]));
             }
 
             if(overflow)
@@ -362,7 +376,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         overallRating /= Overtone.NUM_RATERS;
         p.SetOverallRating(1.0f - overallRating);
 
-        return p;
+        return new Organism(p);
     }
 
     /**
@@ -461,24 +475,24 @@ public class GeneticAlgorithm implements Runnable, JMC
 
     /**
      * Selects a parent based on thief probability, higher ones are chose more often
-     * @param parents The parent organism probabilities
+     * @param values The parent organism probabilities
      * @return The index to the parent chosen for crossover
      */
-    private int RouletteSelection(float[] parents)
+    private int RouletteSelection(float[] values)
     {
-        Utilities.ShuffleArray(parents);
+        Utilities.ShuffleArray(values);
 
         int index = 0;
         float sum = 0;
-        for(int i = 0; i < parents.length; i++)
-            sum += parents[i];
+        for(int i = 0; i < values.length; i++)
+            sum += values[i];
 
         float rand = _random.nextFloat() * sum;
 
         sum = 0;
-        for(int i = 0; i < parents.length; i++)
+        for(int i = 0; i < values.length; i++)
         {
-            sum += parents[i];
+            sum += values[i];
 
             if(sum > rand)
             {
