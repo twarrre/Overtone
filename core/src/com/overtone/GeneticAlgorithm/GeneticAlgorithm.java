@@ -52,10 +52,13 @@ public class GeneticAlgorithm implements Runnable, JMC
     public static int NUM_NOTES = 16;
     /** Size of an octave */
     public static final int OCTAVE = 13;
-
+    /** The highest pitch available */
     public static int HIGH_PITCH = 95;
+    /** The lowest pitch available */
     public static int LOW_PITCH = 30;
+    /** The highest dynamic available */
     public static int HIGH_DYNAMIC = 95;
+    /** The lowest dynamic available */
     public static int LOW_DYNAMIC = 30;
 
     private int                _currentIteration; // The current iteration of the algorithm
@@ -193,13 +196,16 @@ public class GeneticAlgorithm implements Runnable, JMC
             for(int j = 0; j < children.length; j++)
                 children[j] = FitnessRating(children[j]);
 
+            // Get the elites of the children
             elites = Elitism(children);
 
+            // Calculate the overall rating of the children
             double childrenValue = 0;
             for(int j = 0; j < elites.length; j++)
                 childrenValue += elites[j].GetOverallRating();
             childrenValue /= elites.length;
 
+            // If they are better then the current elites, then store them
             if(childrenValue > highestEliteValue)
             {
                 highestEliteValue = childrenValue;
