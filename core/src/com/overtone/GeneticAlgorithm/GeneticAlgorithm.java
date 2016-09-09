@@ -90,6 +90,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         _raters[12]        = new NeighboringRhythmRater();
         _raters[13]        = new RhythmRangeRater();
         _raters[14]        = new UniqueDynamicRater();
+        _raters[15]        = new ChordRatioRater();
         _mutators          = new ArrayList<>();
         _isCompleted       = false;
         _random            = new Random();
@@ -187,6 +188,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         for(int i = 0; i < Overtone.NumberOfIterations; i++)
         {
             _currentIteration = i + 1;
+            System.out.println(_currentIteration);
 
             // Get the children, by selecting from the elites
             Organism[] children = Selection(elites);
@@ -239,16 +241,16 @@ public class GeneticAlgorithm implements Runnable, JMC
             int rhythmSeed  = Math.round(Utilities.Clamp(_random.nextInt(RHYTHMS.size() + 1), 0, RHYTHMS.size() - 1));
 
             float chordProbability = _random.nextFloat() * (0.45f - 0.01f) + 0.01f;
-            float restProbability  = _random.nextFloat() * (0.15f - 0.01f) + 0.01f;
+            float restProbability  = _random.nextFloat() * (0.10f - 0.01f) + 0.01f;
 
             for(int j = 0; j < NUM_NOTES; j++)
             {
-                if(j % 8 == 0)
-                {
-                    pitchSeed   = Utilities.GetRandomRangeNormalDistribution(pitchSeed, OCTAVE, HIGH_PITCH, LOW_PITCH, false);
-                    dynamicSeed = Utilities.GetRandomRangeNormalDistribution(dynamicSeed, OCTAVE, HIGH_DYNAMIC, LOW_DYNAMIC, false);
-                    rhythmSeed  = Utilities.GetRandomRangeNormalDistribution(rhythmSeed, 3, RHYTHMS.size() - 1, 0.0f, false);
-                }
+                //if(j % 8 == 0)
+                //{
+                   // pitchSeed   = Utilities.GetRandomRangeNormalDistribution(pitchSeed, OCTAVE, HIGH_PITCH, LOW_PITCH, false);
+                    //dynamicSeed = Utilities.GetRandomRangeNormalDistribution(dynamicSeed, OCTAVE, HIGH_DYNAMIC, LOW_DYNAMIC, false);
+                    //rhythmSeed  = Utilities.GetRandomRangeNormalDistribution(rhythmSeed, 3, RHYTHMS.size() - 1, 0.0f, false);
+                //}
 
                 boolean chord = Utilities.GetRandom(0, 1, chordProbability) == 0;
                 boolean rest  = Utilities.GetRandom(0, 1, restProbability)  == 0;
@@ -511,7 +513,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         ArrayList<OvertoneNote> tempNotes = new ArrayList<OvertoneNote>();
         Part[] parts = Overtone.GameMusic.getPartArray();
 
-        float elapsedTime                  = GameplayScreen.START_DELAY;
+        double startTime                   = 0;
         int target                         = 0;
         int lastHoldTarget                 = -1;
         double prevDuration                = -1;
@@ -533,7 +535,7 @@ public class GeneticAlgorithm implements Runnable, JMC
                         else if(Overtone.Difficulty == Overtone.Difficulty.Normal)
                             includeNote = Utilities.GetRandom(0, 1, 0.55f) == 0 ? true : false;
                         else
-                            includeNote = Utilities.GetRandom(0, 1, 0.80f) == 0 ? true : false;
+                            includeNote = Utilities.GetRandom(0, 1, 0.85f) == 0 ? true : false;
                     }
                 }
 
@@ -553,8 +555,8 @@ public class GeneticAlgorithm implements Runnable, JMC
                 target = _random.nextInt(Overtone.TargetZones.length);
                 int target2 = DetermineTarget(target);
 
-                elapsedTime += phrases[j].getNote(phrases[j].length() - 1).getRhythmValue();
-                prevDuration = phrases[j].getNote(phrases[j].length() - 1).getRhythmValue();
+                startTime = phrases[j].getStartTime();
+                prevDuration = phrases[j].getNote(phrases[j].length() - 1).getDuration();
 
                 while (target == lastHoldTarget || target2 == lastHoldTarget)
                 {
@@ -568,7 +570,7 @@ public class GeneticAlgorithm implements Runnable, JMC
                 }
                 if(phrases[j].length() > 1 && includeDoubleNote) // else if it is a chord == double note
                 {
-                    OvertoneNote[] notes = CreateDoubleNote(target, target2, elapsedTime);
+                    OvertoneNote[] notes = CreateDoubleNote(target, target2, startTime);
                     tempNotes.add(notes[0]);
                     tempNotes.add(notes[1]);
                 }
@@ -578,19 +580,19 @@ public class GeneticAlgorithm implements Runnable, JMC
                 }
                 else if(phrases[j].getNote(0).getRhythmValue() > DOUBLE_DOTTED_QUARTER_NOTE && includeHoldNote) // if it is longer than a quarter note == hold note
                 {
-                    OvertoneNote[] notes = CreateHoldNote(target, elapsedTime, phrases[j].getNote(0).getRhythmValue());
+                    OvertoneNote[] notes = CreateHoldNote(target, startTime, phrases[j].getNote(0).getDuration());
                     tempNotes.add(notes[0]);
                     tempNotes.add(notes[1]);
                     lastHoldTarget = target;
                 }
                 else // It is a normal note
                 {
-                    tempNotes.add(CreateSingleNote(target, elapsedTime));
+                    tempNotes.add(CreateSingleNote(target, startTime));
                 }
             }
         }
 
-        Overtone.TotalTime = elapsedTime + GameplayScreen.COMPLETION_DELAY;
+        Overtone.TotalTime = (float)startTime + (float)prevDuration + GameplayScreen.COMPLETION_DELAY;
         return tempNotes;
     }
 
@@ -600,11 +602,11 @@ public class GeneticAlgorithm implements Runnable, JMC
      * @param elapsedTime the elapsed time of the song
      * @return and array of notes representing a double note
      */
-    private OvertoneNote[] CreateDoubleNote(int target, int target2,  float elapsedTime)
+    private OvertoneNote[] CreateDoubleNote(int target, int target2,  double elapsedTime)
     {
         OvertoneNote[] note = new OvertoneNote[2];
-        note[0] = new OvertoneNote(OvertoneNote.NoteType.Double, Overtone.TargetZones[target], elapsedTime);
-        note[1] = new OvertoneNote(OvertoneNote.NoteType.Double, Overtone.TargetZones[target2], elapsedTime);
+        note[0] = new OvertoneNote(OvertoneNote.NoteType.Double, Overtone.TargetZones[target], (float)elapsedTime);
+        note[1] = new OvertoneNote(OvertoneNote.NoteType.Double, Overtone.TargetZones[target2], (float)elapsedTime);
 
         note[0].SetOtherNote(note[1]);
         note[0].SetOtherNoteTime(note[1].GetTime());
@@ -621,11 +623,11 @@ public class GeneticAlgorithm implements Runnable, JMC
      * @param noteDuration The duration of the first note
      * @return and array of notes that represents a hold note
      */
-    private OvertoneNote[] CreateHoldNote(int target, float elapsedTime, double noteDuration)
+    private OvertoneNote[] CreateHoldNote(int target, double elapsedTime, double noteDuration)
     {
         OvertoneNote[] note = new OvertoneNote[2];
-        note[0] = new OvertoneNote(OvertoneNote.NoteType.Hold, Overtone.TargetZones[target], elapsedTime);
-        note[1] = new OvertoneNote(OvertoneNote.NoteType.Hold, Overtone.TargetZones[target], elapsedTime + (float)noteDuration - 0.05f);
+        note[0] = new OvertoneNote(OvertoneNote.NoteType.Hold, Overtone.TargetZones[target], (float)elapsedTime);
+        note[1] = new OvertoneNote(OvertoneNote.NoteType.Hold, Overtone.TargetZones[target], (float)elapsedTime + (float)noteDuration - 0.05f);
 
         note[0].SetOtherNote(note[1]);
         note[0].SetOtherNoteTime(note[1].GetTime());
@@ -641,9 +643,9 @@ public class GeneticAlgorithm implements Runnable, JMC
      * @param elapsedTime the elapsed time of the song
      * @return a single note.
      */
-    private OvertoneNote CreateSingleNote(int target, float elapsedTime)
+    private OvertoneNote CreateSingleNote(int target, double elapsedTime)
     {
-        return new OvertoneNote(OvertoneNote.NoteType.Single, Overtone.TargetZones[target], elapsedTime);
+        return new OvertoneNote(OvertoneNote.NoteType.Single, Overtone.TargetZones[target], (float)elapsedTime);
     }
 
     /**

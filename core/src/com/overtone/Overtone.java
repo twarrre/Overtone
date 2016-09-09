@@ -31,7 +31,7 @@ public class Overtone extends ApplicationAdapter implements JMC
 {
 	/**Maximum number of scores that are saved for each difficulty*/
 	public static final int NUM_SCORES = 10;
-	public static final int NUM_RATERS  = 15;
+	public static final int NUM_RATERS  = 16;
 
 	/**Enum for the different types of screens*/
 	public enum Screens
