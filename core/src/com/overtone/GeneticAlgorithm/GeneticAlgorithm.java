@@ -204,19 +204,22 @@ public class GeneticAlgorithm implements Runnable, JMC
             childrenValue /= childrenElites.length;
             parentValue   /= elites.length;
 
+            // TODO: make new rating system
             // if the child value is better than the parent value, then keep the children elites as new elites
-            if(childrenValue >= parentValue)
-            {
-                successFail++;
-                System.out.println("Success");
+            //if(childrenValue >= parentValue)
+            //{
+                //successFail++;
+                //System.out.println("Success");
                 for(int j = 0; j < elites.length; j++)
                     elites[j] = new Organism(childrenElites[j]);
-            }
-            else
-            {
-                System.out.println("Fail");
-                successFail--;
-            }
+
+            //System.out.println(childrenValue);
+            //}
+            //else
+            //{
+                //System.out.println("Fail");
+               // successFail--;
+            //}
         }
 
         System.out.println(successFail);
