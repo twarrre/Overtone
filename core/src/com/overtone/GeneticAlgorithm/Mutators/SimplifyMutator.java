@@ -1,6 +1,7 @@
 package com.overtone.GeneticAlgorithm.Mutators;
 import com.overtone.GeneticAlgorithm.GeneticAlgorithm;
 import com.overtone.Utilities;
+import com.sun.deploy.xml.GeneralEntity;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
 
@@ -55,18 +56,22 @@ public class SimplifyMutator extends Mutator
                 // Get the pitch of a random note in the randomly selected phrase
                 Phrase copyPhrase = p.getPhrase(phraseToCopy);
                 int newPitch = copyPhrase.getNote(_random.nextInt(copyPhrase.length())).getPitch();
+                int newDynamic = copyPhrase.getNote(_random.nextInt(copyPhrase.length())).getDynamic();
 
                 // Get a random note in the phrase to be mutated
                 int noteToChangePitch = _random.nextInt(p.getPhrase(i).length());
 
                 // Store the pitch that the not was previously
                 int changedPitch = p.getPhrase(i).getNote(noteToChangePitch).getPitch();
+                int changedDynamic = p.getPhrase(i).getNote(noteToChangePitch).getDynamic();
 
                 // Calculate the difference in the pitch from the changed one
                 int pitchDifference = newPitch - changedPitch;
+                int dynamicDifference = newDynamic - changedDynamic;
 
                 // Change the pitch to the new one
-                p.getPhrase(i).getNote(noteToChangePitch).setPitch(newPitch);
+                p.getPhrase(i).getNote(noteToChangePitch).setPitch(Math.round(Utilities.Clamp(newPitch, GeneticAlgorithm.LOW_PITCH, GeneticAlgorithm.HIGH_PITCH)));
+                p.getPhrase(i).getNote(noteToChangePitch).setDynamic(Math.round(Utilities.Clamp(newDynamic, GeneticAlgorithm.LOW_DYNAMIC, GeneticAlgorithm.HIGH_DYNAMIC)));
 
                 // If the phrase was a cord, update the other notes by the difference in change
                 for(int j = 0; j < p.getPhrase(i).length(); j++)
@@ -75,8 +80,10 @@ public class SimplifyMutator extends Mutator
                         continue;
                     else
                     {
-                        int currentPitch =  p.getPhrase(i).getNote(j).getPitch();
-                        p.getPhrase(i).getNote(j).setPitch(currentPitch + pitchDifference);
+                        int currentPitch   = p.getPhrase(i).getNote(j).getPitch();
+                        int currentDynamic = p.getPhrase(i).getNote(j).getDynamic();
+                        p.getPhrase(i).getNote(j).setPitch(Math.round(Utilities.Clamp(currentPitch + pitchDifference, GeneticAlgorithm.LOW_PITCH, GeneticAlgorithm.HIGH_PITCH)));
+                        p.getPhrase(i).getNote(j).setDynamic(Math.round(Utilities.Clamp(currentDynamic + dynamicDifference, GeneticAlgorithm.LOW_DYNAMIC, GeneticAlgorithm.HIGH_DYNAMIC)));
                     }
 
                 }
