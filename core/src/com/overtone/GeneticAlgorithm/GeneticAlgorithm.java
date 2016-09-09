@@ -149,7 +149,6 @@ public class GeneticAlgorithm implements Runnable, JMC
         ArrayList<OvertoneNote> tempNotes = GenerateGameNotes();
         Utilities.SortNotes(tempNotes);
 
-        //TODO: CHECK IF THIS IS RIGHT
         // Set the current rater values
         for(int i = 0; i < Overtone.CurrentRaterValues.length; i++)
         {
