@@ -168,9 +168,10 @@ public class GeneticAlgorithm implements Runnable, JMC
      */
     private Organism[] GenerateTracks()
     {
-        int successFail = 0;
+        double highestEliteValue = 0.0f;
+        Organism[] highestElites = new Organism[Overtone.NumberOfElites];
 
-        // Initialization Phrase
+         // Initialization Phrase
         Organism[] parentPopulation = Initialization();
 
         // Rate all of the parents
@@ -192,39 +193,23 @@ public class GeneticAlgorithm implements Runnable, JMC
             for(int j = 0; j < children.length; j++)
                 children[j] = FitnessRating(children[j]);
 
-            Organism[] childrenElites = Elitism(children);
+            elites = Elitism(children);
 
             double childrenValue = 0;
-            double parentValue   = 0;
-            for(int j = 0; j < childrenElites.length; j++)
+            for(int j = 0; j < elites.length; j++)
+                childrenValue += elites[j].GetOverallRating();
+            childrenValue /= elites.length;
+
+            if(childrenValue > highestEliteValue)
             {
-                childrenValue += childrenElites[j].GetOverallRating();
-                parentValue   += elites[j].GetOverallRating();
+                highestEliteValue = childrenValue;
+                for(int k = 0; k < Overtone.NumberOfElites; k++)
+                    highestElites[k] = new Organism(elites[k]);
             }
-            childrenValue /= childrenElites.length;
-            parentValue   /= elites.length;
-
-            // TODO: make new rating system
-            // if the child value is better than the parent value, then keep the children elites as new elites
-            //if(childrenValue >= parentValue)
-            //{
-                //successFail++;
-                //System.out.println("Success");
-                for(int j = 0; j < elites.length; j++)
-                    elites[j] = new Organism(childrenElites[j]);
-
-            //System.out.println(childrenValue);
-            //}
-            //else
-            //{
-                //System.out.println("Fail");
-               // successFail--;
-            //}
         }
 
-        System.out.println(successFail);
-        Arrays.sort(elites, new RatingComparator());
-        return new Organism[] {elites[0], elites[1], elites[2]};
+        Arrays.sort(highestElites, new RatingComparator());
+        return new Organism[] {highestElites[0], highestElites[1], highestElites[2]};
     }
 
     /**
