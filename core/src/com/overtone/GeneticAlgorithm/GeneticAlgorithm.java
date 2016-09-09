@@ -170,8 +170,8 @@ public class GeneticAlgorithm implements Runnable, JMC
      */
     private Organism[] GenerateTracks()
     {
-        double highestEliteValue = 0.0f;
-        Organism[] highestElites = new Organism[Overtone.NumberOfElites];
+        //double highestEliteValue = 0.0f;
+        //Organism[] highestElites = new Organism[Overtone.NumberOfElites];
 
          // Initialization Phrase
         Organism[] parentPopulation = Initialization();
@@ -199,7 +199,7 @@ public class GeneticAlgorithm implements Runnable, JMC
             elites = Elitism(children);
 
             // Calculate the overall rating of the children
-            double childrenValue = 0;
+            /*double childrenValue = 0;
             for(int j = 0; j < elites.length; j++)
                 childrenValue += elites[j].GetOverallRating();
             childrenValue /= elites.length;
@@ -207,14 +207,19 @@ public class GeneticAlgorithm implements Runnable, JMC
             // If they are better then the current elites, then store them
             if(childrenValue > highestEliteValue)
             {
+                System.out.println("success");
                 highestEliteValue = childrenValue;
                 for(int k = 0; k < Overtone.NumberOfElites; k++)
                     highestElites[k] = new Organism(elites[k]);
             }
+            else
+            {
+                System.out.println("Fail");
+            }*/
         }
 
-        Arrays.sort(highestElites, new RatingComparator());
-        return new Organism[] {highestElites[0], highestElites[1], highestElites[2]};
+        Arrays.sort(elites, new RatingComparator());
+        return new Organism[] {elites[0], elites[1], elites[2]};
     }
 
     /**
@@ -233,7 +238,7 @@ public class GeneticAlgorithm implements Runnable, JMC
             int dynamicSeed = Math.round(Utilities.Clamp((_random.nextInt((HIGH_DYNAMIC - LOW_DYNAMIC) + 1) + LOW_DYNAMIC), LOW_DYNAMIC, HIGH_DYNAMIC)); // Random dynamic between 30 and 95
             int rhythmSeed  = Math.round(Utilities.Clamp(_random.nextInt(RHYTHMS.size() + 1), 0, RHYTHMS.size() - 1));
 
-            float chordProbability = _random.nextFloat() * (0.30f - 0.01f) + 0.01f;
+            float chordProbability = _random.nextFloat() * (0.45f - 0.01f) + 0.01f;
             float restProbability  = _random.nextFloat() * (0.15f - 0.01f) + 0.01f;
 
             for(int j = 0; j < NUM_NOTES; j++)
