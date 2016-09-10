@@ -337,23 +337,8 @@ public class GeneticAlgorithm implements Runnable, JMC
                 p2 = RouletteSelection(probabilities);
 
             Organism[] siblings = Crossover(parents[p1], parents[p2]);
-
-            boolean overflow = false;
-            for(int i = 0; i < siblings.length; i++)
-            {
-                if(counter + i >= Overtone.PopulationSize)
-                {
-                    overflow = true;
-                    continue;
-                }
-
-                children[counter + i] = new Organism(Mutation(siblings[i]));
-            }
-
-            if(overflow)
-                counter++;
-            else
-                counter += siblings.length;
+            children[counter++] = new Organism(Mutation(siblings[0]));
+            children[counter++] = new Organism(Mutation(siblings[1]));
         }
         return children;
     }

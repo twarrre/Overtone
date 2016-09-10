@@ -103,14 +103,14 @@ public class OptionsScreen extends OvertoneScreen
         final Button popSizeNext = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.7725f, Overtone.ScreenHeight * 0.5f - Overtone.ScreenWidth * 0.025f), _stage);
         popSizeNext.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
-            Overtone.PopulationSize = (int)Utilities.Clamp(Overtone.PopulationSize + 1, 6, 1000);
+            Overtone.PopulationSize = (int)Utilities.Clamp(Overtone.PopulationSize + 2, 6, 1000);
             Utilities.WriteGenerationValues();
         }});
 
         // Create the back button for the population size
         final Button popSizeBack = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.6f, Overtone.ScreenHeight * 0.5f - Overtone.ScreenWidth * 0.025f), _stage);
         popSizeBack.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
-            Overtone.PopulationSize = (int)Utilities.Clamp(Overtone.PopulationSize - 1, 6, 1000);
+            Overtone.PopulationSize = (int)Utilities.Clamp(Overtone.PopulationSize - 2, 6, 1000);
 
             if(Overtone.NumberOfElites > (Overtone.PopulationSize * 0.5f))
                 Overtone.NumberOfElites = Math.round((Overtone.PopulationSize * 0.5f));
