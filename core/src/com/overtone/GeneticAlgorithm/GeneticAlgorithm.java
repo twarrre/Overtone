@@ -302,6 +302,11 @@ public class GeneticAlgorithm implements Runnable, JMC
         return population;
     }
 
+    /**
+     * Gets the elites out of the population
+     * @param population the population to get the elites from
+     * @return array of elites.
+     */
     public Organism[] Elitism(Organism[] population)
     {
         Organism[] elites = new Organism[Overtone.NumberOfElites];

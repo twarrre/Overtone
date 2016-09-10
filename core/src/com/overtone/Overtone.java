@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.overtone.GeneticAlgorithm.GeneticAlgorithm;
 import com.overtone.GeneticAlgorithm.Mutators.DynamicMutator;
 import com.overtone.GeneticAlgorithm.Organism;
@@ -189,6 +190,7 @@ public class Overtone extends ApplicationAdapter implements JMC
 	private SpriteBatch                   _batch;             // Sprite batch to draw to
 	private Sprite                        _farBackground;     // The star background for the whole app
 	private Sprite                        _closeBackground;   // The cloud background over-top of the star background (for depth)
+	public static ArrayList<Pair<Sequencer, Double>> GameNoteSequencers;
 
 	@Override
 	public void create ()
@@ -218,6 +220,7 @@ public class Overtone extends ApplicationAdapter implements JMC
 		NumberOfIterations = 500;
 		PopulationSize     = 25;
 		NumberOfElites     = 5;
+		GameNoteSequencers = new ArrayList();
 
 		PitchMutatorValues    = new float[3];
 		RhythmMutatorValues   = new float[3];
