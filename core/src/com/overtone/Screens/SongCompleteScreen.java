@@ -26,6 +26,7 @@ public class SongCompleteScreen extends OvertoneScreen
     private final Image       _background;              // Background image for the "Did you like this" screen
     private final Button      _yesButton;               // Yes button for the "Did you like this" screen
     private final Button      _noButton;                // No button for the "Did you like this" screen
+    private final Button      _okButton;                // No button for the "Did you like this" screen
     private final Button      _retryButton;             // Retry button
     private final Button      _menuButton;              // Return to main menu button
     private final Button      _difficultyButton;        // Change difficulty button
@@ -83,24 +84,36 @@ public class SongCompleteScreen extends OvertoneScreen
         _stage.addActor(_background);
         _background.setVisible(false);
 
-        // Set up yes button for confirmation screen
-        _yesButton = CreateButton(null, "yesButtons", Overtone.ScreenWidth * 0.1f, Overtone.ScreenWidth * 0.1f, new Vector2(Overtone.ScreenWidth * 0.375f, Overtone.ScreenHeight * 0.2f), _stage);
+        // Set up ok button for confirmation screen
+        _yesButton = CreateButton(null, "yesButtons", Overtone.ScreenWidth * 0.1f, Overtone.ScreenWidth * 0.1f, new Vector2(Overtone.ScreenWidth * 0.3f, Overtone.ScreenHeight * 0.2f), _stage);
         _yesButton.setDisabled(true);
         _yesButton.setVisible(false);
         _yesButton.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _accept.play(Overtone.SFXVolume);
+            Utilities.GoodRaterValues();
+            Utilities.WriteRaterValues(false);
+            Overtone.SetScreen(_nextScreen);
+        }});
+
+        // Set up no button for confirmation screen
+        _okButton = CreateButton(null, "okButtons", Overtone.ScreenWidth * 0.1f, Overtone.ScreenWidth * 0.1f, new Vector2(Overtone.ScreenWidth * 0.45f, Overtone.ScreenHeight * 0.2f), _stage);
+        _okButton.setDisabled(true);
+        _okButton.setVisible(false);
+        _okButton.addListener(new ClickListener() { public void clicked (InputEvent i, float x, float y) {
+            _decline.play(Overtone.SFXVolume);
             Utilities.AverageRaterValues();
             Utilities.WriteRaterValues(false);
             Overtone.SetScreen(_nextScreen);
         }});
 
         // Set up yes button for confirmation screen
-        _noButton = CreateButton(null, "noButtons", Overtone.ScreenWidth * 0.1f, Overtone.ScreenWidth * 0.1f, new Vector2(Overtone.ScreenWidth * 0.525f, Overtone.ScreenHeight * 0.2f), _stage);
+        _noButton = CreateButton(null, "noButtons", Overtone.ScreenWidth * 0.1f, Overtone.ScreenWidth * 0.1f, new Vector2(Overtone.ScreenWidth * 0.6f, Overtone.ScreenHeight * 0.2f), _stage);
         _noButton.setDisabled(true);
         _noButton.setVisible(false);
         _noButton.addListener(new ClickListener() { public void clicked (InputEvent i, float x, float y) {
             _decline.play(Overtone.SFXVolume);
-            Utilities.ClearRaterValues();
+            Utilities.BadRaterValues();
+            Utilities.WriteRaterValues(false);
             Overtone.SetScreen(_nextScreen);
         }});
 
@@ -210,6 +223,8 @@ public class SongCompleteScreen extends OvertoneScreen
         _yesButton.setVisible(true);
         _noButton.setDisabled(false);
         _noButton.setVisible(true);
+        _okButton.setDisabled(false);
+        _okButton.setVisible(true);
     }
 
     /**

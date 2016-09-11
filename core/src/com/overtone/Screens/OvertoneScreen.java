@@ -42,6 +42,9 @@ public class OvertoneScreen implements OvertoneScreenInterface
     protected final Texture     _no;          // Texture for the no button
     protected final Texture     _noHover;     // Texture for the no button hover
     protected final Texture     _noDown;      // Texture for the no button down
+    protected final Texture     _ok;         // Texture for the yes button
+    protected final Texture     _okHover;    // Texture for the yes button hover
+    protected final Texture     _okDown;     // Texture for the yes button down
     protected final Texture     _next;        // Texture for the next button
     protected final Texture     _nextHover;   // Texture for the next button hover
     protected final Texture     _nextDown;    // Texture for the next button down
@@ -100,6 +103,9 @@ public class OvertoneScreen implements OvertoneScreenInterface
         _back         = new Texture(Gdx.files.internal("Textures\\back.png"));
         _backHover    = new Texture(Gdx.files.internal("Textures\\backHover.png"));
         _backDown     = new Texture(Gdx.files.internal("Textures\\backDown.png"));
+        _ok           = new Texture(Gdx.files.internal("Textures\\ok.png"));
+        _okHover      = new Texture(Gdx.files.internal("Textures\\okHover.png"));
+        _okDown       = new Texture(Gdx.files.internal("Textures\\okDown.png"));
 
         // Create button arrangements
         Pixmap pixmap = new Pixmap(100, 100, Pixmap.Format.RGBA8888);
@@ -121,6 +127,9 @@ public class OvertoneScreen implements OvertoneScreenInterface
         _skin.add("back", _back);
         _skin.add("backHover", _backHover);
         _skin.add("backDown", _backDown);
+        _skin.add("ok", _ok);
+        _skin.add("okHover", _okHover);
+        _skin.add("okDown", _okDown);
 
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.up      = _skin.newDrawable("white", new Color(0.157f, 0.325f, 0.424f, 0.75f));
@@ -158,6 +167,12 @@ public class OvertoneScreen implements OvertoneScreenInterface
         imageButtonStyleNo.over = _skin.newDrawable("noHover", new Color(1f, 1f, 1f, 1f));
         imageButtonStyleNo.down = _skin.newDrawable("noDown", new Color(1f, 1f, 1f, 1f));
         _skin.add("noButtons", imageButtonStyleNo);
+
+        ImageButton.ImageButtonStyle imageButtonStyleOk = new ImageButton.ImageButtonStyle();
+        imageButtonStyleOk.up   = _skin.newDrawable("ok", new Color(1f, 1f, 1f, 1f));
+        imageButtonStyleOk.over = _skin.newDrawable("okHover", new Color(1f, 1f, 1f, 1f));
+        imageButtonStyleOk.down = _skin.newDrawable("okDown", new Color(1f, 1f, 1f, 1f));
+        _skin.add("okButtons", imageButtonStyleOk);
 
         ImageButton.ImageButtonStyle imageButtonStyleNext = new ImageButton.ImageButtonStyle();
         imageButtonStyleNext.up   = _skin.newDrawable("next", new Color(1f, 1f, 1f, 1f));
@@ -234,6 +249,9 @@ public class OvertoneScreen implements OvertoneScreenInterface
         _buttonPress.dispose();
         _warning.dispose();
         _countdown.dispose();
+        _ok.dispose();
+        _okHover.dispose();
+        _okDown.dispose();
     }
     public void pause () {}
     public void resume () {}

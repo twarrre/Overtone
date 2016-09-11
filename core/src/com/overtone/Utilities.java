@@ -330,6 +330,15 @@ public class Utilities implements JMC
     /**
      * Average the rater scores if the user says that they like the song
      */
+    public static void GoodRaterValues()
+    {
+        for(int i = 0; i < Overtone.NUM_RATERS; i++)
+            Overtone.BestRaterValues[i] = Utilities.Clamp((Overtone.BestRaterValues[i] * 0.25f) + (Overtone.CurrentRaterValues[i] * 0.75f), 0.0f, 1.0f);
+    }
+
+    /**
+     * Average the rater scores if the user says that they like the song
+     */
     public static void AverageRaterValues()
     {
         for(int i = 0; i < Overtone.NUM_RATERS; i++)
@@ -337,12 +346,12 @@ public class Utilities implements JMC
     }
 
     /**
-     * Clears rater values for next generation
+     * Average the rater scores if the user says that they like the song
      */
-    public static void ClearRaterValues()
+    public static void BadRaterValues()
     {
         for(int i = 0; i < Overtone.NUM_RATERS; i++)
-            Overtone.CurrentRaterValues[i] = 0.5f;
+            Overtone.BestRaterValues[i] = Utilities.Clamp((Overtone.BestRaterValues[i] * 0.75f) + (Overtone.CurrentRaterValues[i] * 0.25f), 0.0f, 1.0f);
     }
 
     /**
