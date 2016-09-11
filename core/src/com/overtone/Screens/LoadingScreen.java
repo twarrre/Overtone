@@ -16,9 +16,6 @@ import java.util.Random;
  */
 public class LoadingScreen extends OvertoneScreen
 {
-    /** If there is no generation, delay for shitz.*/
-    public static float LOADING_TIMER = 3.0f;
-
     private Thread           _generatingThread; // Thread used to generate the notes
     private GeneticAlgorithm _genetic;          // Genetic algorithm object used to generate the notes
     private boolean          _completed;        // True if the thread has completed, false otherwise
@@ -60,18 +57,10 @@ public class LoadingScreen extends OvertoneScreen
         _timeInterval    = 1;
         _glowAlpha       = 0.0f;
         _glowDirection   = 0.01f;
-        _genetic         = new GeneticAlgorithm();
+        _genetic         = new GeneticAlgorithm(Overtone.Regenerate);
 
-        if(Overtone.Regenerate)
-        {
-            _generatingThread = new Thread(_genetic);
-            _generatingThread.start();
-        }
-        else
-        {
-            ArrayList<OvertoneNote> tempNotes = _genetic.GenerateGameNotes();
-            Utilities.SortNotes(tempNotes);
-        }
+        _generatingThread = new Thread(_genetic);
+        _generatingThread.start();
     }
 
     public void render (float deltaTime)
@@ -105,7 +94,7 @@ public class LoadingScreen extends OvertoneScreen
         if(_completed)
             Overtone.SetScreen(Overtone.Screens.Gameplay);
 
-        if(Overtone.Regenerate && _genetic.IsCompleted())
+        if(_genetic.IsCompleted())
         {
             try
             {
@@ -127,13 +116,6 @@ public class LoadingScreen extends OvertoneScreen
                 _stringIndex =  _random.nextInt(_loadingStrings.length);
                 _timeInterval++;
             }
-
-            if(!Overtone.Regenerate && _elapsedTime >= LOADING_TIMER)
-            {
-                _completed = true;
-                _elapsedTime = LOADING_TIMER;
-            }
-
         }
     }
 

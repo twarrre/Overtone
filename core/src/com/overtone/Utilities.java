@@ -1,7 +1,6 @@
 package com.overtone;
 
 import com.badlogic.gdx.Gdx;
-import com.overtone.GeneticAlgorithm.Organism;
 import com.overtone.Notes.OvertoneNote;
 import jm.JMC;
 
@@ -485,6 +484,43 @@ public class Utilities implements JMC
                 InputStream is = new BufferedInputStream(new FileInputStream(new File("Music\\GeneratedMusic.mid")));
                 Overtone.GameplaySequencer.setSequence(is);
                 Overtone.GameplaySequencer.start();
+            }
+        }
+        catch(MidiUnavailableException x)
+        {
+            System.out.println("Midi Unavailable");
+            Gdx.app.exit();
+        }
+        catch(FileNotFoundException e)
+        {
+            System.out.println("File not found");
+            Gdx.app.exit();
+        }
+        catch(InvalidMidiDataException m)
+        {
+            System.out.println("Invalid Midi Data");
+            Gdx.app.exit();
+        }
+        catch(IOException i)
+        {
+            System.out.println("IO exception");
+            Gdx.app.exit();
+        }
+    }
+
+    public static void LoadSequencers()
+    {
+        // Read the notes in as sequencers
+        Overtone.GameNoteSequencers = new ArrayList<>();
+        try
+        {
+            for(int i = 0; i < Overtone.GameMusicStartTimes.size(); i++)
+            {
+                Sequencer s = MidiSystem.getSequencer();
+                s.open();
+                InputStream is = new BufferedInputStream(new FileInputStream(new File("Music\\" + i + ".mid")));
+                s.setSequence(is);
+                Overtone.GameNoteSequencers.add(new Pair<>(s, Overtone.GameMusicStartTimes.get(i)));
             }
         }
         catch(MidiUnavailableException x)

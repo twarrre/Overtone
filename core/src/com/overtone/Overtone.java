@@ -174,8 +174,7 @@ public class Overtone extends ApplicationAdapter implements JMC
 	public static float[]                 CurrentRaterValues; // The currently generated rating values
 	public static Target[]                TargetZones;        // Array of targets that represent the four target zones
 	public static boolean                 Regenerate;         // True if you want to regenerate the music or not
-	public static Score                   GameMusic;          // Music for the game
-	public static Instrument[]            GameInstruments;    // Instruments for the game music
+	public static Part                    GameMusic;          // Music for the game
 	public static Sequencer               GameplaySequencer;  // Plays the midi sound
 	public static Sequencer               MenuSequencer;      // Plays the midi sound
 	public static int                     NumberOfIterations; //Represents the number of iterations the algorithm is going to go through
@@ -191,6 +190,7 @@ public class Overtone extends ApplicationAdapter implements JMC
 	private Sprite                        _farBackground;     // The star background for the whole app
 	private Sprite                        _closeBackground;   // The cloud background over-top of the star background (for depth)
 	public static ArrayList<Pair<Sequencer, Double>> GameNoteSequencers;
+	public static ArrayList<Double> GameMusicStartTimes;
 
 	@Override
 	public void create ()
@@ -221,6 +221,7 @@ public class Overtone extends ApplicationAdapter implements JMC
 		PopulationSize     = 25;
 		NumberOfElites     = 5;
 		GameNoteSequencers = new ArrayList();
+		GameMusicStartTimes = new ArrayList();
 
 		PitchMutatorValues    = new float[3];
 		RhythmMutatorValues   = new float[3];
@@ -363,5 +364,14 @@ public class Overtone extends ApplicationAdapter implements JMC
 
 			MenuSequencer.close();
 		}
+
+		for(int i = 0; i <  Overtone.GameNoteSequencers.size(); i++)
+		{
+			if( Overtone.GameNoteSequencers.get(i).first.isRunning())
+				Overtone.GameNoteSequencers.get(i).first.stop();
+			if( Overtone.GameNoteSequencers.get(i).first.isOpen())
+				Overtone.GameNoteSequencers.get(i).first.close();
+		}
+
 	}
 }

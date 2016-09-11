@@ -110,6 +110,7 @@ public class GameplayScreen extends OvertoneScreen
     private int                                             _combo;              // The current combo
     private int                                             _score;              // The current score
     private boolean                                         _musicPlaying;       // True if the music is playing, false otherwise
+    private int                                             _currentNote;
 
     /**
      * Constructor
@@ -183,6 +184,7 @@ public class GameplayScreen extends OvertoneScreen
         _onScreenNotes         = new Quadtree(new Rectangle(0, 0, Overtone.ScreenWidth, Overtone.ScreenHeight));
         _onScreenRatings       = new ArrayList<>();
         _musicPlaying          = false;
+        _currentNote           = 0;
 
         // Create the resume button on the paused menu
         _resumeButton = CreateButton("RESUME", "small", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.725f), _stage);
@@ -261,8 +263,6 @@ public class GameplayScreen extends OvertoneScreen
             public void clicked (InputEvent i, float x, float y) {
               PausedButtonPressed();
             }});
-
-        Utilities.LoadMidiMusic(false);
     }
 
     /**
@@ -394,13 +394,16 @@ public class GameplayScreen extends OvertoneScreen
         if(_elapsedTime < Overtone.TotalTime && !_songComplete)
             _elapsedTime += deltaTime;
 
-
         if(_elapsedTime >=  Overtone.TotalTime && !_songComplete)
         {
             PlaySongCompletionSFX(true);
             _songComplete = true;
-            if(Overtone.GameplaySequencer.isRunning())
-                Overtone.GameplaySequencer.stop();
+        }
+
+        if(_currentNote < Overtone.GameNoteSequencers.size() && Overtone.GameNoteSequencers.get(_currentNote).second <= _elapsedTime + ERROR)
+        {
+            Overtone.GameNoteSequencers.get(_currentNote).first.start();
+            _currentNote++;
         }
 
         // Move notes from the note queue to the quadtree if they are ready to be displayed on screen
@@ -477,13 +480,9 @@ public class GameplayScreen extends OvertoneScreen
         for(int i = 0; i < Overtone.TargetZones.length; i++)
         {
             if(_input.ActionOccurred(InputManager.KeyBinding.values()[i], InputManager.ActionType.Down))
-            {
                 _targetZonesPressed[i] = true;
-            }
             else
-            {
                 _targetZonesPressed[i] = false;
-            }
         }
 
         // Handle all hold notes
@@ -654,8 +653,6 @@ public class GameplayScreen extends OvertoneScreen
         {
             PlaySongCompletionSFX(false);
             _songComplete = true;
-            if( Overtone.GameplaySequencer.isRunning())
-                Overtone.GameplaySequencer.stop();
         }
 
         // Update the crowd, to reflect the rating
@@ -694,8 +691,14 @@ public class GameplayScreen extends OvertoneScreen
     {
         super.hide();
         Gdx.input.setInputProcessor(null);
-        if(Overtone.GameplaySequencer.isRunning())
-            Overtone.GameplaySequencer.stop();
+        for(int i = 0; i <  Overtone.GameNoteSequencers.size(); i++)
+        {
+            if( Overtone.GameNoteSequencers.get(i).first.isRunning())
+                Overtone.GameNoteSequencers.get(i).first.stop();
+
+            if( Overtone.GameNoteSequencers.get(i).first.isOpen())
+                Overtone.GameNoteSequencers.get(i).first.close();
+        }
     }
     public void dispose ()
     {
@@ -728,10 +731,14 @@ public class GameplayScreen extends OvertoneScreen
         for(int i = 0; i < _noteSFX.length; i++)
             _noteSFX[1].dispose();
 
-        if(Overtone.GameplaySequencer.isRunning())
-            Overtone.GameplaySequencer.stop();
+        for(int i = 0; i <  Overtone.GameNoteSequencers.size(); i++)
+        {
+            if( Overtone.GameNoteSequencers.get(i).first.isRunning())
+                Overtone.GameNoteSequencers.get(i).first.stop();
 
-        Overtone.GameplaySequencer.close();
+            if( Overtone.GameNoteSequencers.get(i).first.isOpen())
+                Overtone.GameNoteSequencers.get(i).first.close();
+        }
     }
 
     /**
@@ -828,8 +835,6 @@ public class GameplayScreen extends OvertoneScreen
         _sfxBack.setVisible(true);
         _pauseButton.setDisabled(true);
         _pauseButton.setVisible(false);
-        if(Overtone.GameplaySequencer.isRunning())
-            Overtone.GameplaySequencer.stop();
     }
 
     /**
@@ -854,7 +859,6 @@ public class GameplayScreen extends OvertoneScreen
             _prevResumeTimer = 0;
             _pauseButton.setDisabled(false);
             _pauseButton.setVisible(true);
-            Overtone.GameplaySequencer.start();
         }
     }
 
