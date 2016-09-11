@@ -23,9 +23,79 @@ public class GeneticAlgorithm implements Runnable, JMC
 {
     /** Array of valid chords that can be used in generation */
     public static int[][] CHORDS = {
+            //C Major
             {C3, E3, G3},
-            {F3, A3, C3},
-            {G3, B3, D3}
+            {C3, E4, G3},
+            {C3, E4, G4},
+
+            // C minor
+            {C3, EF3, G3},
+            {C3, EF4, G3},
+            {C3, EF4, G4},
+
+            // D major
+            {D3, FS3, A3},
+            {D3, FS4, A3},
+            {D3, FS4, A4},
+
+            // D minor
+            {D3, F3, A3},
+            {D3, F4, A3},
+            {D3, F4, A4},
+
+            // E major
+            {E3, GS3, B3},
+            {E3, GS4, B3},
+            {E3, GS4, B4},
+
+            // E minor
+            {E3, G3, B3},
+            {E3, G4, B3},
+            {E3, G4, B4},
+
+            // F Major
+            {F2, A2, C3},
+            {F2, A3, C3},
+            {F2, A3, C4},
+            {F2, A4, C4},
+
+            // F minor
+            {F2, AF2, C3},
+            {F2, AF3, C3},
+            {F2, AF3, C4},
+            {F2, AF4, C4},
+
+            // G major
+            {G2, B2, D3},
+            {G2, B3, D3},
+            {G2, B3, D4},
+            {G2, B4, D4},
+
+            // G minor
+            {G2, BF2, D3},
+            {G2, BF3, D3},
+            {G2, BF3, D4},
+            {G2, BF4, D4},
+
+            // A major
+            {A2, CS3, E3},
+            {A2, CS4, E3},
+            {A2, CS4, E4},
+
+            // A minor
+            {A2, C3, E3},
+            {A2, C4, E3},
+            {A2, C4, E4},
+
+            // B Major
+            {B2, DS3, FS3},
+            {B2, DS4, FS3},
+            {B2, DS4, FS4},
+
+            // B minor
+            {B2, D3, FS3},
+            {B2, D4, FS3},
+            {B2, D4, FS4},
     };
     /** Array of valid rhythms used in generation. */
     public static final ArrayList<Double> RHYTHMS = new ArrayList<Double>()
@@ -52,13 +122,13 @@ public class GeneticAlgorithm implements Runnable, JMC
     /** Size of an octave */
     public static final int OCTAVE = 13;
     /** The highest pitch available */
-    public static int HIGH_PITCH = GF6;
+    public static int HIGH_PITCH = CF6;
     /** The lowest pitch available */
-    public static int LOW_PITCH = GF1;
+    public static int LOW_PITCH = CF2;
     /** The highest dynamic available */
-    public static int HIGH_DYNAMIC = GF6;
+    public static int HIGH_DYNAMIC = CF6;
     /** The lowest dynamic available */
-    public static int LOW_DYNAMIC = GF1;
+    public static int LOW_DYNAMIC = CF2;
 
     private int                _currentIteration; // The current iteration of the algorithm
     private ArrayList<Mutator> _mutators;         // Array of all of the mutators that may mutate a track.
