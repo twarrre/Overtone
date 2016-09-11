@@ -1,7 +1,6 @@
 package com.overtone.GeneticAlgorithm.Mutators;
 import com.overtone.GeneticAlgorithm.GeneticAlgorithm;
 import com.overtone.Utilities;
-import com.sun.deploy.xml.GeneralEntity;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
 
