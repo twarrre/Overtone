@@ -217,12 +217,13 @@ public class GameplayScreen extends OvertoneScreen
             }});
 
         // Create the main menu button on the paused menu
-        _quitButton = CreateButton("MAIN MENU", "small", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.425f), _stage);
+        _quitButton = CreateButton("GIVE UP", "small", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.425f), _stage);
         _quitButton.setDisabled(true);
         _quitButton.setVisible(false);
         _quitButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
-                PausedMenuButtonPressed(Overtone.Screens.MainMenu);}
+                GiveUpButtonPressed(Overtone.Screens.SongComplete);
+            }
         });
 
         // Create next button for music volume
@@ -762,6 +763,17 @@ public class GameplayScreen extends OvertoneScreen
         Utilities.WriteVolume();
         _buttonPress.play(Overtone.SFXVolume);
         Overtone.SetScreen(screen);
+    }
+
+    /**
+     * Called when a menu button in the pause menu is clicked
+     * @param screen The next screen to transition to
+     */
+    private void GiveUpButtonPressed(Overtone.Screens screen)
+    {
+        Utilities.WriteVolume();
+        _buttonPress.play(Overtone.SFXVolume);
+        Overtone.SetScreen(screen, false, _score, _perfectCounter, _greatCounter, _goodCounter, _badCounter, _missCounter);
     }
 
     /**
