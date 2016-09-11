@@ -206,7 +206,7 @@ public class Overtone extends ApplicationAdapter implements JMC
 		SFXVolume          = 1.0f;
 		BestRaterValues    = new float[NUM_RATERS];
 		CurrentRaterValues = new float[NUM_RATERS];
-		NoteQueue          = new ArrayList<>();
+		NoteQueue          = new ArrayList<OvertoneNote>();
 		_currentScreen     = new SplashScreen();
 		_batch             = new SpriteBatch();
 		_farBackground     = new Sprite(new Texture("Textures\\space.jpg"));

@@ -45,8 +45,8 @@ public class InputManager
     public InputManager()
     {
         // Initialize the keyboard states to false
-        _currentKeyBoardState = new HashMap<>();
-        _prevKeyboardState    = new HashMap<>();
+        _currentKeyBoardState = new HashMap<Integer, Boolean>();
+        _prevKeyboardState    = new HashMap<Integer, Boolean>();
         KeyBinding[] bindings = KeyBinding.values();
 
         for(int i = 0; i < KeyBinding.values().length; ++i)
@@ -61,7 +61,7 @@ public class InputManager
      */
     public void Update()
     {
-        _prevKeyboardState = new HashMap<>(_currentKeyBoardState);
+        _prevKeyboardState = new HashMap<Integer, Boolean>(_currentKeyBoardState);
         _currentKeyBoardState.clear();
 
         KeyBinding[] bindings = KeyBinding.values();

@@ -363,7 +363,7 @@ public class Utilities implements JMC
         // Sort notes based on the time they appear on screen
         Collections.sort(notes);
 
-        Overtone.NoteQueue   = new ArrayList<>();
+        Overtone.NoteQueue   = new ArrayList<OvertoneNote>();
 
         for(int i = 0; i < notes.size(); i++)
         {
@@ -436,7 +436,7 @@ public class Utilities implements JMC
      */
     public static int GetRandom(int idx1, int idx2, float prob)
     {
-        ArrayList<Integer> probability = new ArrayList<>();
+        ArrayList<Integer> probability = new ArrayList<Integer>();
         int len1 = (int)((float)1000 * prob);
 
         for(int i = 0; i < 1000; i++)
@@ -520,7 +520,7 @@ public class Utilities implements JMC
     public static void LoadSequencers()
     {
         // Read the notes in as sequencers
-        Overtone.GameNoteSequencers = new ArrayList<>();
+        Overtone.GameNoteSequencers = new ArrayList<Pair<Sequencer, Double>>();
         try
         {
             for(int i = 0; i < Overtone.GameMusicStartTimes.size(); i++)
@@ -529,7 +529,7 @@ public class Utilities implements JMC
                 s.open();
                 InputStream is = new BufferedInputStream(new FileInputStream(new File("Music\\" + i + ".mid")));
                 s.setSequence(is);
-                Overtone.GameNoteSequencers.add(new Pair<>(s, Overtone.GameMusicStartTimes.get(i)));
+                Overtone.GameNoteSequencers.add(new Pair<Sequencer, Double>(s, Overtone.GameMusicStartTimes.get(i)));
             }
         }
         catch(MidiUnavailableException x)

@@ -92,7 +92,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         _raters[13]        = new RhythmRangeRater();
         _raters[14]        = new UniqueDynamicRater();
         _raters[15]        = new ChordRatioRater();
-        _mutators          = new ArrayList<>();
+        _mutators          = new ArrayList<Mutator>();
         _isCompleted       = false;
         _random            = new Random();
         _mutators.add(new NotePitchMutator());
@@ -169,7 +169,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         Utilities.SortNotes(tempNotes);
 
         // Write the notes to files
-        Overtone.GameMusicStartTimes = new ArrayList<>();
+        Overtone.GameMusicStartTimes = new ArrayList<Double>();
         for(int i = 0; i < mergedSong.size(); i++)
         {
             double start = mergedSong.getPhrase(i).getStartTime();
@@ -495,7 +495,7 @@ public class GeneticAlgorithm implements Runnable, JMC
      */
     public ArrayList<OvertoneNote> GenerateGameNotes()
     {
-        ArrayList<OvertoneNote> tempNotes = new ArrayList<>();
+        ArrayList<OvertoneNote> tempNotes = new ArrayList<OvertoneNote>();
 
         double startTime                   = 0;
         int target                         = 0;

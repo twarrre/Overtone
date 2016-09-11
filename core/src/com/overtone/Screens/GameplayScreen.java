@@ -180,9 +180,9 @@ public class GameplayScreen extends OvertoneScreen
         _combo                 = 0;
         _score                 = 0;
         _ratingScale           = new Vector2(Overtone.ScreenWidth * 0.1f, Overtone.ScreenHeight * 0.09f);
-        _holdNotesOnScreen     = new HashMap<>();
+        _holdNotesOnScreen     = new HashMap<OvertoneNote, InputManager.KeyBinding>();
         _onScreenNotes         = new Quadtree(new Rectangle(0, 0, Overtone.ScreenWidth, Overtone.ScreenHeight));
-        _onScreenRatings       = new ArrayList<>();
+        _onScreenRatings       = new ArrayList<Rating>();
         _musicPlaying          = false;
         _currentNote           = 0;
 
