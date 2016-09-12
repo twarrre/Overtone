@@ -333,7 +333,7 @@ public class Utilities implements JMC
     public static void GoodRaterValues()
     {
         for(int i = 0; i < Overtone.NUM_RATERS; i++)
-            Overtone.BestRaterValues[i] = Utilities.Clamp((Overtone.BestRaterValues[i] * 0.25f) + (Overtone.CurrentRaterValues[i] * 0.75f), 0.0f, 1.0f);
+            Overtone.BestRaterValues[i] = Utilities.Clamp((Overtone.BestRaterValues[i] * 0.2f) + (Overtone.CurrentRaterValues[i] * 0.8f), 0.0f, 1.0f);
     }
 
     /**
@@ -351,7 +351,7 @@ public class Utilities implements JMC
     public static void BadRaterValues()
     {
         for(int i = 0; i < Overtone.NUM_RATERS; i++)
-            Overtone.BestRaterValues[i] = Utilities.Clamp((Overtone.BestRaterValues[i] * 0.75f) + (Overtone.CurrentRaterValues[i] * 0.25f), 0.0f, 1.0f);
+            Overtone.BestRaterValues[i] = Utilities.Clamp((Overtone.BestRaterValues[i] * 0.8f) + (Overtone.CurrentRaterValues[i] * 0.2f), 0.0f, 1.0f);
     }
 
     /**

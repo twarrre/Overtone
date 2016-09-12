@@ -250,11 +250,9 @@ public class GeneticAlgorithm implements Runnable, JMC
         mergedSong = CorrectStartTime(CorrectDuration(mergedSong));
         Overtone.GameMusic = mergedSong.copy();
 
-        // TODO: CHECK THIS TO MAKE SURE THAT IT IS RIGHT
         // Generate the notes and store them in the game and backup arrays
         ArrayList<OvertoneNote> tempNotes = GenerateGameNotes();
         Utilities.SortNotes(tempNotes);
-        double f = Overtone.TotalTime;
 
         // Write the notes to files
         Overtone.GameMusicStartTimes = new ArrayList<Double>();

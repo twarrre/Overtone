@@ -1,10 +1,10 @@
 e
 540700 Great
+399700 Great
 366700 Great
 191900 Great
 110500 Cleared
 93400 Great
-0 ---
 0 ---
 0 ---
 0 ---
@@ -21,6 +21,8 @@ n
 0 ---
 0 ---
 h
+1659900 Great
+900800 Great
 789500 Great
 671700 Great
 627500 Great
@@ -29,5 +31,3 @@ h
 510100 Cleared
 309100 Great
 284200 Cleared
-236800 Great
-204200 Cleared

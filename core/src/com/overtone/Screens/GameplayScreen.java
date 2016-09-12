@@ -109,7 +109,6 @@ public class GameplayScreen extends OvertoneScreen
     private int                                             _missCounter;        // The number of missed notes
     private int                                             _combo;              // The current combo
     private int                                             _score;              // The current score
-    private boolean                                         _musicPlaying;       // True if the music is playing, false otherwise
     private int                                             _currentNote;
 
     /**
@@ -183,7 +182,6 @@ public class GameplayScreen extends OvertoneScreen
         _holdNotesOnScreen     = new HashMap<OvertoneNote, InputManager.KeyBinding>();
         _onScreenNotes         = new Quadtree(new Rectangle(0, 0, Overtone.ScreenWidth, Overtone.ScreenHeight));
         _onScreenRatings       = new ArrayList<Rating>();
-        _musicPlaying          = false;
         _currentNote           = 0;
 
         // Create the resume button on the paused menu
