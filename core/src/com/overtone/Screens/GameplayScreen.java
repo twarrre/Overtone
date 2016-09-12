@@ -36,10 +36,10 @@ public class GameplayScreen extends OvertoneScreen
     public static final float RESUME_DELAY     = 3.0f;
 
     /** The delay for the completion or failure of the song */
-    public static final float COMPLETION_DELAY = 5.0f;
+    public static final float COMPLETION_DELAY = 4.0f;
 
     /** Delay for the start of the song*/
-    public static final float START_DELAY = 5.0f;
+    public static final float START_DELAY = 4.0f;
 
     /** Timers that determine if you fail for each difficulty */
     public static final float[] FAILURE_TIMER  = { 12.0f, 11.0f, 10.0f };
@@ -262,6 +262,8 @@ public class GameplayScreen extends OvertoneScreen
             public void clicked (InputEvent i, float x, float y) {
               PausedButtonPressed();
             }});
+
+        Utilities.LoadMidiMusic(false);
     }
 
     /**
@@ -397,6 +399,8 @@ public class GameplayScreen extends OvertoneScreen
         {
             PlaySongCompletionSFX(true);
             _songComplete = true;
+            if(Overtone.GameplaySequencer.isRunning())
+                Overtone.GameplaySequencer.stop();
         }
 
         if(_currentNote < Overtone.GameNoteSequencers.size() && Overtone.GameNoteSequencers.get(_currentNote).second <= _elapsedTime + ERROR)
@@ -652,6 +656,8 @@ public class GameplayScreen extends OvertoneScreen
         {
             PlaySongCompletionSFX(false);
             _songComplete = true;
+            if( Overtone.GameplaySequencer.isRunning())
+                Overtone.GameplaySequencer.stop();
         }
 
         // Update the crowd, to reflect the rating
@@ -698,6 +704,12 @@ public class GameplayScreen extends OvertoneScreen
             if( Overtone.GameNoteSequencers.get(i).first.isOpen())
                 Overtone.GameNoteSequencers.get(i).first.close();
         }
+
+        if(Overtone.GameplaySequencer.isRunning())
+            Overtone.GameplaySequencer.stop();
+
+        if(Overtone.GameplaySequencer.isOpen())
+            Overtone.GameplaySequencer.close();
     }
     public void dispose ()
     {
@@ -738,6 +750,12 @@ public class GameplayScreen extends OvertoneScreen
             if( Overtone.GameNoteSequencers.get(i).first.isOpen())
                 Overtone.GameNoteSequencers.get(i).first.close();
         }
+
+        if(Overtone.GameplaySequencer.isRunning())
+            Overtone.GameplaySequencer.stop();
+
+        if(Overtone.GameplaySequencer.isOpen())
+            Overtone.GameplaySequencer.close();
     }
 
     /**

@@ -4,10 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.overtone.Notes.OvertoneNote;
 import jm.JMC;
 
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.Sequencer;
+import javax.sound.midi.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -490,8 +487,9 @@ public class Utilities implements JMC
             {
                 Overtone.GameplaySequencer = MidiSystem.getSequencer();
                 Overtone.GameplaySequencer.open();
-                InputStream is = new BufferedInputStream(new FileInputStream(new File("Music\\GeneratedMusic.mid")));
+                InputStream is = new BufferedInputStream(new FileInputStream(new File("Music\\Beat.mid")));
                 Overtone.GameplaySequencer.setSequence(is);
+                Overtone.GameplaySequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
                 Overtone.GameplaySequencer.start();
             }
         }
