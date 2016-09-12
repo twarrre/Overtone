@@ -3,17 +3,17 @@ e
 366700 Great
 191900 Great
 110500 Cleared
-0 ---
+93400 Great
 0 ---
 0 ---
 0 ---
 0 ---
 0 ---
 n
+308900 Great
 251000 Great
 162700 Cleared
 22800 Failure
-0 ---
 0 ---
 0 ---
 0 ---
@@ -24,10 +24,10 @@ h
 789500 Great
 671700 Great
 627500 Great
+600700 Great
 579400 Great
 510100 Cleared
 309100 Great
 284200 Cleared
 236800 Great
 204200 Cleared
-196600 Great

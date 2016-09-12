@@ -12,6 +12,7 @@ public class DesktopLauncher {
 		config.title = "Overtone";
 		config.width = 1280;
 		config.height = 720;
+		config.fullscreen = true;
 		config.vSyncEnabled = true;
 		config.foregroundFPS = 60;
 		config.resizable = false;
