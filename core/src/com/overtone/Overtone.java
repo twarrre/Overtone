@@ -169,7 +169,7 @@ public class Overtone extends ApplicationAdapter implements JMC
 	public static float                   MusicVolume;        // Stores the music volume for all music in the game
 	public static float                   SFXVolume;          // Stores the sound effects volume for all sound effects in the game
 	public static ArrayList<OvertoneNote> NoteQueue;          // Storage for notes that are not on screen
-	public static float                   TotalTime;          // The amount of time the song takes
+	public static double                  TotalTime;          // The amount of time the song takes
 	public static float[]                 BestRaterValues;    // The stored rater values
 	public static float[]                 CurrentRaterValues; // The currently generated rating values
 	public static Target[]                TargetZones;        // Array of targets that represent the four target zones

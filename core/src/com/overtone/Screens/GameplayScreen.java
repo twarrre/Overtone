@@ -276,7 +276,7 @@ public class GameplayScreen extends OvertoneScreen
         _batch.begin();
 
         // Draw progress bar
-        float songProgress = _elapsedTime / Overtone.TotalTime;
+        float songProgress = _elapsedTime / (float)Overtone.TotalTime;
         _batch.draw(_progressBar, Overtone.ScreenWidth * 0.225f, Overtone.ScreenHeight * 0.95f, Overtone.ScreenWidth * 0.55f, Overtone.ScreenHeight * 0.03f);
         _batch.draw(_progress, Overtone.ScreenWidth * 0.23f, Overtone.ScreenHeight * 0.955f, Overtone.ScreenWidth * 0.54f * songProgress , Overtone.ScreenHeight * 0.02f);
         _batch.draw(_progressArrow, Overtone.ScreenWidth * 0.23f - (_progressArrow.getWidth() / 2.0f) + (Overtone.ScreenWidth * 0.54f * songProgress), Overtone.ScreenHeight * 0.94f, _progressArrow.getWidth(), _progressArrow.getHeight());

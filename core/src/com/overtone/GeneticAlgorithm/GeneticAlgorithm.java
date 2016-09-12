@@ -254,6 +254,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         // Generate the notes and store them in the game and backup arrays
         ArrayList<OvertoneNote> tempNotes = GenerateGameNotes();
         Utilities.SortNotes(tempNotes);
+        double f = Overtone.TotalTime;
 
         // Write the notes to files
         Overtone.GameMusicStartTimes = new ArrayList<Double>();
@@ -576,7 +577,6 @@ public class GeneticAlgorithm implements Runnable, JMC
                 break;
             }
         }
-
         return index;
     }
 
@@ -596,32 +596,17 @@ public class GeneticAlgorithm implements Runnable, JMC
         for(int j = 0; j < Overtone.GameMusic.size(); j++)
         {
             Phrase phrase = Overtone.GameMusic.getPhrase(j);
-            boolean includeNote = true;
-            if(prevDuration != -1)
-            {
-                // Simplify very close together notes or notes that follow right after a hold note
-                if((phrase.getNote(phrase.length() - 1).getDuration() < DOUBLE_DOTTED_EIGHTH_NOTE && prevDuration < DOUBLE_DOTTED_EIGHTH_NOTE)
-                        || (prevDuration > DOTTED_HALF_NOTE && phrase.getNote(phrase.length() - 1).getDuration() < DOUBLE_DOTTED_EIGHTH_NOTE))
-                {
-                    if(Overtone.Difficulty == Overtone.Difficulty.Easy)
-                        includeNote = Utilities.GetRandom(0, 1, 0.35f) == 0 ? true : false;
-                    else if(Overtone.Difficulty == Overtone.Difficulty.Normal)
-                        includeNote = Utilities.GetRandom(0, 1, 0.55f) == 0 ? true : false;
-                    else
-                        includeNote = Utilities.GetRandom(0, 1, 0.85f) == 0 ? true : false;
-                }
-            }
 
-            boolean includeHoldNote = true;
+            boolean includeHoldNote   = true;
             boolean includeDoubleNote = true;
             if(Overtone.Difficulty == Overtone.Difficulty.Easy)
             {
-                includeHoldNote = Utilities.GetRandom(0, 1, 0.2f) == 0 ? true : false;
+                includeHoldNote   = Utilities.GetRandom(0, 1, 0.2f) == 0 ? true : false;
                 includeDoubleNote = Utilities.GetRandom(0, 1, 0.2f) == 0 ? true : false;
             }
             else if(Overtone.Difficulty == Overtone.Difficulty.Normal)
             {
-                includeHoldNote = Utilities.GetRandom(0, 1, 0.45f) == 0 ? true : false;
+                includeHoldNote   = Utilities.GetRandom(0, 1, 0.45f) == 0 ? true : false;
                 includeDoubleNote = Utilities.GetRandom(0, 1, 0.45f) == 0 ? true : false;
             }
 
@@ -637,11 +622,7 @@ public class GeneticAlgorithm implements Runnable, JMC
                 target2 = DetermineTarget(target);
             }
 
-            if(!includeNote)
-            {
-                continue;
-            }
-            else if(phrase.length() > 1 && includeDoubleNote) // else if it is a chord == double note
+            if(phrase.length() > 1 && includeDoubleNote) // else if it is a chord == double note
             {
                 OvertoneNote[] notes = CreateDoubleNote(target, target2, startTime);
                 tempNotes.add(notes[0]);
@@ -664,7 +645,7 @@ public class GeneticAlgorithm implements Runnable, JMC
             }
         }
 
-        Overtone.TotalTime = (float)startTime + (float)prevDuration + GameplayScreen.COMPLETION_DELAY;
+        Overtone.TotalTime = startTime + prevDuration + GameplayScreen.COMPLETION_DELAY;
         return tempNotes;
     }
 
@@ -699,7 +680,7 @@ public class GeneticAlgorithm implements Runnable, JMC
     {
         OvertoneNote[] note = new OvertoneNote[2];
         note[0] = new OvertoneNote(OvertoneNote.NoteType.Hold, Overtone.TargetZones[target], (float)elapsedTime);
-        note[1] = new OvertoneNote(OvertoneNote.NoteType.Hold, Overtone.TargetZones[target], (float)elapsedTime + (float)noteDuration - 0.05f);
+        note[1] = new OvertoneNote(OvertoneNote.NoteType.Hold, Overtone.TargetZones[target], (float)elapsedTime + (float)noteDuration);
 
         note[0].SetOtherNote(note[1]);
         note[0].SetOtherNoteTime(note[1].GetTime());
