@@ -658,4 +658,20 @@ public class Utilities implements JMC
             ar[i] = a;
         }
     }
+
+    public static int FindClosestChord(ArrayList<Double> p, double pitch)
+    {
+        double closest = Double.MAX_VALUE;
+        int index = 0;
+        for(int i = 0; i < p.size(); i++)
+        {
+            if(Math.abs(p.get(i) - pitch) < closest)
+            {
+                closest = Math.abs(p.get(i) - pitch);
+                index = i;
+            }
+        }
+        return index;
+    }
+
 }

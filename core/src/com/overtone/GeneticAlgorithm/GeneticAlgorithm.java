@@ -25,71 +25,71 @@ public class GeneticAlgorithm implements Runnable, JMC
     public static int[][] CHORDS = {
             //C Major
             {C3, E3, G3},
-            {C3, E4, G3},
+            {C3, G3, E4},
             {C3, E4, G4},
 
             // C minor
             {C3, EF3, G3},
-            {C3, EF4, G3},
+            {C3, G3, EF4},
             {C3, EF4, G4},
 
             // D major
             {D3, FS3, A3},
-            {D3, FS4, A3},
+            {D3, A3, FS4},
             {D3, FS4, A4},
 
             // D minor
             {D3, F3, A3},
-            {D3, F4, A3},
+            {D3, A3, F4},
             {D3, F4, A4},
 
             // E major
             {E3, GS3, B3},
-            {E3, GS4, B3},
+            {E3, B3, GS4},
             {E3, GS4, B4},
 
             // E minor
             {E3, G3, B3},
-            {E3, G4, B3},
+            {E3, B3, G4},
             {E3, G4, B4},
 
             // F Major
             {F2, A2, C3},
-            {F2, A3, C3},
+            {F2, C3, A3},
             {F2, A3, C4},
-            {F2, A4, C4},
+            {F2, C4, A4,},
 
             // F minor
             {F2, AF2, C3},
-            {F2, AF3, C3},
+            {F2, C3, AF3},
             {F2, AF3, C4},
-            {F2, AF4, C4},
+            {F2, C4, AF4},
 
             // G major
             {G2, B2, D3},
-            {G2, B3, D3},
+            {G2, D3, B3},
             {G2, B3, D4},
-            {G2, B4, D4},
+            {G2, D4, B4},
 
             // G minor
             {G2, BF2, D3},
-            {G2, BF3, D3},
+            {G2, D3, BF3},
             {G2, BF3, D4},
-            {G2, BF4, D4},
+            {G2, D4, BF4},
 
             // A major
             {A2, CS3, E3},
-            {A2, CS4, E3},
+            {A2, E3, CS4},
             {A2, CS4, E4},
 
             // A minor
             {A2, C3, E3},
-            {A2, C4, E3},
+            {A2, E3, C4},
             {A2, C4, E4},
 
             // B Major
             {B2, DS3, FS3},
-            {B2, DS4, FS3},
+            {B2, FS3, DS4},
             {B2, DS4, FS4},
 
             // B minor
@@ -137,6 +137,7 @@ public class GeneticAlgorithm implements Runnable, JMC
     private Random             _random;
     private int                _indexForLargestRhythmChord;
     private boolean            _regenerate;
+    private ArrayList<Double>  _chordAverages;
 
     /**
      * Constructor
@@ -173,6 +174,22 @@ public class GeneticAlgorithm implements Runnable, JMC
 
         Collections.sort(GeneticAlgorithm.RHYTHMS);
         _indexForLargestRhythmChord = RHYTHMS.indexOf(DOUBLE_DOTTED_QUARTER_NOTE);
+
+        _chordAverages = new ArrayList();
+        double[] influence3 = new double[] {0.5, 0.4, 0.1};
+        double[] influence4 = new double[] {0.4, 0.3, 0.2, 0.1};
+        for(int i = 0; i < CHORDS.length; i++)
+        {
+            double average = 0;
+            for(int j = 0; j < CHORDS[i].length; j++)
+            {
+                if(CHORDS[i].length == 3)
+                    average += CHORDS[i][j] * influence3[j];
+                else
+                    average += CHORDS[i][j] * influence4[j];
+            }
+            _chordAverages.add(average);
+        }
     }
 
     public void run()
@@ -296,7 +313,7 @@ public class GeneticAlgorithm implements Runnable, JMC
     public Organism[] Initialization()
     {
         Organism[] population = new Organism[Overtone.PopulationSize];
-        int prevChord = Math.round(Utilities.Clamp(_random.nextInt(CHORDS.length + 1), 0.0f, CHORDS.length - 1));
+        double prevPitch = Math.round(Utilities.Clamp((_random.nextInt((HIGH_PITCH - LOW_PITCH) + 1) + LOW_PITCH), LOW_PITCH, HIGH_PITCH));
 
         for(int i = 0; i < Overtone.PopulationSize; i++)
         {
@@ -345,11 +362,13 @@ public class GeneticAlgorithm implements Runnable, JMC
                     while(rhythm > _indexForLargestRhythmChord)
                         rhythm = Utilities.GetRandomRangeNormalDistribution((_indexForLargestRhythmChord / 2.0f), 3, _indexForLargestRhythmChord, 0.0f, true);
 
-                    int chordIndex = Utilities.GetRandomRangeNormalDistribution(prevChord, 1, CHORDS.length - 1, 0.0f, true);
+                    int chordIndex = Utilities.FindClosestChord(_chordAverages, prevPitch);
 
                     phrase.addChord(CHORDS[chordIndex], RHYTHMS.get(rhythm));
                     for(int k = 0; k < phrase.length(); k++)
                         phrase.getNote(k).setDynamic(dynamic);
+
+                    prevPitch = _chordAverages.get(chordIndex);
                 }
                 else if(rest)
                 {
@@ -360,8 +379,10 @@ public class GeneticAlgorithm implements Runnable, JMC
                     phrase.addNote(new Note(pitch, RHYTHMS.get(rhythm), dynamic));
                 }
                 p.appendPhrase(phrase);
-            }
 
+                if(!chord)
+                    prevPitch = pitch;
+            }
             population[i] = new Organism(CorrectStartTime(CorrectDuration(p.copy())), _currentIteration);
         }
         return population;
