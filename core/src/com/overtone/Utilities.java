@@ -6,6 +6,7 @@ import jm.JMC;
 
 import javax.sound.midi.*;
 import java.io.*;
+import java.nio.channels.Channel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -139,66 +140,6 @@ public class Utilities implements JMC
         // If any scores were changed, write the scores to the file
         if(replaced)
             WriteScores(false);
-    }
-
-    /**
-     * Loads the music and sound effects volumes from a file
-     */
-    public static void LoadVolume()
-    {
-        try
-        {
-            // Open the file
-            BufferedReader reader = new BufferedReader(new FileReader("Storage\\Volume.txt"));
-
-            String line      = null;
-            int counter      = 0;
-
-            // Read two lines from the file and store in the appropriate variables
-            while ((line = reader.readLine())!= null)
-            {
-                if(counter == 0)
-                    Overtone.MusicVolume = Float.parseFloat(line);
-                else if(counter == 1)
-                    Overtone.SFXVolume = Float.parseFloat(line);
-                else
-                    break;
-                counter++;
-            }
-
-            reader.close();
-        }
-        catch (IOException e)
-        {
-            System.out.print("Volume data cannot be loaded at this time.");
-        }
-    }
-
-    /**
-     * Writes the new volume values to a file
-     */
-    public static void WriteVolume()
-    {
-        try
-        {
-            File file = new File("Storage\\Volume.txt");
-
-            if (!file.exists())
-                file.createNewFile();
-
-            FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
-            BufferedWriter writer = new BufferedWriter(fileWriter);
-
-            writer.write(Overtone.MusicVolume + "");
-            writer.newLine();
-            writer.write(Overtone.SFXVolume + "");
-
-            writer.close();
-        }
-        catch(IOException x)
-        {
-            System.out.print("Volume data cannot be saved at this time.");
-        }
     }
 
     /**

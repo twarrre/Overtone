@@ -21,6 +21,8 @@ import jm.audio.Instrument;
 import jm.constants.Durations;
 import jm.music.data.*;
 import javax.sound.midi.Sequencer;
+import javax.sound.midi.Synthesizer;
+
 import jm.JMC;
 import jm.util.Play;
 import jm.util.Write;
@@ -203,7 +205,7 @@ public class Overtone extends ApplicationAdapter implements JMC
 		HighScores         = new int[Difficulty.values().length][NUM_SCORES];
         CrowdRatings       = new CrowdRating[Difficulty.values().length][NUM_SCORES];
 		MusicVolume        = 1.0f;
-		SFXVolume          = 1.0f;
+		SFXVolume          = 0.45f;
 		BestRaterValues    = new float[NUM_RATERS];
 		CurrentRaterValues = new float[NUM_RATERS];
 		NoteQueue          = new ArrayList<OvertoneNote>();
@@ -248,7 +250,6 @@ public class Overtone extends ApplicationAdapter implements JMC
 		_closeBackground.setCenter(ScreenWidth / 2.0f, ScreenHeight / 2.0f);
 		_currentScreen.show();
 		Utilities.LoadHighScores();
-		Utilities.LoadVolume();
 		Utilities.LoadRaterValues();
 		Utilities.LoadGenerationValues();
 		Utilities.LoadMutationValues();

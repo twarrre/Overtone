@@ -19,6 +19,8 @@ import com.overtone.Quadtree;
 import com.overtone.Ratings.Rating;
 import com.overtone.Ratings.RatingRenderer;
 import com.overtone.Utilities;
+import com.sun.corba.se.impl.javax.rmi.CORBA.Util;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -87,10 +89,6 @@ public class GameplayScreen extends OvertoneScreen
     private final Button                                    _retryButton;        // Retry button for the pause menu
     private final Button                                    _quitButton;         // Main menu button for the pause menu
     private final Button                                    _difficultyButton;   // Difficulty select button for the pause menu
-    private final Button                                    _musicNext;          // Music volume up button for pause menu
-    private final Button                                    _sfxNext;            // SFX volume up button for pause menu
-    private final Button                                    _musicBack;          // Music volume down button for pause menu
-    private final Button                                    _sfxBack;            // SFX volume down button for pause menu
     private final Button                                    _pauseButton;        // Pause button to bring up pause menu
     private final Vector2                                   _ratingScale;        // Scale for a rating to show up on screen
     private Vector2                                         _shipDirection;      // The direction that the sound is pointing
@@ -224,38 +222,6 @@ public class GameplayScreen extends OvertoneScreen
             }
         });
 
-        // Create next button for music volume
-        _musicNext = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.02f, Overtone.ScreenWidth * 0.02f, new Vector2(Overtone.ScreenWidth * 0.58f, Overtone.ScreenHeight * 0.325f), _stage);
-        _musicNext.setDisabled(true);
-        _musicNext.setVisible(false);
-        _musicNext.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
-            VolumeButtonPressed(false, 1);
-        }});
-
-        // Create back button for music volume
-        _musicBack = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.02f, Overtone.ScreenWidth * 0.02f, new Vector2(Overtone.ScreenWidth * 0.55f,  Overtone.ScreenHeight * 0.325f), _stage);
-        _musicBack.setDisabled(true);
-        _musicBack.setVisible(false);
-        _musicBack.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
-            VolumeButtonPressed(false, -1);
-        }});
-
-        // Create the next button for sfx
-        _sfxNext = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.02f, Overtone.ScreenWidth * 0.02f, new Vector2(Overtone.ScreenWidth * 0.58f,  Overtone.ScreenHeight * 0.225f), _stage);
-        _sfxNext.setDisabled(true);
-        _sfxNext.setVisible(false);
-        _sfxNext.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
-            VolumeButtonPressed(true, 1);
-        }});
-
-        // Create the back button for sfx
-        _sfxBack = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.02f, Overtone.ScreenWidth * 0.02f,  new Vector2(Overtone.ScreenWidth * 0.55f, Overtone.ScreenHeight * 0.225f), _stage);
-        _sfxBack.setDisabled(true);
-        _sfxBack.setVisible(false);
-        _sfxBack.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
-            VolumeButtonPressed(true, -1);
-        }});
-
         // Create the pause button
         _pauseButton = CreateButton("Pause", "small", Overtone.ScreenWidth * 0.08f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.46f, Overtone.ScreenHeight * 0.87f), _stage);
         _pauseButton.addListener(new ClickListener() {
@@ -333,12 +299,6 @@ public class GameplayScreen extends OvertoneScreen
             _batch.draw(_background, Overtone.ScreenWidth * 0.375f, 0, Overtone.ScreenWidth * 0.25f, Overtone.ScreenHeight);
             _glyphLayout.setText(_font36,  "Paused");
             _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.92f);
-
-            _glyphLayout.setText(_font18, "Music: " + (int)(Overtone.MusicVolume * 100.0f) + "%");
-            _font18.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.325f + _glyphLayout.height);
-
-            _glyphLayout.setText(_font18, "SFX: " + (int)(Overtone.SFXVolume * 100.0f) + "%");
-            _font18.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.225f + _glyphLayout.height);
         }
 
         // Draw the resume countdown
@@ -776,7 +736,6 @@ public class GameplayScreen extends OvertoneScreen
      */
     private void PausedMenuButtonPressed(Overtone.Screens screen)
     {
-        Utilities.WriteVolume();
         _buttonPress.play(Overtone.SFXVolume);
         Overtone.SetScreen(screen);
     }
@@ -787,29 +746,8 @@ public class GameplayScreen extends OvertoneScreen
      */
     private void GiveUpButtonPressed(Overtone.Screens screen)
     {
-        Utilities.WriteVolume();
         _buttonPress.play(Overtone.SFXVolume);
         Overtone.SetScreen(screen, false, _score, _perfectCounter, _greatCounter, _goodCounter, _badCounter, _missCounter);
-    }
-
-    /**
-     * Called when a volume button is pressed from the pause menu
-     * @param sfx True if the sfx volume button was pressed, false means the music volume button was pressed
-     * @param up 1 if volume is going up, -1 if going down
-     */
-    private void VolumeButtonPressed(boolean sfx, int up)
-    {
-        _buttonPress.play(Overtone.SFXVolume);
-
-        if(sfx)
-            Overtone.SFXVolume += (0.01f * up);
-        else
-            Overtone.MusicVolume += (0.01f * up);
-
-        if(Overtone.SFXVolume > 1.0f)
-            Overtone.SFXVolume = 1.0f;
-        if(Overtone.SFXVolume < 0.0f)
-            Overtone.SFXVolume = 0.0f;
     }
 
     /**
@@ -822,20 +760,11 @@ public class GameplayScreen extends OvertoneScreen
         _resumeButton.setDisabled(true);
         _retryButton.setDisabled(true);
         _quitButton.setDisabled(true);
-        _difficultyButton.setDisabled(true);
-        _musicBack.setDisabled(true);
-        _musicNext.setDisabled(true);
-        _sfxNext.setDisabled(true);
-        _sfxBack.setDisabled(true);
+        _difficultyButton.setDisabled(true);;
         _resumeButton.setVisible(false);
         _retryButton.setVisible(false);
         _quitButton.setVisible(false);
         _difficultyButton.setVisible(false);
-        _musicBack.setVisible(false);
-        _musicNext.setVisible(false);
-        _sfxNext.setVisible(false);
-        _sfxBack.setVisible(false);
-        Utilities.WriteVolume();
     }
 
     /**
@@ -849,18 +778,10 @@ public class GameplayScreen extends OvertoneScreen
         _retryButton.setDisabled(false);
         _quitButton.setDisabled(false);
         _difficultyButton.setDisabled(false);
-        _musicBack.setDisabled(false);
-        _musicNext.setDisabled(false);
-        _sfxNext.setDisabled(false);
-        _sfxBack.setDisabled(false);
         _resumeButton.setVisible(true);
         _retryButton.setVisible(true);
         _quitButton.setVisible(true);
         _difficultyButton.setVisible(true);
-        _musicBack.setVisible(true);
-        _musicNext.setVisible(true);
-        _sfxNext.setVisible(true);
-        _sfxBack.setVisible(true);
         _pauseButton.setDisabled(true);
         _pauseButton.setVisible(false);
     }
