@@ -205,7 +205,7 @@ public class Overtone extends ApplicationAdapter implements JMC
 		HighScores         = new int[Difficulty.values().length][NUM_SCORES];
         CrowdRatings       = new CrowdRating[Difficulty.values().length][NUM_SCORES];
 		MusicVolume        = 1.0f;
-		SFXVolume          = 0.05f;
+		SFXVolume          = 0.1f;
 		BestRaterValues    = new float[NUM_RATERS];
 		CurrentRaterValues = new float[NUM_RATERS];
 		NoteQueue          = new ArrayList<OvertoneNote>();

@@ -31,9 +31,6 @@ import java.util.Iterator;
  */
 public class GameplayScreen extends OvertoneScreen
 {
-    /** Maximum time error for putting notes on screen */
-    public static final float ERROR            = 0.000045f;
-
     /** The delay for the pause resuming */
     public static final float RESUME_DELAY     = 3.0f;
 
@@ -108,6 +105,7 @@ public class GameplayScreen extends OvertoneScreen
     private int                                             _combo;              // The current combo
     private int                                             _score;              // The current score
     private int                                             _currentNote;
+    private int                                             _lastClosedNote;
 
     /**
      * Constructor
@@ -181,6 +179,7 @@ public class GameplayScreen extends OvertoneScreen
         _onScreenNotes         = new Quadtree(new Rectangle(0, 0, Overtone.ScreenWidth, Overtone.ScreenHeight));
         _onScreenRatings       = new ArrayList<Rating>();
         _currentNote           = 0;
+        _lastClosedNote        = -1;
 
         // Create the resume button on the paused menu
         _resumeButton = CreateButton("RESUME", "small", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.725f), _stage);
@@ -363,10 +362,24 @@ public class GameplayScreen extends OvertoneScreen
                 Overtone.GameplaySequencer.stop();
         }
 
-        if(_currentNote < Overtone.GameNoteSequencers.size() && Overtone.GameNoteSequencers.get(_currentNote).second <= _elapsedTime + ERROR)
+        // Play the note at its start time
+        if(_currentNote < Overtone.GameNoteSequencers.size() && Overtone.GameNoteSequencers.get(_currentNote).second <= _elapsedTime + (deltaTime / 2.0f))
         {
             Overtone.GameNoteSequencers.get(_currentNote).first.start();
             _currentNote++;
+        }
+
+        // Clean up any sequencers that have already been played
+        for(int i = _lastClosedNote + 1; i < _currentNote; i++)
+        {
+            if(Overtone.GameNoteSequencers.get(i).second >= _elapsedTime + 4.0f)
+            {
+                if( Overtone.GameNoteSequencers.get(i).first.isRunning())
+                    Overtone.GameNoteSequencers.get(i).first.stop();
+
+                if( Overtone.GameNoteSequencers.get(i).first.isOpen())
+                    Overtone.GameNoteSequencers.get(i).first.close();
+            }
         }
 
         // Move notes from the note queue to the quadtree if they are ready to be displayed on screen
@@ -378,7 +391,7 @@ public class GameplayScreen extends OvertoneScreen
             {
                 if(i < Overtone.NoteQueue.size())
                 {
-                    if(Overtone.NoteQueue.get(i).GetTime() - Overtone.Difficulty.Multiplier <=  _elapsedTime + ERROR)
+                    if(Overtone.NoteQueue.get(i).GetTime() - Overtone.Difficulty.Multiplier <=  _elapsedTime + (deltaTime / 2.0f))
                     {
                         OvertoneNote n = Overtone.NoteQueue.get(i);
                         n.SetVisibility(true);
