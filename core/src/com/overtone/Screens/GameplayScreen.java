@@ -19,7 +19,6 @@ import com.overtone.Quadtree;
 import com.overtone.Ratings.Rating;
 import com.overtone.Ratings.RatingRenderer;
 import com.overtone.Utilities;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,14 +31,11 @@ public class GameplayScreen extends OvertoneScreen
 {
     /** The delay for the pause resuming */
     public static final float RESUME_DELAY     = 3.0f;
-
     /** The delay for the completion or failure of the song */
     public static final float COMPLETION_DELAY = 4.0f;
-
     /** Delay for the start of the song*/
-    public static final float START_DELAY = 4.0f;
-
-    /** Timers that determine if you fail for each difficulty */
+    public static final float START_DELAY      = 4.0f;
+    /** Timers that determine if you fail for each difficulty ( easy, normal, hard )*/
     public static final float[] FAILURE_TIMER  = { 12.0f, 11.0f, 10.0f };
 
     // Objects
@@ -103,8 +99,8 @@ public class GameplayScreen extends OvertoneScreen
     private int                                             _missCounter;        // The number of missed notes
     private int                                             _combo;              // The current combo
     private int                                             _score;              // The current score
-    private int                                             _currentNote;
-    private int                                             _lastClosedNote;
+    private int                                             _currentNote;        // The current note to be played in in teh sequencers
+    private int                                             _lastClosedNote;     // The last closed sequencer
 
     /**
      * Constructor
@@ -173,12 +169,12 @@ public class GameplayScreen extends OvertoneScreen
         _missCounter           = 0;
         _combo                 = 0;
         _score                 = 0;
+        _currentNote           = 0;
+        _lastClosedNote        = -1;
         _ratingScale           = new Vector2(Overtone.ScreenWidth * 0.1f, Overtone.ScreenHeight * 0.09f);
         _holdNotesOnScreen     = new HashMap<OvertoneNote, InputManager.KeyBinding>();
         _onScreenNotes         = new Quadtree(new Rectangle(0, 0, Overtone.ScreenWidth, Overtone.ScreenHeight));
         _onScreenRatings       = new ArrayList<Rating>();
-        _currentNote           = 0;
-        _lastClosedNote        = -1;
 
         // Create the resume button on the paused menu
         _resumeButton = CreateButton("RESUME", "small", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.725f), _stage);
@@ -197,7 +193,8 @@ public class GameplayScreen extends OvertoneScreen
         _retryButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 Overtone.Regenerate = false;
-                PausedMenuButtonPressed(Overtone.Screens.Loading);
+                _buttonPress.play(Overtone.SFXVolume);
+                Overtone.SetScreen(Overtone.Screens.Loading);
             }});
 
         // Create the change difficulty button on the paused menu
@@ -207,7 +204,8 @@ public class GameplayScreen extends OvertoneScreen
         _difficultyButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 Overtone.Regenerate = false;
-                PausedMenuButtonPressed(Overtone.Screens.DifficultySelect);
+                _buttonPress.play(Overtone.SFXVolume);
+                Overtone.SetScreen(Overtone.Screens.DifficultySelect);
             }});
 
         // Create the main menu button on the paused menu
@@ -216,7 +214,8 @@ public class GameplayScreen extends OvertoneScreen
         _quitButton.setVisible(false);
         _quitButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
-                GiveUpButtonPressed(Overtone.Screens.SongComplete);
+                _buttonPress.play(Overtone.SFXVolume);
+                Overtone.SetScreen(Overtone.Screens.SongComplete, false, _score, _perfectCounter, _greatCounter, _goodCounter, _badCounter, _missCounter);
             }
         });
 
@@ -227,6 +226,7 @@ public class GameplayScreen extends OvertoneScreen
               PausedButtonPressed();
             }});
 
+        // Load the beat music to be played
         Utilities.LoadMidiMusic(false);
     }
 
@@ -350,13 +350,17 @@ public class GameplayScreen extends OvertoneScreen
             return;
         }
 
+        // Update the elapsed time if the song is still going
         if(_elapsedTime < Overtone.TotalTime && !_songComplete)
             _elapsedTime += deltaTime;
 
+        // If the elapsed time is greater than the total time then the song is complete
         if(_elapsedTime >=  Overtone.TotalTime && !_songComplete)
         {
+            // Play the clapping sound effect
             PlaySongCompletionSFX(true);
             _songComplete = true;
+            // Stop the sequencers
             if(Overtone.BeatSequencer.isRunning())
                 Overtone.BeatSequencer.stop();
         }
@@ -406,11 +410,14 @@ public class GameplayScreen extends OvertoneScreen
 
         // Update the note positions
         ArrayList<OvertoneNote> removedNotes = _onScreenNotes.Update(deltaTime);
+
+        // Remove any notes that have passed the target zone
         if(!removedNotes.isEmpty())
         {
             // All of the notes that have passed their targets
             for(OvertoneNote n : removedNotes)
             {
+                // This is a miss
                 _missCounter++;
                 _onScreenRatings.add(new Rating(Rating.RatingType.Miss, n.GetPosition(), _ratingScale));
                 n.SetCompleted(true);
@@ -442,16 +449,20 @@ public class GameplayScreen extends OvertoneScreen
         }
         _onScreenRatings.removeAll(done);
 
+        // Update and process the input
         _input.Update();
         CheckInput();
+
+        // Update the crowd ratings
         UpdateCrowdRating(deltaTime);
     }
 
     /**
-     * Handles the input
+     * Handles the input with the notes on screen
      */
     private void CheckInput()
     {
+        // Lights up target zones if you are holding the corresponding keys
         for(int i = 0; i < Overtone.TargetZones.length; i++)
         {
             if(_input.ActionOccurred(InputManager.KeyBinding.values()[i], InputManager.ActionType.Down))
@@ -460,7 +471,7 @@ public class GameplayScreen extends OvertoneScreen
                 _targetZonesPressed[i] = false;
         }
 
-        // Handle all hold notes
+        // Handle all hold notes (iterate though all hold notes on screen)
         Iterator<OvertoneNote> it = _holdNotesOnScreen.keySet().iterator();
         while(it.hasNext())
         {
@@ -474,6 +485,7 @@ public class GameplayScreen extends OvertoneScreen
                 Rating rating = GetNoteRating(currentNote.GetTarget().Position, currentNote.GetOtherNote());
                 HandleRating(rating);
 
+                // Remove it's partner note from the game
                 currentNote.GetOtherNote().SetVisibility(false);
                 currentNote.GetOtherNote().SetCompleted(true);
                 if(!_onScreenNotes.Remove(currentNote.GetOtherNote()))// if it is note in the quadtree the remove it from the note que
@@ -487,11 +499,14 @@ public class GameplayScreen extends OvertoneScreen
         // Check each input related to each target zone
         for(int i = 0; i < Overtone.TargetZones.length; i++)
         {
+            // Check if any of the target zone buttons have been pressed
             if(_input.ActionOccurred(InputManager.KeyBinding.values()[i], InputManager.ActionType.Pressed))
             {
+                // Get the closest on screen note to the key that has been pressed
                 OvertoneNote close = GetClosestNote( Overtone.TargetZones[i].Position, InputManager.KeyBinding.values()[i]);
                 if(close != null)
                 {
+                    // If it is not null, means that we need to process the note, Get the rating
                     Rating rating = GetNoteRating( Overtone.TargetZones[i].Position, close);
                     HandleRating(rating);
                     close.SetCompleted(true);
@@ -516,19 +531,23 @@ public class GameplayScreen extends OvertoneScreen
     }
 
     /**
-     * Handles the rating in specific ways
+     * Handles the rating
+     * Such as playing a sound, updating the combo and put object on screen
      * @param rating The rating to handle
      */
     private void HandleRating(Rating rating)
     {
+        // Update the combo based on the rating
         if(rating.GetRating().ComboMultiplier == -1)
             _combo = 0;
         else
             _combo += rating.GetRating().ComboMultiplier;
 
+        // Play the associated sound effect
         _noteSFX[rating.GetRating().SoundIndex].play(Overtone.SFXVolume);
         _score += rating.GetRating().Score * _combo;
 
+        // Create a rating object and add to the onscreen objects
         if(rating.GetRating() != Rating.RatingType.None)
             _onScreenRatings.add(rating);
     }
@@ -541,6 +560,7 @@ public class GameplayScreen extends OvertoneScreen
      */
     private OvertoneNote GetClosestNote(Vector2 target, InputManager.KeyBinding key)
     {
+        // Get a list of notes in the quadrant of the target
         ArrayList<OvertoneNote> notes = _onScreenNotes.Get(target);
 
         if(notes.isEmpty())
@@ -552,6 +572,7 @@ public class GameplayScreen extends OvertoneScreen
         // Find the closest note and store it
         for(OvertoneNote n : notes)
         {
+            // Find and save the smallest distance
             float distance = Vector2.dst(target.x, target.y, n.GetCenter().x, n.GetCenter().y);
             if(distance < minDistance)
             {
@@ -736,30 +757,11 @@ public class GameplayScreen extends OvertoneScreen
      */
     private void PlaySongCompletionSFX(boolean completed)
     {
+        // Plays the success sound effect or fail sound effect based on the boolean passed in
         if(completed)
             _success.play(Overtone.SFXVolume);
         else
             _fail.play(Overtone.SFXVolume);
-    }
-
-    /**
-     * Called when a menu button in the pause menu is clicked
-     * @param screen The next screen to transition to
-     */
-    private void PausedMenuButtonPressed(Overtone.Screens screen)
-    {
-        _buttonPress.play(Overtone.SFXVolume);
-        Overtone.SetScreen(screen);
-    }
-
-    /**
-     * Called when a menu button in the pause menu is clicked
-     * @param screen The next screen to transition to
-     */
-    private void GiveUpButtonPressed(Overtone.Screens screen)
-    {
-        _buttonPress.play(Overtone.SFXVolume);
-        Overtone.SetScreen(screen, false, _score, _perfectCounter, _greatCounter, _goodCounter, _badCounter, _missCounter);
     }
 
     /**
@@ -780,7 +782,7 @@ public class GameplayScreen extends OvertoneScreen
     }
 
     /**
-     * Called when the paused button is pressed
+     * Called when the paused button is pressed while in gameplay
      */
     public void PausedButtonPressed()
     {
