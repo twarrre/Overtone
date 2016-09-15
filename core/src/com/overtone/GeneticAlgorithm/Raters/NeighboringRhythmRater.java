@@ -31,10 +31,10 @@ public class NeighboringRhythmRater extends Rater
             }
 
             // Find the index (from the rhythm array) of the current rhythm value
-            int currentRhythm = BinarySearch(GeneticAlgorithm.RHYTHMS, 0, GeneticAlgorithm.RHYTHMS.size(), track.getPhrase(i).getNote(track.getPhrase(i).length() - 1).getRhythmValue());
+            int currentRhythm = GeneticAlgorithm.RHYTHMS.indexOf(track.getPhrase(i).getNote(track.getPhrase(i).length() - 1).getRhythmValue());
 
             // Get the index of the next rhythm value
-            int nextRhythm =  BinarySearch(GeneticAlgorithm.RHYTHMS, 0, GeneticAlgorithm.RHYTHMS.size(), track.getPhrase(i + 1).getNote(track.getPhrase(i + 1).length() - 1).getRhythmValue());
+            int nextRhythm =  GeneticAlgorithm.RHYTHMS.indexOf(track.getPhrase(i + 1).getNote(track.getPhrase(i + 1).length() - 1).getRhythmValue());
 
             // If the next rhythm is note within the range of acceptance
             if((nextRhythm > (currentRhythm + ACCEPTABLE_RANGE) || nextRhythm < (currentRhythm - ACCEPTABLE_RANGE)))
@@ -49,31 +49,5 @@ public class NeighboringRhythmRater extends Rater
             return 0;
         else
             return (float)numRhythmsNotes / (float)numNotes;
-    }
-
-    /**
-     * Implementation of binary search to find the index of a rhythm value
-     * @param list The list of values to search
-     * @param low The low index of the searchable area in the array
-     * @param high The high index of the searchable area in the array
-     * @param search The number to search for
-     * @return The index of the found value.
-     */
-    private static int BinarySearch(ArrayList<Double> list, int low, int high, double search)
-    {
-        int len = (high - low);
-        int index = (high + low) / 2;
-
-        if(len == 1 && list.get(index) == search)
-            return index;
-        else if(len == 1 && list.get(index) != search)
-            return -1;
-
-        if(search < list.get(index))
-            return BinarySearch(list, low, index, search);
-        else if(search > list.get(index))
-            return BinarySearch(list, index, high, search);
-        else
-            return index;
     }
 }

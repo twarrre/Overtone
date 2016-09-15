@@ -10,9 +10,7 @@ import jm.JMC;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
-
 import jm.util.Write;
-
 import java.util.*;
 
 /**
@@ -27,76 +25,64 @@ public class GeneticAlgorithm implements Runnable, JMC
             {C3, E3, G3},
             {C3, G3, E4},
             {C3, E4, G4},
-
             // C minor
             {C3, EF3, G3},
             {C3, G3, EF4},
             {C3, EF4, G4},
-
             // D major
             {D3, FS3, A3},
             {D3, A3, FS4},
             {D3, FS4, A4},
-
             // D minor
             {D3, F3, A3},
             {D3, A3, F4},
             {D3, F4, A4},
-
             // E major
             {E3, GS3, B3},
             {E3, B3, GS4},
             {E3, GS4, B4},
-
             // E minor
             {E3, G3, B3},
             {E3, B3, G4},
             {E3, G4, B4},
-
             // F Major
             {F2, A2, C3},
             {F2, C3, A3},
             {F2, A3, C4},
             {F2, C4, A4,},
-
             // F minor
             {F2, AF2, C3},
             {F2, C3, AF3},
             {F2, AF3, C4},
             {F2, C4, AF4},
-
             // G major
             {G2, B2, D3},
             {G2, D3, B3},
             {G2, B3, D4},
             {G2, D4, B4},
-
             // G minor
             {G2, BF2, D3},
             {G2, D3, BF3},
             {G2, BF3, D4},
             {G2, D4, BF4},
-
             // A major
             {A2, CS3, E3},
             {A2, E3, CS4},
             {A2, CS4, E4},
-
             // A minor
             {A2, C3, E3},
             {A2, E3, C4},
             {A2, C4, E4},
-
             // B Major
             {B2, DS3, FS3},
             {B2, FS3, DS4},
             {B2, DS4, FS4},
-
             // B minor
             {B2, D3, FS3},
             {B2, D4, FS3},
             {B2, D4, FS4},
     };
+
     /** Array of valid rhythms used in generation. */
     public static final ArrayList<Double> RHYTHMS = new ArrayList<Double>()
     {{
@@ -118,26 +104,26 @@ public class GeneticAlgorithm implements Runnable, JMC
     /** The number of sections(Verse, chorus, bridges) in the song. */
     public static int NUM_SECTIONS = 4;
     /** The number of notes for each track in the initialization phase. */
-    public static int NUM_NOTES = 12;
+    public static int NUM_NOTES    = 12;
     /** Size of an octave */
     public static final int OCTAVE = 13;
     /** The highest pitch available */
-    public static int HIGH_PITCH = CF6;
+    public static int HIGH_PITCH   = CF6;
     /** The lowest pitch available */
-    public static int LOW_PITCH = CF2;
+    public static int LOW_PITCH    = CF2;
     /** The highest dynamic available */
     public static int HIGH_DYNAMIC = CF6;
     /** The lowest dynamic available */
-    public static int LOW_DYNAMIC = CF2;
+    public static int LOW_DYNAMIC  = CF2;
 
-    private int                _currentIteration; // The current iteration of the algorithm
-    private ArrayList<Mutator> _mutators;         // Array of all of the mutators that may mutate a track.
-    private Rater[]            _raters;           // Array of raters to rate the tracks
-    private boolean            _isCompleted;      // True if the generation has completed;
-    private Random             _random;
-    private int                _indexForLargestRhythmChord;
-    private boolean            _regenerate;
-    private ArrayList<Double>  _chordAverages;
+    private int                _currentIteration;           // The current iteration of the algorithm
+    private ArrayList<Mutator> _mutators;                   // Array of all of the mutators that may mutate a track.
+    private Rater[]            _raters;                     // Array of raters to rate the tracks
+    private boolean            _isCompleted;                // True if the generation has completed;
+    private Random             _random;                     // Random number generator
+    private int                _indexForLargestRhythmChord; // The index of the largest rhythm for chords in the rhythm array
+    private boolean            _regenerate;                 // True if you want to regenerate the music, false otherwise
+    private ArrayList<Double>  _chordAverages;              // List of average pitches for chords
 
     /**
      * Constructor
@@ -146,6 +132,8 @@ public class GeneticAlgorithm implements Runnable, JMC
     {
         _regenerate        = regenerate;
         _currentIteration  = 0;
+        _isCompleted       = false;
+        _random            = new Random();
         _raters            = new Rater[Overtone.NUM_RATERS];
         _raters[0]         = new NeighboringPitchRater();
         _raters[1]         = new PitchDirectionRater();
@@ -166,18 +154,18 @@ public class GeneticAlgorithm implements Runnable, JMC
         _raters[16]        = new RestRatioRater();
         _raters[17]        = new RhythmStabilityRater();
         _mutators          = new ArrayList<Mutator>();
-        _isCompleted       = false;
-        _random            = new Random();
         _mutators.add(new NotePitchMutator());
         _mutators.add(new SimplifyMutator());
         _mutators.add(new SwapMutator());
         _mutators.add(new RhythmMutator());
         _mutators.add(new DynamicMutator());
 
+        // Get the index for the highest index of rhythms for chords
         Collections.sort(GeneticAlgorithm.RHYTHMS);
         _indexForLargestRhythmChord = RHYTHMS.indexOf(DOUBLE_DOTTED_QUARTER_NOTE);
 
-        _chordAverages = new ArrayList();
+        // Average the pitches for the chords
+        _chordAverages      = new ArrayList();
         double[] influence3 = new double[] {0.5, 0.4, 0.1};
         double[] influence4 = new double[] {0.4, 0.3, 0.2, 0.1};
         for(int i = 0; i < CHORDS.length; i++)
@@ -194,6 +182,9 @@ public class GeneticAlgorithm implements Runnable, JMC
         }
     }
 
+    /**
+     * Called when run in a thread.
+     */
     public void run()
     {
         if(_regenerate)
@@ -210,6 +201,10 @@ public class GeneticAlgorithm implements Runnable, JMC
         return _isCompleted;
     }
 
+    /**
+     * Loads all of the sequencers and creates the game note
+     * but does not generate a new song
+     */
     private void Regenerate()
     {
         _isCompleted = false;
@@ -218,8 +213,9 @@ public class GeneticAlgorithm implements Runnable, JMC
         Utilities.SortNotes(tempNotes);
         _isCompleted = true;
     }
+
     /**
-     * Generates the notes.
+     * Generates the song though genetic algorithm
      */
     private void Generate()
     {
@@ -234,22 +230,22 @@ public class GeneticAlgorithm implements Runnable, JMC
             for(int j = 0; j < bestThreeTracks.length; j++)
                 sum += bestThreeTracks[j].GetRating(i);
             sum /= bestThreeTracks.length;
-            Overtone.CurrentRaterValues[i] = sum;
+            Overtone.CurrentRaterValues[i] = Utilities.Clamp(sum, 0.0f, 1.0f);
         }
 
-        // Create phases that create the song. Structure of the song is verse, chorus, verse, chorus, bridge, chorus.
+        // Create phases that create the song. Structure of the song is verse, chorus, bridge, chorus.
         Part[] song = new Part[NUM_SECTIONS];
-        song[0] = bestThreeTracks[1].GetTrack(); // Verse 1
-        song[1] = bestThreeTracks[0].GetTrack(); // Chorus 1
-        song[2] = bestThreeTracks[2].GetTrack(); // bridge 1
-        song[3] = bestThreeTracks[0].GetTrack(); // Chorus 2
+        song[0]     = bestThreeTracks[1].GetTrack(); // Verse 1
+        song[1]     = bestThreeTracks[0].GetTrack(); // Chorus 1
+        song[2]     = bestThreeTracks[2].GetTrack(); // bridge 1
+        song[3]     = bestThreeTracks[0].GetTrack(); // Chorus 2
 
         // Merges the song and adds it to the game music
         Part mergedSong = new Part();
         for(int i = 0; i < song.length; i++)
             for(int j = 0; j < song[i].length(); j++)
                 mergedSong.appendPhrase(song[i].getPhrase(j));
-        mergedSong = CorrectStartTime(CorrectDuration(mergedSong));
+        mergedSong         = CorrectStartTime(CorrectDuration(mergedSong));
         Overtone.GameMusic = mergedSong.copy();
 
         // Generate the notes and store them in the game and backup arrays
@@ -261,19 +257,20 @@ public class GeneticAlgorithm implements Runnable, JMC
         for(int i = 0; i < mergedSong.size(); i++)
         {
             double start = mergedSong.getPhrase(i).getStartTime();
-            Phrase p = mergedSong.getPhrase(i).copy();
+            Phrase p     = mergedSong.getPhrase(i).copy();
             p.setStartTime(0);
             Overtone.GameMusicStartTimes.add(start);
             Write.midi(p, "Music\\" + i + ".mid");
         }
 
+        // Load the sequence players for each note
         Utilities.LoadSequencers();
         _isCompleted = true;
     }
 
     /**
-     * The genetic algorithm. Runs through the genetic algorithm.
-     * @return The best two tracks generated after the genetic algorithm
+     * The genetic algorithm. Runs through the genetic algorithm and returns the best tracks.
+     * @return The best three tracks generated after the genetic algorithm
      */
     private Organism[] GenerateTracks()
     {
@@ -287,7 +284,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         // Get the elites from the parent population
         Organism[] elites = Elitism(parentPopulation);
 
-        //Genetic algorithm phase
+        //Genetic algorithm phase (go through all of the iterations.)
         for(int i = 0; i < Overtone.NumberOfIterations; i++)
         {
             _currentIteration = i + 1;
@@ -303,7 +300,10 @@ public class GeneticAlgorithm implements Runnable, JMC
             elites = Elitism(children);
         }
 
+        // Sort the final elites
         Arrays.sort(elites, new RatingComparator());
+
+        // Return the best three elites
         return new Organism[] {elites[0], elites[1], elites[2]};
     }
 
@@ -314,18 +314,21 @@ public class GeneticAlgorithm implements Runnable, JMC
     public Organism[] Initialization()
     {
         Organism[] population = new Organism[Overtone.PopulationSize];
-        double prevPitch = Math.round(Utilities.Clamp((_random.nextInt((HIGH_PITCH - LOW_PITCH) + 1) + LOW_PITCH), LOW_PITCH, HIGH_PITCH));
+        double prevPitch      = Math.round(Utilities.Clamp((_random.nextInt((HIGH_PITCH - LOW_PITCH) + 1) + LOW_PITCH), LOW_PITCH, HIGH_PITCH));
 
+        // Generate the population based on the population size
         for(int i = 0; i < Overtone.PopulationSize; i++)
         {
-            Part p = new Part();
+            // Generate a value to normal distribute around for each of the note in this phrase
+            Part p          = new Part();
             int pitchSeed   = Math.round(Utilities.Clamp((_random.nextInt((HIGH_PITCH - LOW_PITCH) + 1) + LOW_PITCH), LOW_PITCH, HIGH_PITCH));           // Random pitch between 30 and 95
             int dynamicSeed = Math.round(Utilities.Clamp((_random.nextInt((HIGH_DYNAMIC - LOW_DYNAMIC) + 1) + LOW_DYNAMIC), LOW_DYNAMIC, HIGH_DYNAMIC)); // Random dynamic between 30 and 95
-            int rhythmSeed  = Math.round(Utilities.Clamp(_random.nextInt(RHYTHMS.size() + 1), 0, RHYTHMS.size() - 1));
+            int rhythmSeed  = Math.round(Utilities.Clamp(_random.nextInt(RHYTHMS.size() + 1), 0, RHYTHMS.size() - 1));                                   // Random rhythm within the rhythm array
 
-            float chordProbability = _random.nextFloat() * (0.45f - 0.01f) + 0.01f;
-            float restProbability  = _random.nextFloat() * (0.10f - 0.01f) + 0.01f;
+            float chordProbability = _random.nextFloat() * (0.45f - 0.01f) + 0.01f; // Random probability for a note to be a chord (0.01% - 0.45%)
+            float restProbability  = _random.nextFloat() * (0.10f - 0.01f) + 0.01f; // Random probability for a note to be a rest (0.01% - 0.10%)
 
+            // Generate the number of note in one organism in the population
             for(int j = 0; j < NUM_NOTES; j++)
             {
                 //if(j % 8 == 0)
@@ -335,9 +338,11 @@ public class GeneticAlgorithm implements Runnable, JMC
                     //rhythmSeed  = Utilities.GetRandomRangeNormalDistribution(rhythmSeed, 3, RHYTHMS.size() - 1, 0.0f, false);
                 //}
 
+                // Determine if this note will be a rest or chord (using the probabilities
                 boolean chord = Utilities.GetRandom(0, 1, chordProbability) == 0;
                 boolean rest  = Utilities.GetRandom(0, 1, restProbability)  == 0;
 
+                // If both a true, random pick one of them
                 if(chord && rest)
                 {
                     int change = Utilities.GetRandom(0, 1, 0.5f);
@@ -353,29 +358,34 @@ public class GeneticAlgorithm implements Runnable, JMC
                     }
                 }
 
+                // Generate a random pitch, dynamic, and rhythm for this particular note
                 Phrase phrase = new Phrase();
-                int pitch   = Utilities.GetRandomRangeNormalDistribution(pitchSeed, OCTAVE, HIGH_PITCH, LOW_PITCH, true);
-                int dynamic = Utilities.GetRandomRangeNormalDistribution(dynamicSeed, OCTAVE, HIGH_DYNAMIC, LOW_DYNAMIC, true);
-                int rhythm  = Utilities.GetRandomRangeNormalDistribution(rhythmSeed, 2, RHYTHMS.size() - 1, 0.0f, true);
+                int pitch     = Utilities.GetRandomRangeNormalDistribution(pitchSeed, OCTAVE, HIGH_PITCH, LOW_PITCH, true);
+                int dynamic   = Utilities.GetRandomRangeNormalDistribution(dynamicSeed, OCTAVE, HIGH_DYNAMIC, LOW_DYNAMIC, true);
+                int rhythm    = Utilities.GetRandomRangeNormalDistribution(rhythmSeed, 2, RHYTHMS.size() - 1, 0.0f, true);
 
+                // if the note is a chord, make a chord
                 if(chord)
                 {
+                    // Correct the rhythm if it is greater than the largest one a chord can be
                     while(rhythm > _indexForLargestRhythmChord)
                         rhythm = Utilities.GetRandomRangeNormalDistribution((_indexForLargestRhythmChord / 2.0f), 3, _indexForLargestRhythmChord, 0.0f, true);
 
+                    // Get an index to a chord (hopefully close the previous note pitch)
                     int chordIndex = Utilities.FindClosestChord(_chordAverages, prevPitch);
 
+                    // Add the chord to phrase
                     phrase.addChord(CHORDS[chordIndex], RHYTHMS.get(rhythm));
                     for(int k = 0; k < phrase.length(); k++)
                         phrase.getNote(k).setDynamic(dynamic);
 
                     prevPitch = _chordAverages.get(chordIndex);
                 }
-                else if(rest)
+                else if(rest) // if the note was determined to be a rest, then add a rest to the phrase
                 {
                     phrase.addNote(new Note(REST, RHYTHMS.get(rhythm), dynamic));
                 }
-                else
+                else // Else a note was determined to add a new note to the phrase
                 {
                     phrase.addNote(new Note(pitch, RHYTHMS.get(rhythm), dynamic));
                 }
@@ -384,13 +394,16 @@ public class GeneticAlgorithm implements Runnable, JMC
                 if(!chord)
                     prevPitch = pitch;
             }
+            // Save the phrase to the population
             population[i] = new Organism(CorrectStartTime(CorrectDuration(p.copy())), _currentIteration);
         }
+
+        // Return the final population
         return population;
     }
 
     /**
-     * Gets the elites out of the population
+     * Determines the elites out of the population
      * @param population the population to get the elites from
      * @return array of elites.
      */
@@ -399,6 +412,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         Organism[] elites = new Organism[Overtone.NumberOfElites];
         Arrays.sort(population, new RatingComparator());
 
+        // Store the best organisms in the population after being sorted
         for(int i = 0; i < Overtone.NumberOfElites; i++)
             elites[i] = new Organism(population[i]);
 
@@ -407,7 +421,7 @@ public class GeneticAlgorithm implements Runnable, JMC
 
     /**
      * Selects organisms to crossover
-     * @param parents The parents to crossover
+     * @param parents Array of parents for crossover
      * @return A generation of children organisms
      */
     private Organism[] Selection(Organism[] parents)
@@ -415,7 +429,6 @@ public class GeneticAlgorithm implements Runnable, JMC
         Arrays.sort(parents, new RatingComparator());
         Organism[] children = new Organism[Overtone.PopulationSize];
 
-        // Elitism, save the best ones
         int counter = 0;
         while(counter < Overtone.PopulationSize)
         {
@@ -423,15 +436,19 @@ public class GeneticAlgorithm implements Runnable, JMC
             for(int i = 0; i < parents.length; i++)
                 probabilities[i] = parents[i].GetOverallRating();
 
+            // Find the index of two parents in the parents array to crossover
             int p1 = RouletteSelection(probabilities);
             int p2 = p1;
             while(p2 == p1)
                 p2 = RouletteSelection(probabilities);
 
+            // Cross them over, mutate them and store them in the next generation
             Organism[] siblings = Crossover(parents[p1], parents[p2]);
             children[counter++] = new Organism(Mutation(siblings[0]));
             children[counter++] = new Organism(Mutation(siblings[1]));
         }
+
+        // Return the children
         return children;
     }
 
@@ -445,32 +462,37 @@ public class GeneticAlgorithm implements Runnable, JMC
         float overallRating = 0;
         for(int i = 0; i < Overtone.NUM_RATERS; i++)
         {
+            // Rates the organism
             p.SetRating(_raters[i].Rate(p), i);
+
+            // Determines the quality of the organism
             p.SetQuality(Math.abs(Overtone.BestRaterValues[i] - p.GetRating(i)), i);
             overallRating += p.GetQuality(i);
         }
 
+        // Store the overall rating of the organism
         overallRating /= Overtone.NUM_RATERS;
         p.SetOverallRating(1.0f - overallRating);
 
+        // Return the now rated organism
         return new Organism(p);
     }
 
     /**
-     * Goes through all of the mutators and mutates the passed in phrase.
-     * @param o The phrase to be mutated
-     * @return A new Phrase that has been mutated
+     * Goes through all of the mutators and mutates the passed in organism.
+     * @param o The organism to be mutated
+     * @return A new organism that has been mutated
      */
     public Organism Mutation(Organism o)
     {
         // Randomize the order of the mutators
         Collections.shuffle(_mutators, _random);
-
-        // Mutate the phrase
         Part mutation = o.GetTrack().copy();
 
+        // Run though all of the mutators
         for(int i = 0; i < _mutators.size(); i++)
         {
+            // Get the correct mutation probability
             float probability = 0.0f;
             if(_mutators.get(i) instanceof NotePitchMutator)
                 probability = o.GetPitchProbability();
@@ -483,9 +505,11 @@ public class GeneticAlgorithm implements Runnable, JMC
             else if(_mutators.get(i) instanceof DynamicMutator)
                 probability = o.GetDynamicProbability();
 
+            // Mutate the organism
             mutation = _mutators.get(i).Mutate(mutation, probability);
         }
 
+        // Return the mutated organism
         Organism mutated = new Organism(o);
         mutated.SetTrack(mutation);
         return mutated;
@@ -502,8 +526,8 @@ public class GeneticAlgorithm implements Runnable, JMC
     {
         // Create two children
         Part[] children = new Part[2];
-        children[0] = new Part();
-        children[1] = new Part();
+        children[0]     = new Part();
+        children[1]     = new Part();
 
         Part p1 = parent1.GetTrack().copy();
         Part p2 = parent2.GetTrack().copy();
@@ -517,6 +541,7 @@ public class GeneticAlgorithm implements Runnable, JMC
             Phrase ph1 = p1.getPhrase(i).copy();
             Phrase ph2 = p2.getPhrase(i).copy();
 
+            // Randomly choose which phrase to put each note in
             int index = Utilities.GetRandom(0, 1, 0.5f);
             if(index == 0)
             {
@@ -544,9 +569,9 @@ public class GeneticAlgorithm implements Runnable, JMC
                 children[0].addPhrase(p1.getPhrase(length + i));
         }
 
+        // Return the new crossed over children
         children[0] = CorrectStartTime(CorrectDuration(children[0]));
         children[1] = CorrectStartTime(CorrectDuration(children[1]));
-
         return new Organism[] { new Organism(children[0], _currentIteration), new Organism(children[1], _currentIteration)};
     }
 
@@ -587,41 +612,47 @@ public class GeneticAlgorithm implements Runnable, JMC
     public ArrayList<OvertoneNote> GenerateGameNotes()
     {
         ArrayList<OvertoneNote> tempNotes = new ArrayList<OvertoneNote>();
-
-        double startTime                   = 0;
-        int target                         = 0;
-        int lastHoldTarget                 = -1;
-        double prevDuration                = -1;
+        double startTime                   = 0;  // Start time of the note
+        int target                         = 0;  // Index to the target the note is going to
+        int lastHoldTarget                 = -1; // Index to the last hold note target
+        double prevDuration                = -1; // The duration of the last note
 
         for(int j = 0; j < Overtone.GameMusic.size(); j++)
         {
             Phrase phrase = Overtone.GameMusic.getPhrase(j);
 
+            // Simplify hold notes and double notes on easy and normal difficulty
             boolean includeHoldNote   = true;
             boolean includeDoubleNote = true;
             if(Overtone.Difficulty == Overtone.Difficulty.Easy)
             {
+                // Randomly generate a boolean to determine if we will include a hold note or double note on easy difficulty
                 includeHoldNote   = Utilities.GetRandom(0, 1, 0.2f) == 0 ? true : false;
                 includeDoubleNote = Utilities.GetRandom(0, 1, 0.2f) == 0 ? true : false;
             }
             else if(Overtone.Difficulty == Overtone.Difficulty.Normal)
             {
+                // Randomly generate a boolean to determine if we will include a hold note or double note on normal difficulty
                 includeHoldNote   = Utilities.GetRandom(0, 1, 0.45f) == 0 ? true : false;
                 includeDoubleNote = Utilities.GetRandom(0, 1, 0.45f) == 0 ? true : false;
             }
 
-            target = _random.nextInt(Overtone.TargetZones.length);
+            // Generate the target and a potential second target for a double note
+            target      = _random.nextInt(Overtone.TargetZones.length);
             int target2 = DetermineTarget(target);
 
-            startTime = phrase.getStartTime();
+            // Get the start time and the duration of note
+            startTime    = phrase.getStartTime();
             prevDuration = phrase.getNote(phrase.length() - 1).getDuration();
 
+            // If the target was the same as the last hold note, change the target
             while (target == lastHoldTarget || target2 == lastHoldTarget)
             {
                 target = _random.nextInt(Overtone.TargetZones.length);
                 target2 = DetermineTarget(target);
             }
 
+            // Create the note and add it to the array
             if(phrase.length() > 1 && includeDoubleNote) // else if it is a chord == double note
             {
                 OvertoneNote[] notes = CreateDoubleNote(target, target2, startTime);
@@ -645,6 +676,7 @@ public class GeneticAlgorithm implements Runnable, JMC
             }
         }
 
+        // Set the total time of the song
         Overtone.TotalTime = startTime + prevDuration + GameplayScreen.COMPLETION_DELAY;
         return tempNotes;
     }
@@ -669,7 +701,7 @@ public class GeneticAlgorithm implements Runnable, JMC
         return note;
     }
 
-    /**
+     /**
      * Creates a hold note
      * @param target the target of the notes
      * @param elapsedTime the elapsed time of the song
@@ -746,24 +778,15 @@ public class GeneticAlgorithm implements Runnable, JMC
     }
 
     /**
-     * Comparator for sorting organisms based on their ratings
-     * Sorts them in reverse.
+     * Corrects the duration of the notes
+     * @param p The part to be corrected
+     * @return The corrected part
      */
-    static class RatingComparator implements Comparator<Organism>
-    {
-        public int compare(Organism o1, Organism o2)
-        {
-            if(o1.GetOverallRating() < o2.GetOverallRating())
-                return 1;
-            else if (o1.GetOverallRating() == o2.GetOverallRating())
-                return 0;
-            else
-                return -1;
-        }
-    }
-
     public static Part CorrectDuration(Part p)
     {
+        // When a rhythm value changes, the duration does not change with it.
+        // Therefore the note may play for longer or shorter then it's rhythm values says that it should play for
+        // This method corrects the duration of each note based on it's rhythm value
         for(int i = 0; i < p.length(); i++)
         {
             double rhythmValue = p.getPhrase(i).getNote(p.getPhrase(i).length() - 1).getRhythmValue();
@@ -778,8 +801,16 @@ public class GeneticAlgorithm implements Runnable, JMC
         return newP;
     }
 
+    /**
+     * Corrects the start time of a particular part
+     * @param p The part ot be corrected
+     * @return The part with corrected start time
+     */
     public static Part CorrectStartTime(Part p)
     {
+        // When moving notes in a phrase the start time does not get changed therefore even though the
+        // notes are in an order, because their start times were not changed, they still play in the original order.
+        // Need to update the start time so that it goes up in ascending order based on rhythm value
         double startTime = GameplayScreen.START_DELAY;
         for(int i = 0; i < p.length(); i++)
         {
@@ -792,13 +823,36 @@ public class GeneticAlgorithm implements Runnable, JMC
         return newP;
     }
 
+    /**
+     * Renames a track based on the iteration it was generated
+     * @param p The renamed part
+     */
     public static void RenameTracks(Part p)
     {
+        //Creating copies of the track adds "copy" to the name and after several interaction, it becomes hard to debug.
+        // This renames the tracks to the iteration that they were generated in.
         for(int i = 0; i < p.length(); i++)
         {
-            p.setTitle(i + " ");
+            p.setTitle(i + "");
             for(int j = 0; j < p.getPhrase(i).length(); j++)
                 p.getPhrase(i).setTitle(j + " ");
+        }
+    }
+
+    /**
+     * Comparator for sorting organisms based on their overall ratings
+     * Sorts them in reverse (highest first).
+     */
+    static class RatingComparator implements Comparator<Organism>
+    {
+        public int compare(Organism o1, Organism o2)
+        {
+            if(o1.GetOverallRating() < o2.GetOverallRating())
+                return 1;
+            else if (o1.GetOverallRating() == o2.GetOverallRating())
+                return 0;
+            else
+                return -1;
         }
     }
 }
