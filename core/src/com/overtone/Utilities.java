@@ -3,21 +3,22 @@ package com.overtone;
 import com.badlogic.gdx.Gdx;
 import com.overtone.Notes.OvertoneNote;
 import jm.JMC;
-
 import javax.sound.midi.*;
 import java.io.*;
-import java.nio.channels.Channel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
 /**
- * Has static utility methods
+ * This class contains static utility methods such as functions that load
+ * data from files, or functions that are used several classes.
  * Created by trevor on 2016-08-02.
  */
 public class Utilities implements JMC
 {
+    // Random number generator for some of the methods that need random numbers
     private static Random _rand = new Random();
+
     /**
      * Loads high scores & crowd ratings from a file.
      */
@@ -178,7 +179,7 @@ public class Utilities implements JMC
     }
 
     /**
-     * Writes the new volume values to a file
+     * Writes the new generation values to a file
      */
     public static void WriteGenerationValues()
     {
@@ -266,7 +267,7 @@ public class Utilities implements JMC
     }
 
     /**
-     * Average the rater scores if the user says that they like the song
+     * Updates the rater values, favours the new rater values.
      */
     public static void GoodRaterValues()
     {
@@ -275,7 +276,7 @@ public class Utilities implements JMC
     }
 
     /**
-     * Average the rater scores if the user says that they like the song
+     * Average the rater scores if the user says that they like the song.
      */
     public static void AverageRaterValues()
     {
@@ -284,7 +285,7 @@ public class Utilities implements JMC
     }
 
     /**
-     * Average the rater scores if the user says that they like the song
+     * Updates the rater values, favouring the previous rater values
      */
     public static void BadRaterValues()
     {
@@ -293,20 +294,17 @@ public class Utilities implements JMC
     }
 
     /**
-     * Resorts the notes and saves a backup of them.
+     * Sorts an array list of overtone notes and creates a new note queue for the gameplay screen
      * @param notes The notes to sort and create a backup from
      */
     public static void SortNotes(ArrayList<OvertoneNote> notes)
     {
         // Sort notes based on the time they appear on screen
         Collections.sort(notes);
-
-        Overtone.NoteQueue   = new ArrayList<OvertoneNote>();
+        Overtone.NoteQueue = new ArrayList<OvertoneNote>();
 
         for(int i = 0; i < notes.size(); i++)
-        {
             Overtone.NoteQueue.add(new OvertoneNote(notes.get(i)));
-        }
 
         for(int i = 0; i < Overtone.NoteQueue.size(); i++)
         {
@@ -325,14 +323,14 @@ public class Utilities implements JMC
     /**
      * Binary search to search for the corresponding note
      * @param n The array to search
-     * @param search The value to seach for
+     * @param search The value to search for
      * @param low low index of the array
      * @param high high index of the array
      * @return the index of the found note, -1 otherwise
      */
     private static int BinarySearch(ArrayList<OvertoneNote> n, float search, int low, int high)
     {
-        int len = (high - low);
+        int len   = (high - low);
         int index = (high + low) / 2;
 
         if(len == 1 && n.get(index).GetTime() == search)
@@ -426,12 +424,12 @@ public class Utilities implements JMC
             }
             else
             {
-                Overtone.GameplaySequencer = MidiSystem.getSequencer();
-                Overtone.GameplaySequencer.open();
+                Overtone.BeatSequencer = MidiSystem.getSequencer();
+                Overtone.BeatSequencer.open();
                 InputStream is = new BufferedInputStream(new FileInputStream(new File("Music\\Beat.mid")));
-                Overtone.GameplaySequencer.setSequence(is);
-                Overtone.GameplaySequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
-                Overtone.GameplaySequencer.start();
+                Overtone.BeatSequencer.setSequence(is);
+                Overtone.BeatSequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+                Overtone.BeatSequencer.start();
             }
         }
         catch(MidiUnavailableException x)
@@ -456,6 +454,9 @@ public class Utilities implements JMC
         }
     }
 
+    /**
+     * Loads all of the notes stored in midi files and creates sequencers for them
+     */
     public static void LoadSequencers()
     {
         // Read the notes in as sequencers
@@ -493,15 +494,17 @@ public class Utilities implements JMC
         }
     }
 
+    /**
+     * Loads the mutaion values from a file.
+     */
     public static void LoadMutationValues()
     {
         try
         {
             // Open the file
             BufferedReader reader = new BufferedReader(new FileReader("Storage\\MutationValues.txt"));
-
-            String line      = null;
-            int counter      = 0;
+            String line           = null;
+            int counter           = 0;
 
             // Read two lines from the file and store in the appropriate variables
             while ((line = reader.readLine())!= null)
@@ -510,37 +513,27 @@ public class Utilities implements JMC
                 if(counter == 0)
                 {
                     for(int i = 0; i < Overtone.PitchMutatorValues.length; i++)
-                    {
                         Overtone.PitchMutatorValues[i] = Float.parseFloat(result[i]);
-                    }
                 }
                 else if(counter == 1)
                 {
                     for(int i = 0; i < Overtone.RhythmMutatorValues.length; i++)
-                    {
                         Overtone.RhythmMutatorValues[i] = Float.parseFloat(result[i]);
-                    }
                 }
                 else if(counter == 2)
                 {
                     for(int i = 0; i < Overtone.SimplifyMutatorValues.length; i++)
-                    {
                         Overtone.SimplifyMutatorValues[i] = Float.parseFloat(result[i]);
-                    }
                 }
                 else if(counter == 3)
                 {
                     for(int i = 0; i < Overtone.SwapMutatorValues.length; i++)
-                    {
                         Overtone.SwapMutatorValues[i] = Float.parseFloat(result[i]);
-                    }
                 }
                 else if(counter == 4)
                 {
                     for(int i = 0; i < Overtone.DynamicMutatorValues.length; i++)
-                    {
                         Overtone.DynamicMutatorValues[i] = Float.parseFloat(result[i]);
-                    }
                 }
                 else
                     break;
@@ -555,6 +548,9 @@ public class Utilities implements JMC
         }
     }
 
+    /**
+     * Writes mutation values to a file.
+     */
     public static void WriteMutationValues()
     {
         try
@@ -576,7 +572,6 @@ public class Utilities implements JMC
             writer.write(Overtone.SwapMutatorValues[0] + " " + Overtone.SwapMutatorValues[1] + " " + Overtone.SwapMutatorValues[2]);
             writer.newLine();
             writer.write(Overtone.DynamicMutatorValues[0] + " " + Overtone.DynamicMutatorValues[1] + " " + Overtone.DynamicMutatorValues[2]);
-
             writer.close();
         }
         catch(IOException x)
@@ -585,29 +580,37 @@ public class Utilities implements JMC
         }
     }
 
-    // Implementing Fisher–Yates shuffle
+    /**
+     * Shuffles an array of float using Fisher-Yates shuffle algorithm.
+     * @param ar The array to be sorted.
+     */
     public static void ShuffleArray(float[] ar)
     {
         for (int i = ar.length - 1; i > 0; i--)
         {
             int index = _rand.nextInt(i + 1);
-            // Simple swap
-            float a = ar[index];
+            float a   = ar[index];
             ar[index] = ar[i];
-            ar[i] = a;
+            ar[i]     = a;
         }
     }
 
+    /**
+     * Finds the closet chord from an array of pitches.
+     * @param p The array list containing pitches
+     * @param pitch The pitch that we are trying to find the closest values to
+     * @return The index to the closest pitch.
+     */
     public static int FindClosestChord(ArrayList<Double> p, double pitch)
     {
         double closest = Double.MAX_VALUE;
-        int index = 0;
+        int index      = 0;
         for(int i = 0; i < p.size(); i++)
         {
             if(Math.abs(p.get(i) - pitch) < closest)
             {
                 closest = Math.abs(p.get(i) - pitch);
-                index = i;
+                index   = i;
             }
         }
         return index;

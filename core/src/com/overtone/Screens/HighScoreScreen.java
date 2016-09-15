@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.overtone.Overtone;
 
 /**
- * Screen used for high scores
+ * Screen used to display high scores
  * Created by trevor on 2016-05-01.
  */
 public class HighScoreScreen extends OvertoneScreen
@@ -66,6 +66,7 @@ public class HighScoreScreen extends OvertoneScreen
             }
         });
 
+        // Set the currently selected button
         _currentButton = _easyButton;
         _currentButton.setChecked(true);
     }
@@ -78,6 +79,7 @@ public class HighScoreScreen extends OvertoneScreen
         _glyphLayout.setText(_font36,  "High Scores");
         _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - (_glyphLayout.width / 2.0f), Overtone.ScreenHeight * 0.92f);
 
+        // Render each of the scores for the selected difficulty
         for(int i = 0; i < Overtone.NUM_SCORES; i++)
         {
             _glyphLayout.setText(_font24, (i + 1) + "");

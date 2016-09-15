@@ -12,13 +12,13 @@ public class Organism
 {
     private Part    _track;               // The track for this organism
     private float[] _rating;              // The fitness rating for this organism
-    private float[] _quality;             // The quality of the rating
-    private float   _rhythmProbability;
-    private float   _pitchProbability;
-    private float   _swapProbability;
-    private float   _simplifyProbability;
-    private float   _dynamicProbability;
-    private float   _overallRating;
+    private float[] _quality;             // The quality of the rating based on this organism and the best rater values
+    private float   _rhythmProbability;   // Probability to mutate the track in the rhythm mutator
+    private float   _pitchProbability;    // Probability to mutate the track in the pitch mutator
+    private float   _swapProbability;     // Probability to mutate the track in the swap mutator
+    private float   _simplifyProbability; // Probability to mutate the track in the simplify mutator
+    private float   _dynamicProbability;  // Probability to mutate the track in the dynamic mutator
+    private float   _overallRating;       // The overall rating of the organism
 
     /**
      * Constructor
@@ -42,9 +42,10 @@ public class Organism
         _track               = o.GetTrack().copy();
         _quality             = new float[Overtone.NUM_RATERS];
         _rating              = new float[Overtone.NUM_RATERS];
+
         for(int i = 0; i < Overtone.NUM_RATERS; i++)
         {
-            _rating[i] = o.GetRating(i);
+            _rating[i]  = o.GetRating(i);
             _quality[i] = o.GetQuality(i);
         }
 
@@ -68,15 +69,18 @@ public class Organism
     public Part GetTrack() {return _track;}
     /** Sets the track of this organism. */
     public void SetTrack(Part p) {_track = p;}
-    /** Gets the mutation probability */
+    /** Gets the mutation probability of pitch mutation */
     public float GetPitchProbability() {return _pitchProbability;}
+    /** Gets the mutation probability of rhythm mutation */
     public float GetRhythmProbability() {return _rhythmProbability;}
+    /** Gets the mutation probability of simplify mutation */
     public float GetSimplifyProbability() {return _simplifyProbability;}
+    /** Gets the mutation probability of swap mutation */
     public float GetSwapProbability() {return _swapProbability;}
+    /** Gets the mutation probability of dynamic mutation */
     public float GetDynamicProbability() {return _dynamicProbability;}
     /** Sets overall rating */
     public void SetOverallRating(float r) {_overallRating = r;}
     /** Gets the average rating */
     public float GetOverallRating() {return _overallRating;}
-
 }

@@ -2,14 +2,11 @@ package com.overtone;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
-
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Handles input for the Game.
- *
  * Created by trevor on 2016-05-01.
  */
 public class InputManager
@@ -66,9 +63,7 @@ public class InputManager
 
         KeyBinding[] bindings = KeyBinding.values();
         for(int i = 0; i < bindings.length; i++)
-        {
             _currentKeyBoardState.put(bindings[i].keyCode, Gdx.input.isKeyPressed(bindings[i].keyCode));
-        }
     }
 
     /**

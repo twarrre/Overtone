@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.overtone.Overtone;
 
 /**
- * Screen used for help
+ * Screen used to show help for the player
  * Created by trevor on 2016-05-01.
  */
 public class HelpScreen extends OvertoneScreen
@@ -27,15 +27,15 @@ public class HelpScreen extends OvertoneScreen
     private int             _helpIndex;       // Which texture are you on right now
 
     private final String[] _headerString = new String[] // Stores the strings for the headers of the help menu
-            {
-                    "Controls",
-                    "Notes",
-                    "Note Ratings",
-                    "Crowd Ratings",
-                    "GUI",
-                    "Game Over",
-                    "Misc."
-            };
+    {
+            "Controls",
+            "Notes",
+            "Note Ratings",
+            "Crowd Ratings",
+            "GUI",
+            "Game Over",
+            "Misc."
+    };
 
     public HelpScreen()
     {
@@ -89,6 +89,7 @@ public class HelpScreen extends OvertoneScreen
         _glyphLayout.setText(_font36, _headerString[_helpIndex]);
         _font36.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - _glyphLayout.width / 2.0f, Overtone.ScreenHeight * 0.92f);
 
+        // Render the progress bar of the help screen
         float start = Overtone.ScreenWidth * 0.5f - ((Overtone.ScreenWidth * 0.05f * NUM_HELP_SCREENS) / 2.0f);
         for(int i = 0; i < _help.length; i++)
         {
@@ -98,6 +99,7 @@ public class HelpScreen extends OvertoneScreen
                 _batch.draw(_circleNotFilled, start + (Overtone.ScreenWidth * 0.05f * (float)i), Overtone.ScreenHeight * 0.02f, Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f);
         }
 
+        // Render the help image on screen
         _batch.draw(_help[_helpIndex], Overtone.ScreenWidth * 0.125f, Overtone.ScreenHeight * 0.08f, Overtone.ScreenWidth * 0.75f, Overtone.ScreenHeight * 0.75f);
 
         _batch.end();
@@ -125,9 +127,7 @@ public class HelpScreen extends OvertoneScreen
         _stage.dispose();
 
         for(int i = 0; i < _help.length; i++)
-        {
             _help[i].dispose();
-        }
 
         _circleFilled.dispose();
         _circleNotFilled.dispose();

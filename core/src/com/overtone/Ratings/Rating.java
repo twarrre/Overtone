@@ -21,9 +21,9 @@ public class Rating
         Miss    (0, -1, 1),
         None    (0, 0, 2);
 
-        public int Score; // The score associated with each rating
-        public int ComboMultiplier;
-        public int SoundIndex;
+        public int Score;            // The score associated with each rating
+        public int ComboMultiplier;  // The multiplier for this rating
+        public int SoundIndex;       // The index into the sound array to play the particular sound
         RatingType(int score, int combo, int sound) {Score = score; ComboMultiplier = combo; SoundIndex = sound;}
     }
 

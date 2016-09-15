@@ -3,11 +3,8 @@ package com.overtone.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.overtone.GeneticAlgorithm.GeneticAlgorithm;
-import com.overtone.Notes.OvertoneNote;
 import com.overtone.Overtone;
 import com.overtone.Utilities;
-
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -28,7 +25,9 @@ public class LoadingScreen extends OvertoneScreen
     private float            _glowAlpha;        // The alpha of the glow for the logo
     private float            _glowDirection;    // The direction of the glow alpha
 
-    private String[]         _loadingStrings = new String[] {
+    // Array of strings to display while the genetic algorithm is running in the background
+    private String[]         _loadingStrings = new String[]
+    {
             "Tuning Instruments",
             "Replacing Strings",
             "Turing on Amp",
@@ -48,17 +47,18 @@ public class LoadingScreen extends OvertoneScreen
     public LoadingScreen()
     {
         super();
-        _completed       = false;
-        _logoNoGlow      = new Texture(Gdx.files.internal("Textures\\logo_noglow.png"));
-        _glow            = new Texture(Gdx.files.internal("Textures\\glow.png"));
-        _elapsedTime     = 0.0f;
-        _random          = new Random();
-        _stringIndex     = 0;
-        _timeInterval    = 1;
-        _glowAlpha       = 0.0f;
-        _glowDirection   = 0.01f;
-        _genetic         = new GeneticAlgorithm(Overtone.Regenerate);
+        _completed        = false;
+        _logoNoGlow       = new Texture(Gdx.files.internal("Textures\\logo_noglow.png"));
+        _glow             = new Texture(Gdx.files.internal("Textures\\glow.png"));
+        _elapsedTime      = 0.0f;
+        _random           = new Random();
+        _stringIndex      = 0;
+        _timeInterval     = 1;
+        _glowAlpha        = 0.0f;
+        _glowDirection    = 0.01f;
+        _genetic          = new GeneticAlgorithm(Overtone.Regenerate);
 
+        // Create the genetic thread to generate the notes using the genetic algorithm
         _generatingThread = new Thread(_genetic);
         _generatingThread.start();
     }
@@ -85,8 +85,10 @@ public class LoadingScreen extends OvertoneScreen
     {
         super.update(deltaTime);
 
-        // Update the glow for the loading screen
+        // Update the glow alpha value for the loading screen
         _glowAlpha = Utilities.Clamp(_glowAlpha + _glowDirection, 0, 1);
+
+       // Change the direction of the alpha change if the value hits 1 or 0
         if(_glowAlpha >= 1.0f || _glowAlpha <= 0.0f)
             _glowDirection *= -1.0f;
 
@@ -98,19 +100,20 @@ public class LoadingScreen extends OvertoneScreen
         {
             try
             {
+                // Wait for the thread if the algorithm is complete
                 _generatingThread.join();
             }
             catch (InterruptedException e)
             {
                 System.out.println("Thread Interrupted.");
             }
-
             _completed = true;
         }
         else
         {
             _elapsedTime += deltaTime;
 
+            // Change the loading string on the screen
             if(_elapsedTime > _timeInterval)
             {
                 _stringIndex =  _random.nextInt(_loadingStrings.length);

@@ -3,7 +3,6 @@ import com.overtone.GeneticAlgorithm.GeneticAlgorithm;
 import com.overtone.Utilities;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
-
 import java.util.Random;
 
 /**
@@ -12,6 +11,7 @@ import java.util.Random;
  */
 public class SimplifyMutator extends Mutator
 {
+    // Generate random number
     private Random _random;
     public SimplifyMutator()
     {
@@ -22,9 +22,11 @@ public class SimplifyMutator extends Mutator
     {
         for(int i = 0; i < p.length(); i++)
         {
+            // Skip rests
             if(p.getPhrase(i).getNote(0).isRest())
                 continue;
 
+            // Skip chords
             if(p.getPhrase(i).length() > 1)
                 continue;
 
@@ -35,6 +37,7 @@ public class SimplifyMutator extends Mutator
                 // Randomly choose the note ahead of it, or behind it
                 int leftOrRight = Utilities.GetRandom(-1, 1, 0.5f);
 
+                // Make sure that the next note does not go out of bounds and wraps
                 int phraseToCopy = i + leftOrRight;
                 if(i == 0 && leftOrRight == -1)
                     phraseToCopy = p.length() - 1;
@@ -51,11 +54,12 @@ public class SimplifyMutator extends Mutator
                     else if(i == p.length() - 1 && (leftOrRight * -1) == 1)
                         phraseToCopy = 0;
 
+                    // Skip rests
                     if(p.getPhrase(phraseToCopy).getNote(0).isRest())
                         continue;
                 }
 
-                // Get the pitch of a random note in the randomly selected phrase
+                // Get the pitch & dynamic of a random note in the randomly selected phrase
                 Phrase copyPhrase = p.getPhrase(phraseToCopy);
                 int newPitch = copyPhrase.getNote(_random.nextInt(copyPhrase.length())).getPitch();
                 int newDynamic = copyPhrase.getNote(_random.nextInt(copyPhrase.length())).getDynamic();
@@ -63,7 +67,7 @@ public class SimplifyMutator extends Mutator
                 // Get a random note in the phrase to be mutated
                 int noteToChangePitch = _random.nextInt(p.getPhrase(i).length());
 
-                // Change the pitch to the new one
+                // Change the pitch & dynamic to the new one
                 p.getPhrase(i).getNote(noteToChangePitch).setPitch(Math.round(Utilities.Clamp(newPitch, GeneticAlgorithm.LOW_PITCH, GeneticAlgorithm.HIGH_PITCH)));
                 p.getPhrase(i).getNote(noteToChangePitch).setDynamic(Math.round(Utilities.Clamp(newDynamic, GeneticAlgorithm.LOW_DYNAMIC, GeneticAlgorithm.HIGH_DYNAMIC)));
             }

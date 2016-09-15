@@ -42,9 +42,9 @@ public class OvertoneScreen implements OvertoneScreenInterface
     protected final Texture     _no;          // Texture for the no button
     protected final Texture     _noHover;     // Texture for the no button hover
     protected final Texture     _noDown;      // Texture for the no button down
-    protected final Texture     _ok;         // Texture for the yes button
-    protected final Texture     _okHover;    // Texture for the yes button hover
-    protected final Texture     _okDown;     // Texture for the yes button down
+    protected final Texture     _ok;          // Texture for the yes button
+    protected final Texture     _okHover;     // Texture for the yes button hover
+    protected final Texture     _okDown;      // Texture for the yes button down
     protected final Texture     _next;        // Texture for the next button
     protected final Texture     _nextHover;   // Texture for the next button hover
     protected final Texture     _nextDown;    // Texture for the next button down
@@ -112,6 +112,7 @@ public class OvertoneScreen implements OvertoneScreenInterface
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
 
+        // Set up images for buttons
         _skin.add("default", _font30);
         _skin.add("small", _font18);
         _skin.add("white", new Texture(pixmap));
@@ -131,55 +132,60 @@ public class OvertoneScreen implements OvertoneScreenInterface
         _skin.add("okHover", _okHover);
         _skin.add("okDown", _okDown);
 
+        // Set up a default text buttons
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.up      = _skin.newDrawable("white", new Color(0.157f, 0.325f, 0.424f, 0.75f));
-        textButtonStyle.down    = _skin.newDrawable("white", new Color(0.012f, 0.137f, 0.212f, 0.75f));
-        textButtonStyle.over    = _skin.newDrawable("white", new Color(0.067f, 0.224f, 0.318f, 0.75f));
-
+        textButtonStyle.up   = _skin.newDrawable("white", new Color(0.157f, 0.325f, 0.424f, 0.75f));
+        textButtonStyle.down = _skin.newDrawable("white", new Color(0.012f, 0.137f, 0.212f, 0.75f));
+        textButtonStyle.over = _skin.newDrawable("white", new Color(0.067f, 0.224f, 0.318f, 0.75f));
         textButtonStyle.font = _skin.getFont("default");
         _skin.add("default", textButtonStyle);
 
+        // Set up small text buttons
         TextButton.TextButtonStyle textButtonStyleSmall = new TextButton.TextButtonStyle();
-        textButtonStyleSmall.up      = _skin.newDrawable("white", new Color(0.157f, 0.325f, 0.424f, 0.75f));
-        textButtonStyleSmall.down    = _skin.newDrawable("white", new Color(0.012f, 0.137f, 0.212f, 0.75f));
-        textButtonStyleSmall.over    = _skin.newDrawable("white", new Color(0.067f, 0.224f, 0.318f, 0.75f));
-
+        textButtonStyleSmall.up   = _skin.newDrawable("white", new Color(0.157f, 0.325f, 0.424f, 0.75f));
+        textButtonStyleSmall.down = _skin.newDrawable("white", new Color(0.012f, 0.137f, 0.212f, 0.75f));
+        textButtonStyleSmall.over = _skin.newDrawable("white", new Color(0.067f, 0.224f, 0.318f, 0.75f));
         textButtonStyleSmall.font = _skin.getFont("small");
         _skin.add("small", textButtonStyleSmall);
 
+        // Set a button group of text buttons
         TextButton.TextButtonStyle buttonGroupStyle = new TextButton.TextButtonStyle();
-        buttonGroupStyle.up         = _skin.newDrawable("white", new Color(0.157f, 0.325f, 0.424f, 0.75f));
-        buttonGroupStyle.down       = _skin.newDrawable("white", new Color(0.012f, 0.137f, 0.212f, 0.75f));
-        buttonGroupStyle.over       = _skin.newDrawable("white", new Color(0.067f, 0.224f, 0.318f, 0.75f));
-        buttonGroupStyle.checked    = _skin.newDrawable("white", new Color(0.467f, 0.224f, 0.318f, 0.75f));
-
+        buttonGroupStyle.up      = _skin.newDrawable("white", new Color(0.157f, 0.325f, 0.424f, 0.75f));
+        buttonGroupStyle.down    = _skin.newDrawable("white", new Color(0.012f, 0.137f, 0.212f, 0.75f));
+        buttonGroupStyle.over    = _skin.newDrawable("white", new Color(0.067f, 0.224f, 0.318f, 0.75f));
+        buttonGroupStyle.checked = _skin.newDrawable("white", new Color(0.467f, 0.224f, 0.318f, 0.75f));
         buttonGroupStyle.font = _skin.getFont("default");
         _skin.add("group", buttonGroupStyle);
 
+        // Set up image button for yes / like
         ImageButton.ImageButtonStyle imageButtonStyleYes = new ImageButton.ImageButtonStyle();
         imageButtonStyleYes.up   = _skin.newDrawable("yes", new Color(1f, 1f, 1f, 1f));
         imageButtonStyleYes.over = _skin.newDrawable("yesHover", new Color(1f, 1f, 1f, 1f));
         imageButtonStyleYes.down = _skin.newDrawable("yesDown", new Color(1f, 1f, 1f, 1f));
         _skin.add("yesButtons", imageButtonStyleYes);
 
+        // Set up image button for no button
         ImageButton.ImageButtonStyle imageButtonStyleNo = new ImageButton.ImageButtonStyle();
         imageButtonStyleNo.up   = _skin.newDrawable("no", new Color(1f, 1f, 1f, 1f));
         imageButtonStyleNo.over = _skin.newDrawable("noHover", new Color(1f, 1f, 1f, 1f));
         imageButtonStyleNo.down = _skin.newDrawable("noDown", new Color(1f, 1f, 1f, 1f));
         _skin.add("noButtons", imageButtonStyleNo);
 
+        // Set up button for ok / average button
         ImageButton.ImageButtonStyle imageButtonStyleOk = new ImageButton.ImageButtonStyle();
         imageButtonStyleOk.up   = _skin.newDrawable("ok", new Color(1f, 1f, 1f, 1f));
         imageButtonStyleOk.over = _skin.newDrawable("okHover", new Color(1f, 1f, 1f, 1f));
         imageButtonStyleOk.down = _skin.newDrawable("okDown", new Color(1f, 1f, 1f, 1f));
         _skin.add("okButtons", imageButtonStyleOk);
 
+        // Image button for right facing arrow
         ImageButton.ImageButtonStyle imageButtonStyleNext = new ImageButton.ImageButtonStyle();
         imageButtonStyleNext.up   = _skin.newDrawable("next", new Color(1f, 1f, 1f, 1f));
         imageButtonStyleNext.over = _skin.newDrawable("nextHover", new Color(1f, 1f, 1f, 1f));
         imageButtonStyleNext.down = _skin.newDrawable("nextDown", new Color(1f, 1f, 1f, 1f));
         _skin.add("nextButton", imageButtonStyleNext);
 
+        // Set up image button for left facing arrow
         ImageButton.ImageButtonStyle imageButtonStyleBack = new ImageButton.ImageButtonStyle();
         imageButtonStyleBack.up   = _skin.newDrawable("back", new Color(1f, 1f, 1f, 1f));
         imageButtonStyleBack.over = _skin.newDrawable("backHover", new Color(1f, 1f, 1f, 1f));

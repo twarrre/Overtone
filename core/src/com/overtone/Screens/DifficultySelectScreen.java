@@ -2,16 +2,14 @@ package com.overtone.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.overtone.Overtone;
 
 /**
- * Screen used form the difficulty select screen
+ * Screen used to select the difficulty for the song
  * Created by trevor on 2016-05-01.
  */
 public class DifficultySelectScreen extends OvertoneScreen

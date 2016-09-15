@@ -28,7 +28,7 @@ public class OvertoneNote implements Comparable<OvertoneNote>
     private boolean        _connectorRendered; // True if the note is double or hold and it's connector has been rendered on screen
     private OvertoneNote   _partnerNote;       // Stores a reference to the partner note if it is a hold or double note, null otherwise
     private float          _otherNoteTime;     // Time that the note must be at the target zone at
-    private boolean        _completed;
+    private boolean        _completed;         // True if the note has passed a target zone or has been pressed with a button press
 
     /**
      * Constructor
@@ -38,11 +38,10 @@ public class OvertoneNote implements Comparable<OvertoneNote>
      */
     public OvertoneNote(NoteType type, Target target, float timer)
     {
-        float distance     = target.Position.dst(Overtone.NoteCenter);                                                   // Find the distance from the target to the center of the note
-
+        float distance     = target.Position.dst(Overtone.NoteCenter);                                                                // Find the distance from the target to the center of the note
         _direction         = new Vector2(target.Position.x - Overtone.NoteCenter.x, target.Position.y - Overtone.NoteCenter.y).nor(); // Creates a vector point in the direction of the target zone
         _center            = new Vector2(Overtone.NoteCenter.x + _direction.x, Overtone.NoteCenter.y + _direction.y);                 // Shift the center into the proper quad based on the direction it is going
-        _speed             = distance / Overtone.Difficulty.Multiplier;                                     // Calculate the speed of note (dist / time)
+        _speed             = distance / Overtone.Difficulty.Multiplier;                                                               // Calculate the speed of note (dist / time)
         _target            = target;
         _time              = timer;
         _type              = type;
@@ -61,7 +60,6 @@ public class OvertoneNote implements Comparable<OvertoneNote>
     public OvertoneNote(OvertoneNote n)
     {
         float distance     = n.GetTarget().Position.dst(n.GetCenter());                                                                 // Find the distance from the target to the center of the note
-
         _direction         = new Vector2(n.GetTarget().Position.x - n.GetCenter().x, n.GetTarget().Position.y - n.GetCenter().y).nor(); // Creates a vector point in the direction of the target zone
         _center            = new Vector2(n.GetCenter().x + _direction.x, n.GetCenter().y + _direction.y);                               // Shift the center into the proper quad based on the direction it is going
         _speed             = distance / Overtone.Difficulty.Multiplier;                                                                 // Calculate the speed of note (dist / time)
@@ -220,7 +218,14 @@ public class OvertoneNote implements Comparable<OvertoneNote>
             return 1;
     }
 
+    /**
+     * @return Whether or not the note process has been completed or note
+     */
     public boolean IsCompleted() {return _completed;}
 
-    public void SetComplted(boolean val) {_completed = val; }
+    /**
+     * Sets the completed value of the note
+     * @param val The value to set the note to
+     */
+    public void SetCompleted(boolean val) {_completed = val; }
 }

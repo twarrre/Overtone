@@ -6,11 +6,11 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.overtone.GeneticAlgorithm.Raters.NeighboringPitchRater;
 import com.overtone.Overtone;
 import com.overtone.Utilities;
 
 /**
+ * Mutation screen to change mutation percentage values.
  * Created by trevor on 2016-09-04.
  */
 public class MutationScreen extends OvertoneScreen
@@ -35,7 +35,7 @@ public class MutationScreen extends OvertoneScreen
             }
         });
 
-        // Pitch Mutators
+        // Starting point for pitch mutation next button
         final Button pitchNextStart = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.45f, Overtone.ScreenHeight * 0.72f - Overtone.ScreenWidth * 0.025f), _stage);
         pitchNextStart.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -45,6 +45,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
+        // Starting point for pitch mutation back button
         final Button pitchBackStart = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.35f, Overtone.ScreenHeight * 0.72f - Overtone.ScreenWidth * 0.025f), _stage);
         pitchBackStart.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -54,6 +55,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
+        // Minimum mutation percentage for pitch mutation next button
         final Button pitchNextMin = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.65f, Overtone.ScreenHeight * 0.72f - Overtone.ScreenWidth * 0.025f), _stage);
         pitchNextMin.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -62,6 +64,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
+        // Minimum mutation percentage for pitch mutation back button
         final Button pitchBackMin = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.55f, Overtone.ScreenHeight * 0.72f - Overtone.ScreenWidth * 0.025f), _stage);
         pitchBackMin.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -70,6 +73,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
+        // Pitch mutator step value next button
         final Button pitchNextStep = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.85f, Overtone.ScreenHeight * 0.72f - Overtone.ScreenWidth * 0.025f), _stage);
         pitchNextStep.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -77,6 +81,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
+        // Pitch mutator step value back button
         final Button pitchBackStep = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.75f, Overtone.ScreenHeight * 0.72f - Overtone.ScreenWidth * 0.025f), _stage);
         pitchBackStep.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -86,7 +91,7 @@ public class MutationScreen extends OvertoneScreen
 
 
 
-        // Rhythm Mutators
+        // Rhythm Mutator starting percentage next
         final Button rhythmNextStart = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.45f, Overtone.ScreenHeight * 0.57f - Overtone.ScreenWidth * 0.025f), _stage);
         rhythmNextStart.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -96,7 +101,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
-        // Create the back button for num iterations
+        // Rhythm Mutator starting percentage back
         final Button rhythBackStart = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.35f, Overtone.ScreenHeight * 0.57f - Overtone.ScreenWidth * 0.025f), _stage);
         rhythBackStart.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -106,6 +111,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
+        // Rhythm Mutator minimum percentage next
         final Button rhythmNextMin = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.65f, Overtone.ScreenHeight * 0.57f - Overtone.ScreenWidth * 0.025f), _stage);
         rhythmNextMin.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -114,15 +120,16 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
-        // Create the back button for num iterations
-        final Button rhythBackMin = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.55f, Overtone.ScreenHeight * 0.57f - Overtone.ScreenWidth * 0.025f), _stage);
-        rhythBackMin.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+        // Rhythm Mutator minimum percentage back
+        final Button rhythmBackMin = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.55f, Overtone.ScreenHeight * 0.57f - Overtone.ScreenWidth * 0.025f), _stage);
+        rhythmBackMin.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.RhythmMutatorValues[1] = Utilities.Clamp(Overtone.RhythmMutatorValues[1] - 0.01f, 0.0f, Overtone.RhythmMutatorValues[0]);
             Overtone.RhythmMutatorValues[2] = Utilities.Clamp(Overtone.RhythmMutatorValues[2], 0.0f, Overtone.RhythmMutatorValues[0]);
             Utilities.WriteMutationValues();
         }});
 
+        // Rhythm Mutator step percentage next
         final Button rhythmNextStep = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.85f, Overtone.ScreenHeight * 0.57f - Overtone.ScreenWidth * 0.025f), _stage);
         rhythmNextStep.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -130,9 +137,9 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
-        // Create the back button for num iterations
-        final Button rhythBackStep = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.75f, Overtone.ScreenHeight * 0.57f - Overtone.ScreenWidth * 0.025f), _stage);
-        rhythBackStep.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
+        // Rhythm Mutator step percentage back
+        final Button rhythmBackStep = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.75f, Overtone.ScreenHeight * 0.57f - Overtone.ScreenWidth * 0.025f), _stage);
+        rhythmBackStep.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
             Overtone.RhythmMutatorValues[2] = Utilities.Clamp(Overtone.RhythmMutatorValues[2] - 0.01f, 0.0f, Overtone.RhythmMutatorValues[0]);
             Utilities.WriteMutationValues();
@@ -141,7 +148,7 @@ public class MutationScreen extends OvertoneScreen
 
 
 
-        // Simplify Mutators
+        // Simplify mutators starting percentage next
         final Button simpNextStart = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.45f, Overtone.ScreenHeight * 0.42f - Overtone.ScreenWidth * 0.025f), _stage);
         simpNextStart.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -151,7 +158,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
-        // Create the back button for num iterations
+        // Simplify mutators starting percentage back
         final Button simpBackStart = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.35f, Overtone.ScreenHeight * 0.42f - Overtone.ScreenWidth * 0.025f), _stage);
         simpBackStart.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -161,6 +168,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
+        // Simplify mutators minimum percentage next
         final Button simpNextMin = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.65f, Overtone.ScreenHeight * 0.42f - Overtone.ScreenWidth * 0.025f), _stage);
         simpNextMin.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -169,7 +177,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
-        // Create the back button for num iterations
+        // Simplify mutators minimum percentage back
         final Button simpBackMin = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.55f, Overtone.ScreenHeight * 0.42f - Overtone.ScreenWidth * 0.025f), _stage);
         simpBackMin.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -178,6 +186,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
+        // Simplify mutators step percentage next
         final Button simpNextStep = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.85f, Overtone.ScreenHeight * 0.42f - Overtone.ScreenWidth * 0.025f), _stage);
         simpNextStep.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -185,7 +194,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
-        // Create the back button for num iterations
+        // Simplify mutators step percentage back
         final Button simpBackStep = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.75f, Overtone.ScreenHeight * 0.42f - Overtone.ScreenWidth * 0.025f), _stage);
         simpBackStep.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -196,7 +205,7 @@ public class MutationScreen extends OvertoneScreen
 
 
 
-        // Swap Mutators
+        // Swap mutator starting percentage next
         final Button swapNextStart = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.45f, Overtone.ScreenHeight * 0.27f - Overtone.ScreenWidth * 0.025f), _stage);
         swapNextStart.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -206,7 +215,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
-        // Create the back button for num iterations
+        // Swap mutator starting percentage back
         final Button swapBackStart = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.35f, Overtone.ScreenHeight * 0.27f - Overtone.ScreenWidth * 0.025f), _stage);
         swapBackStart.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -216,6 +225,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
+        // Swap mutator minimum percentage next
         final Button swapNextMin = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.65f, Overtone.ScreenHeight * 0.27f - Overtone.ScreenWidth * 0.025f), _stage);
         swapNextMin.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -224,7 +234,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
-        // Create the back button for num iterations
+        // Swap mutator minimum percentage back
         final Button swapBackMin = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.55f, Overtone.ScreenHeight * 0.27f - Overtone.ScreenWidth * 0.025f), _stage);
         swapBackMin.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -233,6 +243,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
+        // Swap mutator step percentage next
         final Button swapNextStep = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.85f, Overtone.ScreenHeight * 0.27f - Overtone.ScreenWidth * 0.025f), _stage);
         swapNextStep.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -240,7 +251,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
-        // Create the back button for num iterations
+        // Swap mutator step percentage back
         final Button swapBackStep = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.75f, Overtone.ScreenHeight * 0.27f - Overtone.ScreenWidth * 0.025f), _stage);
         swapBackStep.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -250,7 +261,7 @@ public class MutationScreen extends OvertoneScreen
 
 
 
-        // Dynamic Mutators
+        // Dynamic mutators starting percentage next
         final Button dyNextStart = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.45f, Overtone.ScreenHeight * 0.12f - Overtone.ScreenWidth * 0.025f), _stage);
         dyNextStart.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -260,7 +271,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
-        // Create the back button for num iterations
+        // Dynamic mutators starting percentage back
         final Button dyBackStart = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.35f, Overtone.ScreenHeight * 0.12f - Overtone.ScreenWidth * 0.025f), _stage);
         dyBackStart.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -270,6 +281,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
+        // Dynamic mutators minimum percentage next
         final Button dyNextMin = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.65f, Overtone.ScreenHeight * 0.12f - Overtone.ScreenWidth * 0.025f), _stage);
         dyNextMin.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -278,7 +290,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
-        // Create the back button for num iterations
+        // Dynamic mutators minimum percentage back
         final Button dyBackMin = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.55f, Overtone.ScreenHeight * 0.12f - Overtone.ScreenWidth * 0.025f), _stage);
         dyBackMin.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -287,6 +299,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
+        // Dynamic mutators step percentage next
         final Button dyNextStep = CreateButton(null, "nextButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f, new Vector2(Overtone.ScreenWidth * 0.85f, Overtone.ScreenHeight * 0.12f - Overtone.ScreenWidth * 0.025f), _stage);
         dyNextStep.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);
@@ -294,7 +307,7 @@ public class MutationScreen extends OvertoneScreen
             Utilities.WriteMutationValues();
         }});
 
-        // Create the back button for num iterations
+        // Dynamic mutators step percentage back
         final Button dyBackStep = CreateButton(null, "backButton", Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f,  new Vector2(Overtone.ScreenWidth * 0.75f, Overtone.ScreenHeight * 0.12f - Overtone.ScreenWidth * 0.025f), _stage);
         dyBackStep.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             _buttonPress.play(Overtone.SFXVolume);

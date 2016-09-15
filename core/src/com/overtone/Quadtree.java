@@ -6,7 +6,7 @@ import com.overtone.Notes.OvertoneNote;
 import java.util.ArrayList;
 
 /**
- * Quadtree data structure
+ * Quadtree data structure used to sort the notes in each quadrant.
  * Created by trevor on 2016-07-01.
  */
 public class Quadtree
@@ -137,10 +137,10 @@ public class Quadtree
             float bottomRightX      = node._bounds.x + childWidthLeft;
             float bottomRightY      = node._bounds.y ;
 
-            node.topLeft         = new Node(new Rectangle(topLeftX,     topLeftY,     childWidthLeft,  childHeightTop),    node);
-            node.topRight        = new Node(new Rectangle(topRightX,    topRightY,    childWidthRight, childHeightTop),    node);
-            node.bottomLeft      = new Node(new Rectangle(bottomLeftX,  bottomLeftY,  childWidthLeft,  childHeightBottom), node);
-            node.bottomRight     = new Node(new Rectangle(bottomRightX, bottomRightY, childWidthRight, childHeightBottom), node);
+            node.topLeft            = new Node(new Rectangle(topLeftX,     topLeftY,     childWidthLeft,  childHeightTop),    node);
+            node.topRight           = new Node(new Rectangle(topRightX,    topRightY,    childWidthRight, childHeightTop),    node);
+            node.bottomLeft         = new Node(new Rectangle(bottomLeftX,  bottomLeftY,  childWidthLeft,  childHeightBottom), node);
+            node.bottomRight        = new Node(new Rectangle(bottomRightX, bottomRightY, childWidthRight, childHeightBottom), node);
 
             level++;
 
@@ -162,7 +162,6 @@ public class Quadtree
     {
         if (!node._bounds.contains(note.GetCenter().x, note.GetCenter().y))
             return false;
-
 
         if (node.topLeft == null)
         {
@@ -293,7 +292,6 @@ public class Quadtree
             }
             else
                 return false;
-
         }
     }
 }

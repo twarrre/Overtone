@@ -103,7 +103,10 @@ public class MainMenuScreen extends OvertoneScreen
         super.update(deltaTime);
         _stage.act(deltaTime);
 
+        // Update glow alpha value
         _glowAlpha = Utilities.Clamp(_glowAlpha + _glowDirection, 0, 1);
+
+        // If the alpha is 1 or 0 change the direction that the alpha is switch
         if(_glowAlpha >= 1.0f || _glowAlpha <= 0.0f)
             _glowDirection *= -1.0f;
 

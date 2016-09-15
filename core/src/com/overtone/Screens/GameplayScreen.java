@@ -19,7 +19,6 @@ import com.overtone.Quadtree;
 import com.overtone.Ratings.Rating;
 import com.overtone.Ratings.RatingRenderer;
 import com.overtone.Utilities;
-import com.sun.corba.se.impl.javax.rmi.CORBA.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -358,8 +357,8 @@ public class GameplayScreen extends OvertoneScreen
         {
             PlaySongCompletionSFX(true);
             _songComplete = true;
-            if(Overtone.GameplaySequencer.isRunning())
-                Overtone.GameplaySequencer.stop();
+            if(Overtone.BeatSequencer.isRunning())
+                Overtone.BeatSequencer.stop();
         }
 
         // Play the note at its start time
@@ -414,7 +413,7 @@ public class GameplayScreen extends OvertoneScreen
             {
                 _missCounter++;
                 _onScreenRatings.add(new Rating(Rating.RatingType.Miss, n.GetPosition(), _ratingScale));
-                n.SetComplted(true);
+                n.SetCompleted(true);
                 n.SetVisibility(false);
                 if(n.GetType() == OvertoneNote.NoteType.Hold && !n.GetOtherNote().IsCompleted()) // if a miss was a hold note then remove the other one
                 {
@@ -422,7 +421,7 @@ public class GameplayScreen extends OvertoneScreen
                     HandleRating(rating);
 
                     n.GetOtherNote().SetVisibility(false);
-                    n.GetOtherNote().SetComplted(true);
+                    n.GetOtherNote().SetCompleted(true);
                     if(!_onScreenNotes.Remove(n.GetOtherNote()))// if it is note in the quadtree the remove it from the note que
                         if(!Overtone.NoteQueue.remove(n.GetOtherNote()))
                             _holdNotesOnScreen.remove(n.GetOtherNote());
@@ -476,7 +475,7 @@ public class GameplayScreen extends OvertoneScreen
                 HandleRating(rating);
 
                 currentNote.GetOtherNote().SetVisibility(false);
-                currentNote.GetOtherNote().SetComplted(true);
+                currentNote.GetOtherNote().SetCompleted(true);
                 if(!_onScreenNotes.Remove(currentNote.GetOtherNote()))// if it is note in the quadtree the remove it from the note que
                     if(!Overtone.NoteQueue.remove(currentNote.GetOtherNote()))
                         _holdNotesOnScreen.remove(currentNote.GetOtherNote());
@@ -495,7 +494,7 @@ public class GameplayScreen extends OvertoneScreen
                 {
                     Rating rating = GetNoteRating( Overtone.TargetZones[i].Position, close);
                     HandleRating(rating);
-                    close.SetComplted(true);
+                    close.SetCompleted(true);
 
                     // If the player missed the first hold note, then remove the other one.
                     if(rating.GetRating() == Rating.RatingType.Miss && close.GetType() == OvertoneNote.NoteType.Hold && !close.GetOtherNote().IsCompleted())
@@ -504,7 +503,7 @@ public class GameplayScreen extends OvertoneScreen
                         HandleRating(rating2);
 
                         close.GetOtherNote().SetVisibility(false);
-                        close.GetOtherNote().SetComplted(true);
+                        close.GetOtherNote().SetCompleted(true);
                         if (!_onScreenNotes.Remove(close.GetOtherNote()))// if it is note in the quadtree the remove it from the note que
                             if(!Overtone.NoteQueue.remove(close.GetOtherNote()))
                                 _holdNotesOnScreen.remove(close.GetOtherNote());
@@ -629,8 +628,8 @@ public class GameplayScreen extends OvertoneScreen
         {
             PlaySongCompletionSFX(false);
             _songComplete = true;
-            if( Overtone.GameplaySequencer.isRunning())
-                Overtone.GameplaySequencer.stop();
+            if( Overtone.BeatSequencer.isRunning())
+                Overtone.BeatSequencer.stop();
         }
 
         // Update the crowd, to reflect the rating
@@ -678,11 +677,11 @@ public class GameplayScreen extends OvertoneScreen
                 Overtone.GameNoteSequencers.get(i).first.close();
         }
 
-        if(Overtone.GameplaySequencer.isRunning())
-            Overtone.GameplaySequencer.stop();
+        if(Overtone.BeatSequencer.isRunning())
+            Overtone.BeatSequencer.stop();
 
-        if(Overtone.GameplaySequencer.isOpen())
-            Overtone.GameplaySequencer.close();
+        if(Overtone.BeatSequencer.isOpen())
+            Overtone.BeatSequencer.close();
     }
     public void dispose ()
     {
@@ -724,11 +723,11 @@ public class GameplayScreen extends OvertoneScreen
                 Overtone.GameNoteSequencers.get(i).first.close();
         }
 
-        if(Overtone.GameplaySequencer.isRunning())
-            Overtone.GameplaySequencer.stop();
+        if(Overtone.BeatSequencer.isRunning())
+            Overtone.BeatSequencer.stop();
 
-        if(Overtone.GameplaySequencer.isOpen())
-            Overtone.GameplaySequencer.close();
+        if(Overtone.BeatSequencer.isOpen())
+            Overtone.BeatSequencer.close();
     }
 
     /**

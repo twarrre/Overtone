@@ -14,8 +14,8 @@ public class SplashScreen extends OvertoneScreen
     /**The amount of time the screen stays on screen*/
     private static final float SPLASH_TIME = 3.0f;
 
-    private final InputManager _inputManager;       // Manager for input
-    private float              _elapsedTime; // amount of time the screen has been rendered
+    private final InputManager _inputManager; // Manager for input
+    private float              _elapsedTime;  // amount of time the screen has been rendered
 
     /**
      * Constructor
@@ -47,6 +47,7 @@ public class SplashScreen extends OvertoneScreen
         _inputManager.Update();
         _elapsedTime += deltaTime;
 
+        // Check input to skip the splash screen.
         if (_elapsedTime >= SPLASH_TIME
                 || Gdx.input.isButtonPressed(Input.Keys.ENTER)
                 || Gdx.input.isButtonPressed(Input.Buttons.LEFT)

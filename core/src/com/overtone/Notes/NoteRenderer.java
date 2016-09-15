@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
@@ -110,7 +109,7 @@ public class NoteRenderer
         Vector2 dir             = new Vector2(otherCenter.x - noteCenter.x, otherCenter.y - noteCenter.y).nor(); // Direction from the first note to the other note
         Vector2 pos             = new Vector2(noteCenter.x, noteCenter.y);                                       // The starting position for the connector
         Vector2 dirFromPos      = new Vector2(otherCenter.x - pos.x , otherCenter.y - pos.y);                    // Direction from the drawing position to the other note
-        Vector2 connectorScale  = new Vector2( n.GetScale().x * 0.5f,  n.GetScale().y * 0.5f);                    // Set the connector to be half the size of a note.
+        Vector2 connectorScale  = new Vector2( n.GetScale().x * 0.5f,  n.GetScale().y * 0.5f);                   // Set the connector to be half the size of a note.
 
         while(dirFromPos.dot(dir) >= 0) // While the direction from pos to other note is pointed in the same direction as dir (as in, while pos has not passed the other note)
         {
@@ -118,6 +117,7 @@ public class NoteRenderer
             pos.add(( connectorScale.x / 4.0f) * dir.x, ( connectorScale.y / 4.0f) * dir.y); // Move the connector position down the direction 1/4 the size of a connector
             dirFromPos  = new Vector2(otherCenter.x - pos.x , otherCenter.y - pos.y);        // Update the direction from position to the other note
         }
+
         // Set connector rendered to true
         n.GetOtherNote().SetConnectorRendered(true);
         n.SetConnectorRendered(true);
