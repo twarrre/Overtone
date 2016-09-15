@@ -15,24 +15,29 @@ public class PitchDirectionRater extends Rater
         int pitchesHigherThanBefore = 0;
         int numNotes                = 0;
         int prevPitch               = -1;
+        Part track                  = p.GetTrack();
 
-        Part track = p.GetTrack();
         for(int i = 0; i < track.length(); i++)
         {
+            // Get the phrase
             Phrase ph = track.getPhrase(i);
-            if(ph.length() > 1)
+
+            // If it is a chord  or rest skip it
+            if(ph.length() > 1 || ph.getNote(0).isRest())
                 continue;
 
-            if(ph.getNote(0).isRest())
-                continue;
-
+            // if the note was higher then before, increment
             if(ph.getNote(0).getPitch() > prevPitch && prevPitch != -1)
                 pitchesHigherThanBefore++;
 
+            // Save the previous pitch
             prevPitch = ph.getNote(0).getPitch();
+
+            // Increment the number if notes
             numNotes++;
         }
 
+        // Return the rating
         if(numNotes == 0)
             return 0;
         else

@@ -163,6 +163,8 @@ public class GeneticAlgorithm implements Runnable, JMC
         _raters[13]        = new RhythmRangeRater();
         _raters[14]        = new UniqueDynamicRater();
         _raters[15]        = new ChordRatioRater();
+        _raters[16]        = new RestRatioRater();
+        _raters[17]        = new RhythmStabilityRater();
         _mutators          = new ArrayList<Mutator>();
         _isCompleted       = false;
         _random            = new Random();

@@ -8,5 +8,10 @@ import com.overtone.GeneticAlgorithm.Organism;
  */
 public abstract class Rater
 {
+    /**
+     * Rates an organism's phrase.
+     * @param p The organism to rate
+     * @return the rating of the phrase.
+     */
     public abstract float Rate(Organism p);
 }

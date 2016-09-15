@@ -13,21 +13,26 @@ public class ContinuousSilenceRater extends Rater
     public float Rate(Organism p)
     {
         float totalSilenceLength = 0;
-        float totalLength = 0;
+        float totalLength        = 0;
+        Part track               = p.GetTrack();
 
-        Part track = p.GetTrack();
         for(int i = 0; i < track.length(); i++)
         {
+            // Get the track
             Phrase ph = track.getPhrase(i);
+
+            // Get The duration of the note
             if(ph.length() > 1)
                 totalLength += ph.getNote(ph.length() - 1).getDuration();
             else
                 totalLength += ph.getNote(0).getDuration();
 
+            // It the note was a rest, save it's duration
             if(ph.getNote(0).isRest())
                 totalSilenceLength += ph.getNote(0).getDuration();
         }
 
+        // Return the rating value
         return 1.0f - (totalSilenceLength / totalLength);
     }
 }

@@ -8,5 +8,11 @@ import jm.music.data.Part;
  */
 public abstract class Mutator
 {
+    /**
+     * Mutates a part.
+     * @param p The part to be mutated
+     * @param probability The probability that a mutation will occur
+     * @return The new mutated part
+     */
     public abstract Part Mutate(Part p, float probability);
 }

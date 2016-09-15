@@ -3,6 +3,8 @@ package com.overtone;
 import com.badlogic.gdx.Gdx;
 import com.overtone.Notes.OvertoneNote;
 import jm.JMC;
+
+import javax.rmi.CORBA.Util;
 import javax.sound.midi.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -222,7 +224,7 @@ public class Utilities implements JMC
 
             while ((line = reader.readLine())!= null && index < Overtone.NUM_RATERS) // While there is a lind to read
             {
-                Overtone.BestRaterValues[index] = Float.parseFloat(line);
+                Overtone.BestRaterValues[index] = Clamp(Float.parseFloat(line), 0.0f, 1.0f);
                 index++;
             }
 
@@ -254,7 +256,7 @@ public class Utilities implements JMC
                 if(clear)
                     writer.write(0.5 + "");
                 else
-                    writer.write(Overtone.BestRaterValues[i] + "");
+                    writer.write(Clamp(Overtone.BestRaterValues[i], 0.0f, 1.0f) + "");
                 writer.newLine();
             }
 
@@ -281,7 +283,7 @@ public class Utilities implements JMC
     public static void AverageRaterValues()
     {
         for(int i = 0; i < Overtone.NUM_RATERS; i++)
-            Overtone.BestRaterValues[i] = Utilities.Clamp((Overtone.BestRaterValues[i] + Overtone.CurrentRaterValues[i]) / 2.0f, 0.0f, 1.0f);
+            Overtone.BestRaterValues[i] = Utilities.Clamp(((Overtone.BestRaterValues[i] + Overtone.CurrentRaterValues[i]) / 2.0f), 0.0f, 1.0f);
     }
 
     /**

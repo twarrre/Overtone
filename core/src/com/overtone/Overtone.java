@@ -22,7 +22,7 @@ public class Overtone extends ApplicationAdapter implements JMC
 	/** Maximum number of scores per difficulty. */
 	public static final int NUM_SCORES = 10;
 	/** The number of total raters in the genetic algorithm. */
-	public static final int NUM_RATERS  = 16;
+	public static final int NUM_RATERS  = 18;
 
 	/**Enum for the different types of screens*/
 	public enum Screens
