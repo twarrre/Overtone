@@ -283,9 +283,10 @@ public class Overtone extends ApplicationAdapter implements JMC
 	 * @param s The type of the next screen
 	 * @param completed True if the song was successfully completed, false otherwise
 	 * @param score The score that the player achieved
+	 * @param combo The combo achied by the player
 	 * @param counters Counters for each type of rating
      */
-	public static void SetScreen(Screens s, boolean completed, int score, int ... counters)
+	public static void SetScreen(Screens s, boolean completed, int score, int combo, int ... counters)
 	{
 		_currentScreen.hide();
 
@@ -293,7 +294,7 @@ public class Overtone extends ApplicationAdapter implements JMC
 			MenuSequencer.start();
 
 		if (s == Screens.SongComplete)
-			_currentScreen = new SongCompleteScreen(completed, score, counters);
+			_currentScreen = new SongCompleteScreen(completed, score, combo, counters);
 
 		_currentScreen.show();
 	}

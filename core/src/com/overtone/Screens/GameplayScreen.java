@@ -101,6 +101,7 @@ public class GameplayScreen extends OvertoneScreen
     private int                                             _score;              // The current score
     private int                                             _currentNote;        // The current note to be played in in teh sequencers
     private int                                             _lastClosedNote;     // The last closed sequencer
+    private int                                             _highestCombo;       // The highest combo achieved
 
     /**
      * Constructor
@@ -167,7 +168,7 @@ public class GameplayScreen extends OvertoneScreen
         _goodCounter           = 0;
         _badCounter            = 0;
         _missCounter           = 0;
-        _combo                 = 0;
+        _combo                 = 1;
         _score                 = 0;
         _currentNote           = 0;
         _lastClosedNote        = -1;
@@ -175,6 +176,7 @@ public class GameplayScreen extends OvertoneScreen
         _holdNotesOnScreen     = new HashMap<OvertoneNote, InputManager.KeyBinding>();
         _onScreenNotes         = new Quadtree(new Rectangle(0, 0, Overtone.ScreenWidth, Overtone.ScreenHeight));
         _onScreenRatings       = new ArrayList<Rating>();
+        _highestCombo          = 1;
 
         // Create the resume button on the paused menu
         _resumeButton = CreateButton("RESUME", "small", Overtone.ScreenWidth * 0.2f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.4f, Overtone.ScreenHeight * 0.725f), _stage);
@@ -215,7 +217,7 @@ public class GameplayScreen extends OvertoneScreen
         _quitButton.addListener(new ClickListener() {
             public void clicked (InputEvent i, float x, float y) {
                 _buttonPress.play(Overtone.SFXVolume);
-                Overtone.SetScreen(Overtone.Screens.SongComplete, false, _score, _perfectCounter, _greatCounter, _goodCounter, _badCounter, _missCounter);
+                Overtone.SetScreen(Overtone.Screens.SongComplete, false, _score, _highestCombo, _perfectCounter, _greatCounter, _goodCounter, _badCounter, _missCounter);
             }
         });
 
@@ -346,7 +348,7 @@ public class GameplayScreen extends OvertoneScreen
 
             _completionTimer += deltaTime;
             if(_completionTimer > COMPLETION_DELAY)
-                Overtone.SetScreen(Overtone.Screens.SongComplete, _elapsedTime <  Overtone.TotalTime ? false : true, _score, _perfectCounter, _greatCounter, _goodCounter, _badCounter, _missCounter);
+                Overtone.SetScreen(Overtone.Screens.SongComplete, _elapsedTime <  Overtone.TotalTime ? false : true, _score, _highestCombo, _perfectCounter, _greatCounter, _goodCounter, _badCounter, _missCounter);
             return;
         }
 
@@ -436,7 +438,7 @@ public class GameplayScreen extends OvertoneScreen
                     _holdNotesOnScreen.remove(n);
                 }
             }
-            _combo = 0;
+            _combo = 1;
         }
 
         // Update on screen ratings
@@ -539,9 +541,17 @@ public class GameplayScreen extends OvertoneScreen
     {
         // Update the combo based on the rating
         if(rating.GetRating().ComboMultiplier == -1)
-            _combo = 0;
+        {
+            if(_combo > _highestCombo)
+                _highestCombo = _combo;
+            _combo = 1;
+        }
         else
+        {
             _combo += rating.GetRating().ComboMultiplier;
+            if(_combo > _highestCombo)
+                _highestCombo = _combo;
+        }
 
         // Play the associated sound effect
         _noteSFX[rating.GetRating().SoundIndex].play(Overtone.SFXVolume);

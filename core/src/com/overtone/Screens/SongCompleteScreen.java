@@ -32,6 +32,7 @@ public class SongCompleteScreen extends OvertoneScreen
     private final Button      _difficultyButton;        // Change difficulty button
     private Overtone.Screens  _nextScreen;              // Stores which screen to transition to next
     private boolean           _showConfirmationScreen;  // True if showing the "Did you like this" screen, false otherwise
+    private int               _combo;                   // The highest combo achieved
 
     /**
      * Constructor
@@ -39,11 +40,12 @@ public class SongCompleteScreen extends OvertoneScreen
      * @param score The score that the player got during the song
      * @param counters Counters for each type of rating for each note in the song
      */
-    public SongCompleteScreen(boolean completed, int score, int ... counters)
+    public SongCompleteScreen(boolean completed, int score, int combo, int ... counters)
     {
         super();
         _stage                  = new Stage();
         _score                  = score;
+        _combo                  = combo;
         _songCompleted          = completed ? "Song Completed!" : "Song Failed...";
         _counters               = counters;
         _nextScreen             = Overtone.Screens.MainMenu;
@@ -137,26 +139,32 @@ public class SongCompleteScreen extends OvertoneScreen
         _glyphLayout.setText(_font24, "Difficulty:");
         _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.575f, Overtone.ScreenHeight * 0.65f);
 
+        _glyphLayout.setText(_font24, "Highest Combo:");
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.575f, Overtone.ScreenHeight * 0.58f);
+
         _glyphLayout.setText(_font24, "Rating:");
-        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.575f, Overtone.ScreenHeight * 0.57f);
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.575f, Overtone.ScreenHeight * 0.51f);
 
         _glyphLayout.setText(_font24, "Score: ");
-        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.575f, Overtone.ScreenHeight * 0.49f);
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.575f, Overtone.ScreenHeight * 0.44f);
 
         _glyphLayout.setText(_font24, "High Score: ");
-        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.575f, Overtone.ScreenHeight * 0.41f);
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.575f, Overtone.ScreenHeight * 0.37f);
 
         _glyphLayout.setText(_font24, "" + Overtone.Difficulty.toString());
         _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.925f - _glyphLayout.width, Overtone.ScreenHeight * 0.65f);
 
+        _glyphLayout.setText(_font24, "" + _combo);
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.925f - _glyphLayout.width, Overtone.ScreenHeight * 0.58f);
+
         _glyphLayout.setText(_font24, "" + Overtone.CrowdRating.GetRating(_counters).toString());
-        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.925f - _glyphLayout.width, Overtone.ScreenHeight * 0.57f);
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.925f - _glyphLayout.width, Overtone.ScreenHeight * 0.51f);
 
         _glyphLayout.setText(_font24, "" + _score);
-        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.925f - _glyphLayout.width, Overtone.ScreenHeight * 0.49f);
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.925f - _glyphLayout.width, Overtone.ScreenHeight * 0.44f);
 
         _glyphLayout.setText(_font24, Overtone.HighScores[Overtone.Difficulty.ordinal()][0] + "");
-        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.925f - _glyphLayout.width, Overtone.ScreenHeight * 0.41f);
+        _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.925f - _glyphLayout.width, Overtone.ScreenHeight * 0.37f);
 
         _glyphLayout.setText(_font24, _newHighScore);
         _font24.draw(_batch, _glyphLayout, Overtone.ScreenWidth * 0.5f - _glyphLayout.width / 2.0f, Overtone.ScreenHeight * 0.85f);
