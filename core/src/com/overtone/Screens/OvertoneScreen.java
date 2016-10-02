@@ -69,14 +69,14 @@ public class OvertoneScreen implements OvertoneScreenInterface
         _skin         = new Skin();
 
         // Load Sounder
-        _accept      = Gdx.audio.newSound(Gdx.files.internal("Sounds\\accept.wav"));
-        _decline     = Gdx.audio.newSound(Gdx.files.internal("Sounds\\decline.wav"));
-        _buttonPress = Gdx.audio.newSound(Gdx.files.internal("Sounds\\press.wav"));
-        _warning     = Gdx.audio.newSound(Gdx.files.internal("Sounds\\warning.wav"));
-        _countdown   = Gdx.audio.newSound(Gdx.files.internal("Sounds\\countdown.wav"));
+        _accept      = Gdx.audio.newSound(Gdx.files.internal("Assets\\Sounds\\accept.wav"));
+        _decline     = Gdx.audio.newSound(Gdx.files.internal("Assets\\Sounds\\decline.wav"));
+        _buttonPress = Gdx.audio.newSound(Gdx.files.internal("Assets\\Sounds\\press.wav"));
+        _warning     = Gdx.audio.newSound(Gdx.files.internal("Assets\\Sounds\\warning.wav"));
+        _countdown   = Gdx.audio.newSound(Gdx.files.internal("Assets\\Sounds\\countdown.wav"));
 
         // Load Fonts
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Fonts\\Furore.ttf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Assets\\Fonts\\Furore.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 12;
         _font12 = generator.generateFont(parameter);
@@ -91,21 +91,21 @@ public class OvertoneScreen implements OvertoneScreenInterface
         generator.dispose();
 
         // load Textures
-        _yes          = new Texture(Gdx.files.internal("Textures\\yes.png"));
-        _yesHover     = new Texture(Gdx.files.internal("Textures\\yesHover.png"));
-        _yesDown      = new Texture(Gdx.files.internal("Textures\\yesDown.png"));
-        _no           = new Texture(Gdx.files.internal("Textures\\no.png"));
-        _noHover      = new Texture(Gdx.files.internal("Textures\\noHover.png"));
-        _noDown       = new Texture(Gdx.files.internal("Textures\\noDown.png"));
-        _next         = new Texture(Gdx.files.internal("Textures\\next.png"));
-        _nextHover    = new Texture(Gdx.files.internal("Textures\\nextHover.png"));
-        _nextDown     = new Texture(Gdx.files.internal("Textures\\nextDown.png"));
-        _back         = new Texture(Gdx.files.internal("Textures\\back.png"));
-        _backHover    = new Texture(Gdx.files.internal("Textures\\backHover.png"));
-        _backDown     = new Texture(Gdx.files.internal("Textures\\backDown.png"));
-        _ok           = new Texture(Gdx.files.internal("Textures\\ok.png"));
-        _okHover      = new Texture(Gdx.files.internal("Textures\\okHover.png"));
-        _okDown       = new Texture(Gdx.files.internal("Textures\\okDown.png"));
+        _yes          = new Texture(Gdx.files.internal("Assets\\Textures\\yes.png"));
+        _yesHover     = new Texture(Gdx.files.internal("Assets\\Textures\\yesHover.png"));
+        _yesDown      = new Texture(Gdx.files.internal("Assets\\Textures\\yesDown.png"));
+        _no           = new Texture(Gdx.files.internal("Assets\\Textures\\no.png"));
+        _noHover      = new Texture(Gdx.files.internal("Assets\\Textures\\noHover.png"));
+        _noDown       = new Texture(Gdx.files.internal("Assets\\Textures\\noDown.png"));
+        _next         = new Texture(Gdx.files.internal("Assets\\Textures\\next.png"));
+        _nextHover    = new Texture(Gdx.files.internal("Assets\\Textures\\nextHover.png"));
+        _nextDown     = new Texture(Gdx.files.internal("Assets\\Textures\\nextDown.png"));
+        _back         = new Texture(Gdx.files.internal("Assets\\Textures\\back.png"));
+        _backHover    = new Texture(Gdx.files.internal("Assets\\Textures\\backHover.png"));
+        _backDown     = new Texture(Gdx.files.internal("Assets\\Textures\\backDown.png"));
+        _ok           = new Texture(Gdx.files.internal("Assets\\Textures\\ok.png"));
+        _okHover      = new Texture(Gdx.files.internal("Assets\\Textures\\okHover.png"));
+        _okDown       = new Texture(Gdx.files.internal("Assets\\Textures\\okDown.png"));
 
         // Create button arrangements
         Pixmap pixmap = new Pixmap(100, 100, Pixmap.Format.RGBA8888);

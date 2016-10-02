@@ -260,7 +260,7 @@ public class GeneticAlgorithm implements Runnable, JMC
             Phrase p     = mergedSong.getPhrase(i).copy();
             p.setStartTime(0);
             Overtone.GameMusicStartTimes.add(start);
-            Write.midi(p, "Music\\" + i + ".mid");
+            Write.midi(p, "Assets\\Music\\" + i + ".mid");
         }
 
         // Load the sequence players for each note

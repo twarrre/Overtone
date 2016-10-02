@@ -26,12 +26,12 @@ public class NoteRenderer
     {
         // Initialize all of the textures
         _noteTextures                  = new Texture[3];
-        _noteTextures[0]               = new Texture(Gdx.files.internal("Textures\\Notes\\note.png"));
-        _noteTextures[1]               = new Texture(Gdx.files.internal("Textures\\Notes\\double_note.png"));
-        _noteTextures[2]               = new Texture(Gdx.files.internal("Textures\\Notes\\hold_note.png"));
-        _doubleNoteConnectorHorizontal = new Texture(Gdx.files.internal("Textures\\Notes\\double_note_connector_horizontal.png"));
-        _doubleNoteConnectorVertical   = new Texture(Gdx.files.internal("Textures\\Notes\\double_note_connector_vertical.png"));
-        _holdNoteConnector             = new Texture(Gdx.files.internal("Textures\\Notes\\hold_note_connector.png"));
+        _noteTextures[0]               = new Texture(Gdx.files.internal("Assets\\Textures\\Notes\\note.png"));
+        _noteTextures[1]               = new Texture(Gdx.files.internal("Assets\\Textures\\Notes\\double_note.png"));
+        _noteTextures[2]               = new Texture(Gdx.files.internal("Assets\\Textures\\Notes\\hold_note.png"));
+        _doubleNoteConnectorHorizontal = new Texture(Gdx.files.internal("Assets\\Textures\\Notes\\double_note_connector_horizontal.png"));
+        _doubleNoteConnectorVertical   = new Texture(Gdx.files.internal("Assets\\Textures\\Notes\\double_note_connector_vertical.png"));
+        _holdNoteConnector             = new Texture(Gdx.files.internal("Assets\\Textures\\Notes\\hold_note_connector.png"));
     }
 
     /**

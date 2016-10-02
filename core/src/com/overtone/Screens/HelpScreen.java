@@ -42,13 +42,13 @@ public class HelpScreen extends OvertoneScreen
         super();
         _stage           = new Stage();
         _help            = new Texture[NUM_HELP_SCREENS];
-        _circleFilled    = new Texture(Gdx.files.internal("Textures\\circleFilled.png"));
-        _circleNotFilled = new Texture(Gdx.files.internal("Textures\\circle.png"));
+        _circleFilled    = new Texture(Gdx.files.internal("Assets\\Textures\\circleFilled.png"));
+        _circleNotFilled = new Texture(Gdx.files.internal("Assets\\Textures\\circle.png"));
         _helpIndex       = 0;
 
         // Load help textures
         for(int i = 0; i < NUM_HELP_SCREENS; i++)
-            _help[i] = new Texture(Gdx.files.internal("Textures\\help" + (i + 1) + ".png"));
+            _help[i] = new Texture(Gdx.files.internal("Assets\\Textures\\help" + (i + 1) + ".png"));
 
         // Create the back button
         final Button backButton = CreateButton("BACK", "small", Overtone.ScreenWidth * 0.08f, Overtone.ScreenHeight * 0.05f, new Vector2(Overtone.ScreenWidth * 0.02f, Overtone.ScreenHeight * 0.92f), _stage);

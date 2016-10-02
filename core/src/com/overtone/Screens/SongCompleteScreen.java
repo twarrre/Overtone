@@ -79,7 +79,7 @@ public class SongCompleteScreen extends OvertoneScreen
         });
 
         // Set up background for confirmation screen
-        _background = new Image(new Texture(Gdx.files.internal("Textures\\background.png")));
+        _background = new Image(new Texture(Gdx.files.internal("Assets\\Textures\\background.png")));
         _background.setWidth(Overtone.ScreenWidth * 0.85f);
         _background.setHeight(Overtone.ScreenHeight * 0.75f);
         _background.setPosition(Overtone.ScreenWidth * 0.075f, Overtone.ScreenHeight * 0.125f);

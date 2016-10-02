@@ -117,24 +117,24 @@ public class GameplayScreen extends OvertoneScreen
         _stage          = new Stage();
 
         // Load textures
-        _targetZone         = new Texture(Gdx.files.internal("Textures\\targetzone.png"));
-        _targetZonePressed  = new Texture(Gdx.files.internal("Textures\\targetzonepressed.png"));
-        _progressBar        = new Texture(Gdx.files.internal("Textures\\progressbar.png"));
-        _progress           = new Texture(Gdx.files.internal("Textures\\red.png"));
-        _progressArrow      = new Texture(Gdx.files.internal("Textures\\arrow.png"));
-        _topLeft            = new Texture(Gdx.files.internal("Textures\\TopLeft.png"));
-        _bottomLeft         = new Texture(Gdx.files.internal("Textures\\BottomLeft.png"));
-        _topRight           = new Texture(Gdx.files.internal("Textures\\TopRight.png"));
-        _bottomRight        = new Texture(Gdx.files.internal("Textures\\BottomRight.png"));
-        _background         = new Texture(Gdx.files.internal("Textures\\background.png"));
-        _perfection         = new Texture(Gdx.files.internal("Textures\\perfection.png"));
-        _brilliant          = new Texture(Gdx.files.internal("Textures\\brilliant.png"));
-        _great              = new Texture(Gdx.files.internal("Textures\\great.png"));
-        _cleared            = new Texture(Gdx.files.internal("Textures\\cleared.png"));
-        _failure            = new Texture(Gdx.files.internal("Textures\\failure.png"));
-        _losing             = new Texture(Gdx.files.internal("Textures\\losing.png"));
+        _targetZone         = new Texture(Gdx.files.internal("Assets\\Textures\\targetzone.png"));
+        _targetZonePressed  = new Texture(Gdx.files.internal("Assets\\Textures\\targetzonepressed.png"));
+        _progressBar        = new Texture(Gdx.files.internal("Assets\\Textures\\progressbar.png"));
+        _progress           = new Texture(Gdx.files.internal("Assets\\Textures\\red.png"));
+        _progressArrow      = new Texture(Gdx.files.internal("Assets\\Textures\\arrow.png"));
+        _topLeft            = new Texture(Gdx.files.internal("Assets\\Textures\\TopLeft.png"));
+        _bottomLeft         = new Texture(Gdx.files.internal("Assets\\Textures\\BottomLeft.png"));
+        _topRight           = new Texture(Gdx.files.internal("Assets\\Textures\\TopRight.png"));
+        _bottomRight        = new Texture(Gdx.files.internal("Assets\\Textures\\BottomRight.png"));
+        _background         = new Texture(Gdx.files.internal("Assets\\Textures\\background.png"));
+        _perfection         = new Texture(Gdx.files.internal("Assets\\Textures\\perfection.png"));
+        _brilliant          = new Texture(Gdx.files.internal("Assets\\Textures\\brilliant.png"));
+        _great              = new Texture(Gdx.files.internal("Assets\\Textures\\great.png"));
+        _cleared            = new Texture(Gdx.files.internal("Assets\\Textures\\cleared.png"));
+        _failure            = new Texture(Gdx.files.internal("Assets\\Textures\\failure.png"));
+        _losing             = new Texture(Gdx.files.internal("Assets\\Textures\\losing.png"));
         _currentCrowdRating = _cleared;
-        _ship               = new Sprite(new Texture(Gdx.files.internal("Textures\\ship.png")));
+        _ship               = new Sprite(new Texture(Gdx.files.internal("Assets\\Textures\\ship.png")));
         _ship.setCenter(Overtone.ScreenWidth * 0.5f, Overtone.ScreenHeight * 0.5f);
         _ship.setScale(0.75f);
         _shipDirection = new Vector2(0, 0);
@@ -142,12 +142,12 @@ public class GameplayScreen extends OvertoneScreen
 
         // Load sounds
         _noteSFX    = new Sound[3];
-        _noteSFX[0] = Gdx.audio.newSound(Gdx.files.internal("Sounds\\note_good.wav"));
-        _noteSFX[1] = Gdx.audio.newSound(Gdx.files.internal("Sounds\\note_bad.wav"));
-        _noteSFX[2] = Gdx.audio.newSound(Gdx.files.internal("Sounds\\note_none.wav"));
-        _noteShot   = Gdx.audio.newSound(Gdx.files.internal("Sounds\\laser.wav"));
-        _success    = Gdx.audio.newSound(Gdx.files.internal("Sounds\\complete.wav"));
-        _fail       = Gdx.audio.newSound(Gdx.files.internal("Sounds\\fail.wav"));
+        _noteSFX[0] = Gdx.audio.newSound(Gdx.files.internal("Assets\\Sounds\\note_good.wav"));
+        _noteSFX[1] = Gdx.audio.newSound(Gdx.files.internal("Assets\\Sounds\\note_bad.wav"));
+        _noteSFX[2] = Gdx.audio.newSound(Gdx.files.internal("Assets\\Sounds\\note_none.wav"));
+        _noteShot   = Gdx.audio.newSound(Gdx.files.internal("Assets\\Sounds\\laser.wav"));
+        _success    = Gdx.audio.newSound(Gdx.files.internal("Assets\\Sounds\\complete.wav"));
+        _fail       = Gdx.audio.newSound(Gdx.files.internal("Assets\\Sounds\\fail.wav"));
 
         // Initialize variables
         _targetZonesPressed    = new boolean[4];

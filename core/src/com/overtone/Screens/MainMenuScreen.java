@@ -29,8 +29,8 @@ public class MainMenuScreen extends OvertoneScreen
     {
         super();
         _stage              = new Stage();
-        _logoNoGlow         = new Texture(Gdx.files.internal("Textures\\logo_noglow.png"));
-        _glow               = new Texture(Gdx.files.internal("Textures\\glow.png"));
+        _logoNoGlow         = new Texture(Gdx.files.internal("Assets\\Textures\\logo_noglow.png"));
+        _glow               = new Texture(Gdx.files.internal("Assets\\Textures\\glow.png"));
         _glowAlpha          = 0.0f;
         _glowDirection      = 0.01f;
         Overtone.Regenerate = true;

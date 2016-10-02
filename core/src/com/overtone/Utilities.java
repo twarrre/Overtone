@@ -29,7 +29,7 @@ public class Utilities implements JMC
         try
         {
             // Open the file
-            BufferedReader reader = new BufferedReader(new FileReader("Storage\\HighScores.txt"));
+            BufferedReader reader = new BufferedReader(new FileReader("Assets\\Storage\\HighScores.txt"));
 
             String line      = null;
             int diffCounter  = -1;
@@ -74,7 +74,7 @@ public class Utilities implements JMC
 
         try
         {
-            File file = new File("Storage\\HighScores.txt");
+            File file = new File("Assets\\Storage\\HighScores.txt");
 
             if (!file.exists())
                 file.createNewFile();
@@ -153,7 +153,7 @@ public class Utilities implements JMC
         try
         {
             // Open the file
-            BufferedReader reader = new BufferedReader(new FileReader("Storage\\GenerationValues.txt"));
+            BufferedReader reader = new BufferedReader(new FileReader("Assets\\Storage\\GenerationValues.txt"));
 
             String line      = null;
             int counter      = 0;
@@ -187,7 +187,7 @@ public class Utilities implements JMC
     {
         try
         {
-            File file = new File("Storage\\GenerationValues.txt");
+            File file = new File("Assets\\Storage\\GenerationValues.txt");
 
             if (!file.exists())
                 file.createNewFile();
@@ -217,7 +217,7 @@ public class Utilities implements JMC
         try
         {
             // Open the file
-            BufferedReader reader = new BufferedReader(new FileReader("Storage\\GeneticRaters.txt"));
+            BufferedReader reader = new BufferedReader(new FileReader("Assets\\Storage\\GeneticRaters.txt"));
 
             String line  = null;
             int    index = 0;
@@ -243,7 +243,7 @@ public class Utilities implements JMC
     {
         try
         {
-            File file = new File("Storage\\GeneticRaters.txt");
+            File file = new File("Assets\\Storage\\GeneticRaters.txt");
 
             if (!file.exists())
                 file.createNewFile();
@@ -419,7 +419,7 @@ public class Utilities implements JMC
             {
                 Overtone.MenuSequencer = MidiSystem.getSequencer();
                 Overtone.MenuSequencer.open();
-                InputStream is = new BufferedInputStream(new FileInputStream(new File("Music\\MenuMusic.mid")));
+                InputStream is = new BufferedInputStream(new FileInputStream(new File("Assets\\Music\\MenuMusic.mid")));
                 Overtone.MenuSequencer.setSequence(is);
                 Overtone.MenuSequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
                 Overtone.MenuSequencer.start();
@@ -428,7 +428,7 @@ public class Utilities implements JMC
             {
                 Overtone.BeatSequencer = MidiSystem.getSequencer();
                 Overtone.BeatSequencer.open();
-                InputStream is = new BufferedInputStream(new FileInputStream(new File("Music\\Beat.mid")));
+                InputStream is = new BufferedInputStream(new FileInputStream(new File("Assets\\Music\\Beat.mid")));
                 Overtone.BeatSequencer.setSequence(is);
                 Overtone.BeatSequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
                 Overtone.BeatSequencer.start();
@@ -469,7 +469,7 @@ public class Utilities implements JMC
             {
                 Sequencer s = MidiSystem.getSequencer();
                 s.open();
-                InputStream is = new BufferedInputStream(new FileInputStream(new File("Music\\" + i + ".mid")));
+                InputStream is = new BufferedInputStream(new FileInputStream(new File("Assets\\Music\\" + i + ".mid")));
                 s.setSequence(is);
                 Overtone.GameNoteSequencers.add(new Pair<Sequencer, Double>(s, Overtone.GameMusicStartTimes.get(i)));
             }
@@ -504,7 +504,7 @@ public class Utilities implements JMC
         try
         {
             // Open the file
-            BufferedReader reader = new BufferedReader(new FileReader("Storage\\MutationValues.txt"));
+            BufferedReader reader = new BufferedReader(new FileReader("Assets\\Storage\\MutationValues.txt"));
             String line           = null;
             int counter           = 0;
 
@@ -557,7 +557,7 @@ public class Utilities implements JMC
     {
         try
         {
-            File file = new File("Storage\\MutationValues.txt");
+            File file = new File("Assets\\Storage\\MutationValues.txt");
 
             if (!file.exists())
                 file.createNewFile();

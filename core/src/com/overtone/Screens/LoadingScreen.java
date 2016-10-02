@@ -48,8 +48,8 @@ public class LoadingScreen extends OvertoneScreen
     {
         super();
         _completed        = false;
-        _logoNoGlow       = new Texture(Gdx.files.internal("Textures\\logo_noglow.png"));
-        _glow             = new Texture(Gdx.files.internal("Textures\\glow.png"));
+        _logoNoGlow       = new Texture(Gdx.files.internal("Assets\\Textures\\logo_noglow.png"));
+        _glow             = new Texture(Gdx.files.internal("Assets\\Textures\\glow.png"));
         _elapsedTime      = 0.0f;
         _random           = new Random();
         _stringIndex      = 0;

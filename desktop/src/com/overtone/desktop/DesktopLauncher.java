@@ -17,8 +17,8 @@ public class DesktopLauncher {
 		config.foregroundFPS = 60;
 		config.resizable = false;
 		config.forceExit = true;
-		config.addIcon("Textures\\icon32x32.png",  Files.FileType.Internal);
-		config.addIcon("Textures\\icon16x16.png",  Files.FileType.Internal);
+		config.addIcon("Assets\\Textures\\icon32x32.png",  Files.FileType.Internal);
+		config.addIcon("Assets\\Textures\\icon16x16.png",  Files.FileType.Internal);
 
 		new LwjglApplication(new Overtone(), config);
 	}

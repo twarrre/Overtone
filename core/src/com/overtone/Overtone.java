@@ -200,8 +200,8 @@ public class Overtone extends ApplicationAdapter implements JMC
 		NoteQueue                = new ArrayList<OvertoneNote>();
 		_currentScreen           = new SplashScreen();
 		_batch                   = new SpriteBatch();
-		_farBackground           = new Sprite(new Texture("Textures\\space.jpg"));
-		_closeBackground         = new Sprite(new Texture("Textures\\clouds.png"));
+		_farBackground           = new Sprite(new Texture("Assets\\Textures\\space.jpg"));
+		_closeBackground         = new Sprite(new Texture("Assets\\Textures\\clouds.png"));
 		TargetZones              = new Target[4];
 		TargetZones[0]           = new Target(Overtone.TargetZone.TopLeft);
 		TargetZones[1]           = new Target(Overtone.TargetZone.TopRight);

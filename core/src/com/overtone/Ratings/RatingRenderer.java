@@ -19,11 +19,11 @@ public class RatingRenderer
     public RatingRenderer()
     {
         _ratingTextures    = new Texture[5];
-        _ratingTextures[0] = new Texture(Gdx.files.internal("Textures\\Ratings\\Perfect.png"));
-        _ratingTextures[1] = new Texture(Gdx.files.internal("Textures\\Ratings\\Great.png"));
-        _ratingTextures[2] = new Texture(Gdx.files.internal("Textures\\Ratings\\okay.png"));
-        _ratingTextures[3] = new Texture(Gdx.files.internal("Textures\\Ratings\\bad.png"));
-        _ratingTextures[4] = new Texture(Gdx.files.internal("Textures\\Ratings\\miss.png"));
+        _ratingTextures[0] = new Texture(Gdx.files.internal("Assets\\Textures\\Ratings\\Perfect.png"));
+        _ratingTextures[1] = new Texture(Gdx.files.internal("Assets\\Textures\\Ratings\\Great.png"));
+        _ratingTextures[2] = new Texture(Gdx.files.internal("Assets\\Textures\\Ratings\\okay.png"));
+        _ratingTextures[3] = new Texture(Gdx.files.internal("Assets\\Textures\\Ratings\\bad.png"));
+        _ratingTextures[4] = new Texture(Gdx.files.internal("Assets\\Textures\\Ratings\\miss.png"));
     }
 
     /**
