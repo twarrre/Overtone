@@ -11,11 +11,6 @@ import com.overtone.Notes.Target;
 import com.overtone.Screens.*;
 import java.util.*;
 
-import com.overtone.Testing.CrossoverTest;
-import com.overtone.Testing.ElitismTest;
-import com.overtone.Testing.MutatorTests.*;
-import com.overtone.Testing.RaterTests.*;
-import com.overtone.Testing.SelectionTest;
 import jm.music.data.*;
 import javax.sound.midi.Sequencer;
 import jm.JMC;
