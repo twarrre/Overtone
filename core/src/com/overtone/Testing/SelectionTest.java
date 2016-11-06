@@ -42,7 +42,7 @@ public class SelectionTest implements JMC
         for(int i = 0; i < o.length; i++)
             probabilities[i] = o[i].GetOverallRating();
 
-        ArrayList<Integer> values = new ArrayList<>();
+        ArrayList<Integer> values = new ArrayList<Integer>();
 
         for (int i = 0; i < 25; ++i)
         {

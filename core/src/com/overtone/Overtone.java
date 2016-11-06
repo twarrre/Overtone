@@ -184,7 +184,8 @@ public class Overtone extends ApplicationAdapter implements JMC
 	private Sprite                                   _closeBackground;      // The cloud background over-top of the star background (for depth)
 
 	@Override
-	public void create () {
+	public void create ()
+	{
 		ScreenWidth = Gdx.graphics.getWidth();
 		ScreenHeight = Gdx.graphics.getHeight();
 		NoteScale = new Vector2(Overtone.ScreenWidth * 0.025f, Overtone.ScreenWidth * 0.025f);
