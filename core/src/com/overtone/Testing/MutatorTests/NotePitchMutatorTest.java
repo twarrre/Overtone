@@ -22,54 +22,54 @@ public class NotePitchMutatorTest implements JMC
 
         Part m1 = npm.Mutate(p.copy(), 1);
         Part m2 = npm.Mutate(p.copy(), 0.8f);
-        Part m3 = npm.Mutate(p.copy(), 0.6f);
-        Part m4 = npm.Mutate(p.copy(), 0.4f);
+        Part m3 = npm.Mutate(p.copy(), 0.5f);
+        Part m4 = npm.Mutate(p.copy(), 0.25f);
         Part m5 = npm.Mutate(p.copy(), 0.2f);
         Part m6 = npm.Mutate(p.copy(), 0.0f);
 
-        System.out.println("Mutation 1, 100% note mutation probability");
+        System.out.println("Note Pitch Mutation 1, 100% note mutation probability");
         System.out.println("--------------------------------------------");
         System.out.println("Original         Mutated");
         for(int i = 0; i < p.length(); i++)
             System.out.println(p.getPhrase(i).getNote(0).getPitch() + "             " + m1.getPhrase(i).getNote(0).getPitch());
         System.out.println();
 
-        System.out.println("Mutation 2, 80% note mutation probability");
+        /*System.out.println("Mutation 2, 80% note mutation probability");
         System.out.println("--------------------------------------------");
         System.out.println("Original        Mutated");
         for(int i = 0; i < p.length(); i++)
             System.out.println(p.getPhrase(i).getNote(0).getPitch() + "             " + m2.getPhrase(i).getNote(0).getPitch());
-        System.out.println();
+        System.out.println();*/
 
-        System.out.println("Mutation 3, 60% note mutation probability");
+        System.out.println("Note Pitch Mutation 2, 50% note mutation probability");
         System.out.println("--------------------------------------------");
         System.out.println("Original        Mutated");
         for(int i = 0; i < p.length(); i++)
             System.out.println(p.getPhrase(i).getNote(0).getPitch() + "             " + m3.getPhrase(i).getNote(0).getPitch());
         System.out.println();
 
-        System.out.println("Mutation 4, 40% note mutation probability");
+        System.out.println("Note Pitch Mutation 3, 25% note mutation probability");
         System.out.println("--------------------------------------------");
         System.out.println("Original        Mutated");
         for(int i = 0; i < p.length(); i++)
             System.out.println(p.getPhrase(i).getNote(0).getPitch() + "             " + m4.getPhrase(i).getNote(0).getPitch());
         System.out.println();
 
-        System.out.println("Mutation 5, 20% note mutation probability");
+        /*System.out.println("Mutation 5, 20% note mutation probability");
         System.out.println("--------------------------------------------");
         System.out.println("Original        Mutated");
         for(int i = 0; i < p.length(); i++)
             System.out.println(p.getPhrase(i).getNote(0).getPitch() + "             " + m5.getPhrase(i).getNote(0).getPitch());
-        System.out.println();
+        System.out.println();*/
 
-        System.out.println("Mutation 6, 0% note mutation probability");
+        System.out.println("Note Pitch Mutation 4, 0% note mutation probability");
         System.out.println("--------------------------------------------");
         System.out.println("Original        Mutated");
         for(int i = 0; i < p.length(); i++)
             System.out.println(p.getPhrase(i).getNote(0).getPitch() + "             " + m6.getPhrase(i).getNote(0).getPitch());
         System.out.println();
 
-        Part pChord = new Part();
+        /*Part pChord = new Part();
         for(int i = 0; i < 10; i++)
         {
             if(i % 2 ==  0)
@@ -173,6 +173,6 @@ public class NotePitchMutatorTest implements JMC
         System.out.println("Original         Mutated");
         for(int i = 0; i < p.length(); i++)
             System.out.println(p3.getPhrase(i).getNote(0).getPitch() + "             " + mr1.getPhrase(i).getNote(0).getPitch());
-        System.out.println();
+        System.out.println();*/
     }
 }

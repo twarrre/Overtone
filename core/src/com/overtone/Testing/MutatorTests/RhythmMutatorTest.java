@@ -22,41 +22,41 @@ public class RhythmMutatorTest implements JMC
             p.addPhrase(new Phrase(new Note(C4, THIRTYSECOND_NOTE)));
 
         Part m1 = rm.Mutate(p.copy(), 1);
-        Part m2 = rm.Mutate(p.copy(), 0.8f);
-        Part m3 = rm.Mutate(p.copy(), 0.6f);
-        Part m4 = rm.Mutate(p.copy(), 0.4f);
-        Part m5 = rm.Mutate(p.copy(), 0.2f);
-        Part m6 = rm.Mutate(p.copy(), 0.0f);
+        Part m2 = rm.Mutate(p.copy(), 0.5f);
+        Part m3 = rm.Mutate(p.copy(), 0.25f);
+        Part m4 = rm.Mutate(p.copy(), 0.0f);
+        //Part m5 = rm.Mutate(p.copy(), 0.2f);
+        //Part m6 = rm.Mutate(p.copy(), 0.0f);
 
-        System.out.println("Mutation 1, 100% note mutation probability");
+        System.out.println("Rhythm Mutation 1, 100% note mutation probability");
         System.out.println("--------------------------------------------");
-        System.out.println("Original         Mutated");
+        System.out.println("Original Rhythm         Mutated Rhythm");
         for(int i = 0; i < p.length(); i++)
             System.out.println(p.getPhrase(i).getNote(0).getRhythmValue() + "             " + m1.getPhrase(i).getNote(0).getRhythmValue());
         System.out.println();
 
-        System.out.println("Mutation 2, 80% note mutation probability");
+        System.out.println("Rhythm Mutation 2, 50% note mutation probability");
         System.out.println("--------------------------------------------");
-        System.out.println("Original        Mutated");
+        System.out.println("Original Rhythm         Mutated Rhythm");
         for(int i = 0; i < p.length(); i++)
             System.out.println(p.getPhrase(i).getNote(0).getRhythmValue() + "             " + m2.getPhrase(i).getNote(0).getRhythmValue());
         System.out.println();
 
-        System.out.println("Mutation 3, 60% note mutation probability");
+        System.out.println("Rhythm Mutation 3, 25% note mutation probability");
         System.out.println("--------------------------------------------");
-        System.out.println("Original        Mutated");
+        System.out.println("Original Rhythm         Mutated Rhythm");
         for(int i = 0; i < p.length(); i++)
             System.out.println(p.getPhrase(i).getNote(0).getRhythmValue() + "             " + m3.getPhrase(i).getNote(0).getRhythmValue());
         System.out.println();
 
-        System.out.println("Mutation 4, 40% note mutation probability");
+        System.out.println("Rhythm Mutation 4, 0% note mutation probability");
         System.out.println("--------------------------------------------");
-        System.out.println("Original        Mutated");
+        System.out.println("Original Rhythm         Mutated Rhythm");
         for(int i = 0; i < p.length(); i++)
             System.out.println(p.getPhrase(i).getNote(0).getRhythmValue() + "             " + m4.getPhrase(i).getNote(0).getRhythmValue());
         System.out.println();
 
-        System.out.println("Mutation 5, 20% note mutation probability");
+        /*System.out.println("Mutation 5, 20% note mutation probability");
         System.out.println("--------------------------------------------");
         System.out.println("Original        Mutated");
         for(int i = 0; i < p.length(); i++)
@@ -174,6 +174,6 @@ public class RhythmMutatorTest implements JMC
         System.out.println("Original         Mutated");
         for(int i = 0; i < p.length(); i++)
             System.out.println(p3.getPhrase(i).getNote(0).getRhythmValue() + "             " + mr1.getPhrase(i).getNote(0).getRhythmValue());
-        System.out.println();
+        System.out.println();*/
     }
 }

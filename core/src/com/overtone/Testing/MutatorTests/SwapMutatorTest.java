@@ -32,13 +32,13 @@ public class SwapMutatorTest implements JMC
         }
 
         Part mChord1 = sm.Mutate(pChord.copy(), 1.0f);
-        Part mChord2 = sm.Mutate(pChord.copy(), 0.8f);
-        Part mChord3 = sm.Mutate(pChord.copy(), 0.6f);
-        Part mChord4 = sm.Mutate(pChord.copy(), 0.4f);
-        Part mChord5 = sm.Mutate(pChord.copy(), 0.2f);
-        Part mChord6 = sm.Mutate(pChord.copy(), 0.0f);
+        Part mChord2 = sm.Mutate(pChord.copy(), 0.5f);
+        Part mChord3 = sm.Mutate(pChord.copy(), 0.25f);
+        Part mChord4 = sm.Mutate(pChord.copy(), 0.0f);
+        //Part mChord5 = sm.Mutate(pChord.copy(), 0.2f);
+        //Part mChord6 = sm.Mutate(pChord.copy(), 0.0f);
 
-        System.out.println("Mutation Chord 1, 100% note mutation probability");
+        System.out.println("Swap Mutation Chord 1, 100% note mutation probability");
         System.out.println("--------------------------------------------");
         System.out.println("Original        Mutated");
         for(int i = 0; i < pChord.length(); i++)
@@ -61,7 +61,7 @@ public class SwapMutatorTest implements JMC
         }
         System.out.println();
 
-        System.out.println("Mutation Chord 2, 80% note mutation probability");
+        System.out.println("Swap Mutation Chord 2, 50% note mutation probability");
         System.out.println("--------------------------------------------");
         System.out.println("Original        Mutated");
         for(int i = 0; i < pChord.length(); i++)
@@ -84,7 +84,7 @@ public class SwapMutatorTest implements JMC
         }
         System.out.println();
 
-        System.out.println("Mutation Chord 3, 60% note mutation probability");
+        System.out.println("Swap Mutation Chord 3, 25% note mutation probability");
         System.out.println("--------------------------------------------");
         System.out.println("Original        Mutated");
         for(int i = 0; i < pChord.length(); i++)
@@ -107,7 +107,7 @@ public class SwapMutatorTest implements JMC
         }
         System.out.println();
 
-        System.out.println("Mutation Chord 4, 40% note mutation probability");
+        System.out.println("Swap Mutation Chord 4, 0% note mutation probability");
         System.out.println("--------------------------------------------");
         System.out.println("Original        Mutated");
         for(int i = 0; i < pChord.length(); i++)
@@ -130,7 +130,7 @@ public class SwapMutatorTest implements JMC
         }
         System.out.println();
 
-        System.out.println("Mutation Chord 5, 20% note mutation probability");
+        /*System.out.println("Mutation Chord 5, 20% note mutation probability");
         System.out.println("--------------------------------------------");
         System.out.println("Original        Mutated");
         for(int i = 0; i < pChord.length(); i++)
@@ -174,6 +174,6 @@ public class SwapMutatorTest implements JMC
             }
             System.out.println();
         }
-        System.out.println();
+        System.out.println();*/
     }
 }

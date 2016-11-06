@@ -16,6 +16,8 @@ public class ContinuousSilenceRaterTest implements JMC
     public static void Test()
     {
         ContinuousSilenceRater csr = new ContinuousSilenceRater();
+        System.out.println("Continuous Silence Rater Test");
+        System.out.println("------------------------------------------------");
 
         Part p1 = new Part();
         for(int i = 0; i < 10; i++)
@@ -23,8 +25,10 @@ public class ContinuousSilenceRaterTest implements JMC
             p1.addPhrase(new Phrase(new Note(REST, QUARTER_NOTE)));
         }
         float value = csr.Rate(new Organism(p1, 0));
-        System.out.print("Test 1: All are rest. ");
+        System.out.println("Test 1: All Notes are rest. ");
+        System.out.print("Expected Result: " + 0.0f + ".... Calculated Result: " + value + " .... ");
         System.out.println(value == 0.0f ? "Expected result. OK" : "Not expected result. FAIL");
+        System.out.println("------------------------------------------------");
 
         Part p2 = new Part();
         for(int i = 0; i < 10; i++)
@@ -41,14 +45,18 @@ public class ContinuousSilenceRaterTest implements JMC
                 p2.addPhrase(new Phrase(new Note(C3, QUARTER_NOTE)));
         }
         value = csr.Rate(new Organism(p2, 0));
-        System.out.print("Test 2: Mix of notes and rests. ");
+        System.out.println("Test 2: Mix of notes and rests.");
+        System.out.print("Expected Result: " + (1.0f - ((5.0f * QUARTER_NOTE) / ((8.0f * QUARTER_NOTE) + (2.0f * WHOLE_NOTE)))) + ".... Calculated Result: " + value + " .... ");
         System.out.println(value ==  1.0f - ((5.0f * QUARTER_NOTE) / ((8.0f * QUARTER_NOTE) + (2.0f * WHOLE_NOTE))) ? "Expected result. OK" : "Not expected result. FAIL");
+        System.out.println("------------------------------------------------");
 
         Part p3 = new Part();
         for(int i = 0; i < 10; i++)
             p3.addPhrase(new Phrase(new Note(C4, QUARTER_NOTE)));
         value = csr.Rate(new Organism(p3, 0));
-        System.out.print("Test 3: All notes are the same. ");
+        System.out.println("Test 3: All notes are the same. ");
+        System.out.print("Expected Result: " + 1.0f + ".... Calculated Result: " + value + " .... ");
         System.out.println(value == 1.0f ? "Expected result. OK" : "Not expected result. FAIL");
+        System.out.println("------------------------------------------------");
     }
 }

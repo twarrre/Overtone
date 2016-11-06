@@ -22,12 +22,12 @@ n
 0 ---
 h
 1659900 Great
+1604400 Great
 1584100 Great
 1524200 Great
 1473700 Brilliant
 1467700 Great
 1338700 Great
+1220900 Great
 1083000 Great
 1041500 Great
-970000 Great
-900800 Great

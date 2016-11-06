@@ -15,6 +15,8 @@ public class UniqueDynamicRaterTest implements JMC
     public static void Test()
     {
         UniqueDynamicRater unr = new UniqueDynamicRater();
+        System.out.println("Unique Dynamic Rater Test");
+        System.out.println("------------------------------------------------");
 
         Part p1 = new Part();
         for(int i = 0; i < 10; i++)
@@ -23,8 +25,10 @@ public class UniqueDynamicRaterTest implements JMC
             p1.getPhrase(i).getNote(0).setDynamic(87);
         }
         float value = unr.Rate(new Organism(p1, 0));
-        System.out.print("Test 1: All notes are the same. ");
+        System.out.println("Test 1: All notes are the same. ");
+        System.out.print("Expected Result: " + (1.0f / 10.0f) + ".... Calculated Result: " + value + " .... ");
         System.out.println(value == (1.0f / 10.0f) ? "Expected result. OK" : "Not expected result. FAIL");
+        System.out.println("------------------------------------------------");
 
         Part p2 = new Part();
         for(int i = 0; i < 10; i++)
@@ -33,8 +37,10 @@ public class UniqueDynamicRaterTest implements JMC
             p2.getPhrase(i).getNote(0).setDynamic(87 + i);
         }
         value = unr.Rate(new Organism(p2, 0));
-        System.out.print("Test 2: All notes are unique. ");
+        System.out.println("Test 2: All notes are unique. ");
+        System.out.print("Expected Result: " + 1.0f + ".... Calculated Result: " + value + " .... ");
         System.out.println(value == 1.0f ? "Expected result. OK" : "Not expected result. FAIL");
+        System.out.println("------------------------------------------------");
 
         Part p3 = new Part();
         for(int i = 0; i < 10; i++)
@@ -46,8 +52,10 @@ public class UniqueDynamicRaterTest implements JMC
                 p3.getPhrase(i).getNote(0).setDynamic(100);
         }
         value = unr.Rate(new Organism(p3, 0));
-        System.out.print("Test 3: Half are one note, and half are another note. ");
+        System.out.println("Test 3: Half are one note, and half are another note. ");
+        System.out.print("Expected Result: " + (2.0f / 10.0f) + ".... Calculated Result: " + value + " .... ");
         System.out.println(value == (2.0f / 10.0f) ? "Expected result. OK" : "Not expected result. FAIL");
+        System.out.println("------------------------------------------------");
 
         Part p6 = new Part();
         for(int i = 0; i < 10; i++)
@@ -55,7 +63,9 @@ public class UniqueDynamicRaterTest implements JMC
             p6.addPhrase(new Phrase(new Note(REST, QUARTER_NOTE)));
         }
         value = unr.Rate(new Organism(p6, 0));
-        System.out.print("Test 4: All are rest. ");
+        System.out.println("Test 4: All are rest. ");
+        System.out.print("Expected Result: " + 0.0f + ".... Calculated Result: " + value + " .... ");
         System.out.println(value == 0.0f ? "Expected result. OK" : "Not expected result. FAIL");
+        System.out.println("------------------------------------------------");
     }
 }

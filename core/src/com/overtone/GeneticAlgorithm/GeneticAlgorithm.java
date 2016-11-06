@@ -252,6 +252,35 @@ public class GeneticAlgorithm implements Runnable, JMC
         ArrayList<OvertoneNote> tempNotes = GenerateGameNotes();
         Utilities.SortNotes(tempNotes);
 
+        /*int chord = 0;
+        int hold = 0;
+        int single = 0;
+
+        for(int i = 0; i < tempNotes.size(); ++i)
+        {
+            if (tempNotes.get(i).GetType() == OvertoneNote.NoteType.Hold)
+            {
+                hold++;
+            }
+            else if (tempNotes.get(i).GetType() == OvertoneNote.NoteType.Double)
+            {
+                chord++;
+            }
+            else
+            {
+                single++;
+            }
+        }
+
+        System.out.println("Note Types");
+        System.out.println("-----------------------------------------");
+        System.out.println("Difficulty: " + Overtone.Difficulty);
+        System.out.println("-----------------------------------------");
+        System.out.println("Double Notes: " + chord);
+        System.out.println("Hold Notes: " + hold);
+        System.out.println("Single Notes: " + single);
+        */
+
         // Write the notes to files
         Overtone.GameMusicStartTimes = new ArrayList<Double>();
         for(int i = 0; i < mergedSong.size(); i++)
@@ -522,7 +551,7 @@ public class GeneticAlgorithm implements Runnable, JMC
      * @param parent2 The second phrase
      * @return an array of children phrases
      */
-    private Organism[] Crossover(Organism parent1, Organism parent2)
+    public Organism[] Crossover(Organism parent1, Organism parent2)
     {
         // Create two children
         Part[] children = new Part[2];
@@ -580,7 +609,7 @@ public class GeneticAlgorithm implements Runnable, JMC
      * @param values The parent organism probabilities
      * @return The index to the parent chosen for crossover
      */
-    private int RouletteSelection(float[] values)
+    public int RouletteSelection(float[] values)
     {
         Utilities.ShuffleArray(values);
 
