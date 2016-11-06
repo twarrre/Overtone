@@ -10,7 +10,6 @@ import com.overtone.Notes.OvertoneNote;
 import com.overtone.Notes.Target;
 import com.overtone.Screens.*;
 import java.util.*;
-
 import jm.music.data.*;
 import javax.sound.midi.Sequencer;
 import jm.JMC;
