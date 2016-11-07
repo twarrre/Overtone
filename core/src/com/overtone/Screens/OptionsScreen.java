@@ -76,6 +76,7 @@ public class OptionsScreen extends OvertoneScreen
         popSizeBack.addListener(new ClickListener() {public void clicked (InputEvent i, float x, float y) {
             Overtone.PopulationSize = (int)Utilities.Clamp(Overtone.PopulationSize - 2, 6, 1000);
 
+            _buttonPress.play(Overtone.SFXVolume);
             if(Overtone.NumberOfElites > (Overtone.PopulationSize * 0.5f))
                 Overtone.NumberOfElites = Math.round((Overtone.PopulationSize * 0.5f));
 
